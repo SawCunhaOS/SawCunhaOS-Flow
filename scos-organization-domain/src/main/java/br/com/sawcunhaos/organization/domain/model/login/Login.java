@@ -40,7 +40,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "IFP_LOGIN")
+@Table(name = "SCOS_LOGIN")
 @Auditable
 public class Login extends BaseEntity {
 

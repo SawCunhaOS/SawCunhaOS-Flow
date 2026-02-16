@@ -35,7 +35,7 @@ import org.locationtech.jts.geom.Point;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "IFP_EMPLOYEE_ADDRESS")
+@Table(name = "SCOS_EMPLOYEE_ADDRESS")
 @Auditable
 public class EmployeeAddress extends BaseEntity {
 

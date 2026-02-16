@@ -1,0 +1,273 @@
+openapi: 3.0.3
+info:
+  title: SawCunha OS Components
+  version: 1.0.0
+paths:
+  /:
+    get:
+      summary: Exemplo de endpoint utilizando componentes reutilizáveis
+      parameters:
+          - $ref: '#/components/parameters/X-Request-ID'
+          - $ref: '#/components/parameters/Accept-Language'
+          - $ref: '#/components/parameters/paginationFilter'
+      responses:
+        '201':
+          $ref: '#/components/responses/201_CREATED'
+        '4XX':
+          $ref: '#/components/responses/4XX'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+      security:
+          - BearerAuth: []
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    X-Request-ID:
+      name: X-Request-ID
+      in: header
+      required: false
+      description: Um ID único para rastrear a requisição.
+      schema:
+        type: string
+        format: uuid
+        example: "123e4567-e89b-12d3-a456-426614174000"
+    Accept-Language:
+      in: header
+      name: Accept-Language
+      required: false
+      description: Linguagem da resposta.
+      schema:
+        type: string
+        example: "pt-BR"
+    paginationFilter:
+      name: paginationFilter
+      in: query
+      required: true
+      schema:
+        $ref: '#/components/schemas/PaginationFilter'
+    idRequest:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+      x-jdempotentrequestpayload: true
+    code:
+      name: code
+      in: path
+      required: true
+      schema:
+        type: string
+      x-jdempotentrequestpayload: true
+    startDate:
+      name: startDate
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+    endDate:
+      name: endDate
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+    month:
+      name: month
+      in: path
+      required: true
+      schema:
+        type: string
+        enum:
+          - JANUARY
+          - FEBRUARY
+          - MARCH
+          - APRIL
+          - MAY
+          - JUNE
+          - JULY
+          - AUGUST
+          - SEPTEMBER
+          - OCTOBER
+          - NOVEMBER
+          - DECEMBER
+    year:
+      name: year
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+    date:
+      name: date
+      in: path
+      required: true
+      schema:
+        type: string
+        format: date
+    tagId:
+      name: tagId
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int64
+    tagCode:
+      name: tagCode
+      in: query
+      required: false
+      schema:
+        type: string
+    numberOfDays:
+      name: numberOfDays
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+        default: 0
+    country:
+      name: countryId
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int64
+    state:
+      name: stateId
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int64
+    city:
+      name: cityId
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int64
+    district:
+      name: districtId
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int64
+    zipCode:
+      name: zipCode
+      in: path
+      required: true
+      schema:
+        type: string
+    address:
+      name: address
+      in: query
+      required: true
+      schema:
+        type: string
+      
+  
+  responses:
+    '201_CREATED':
+      description: Created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateResponse'
+    '200_OK_BINARY':
+      description: OK
+      content:
+        application/octet-stream:
+          schema:
+            type: string
+            format: binary
+    '4XX':
+      description: Response with error HTTP 4XX
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExceptionResponse'
+    '5XX':
+      description: Response with error HTTP 5XX
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ExceptionResponse'
+  
+  schemas:
+    AttributeNotValid:
+      type: object
+      properties:
+        attribute:
+          type: string
+        message:
+          type: string
+    ScosPaginated:
+      type: object
+      properties:
+        sizePerPage:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        totalElementsPerPage:
+          type: integer
+          format: int64
+    ExceptionResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+            codeError:
+              type: string
+            validationErrors:
+              type: array
+              items:
+                $ref: '#/components/schemas/AttributeNotValid'
+    PaginationFilter:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+        sizePerPage:
+          type: integer
+          format: int32
+          maximum: 100
+          minimum: 1
+          x-min-message: SCOS-002
+          x-max-message: SCOS-004
+        direction:
+          $ref: '#/components/schemas/Direction'
+        order:
+          type: string
+    Create:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+    CreateResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Create'
+    Direction:
+      type: string
+      enum:
+        - ASC
+        - DESC

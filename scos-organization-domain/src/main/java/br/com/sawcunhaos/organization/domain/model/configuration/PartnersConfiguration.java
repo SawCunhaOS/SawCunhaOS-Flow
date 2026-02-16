@@ -23,7 +23,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name = "IFP_CONFIGURATION")
+@Table(name = "SCOS_CONFIGURATION")
 @Auditable
 public class PartnersConfiguration {
 

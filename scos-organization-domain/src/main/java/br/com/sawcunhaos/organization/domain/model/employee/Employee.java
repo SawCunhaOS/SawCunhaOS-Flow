@@ -47,7 +47,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "IFP_EMPLOYEE")
+@Table(name = "SCOS_EMPLOYEE")
 @Auditable
 public class Employee extends BaseEntity {
 

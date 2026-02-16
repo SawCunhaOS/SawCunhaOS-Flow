@@ -35,7 +35,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "IFP_PROFILE")
+@Table(name = "SCOS_PROFILE")
 @Auditable
 public class Profile extends BaseEntity {
 

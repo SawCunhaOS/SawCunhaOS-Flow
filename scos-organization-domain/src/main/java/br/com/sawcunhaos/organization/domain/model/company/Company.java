@@ -45,7 +45,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "IFP_COMPANY")
+@Table(name = "SCOS_COMPANY")
 @Auditable
 public class Company extends BaseEntity {
 

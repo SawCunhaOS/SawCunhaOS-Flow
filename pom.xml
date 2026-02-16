@@ -19,6 +19,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>scos-organization-domain</module>
+        <module>scos-organization-api</module>
+        <module>scos-organization-application</module>
     </modules>
 
     <parent>
@@ -111,6 +113,18 @@
                 <version>${scos-foundation.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>br.com.sawcunhaos</groupId>
+                <artifactId>scos-organization-domain</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>br.com.sawcunhaos</groupId>
+                <artifactId>scos-organization-application</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

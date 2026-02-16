@@ -36,7 +36,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "IFP_DEPARTMENT")
+@Table(name = "SCOS_DEPARTMENT")
 public class Department extends BaseEntity {
 
     @Id

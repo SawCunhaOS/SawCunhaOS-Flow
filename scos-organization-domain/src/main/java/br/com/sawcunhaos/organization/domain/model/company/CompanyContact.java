@@ -37,7 +37,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "IFP_COMPANY_CONTACT")
+@Table(name = "SCOS_COMPANY_CONTACT")
 @Auditable
 public class CompanyContact extends BaseEntity {
 

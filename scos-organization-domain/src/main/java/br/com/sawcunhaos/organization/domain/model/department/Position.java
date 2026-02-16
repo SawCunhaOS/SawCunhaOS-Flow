@@ -35,7 +35,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "IFP_POSITION")
+@Table(name = "SCOS_POSITION")
 public class Position extends BaseEntity {
 
     @Id

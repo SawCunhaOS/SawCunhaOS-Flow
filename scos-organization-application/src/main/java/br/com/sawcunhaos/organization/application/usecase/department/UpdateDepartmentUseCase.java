@@ -1,0 +1,58 @@
+
+/*
+ *
+ *  * Copyright 2026 SawCunha Open System - SawCunhaOS-Organization
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+package br.com.sawcunhaos.organization.application.usecase.department;
+
+import br.com.sawcunhaos.foundation.exception.error.ScosNoRollbackException;
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.utils.specification.ScosBaseUseCase;
+import br.com.sawcunhaos.organization.application.dto.UpdateDepartmentDTO;
+import br.com.sawcunhaos.organization.application.mapper.department.DepartmentMapper;
+import br.com.sawcunhaos.organization.domain.model.department.Department;
+import br.com.sawcunhaos.organization.domain.repository.department.DepartmentRepository;
+import br.com.sawcunhaos.organization.domain.service.department.DepartmentDomainService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import static br.com.sawcunhaos.organization.domain.exception.ExceptionCodeError.SCOS_DEPARTMENT_001;
+
+@Component
+@RequiredArgsConstructor
+@Slf4j
+@Transactional(rollbackFor = ScosException.class, noRollbackFor = ScosNoRollbackException.class)
+public class UpdateDepartmentUseCase implements ScosBaseUseCase<UpdateDepartmentDTO, Void> {
+
+    private final DepartmentRepository departmentRepository;
+    private final DepartmentDomainService departmentDomainService;
+    private final DepartmentMapper departmentMapper;
+
+    @Override
+    public Void execute(UpdateDepartmentDTO updateDepartmentDTO) {
+        log.info("Updating department: {}", updateDepartmentDTO);
+        departmentDomainService.validateDepartmentExistsValidation(updateDepartmentDTO.getDepartmentId());
+        departmentDomainService.validateDepartmentCodeUniquenessValidation(updateDepartmentDTO.getCode(), updateDepartmentDTO.getDepartmentId());
+
+        Department department = departmentMapper.toDepartment(updateDepartmentDTO);
+        Department departmentUpdated = departmentRepository.findById(department.getId()).orElseThrow(() -> new ScosException(SCOS_DEPARTMENT_001));
+
+        departmentUpdated.setCode(department.getCode());
+        departmentUpdated.setDescription(department.getDescription());
+        departmentUpdated.updateAuditInfo("TEMP");
+
+        departmentRepository.update(departmentUpdated);
+        log.info("Department updated: {}", departmentUpdated);
+        return null;
+    }
+}
