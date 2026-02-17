@@ -1,18 +1,18 @@
 openapi: 3.0.3
 info:
-  title: Inside Flow Partners - Company
-  description: The Inside Flow Partners system contains APIs to use in partners management.
-  termsOfService: http://licencas.softwarelivre.org/gpl-3.0.pt-br.html
+  title: SawCunhaOS Organization - Company
+  description: The SawCunhaOS Organization system contains APIs to use in organization management.
+  termsOfService: https://www.apache.org/licenses/LICENSE-2.0
   contact:
     name: Samuel Cunha
-    url: https://github.com/InsideSoftwares
-    email: samuel.cunha@insidesoftwares.com.br
+    url: https://github.com/SawCunhaOS
+    email: samukasaww@live.com
   license:
-    name: License - GNU
-    url: http://licencas.softwarelivre.org/gpl-3.0.pt-br.html
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
   version: '1.0'
 servers:
-  - url: /insideflow/partners/api
+  - url: /organization/api
     description: Generated server url
 tags:
   - name: Company
@@ -48,7 +48,7 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ GET_COMPANY ]
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY ]
     post:
       tags:
         - Company
@@ -74,9 +74,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ CREATE_COMPANY ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY, INSIDE_FLOW_PARTNERS_COMPANY_CONTACT, INSIDE_FLOW_PARTNERS_COMPANY_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
   /v1/company/{id}:
     get:
       tags:
@@ -100,7 +100,7 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ GET_COMPANY ]
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY ]
     put:
       tags:
         - Company
@@ -127,9 +127,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ UPDATE_COMPANY ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY, INSIDE_FLOW_PARTNERS_COMPANY_CONTACT, INSIDE_FLOW_PARTNERS_COMPANY_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
     delete:
       tags:
         - Company
@@ -149,9 +149,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ DELETE_COMPANY ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY, INSIDE_FLOW_PARTNERS_COMPANY_CONTACT, INSIDE_FLOW_PARTNERS_COMPANY_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY ]
   /v1/company/{id}/enable:
     put:
       tags:
@@ -170,11 +170,11 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_COMPANY ]
+      x-authorize: [ ENABLE_COMPANY ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
   /v1/company/{id}/disable:
     put:
       tags:
@@ -193,11 +193,11 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_COMPANY ]
+      x-authorize: [ DISABLE_COMPANY ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
   /v1/company/{companyId}/contact:
     get:
       tags:
@@ -222,7 +222,7 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ GET_COMPANY_CONTACT ]
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY_CONTACT ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY_CONTACT ]
     post:
       tags:
         - Company Contact
@@ -249,9 +249,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ CREATE_COMPANY_CONTACT ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_COMPANY_CONTACT
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_CONTACT
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY_CONTACT ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
   /v1/company/{companyId}/contact/{id}:
     get:
       tags:
@@ -276,7 +276,7 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ GET_COMPANY_CONTACT ]
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY_CONTACT ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY_CONTACT ]
     put:
       tags:
         - Company Contact
@@ -304,9 +304,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ UPDATE_COMPANY_CONTACT ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_COMPANY_CONTACT
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_CONTACT
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY_CONTACT ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
     delete:
       tags:
         - Company Contact
@@ -327,9 +327,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ DELETE_COMPANY_CONTACT ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_COMPANY_CONTACT
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_CONTACT
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY_CONTACT ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
   /v1/company/{companyId}/address:
     get:
       tags:
@@ -354,7 +354,7 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ GET_COMPANY_ADDRESS ]
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY_ADDRESS ]
     post:
       tags:
         - Company Address
@@ -381,9 +381,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ CREATE_COMPANY_ADDRESS ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_COMPANY_ADDRESS
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_ADDRESS
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY_ADDRESS, SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT ]
   /v1/company/{companyId}/address/{id}:
     get:
       tags:
@@ -408,7 +408,7 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ GET_COMPANY_ADDRESS ]
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY_ADDRESS ]
     put:
       tags:
         - Company Address
@@ -436,9 +436,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ UPDATE_COMPANY_ADDRESS ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_COMPANY_ADDRESS
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_ADDRESS
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY_ADDRESS, SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT ]
     delete:
       tags:
         - Company Address
@@ -459,9 +459,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ DELETE_COMPANY_ADDRESS ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_COMPANY_ADDRESS
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_ADDRESS
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_COMPANY_ADDRESS, SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT ]
 #  /v1/company/{companyId}/document:
 #    get:
 #      tags:
@@ -673,7 +673,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Companies'
-        insidePaginatedDTO:
+        PaginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateCompanyRequest:
       required:
@@ -763,7 +763,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CompanyContact'
-        insidePaginatedDTO:
+        PaginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateCompanyContactRequest:
       required:
@@ -876,7 +876,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CompanyAddresses'
-        insidePaginatedDTO:
+        PaginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateCompanyAddressRequest:
       required:

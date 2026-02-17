@@ -1,0 +1,23 @@
+networks:
+  scos_network:
+    driver: bridge
+
+services:
+  postgresql:
+    image: 'postgis/postgis:18-3.6-alpine'
+    hostname: postgresql
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1GB
+    environment:
+      - POSTGRES_USER=ScosDev
+      - POSTGRES_PASSWORD=ScosDev
+      - POSTGRES_DB=ScosDev
+    volumes:
+      - ./database/postgresql.conf:/opt/postgresql/conf/postgresql.conf
+    networks:
+      - scos_network
+    ports:
+      - '5432:5432'

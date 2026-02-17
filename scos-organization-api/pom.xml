@@ -32,6 +32,10 @@
             <artifactId>spring-boot-starter-validation</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-data-jpa</artifactId>
+        </dependency>
 
         <!-- Scos Dependencies -->
         <dependency>
@@ -41,6 +45,17 @@
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>
             <artifactId>scos-foundation-exception</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>br.com.sawcunhaos</groupId>
+            <artifactId>scos-organization-application</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>br.com.sawcunhaos</groupId>
+                    <artifactId>scos-organization-domain</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>

@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: SGC_1801202514011
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+        -   sqlFile:
+              path: check_employee_supervisor.sql
+              relativeToChangelogFile: true
+              encoding: utf8
+              stripComments: true
+              splitStatements: false
+              endDelimiter: ";"
+  - changeSet:
+      id: SGC_1801202514141
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+        -   sqlFile:
+              path: check_company_parent_company.sql
+              relativeToChangelogFile: true
+              encoding: utf8
+              stripComments: true
+              splitStatements: false
+              endDelimiter: ";"
+  - changeSet:
+      id: SGC_1801202514301
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+        - sqlFile:
+            path: remove_formatting_tax_identifier.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+            endDelimiter: ";"

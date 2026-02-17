@@ -16,6 +16,7 @@ package br.com.sawcunhaos.organization.application.usecase.department;
 import br.com.sawcunhaos.foundation.exception.error.ScosNoRollbackException;
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.foundation.utils.specification.ScosBaseUseCase;
+import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
 import br.com.sawcunhaos.organization.application.dto.UpdateDepartmentDTO;
 import br.com.sawcunhaos.organization.application.mapper.department.DepartmentMapper;
 import br.com.sawcunhaos.organization.domain.model.department.Department;
@@ -37,6 +38,7 @@ public class UpdateDepartmentUseCase implements ScosBaseUseCase<UpdateDepartment
     private final DepartmentRepository departmentRepository;
     private final DepartmentDomainService departmentDomainService;
     private final DepartmentMapper departmentMapper;
+    private final ScosUserAuthentication scosUserAuthentication;
 
     @Override
     public Void execute(UpdateDepartmentDTO updateDepartmentDTO) {
@@ -49,7 +51,7 @@ public class UpdateDepartmentUseCase implements ScosBaseUseCase<UpdateDepartment
 
         departmentUpdated.setCode(department.getCode());
         departmentUpdated.setDescription(department.getDescription());
-        departmentUpdated.updateAuditInfo("TEMP");
+        departmentUpdated.updateAuditInfo(scosUserAuthentication.findUserAuthentication());
 
         departmentRepository.update(departmentUpdated);
         log.info("Department updated: {}", departmentUpdated);

@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - changeSet:
+      id: SGC_1801202510011
+      author: Samuel.Cunha
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+        - createTable:
+            tableName: SCOS_PERMISSION
+            columns:
+              - column:
+                  name: PERMISSION
+                  type: varchar(100)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_IF_PERMISSION
+                    nullable: false
+              - column:
+                  name: SYSTEM_MODULE
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION_PTBR
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION_ENG
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: END_POINT
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name:  FEATURES
+                  type: TEXT[]
+                  defaultValue: '{}'
+                  constraints:
+                    nullable: false
+              - column:
+                  name:  CREATED_AT
+                  type: DATETIME
+                  constraints:
+                    nullable: true
+              - column:
+                  name:  UPDATED_AT
+                  type: DATETIME
+                  constraints:
+                    nullable: true
+              - column:
+                  name:  USER_AT
+                  type: varchar(100)
+                  constraints:
+                    nullable: true

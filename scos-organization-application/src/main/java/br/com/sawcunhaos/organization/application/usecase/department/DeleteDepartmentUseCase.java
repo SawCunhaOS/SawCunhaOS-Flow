@@ -16,7 +16,6 @@ package br.com.sawcunhaos.organization.application.usecase.department;
 import br.com.sawcunhaos.foundation.exception.error.ScosNoRollbackException;
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.foundation.utils.specification.ScosBaseUseCase;
-import br.com.sawcunhaos.organization.application.mapper.department.DepartmentMapper;
 import br.com.sawcunhaos.organization.domain.repository.department.DepartmentRepository;
 import br.com.sawcunhaos.organization.domain.service.department.DepartmentDomainService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,6 @@ public class DeleteDepartmentUseCase implements ScosBaseUseCase<Long, Void> {
 
     private final DepartmentRepository departmentRepository;
     private final DepartmentDomainService departmentDomainService;
-    private final DepartmentMapper departmentMapper;
 
     @Override
     public Void execute(@NonNull Long departmentId) {

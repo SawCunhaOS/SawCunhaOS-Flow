@@ -1,0 +1,70 @@
+databaseChangeLog:
+  - changeSet:
+      id: SGC_1801202509161
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+        - createTable:
+            tableName: SCOS_CONFIGURATION
+            dbms: postgresql
+            columns:
+              - column:
+                  name: CONFIGURATION_ID
+                  autoIncrement: true
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_CONFIGURATION
+                    nullable: false
+              - column:
+                  name: CONFIGURATION_KEY
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CONFIGURATION_VALUE
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: DEFAULT_VALUE
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name:  CREATED_AT
+                  type: DATETIME
+                  constraints:
+                    nullable: true
+              - column:
+                  name:  UPDATED_AT
+                  type: DATETIME
+                  constraints:
+                    nullable: true
+              - column:
+                  name:  USER_AT
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+        - renameSequence:
+              oldSequenceName: scos_configuration_configuration_id_seq
+              newSequenceName: SEQ_SCOS_CONFIGURATION_ID
+        - addUniqueConstraint:
+            columnNames: CONFIGURATION_KEY
+            constraintName: UK_SCOS_CONFIGURATION
+            tableName: SCOS_CONFIGURATION
+            validate: true
+      rollback:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: SCOS_CONFIGURATION

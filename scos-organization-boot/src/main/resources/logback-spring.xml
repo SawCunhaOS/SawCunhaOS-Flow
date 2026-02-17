@@ -1,0 +1,70 @@
+<configuration>
+
+    <!-- Define o padrão dos logs -->
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n - MDC: %mdc%n" />
+    <!-- Define o diretório onde os logs serão salvos -->
+    <property name="LOG_DIR" value="logs" />
+
+    <!-- Appender para o console, que inclui variáveis do MDC -->
+    <appender name="ScosConsole" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n - MDC: %mdc%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appender para arquivo em formato JSON -->
+    <appender name="ScosJson" class="ch.qos.logback.core.FileAppender">
+        <file>${LOG_DIR}/application.json</file>
+
+        <!-- Política de rotação com base no tempo -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Nome dos arquivos rotacionados -->
+            <fileNamePattern>${LOG_DIR}/backup/json/application.%d{yyyy-MM-dd}.json</fileNamePattern>
+            <!-- Manter no máximo logs de 7 dias -->
+            <maxHistory>7</maxHistory>
+            <!-- Tamanho máximo do arquivo antes de rotação (opcional) -->
+            <totalSizeCap>100MB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <fieldNames>
+                <timestamp>timestamp</timestamp>
+                <level>level</level>
+                <logger>logger</logger>
+                <thread>thread</thread>
+                <message>message</message>
+                <mdc>mdc</mdc>
+            </fieldNames>
+        </encoder>
+    </appender>
+
+    <!-- Appender para rotação de arquivos -->
+    <appender name="ScosLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- Arquivo atual -->
+        <file>${LOG_DIR}/application.log</file>
+
+        <!-- Política de rotação com base no tempo -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Nome dos arquivos rotacionados -->
+            <fileNamePattern>${LOG_DIR}/backup/log/application.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- Manter no máximo logs de 7 dias -->
+            <maxHistory>7</maxHistory>
+            <!-- Tamanho máximo do arquivo antes de rotação (opcional) -->
+            <totalSizeCap>25MB</totalSizeCap>
+        </rollingPolicy>
+
+        <!-- Formato do log -->
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="ScosConsole" />
+        <appender-ref ref="ScosJson" />
+        <appender-ref ref="ScosLog" />
+    </root>
+
+</configuration>

@@ -1,0 +1,66 @@
+databaseChangeLog:
+  - changeSet:
+      id: SGC_1601202509582
+      author: Samuel.Cunha
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+        - createTable:
+            tableName: SCOS_PROFILE
+            columns:
+              - column:
+                  name:  PROFILE_ID
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_PROFILE
+                    nullable: false
+              - column:
+                  name:  CODE
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name:  DESCRIPTION
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name:  ACTIVE
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name:  FEATURES
+                  type: TEXT[]
+                  defaultValue: '{}'
+                  constraints:
+                    nullable: false
+              - column:
+                  name:  CREATED_AT
+                  type: DATETIME
+                  constraints:
+                    nullable: true
+              - column:
+                  name:  UPDATED_AT
+                  type: DATETIME
+                  constraints:
+                    nullable: true
+              - column:
+                  name:  USER_AT
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+        - renameSequence:
+            oldSequenceName: SCOS_PROFILE_PROFILE_ID_SEQ
+            newSequenceName: SEQ_PROFILE_ID
+        - addUniqueConstraint:
+            columnNames: CODE
+            constraintName: UK_CODE_SCOS_PROFILE
+            tableName: SCOS_PROFILE
+            validate: true
+      rollback:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: SCOS_PROFILE

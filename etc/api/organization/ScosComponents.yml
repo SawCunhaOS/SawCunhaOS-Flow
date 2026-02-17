@@ -244,6 +244,7 @@ components:
         page:
           type: integer
           format: int32
+          default: 1
         sizePerPage:
           type: integer
           format: int32
@@ -251,8 +252,10 @@ components:
           minimum: 1
           x-min-message: SCOS-002
           x-max-message: SCOS-004
+          default: 10
         direction:
           $ref: '#/components/schemas/Direction'
+          default: ASC
         order:
           type: string
     Create:

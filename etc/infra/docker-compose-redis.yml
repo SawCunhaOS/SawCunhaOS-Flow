@@ -1,0 +1,35 @@
+networks:
+  scos_network:
+    driver: bridge
+
+services:
+  redis:
+    image: 'bitnami/redis:latest'
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1GB
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - scos_network
+    ports:
+      - '6379:6379'
+  redis-sentinel:
+    image: 'bitnami/redis-sentinel:latest'
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1GB
+    environment:
+      - REDIS_MASTER_HOST=localhost
+      - REDIS_MASTER_PASSWORD=inside_flow
+      - REDIS_MASTER_SET=inside_flow_master
+    depends_on:
+      - redis
+    ports:
+      - '26379:26379'
+    networks:
+      - scos_network

@@ -1,18 +1,18 @@
 openapi: 3.0.3
 info:
-  title: Inside Flow Partners - Employee
-  description: The Inside Flow Partners system contains APIs to use in partners management.
-  termsOfService: http://licencas.softwarelivre.org/gpl-3.0.pt-br.html
+  title: SawCunhaOS Organization - Employee
+  description: The SawCunhaOS Organization system contains APIs to use in organization management.
+  termsOfService: https://www.apache.org/licenses/LICENSE-2.0
   contact:
     name: Samuel Cunha
-    url: https://github.com/InsideSoftwares
-    email: samuel.cunha@insidesoftwares.com.br
+    url: https://github.com/SawCunhaOS
+    email: samukasaww@live.com
   license:
-    name: License - GNU
-    url: http://licencas.softwarelivre.org/gpl-3.0.pt-br.html
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
   version: '1.0'
 servers:
-  - url: /insideflow/partners/api
+  - url: organization/api
     description: Generated server url
 tags:
   - name: Employee
@@ -46,7 +46,7 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ GET_EMPLOYEE ]
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE ]
     post:
       tags:
         - Employee
@@ -72,9 +72,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ CREATE_EMPLOYEE ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_EMPLOYEE
+        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE, INSIDE_FLOW_PARTNERS_EMPLOYEE_CONTACT, INSIDE_FLOW_PARTNERS_EMPLOYEE_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE, SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE_CONTACT ]
   /v1/employee/{id}:
     get:
       tags:
@@ -98,7 +98,7 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ GET_EMPLOYEE ]
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE ]
     put:
       tags:
         - Employee
@@ -125,9 +125,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ UPDATE_EMPLOYEE ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_EMPLOYEE
+        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE, INSIDE_FLOW_PARTNERS_EMPLOYEE_CONTACT, INSIDE_FLOW_PARTNERS_EMPLOYEE_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE, SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE_CONTACT ]
     delete:
       tags:
         - Employee
@@ -147,9 +147,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ DELETE_EMPLOYEE ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_EMPLOYEE
+        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE, INSIDE_FLOW_PARTNERS_EMPLOYEE_CONTACT, INSIDE_FLOW_PARTNERS_EMPLOYEE_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE, SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE_CONTACT ]
   /v1/employee/{id}/enable:
     put:
       tags:
@@ -170,9 +170,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ ENABLE_EMPLOYEE ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_EMPLOYEE
+        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE, SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE_CONTACT ]
   /v1/employee/{id}/disable:
     put:
       tags:
@@ -191,11 +191,11 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ ENABLE_EMPLOYEE ]
+      x-authorize: [ DISABLE_EMPLOYEE ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_EMPLOYEE
+        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE, SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE_CONTACT ]
   /v1/employee/{employeeId}/contact:
     get:
       tags:
@@ -220,7 +220,7 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ GET_EMPLOYEE_CONTACT ]
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE_CONTACT ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_CONTACT ]
     post:
       tags:
         - Employee Contact
@@ -247,9 +247,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ CREATE_EMPLOYEE_CONTACT ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_EMPLOYEE_CONTACT
+        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_CONTACT
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE_CONTACT ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_CONTACT, SCOS_ORGANIZATION_EMPLOYEE ]
   /v1/employee/{employeeId}/contact/{id}:
     get:
       tags:
@@ -274,7 +274,7 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ GET_EMPLOYEE_CONTACT ]
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE_CONTACT ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_CONTACT ]
     put:
       tags:
         - Employee Contact
@@ -301,9 +301,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ UPDATE_EMPLOYEE_CONTACT ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_EMPLOYEE_CONTACT
+        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_CONTACT
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE_CONTACT ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_CONTACT, SCOS_ORGANIZATION_EMPLOYEE ]
     delete:
       tags:
         - Employee Contact
@@ -324,9 +324,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ DELETE_EMPLOYEE_CONTACT ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_EMPLOYEE_CONTACT
+        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_CONTACT
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE_CONTACT ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_CONTACT, SCOS_ORGANIZATION_EMPLOYEE ]
   /v1/employee/{employeeId}/address:
     get:
       tags:
@@ -351,7 +351,7 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ GET_EMPLOYEE_ADDRESS ]
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_ADDRESS ]
     post:
       tags:
         - Employee Address
@@ -378,9 +378,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ CREATE_EMPLOYEE_ADDRESS ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_EMPLOYEE_ADDRESS
+        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_ADDRESS
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE ]
   /v1/employee/{employeeId}/address/{id}:
     get:
       tags:
@@ -405,7 +405,7 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ GET_EMPLOYEE_ADDRESS ]
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_ADDRESS ]
     put:
       tags:
         - Employee Address
@@ -433,9 +433,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ UPDATE_EMPLOYEE_ADDRESS ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_EMPLOYEE_ADDRESS
+        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_ADDRESS
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE ]
     delete:
       tags:
         - Employee Address
@@ -456,9 +456,9 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ DELETE_EMPLOYEE_ADDRESS ]
       x-jdempotentresource:
-        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_EMPLOYEE_ADDRESS
+        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_ADDRESS
         ttl: 1
-      x-cache: [ INSIDE_FLOW_PARTNERS_EMPLOYEE_ADDRESS ]
+      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE ]
 
 components:
   securitySchemes:
@@ -549,7 +549,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Employees'
-        insidePaginatedDTO:
+        PaginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateEmployeeRequest:
       required:
@@ -673,7 +673,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EmployeeContact'
-        insidePaginatedDTO:
+        PaginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateEmployeeContactRequest:
       required:
@@ -752,7 +752,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EmployeeAddresses'
-        insidePaginatedDTO:
+        PaginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateEmployeeAddressRequest:
       required:

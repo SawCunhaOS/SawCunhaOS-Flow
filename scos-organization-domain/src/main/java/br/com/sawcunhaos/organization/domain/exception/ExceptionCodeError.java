@@ -33,10 +33,6 @@ public enum ExceptionCodeError implements ExceptionCode {
     SCOS_COMPANY_003("SCOS_COMPANY_003"),
     SCOS_COMPANY_004("SCOS_COMPANY_004"),
 
-    // Legacy aliases (SCOS_*) — mapeiam para os códigos SCOS_ (compatibilidade)
-    SCOS_DEPARTMENT_001("SCOS_DEPARTMENT_001"),
-    SCOS_DEPARTMENT_002("SCOS_DEPARTMENT_002"),
-    SCOS_DEPARTMENT_003("SCOS_DEPARTMENT_003"),
 
     // User / Login
     SCOS_USER_001("SCOS_USER_001"),

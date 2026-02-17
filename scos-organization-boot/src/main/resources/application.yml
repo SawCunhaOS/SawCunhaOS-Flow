@@ -1,0 +1,48 @@
+scos:
+  port: 8081
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=scos
+    username: scos_user
+    password: scos_user
+    connection-timeout: 600000
+    idle-timeout: 150000
+    max-lifetime: 1800000
+    minimum-idle: 25
+    maximum-pool-size: 100
+  audit:
+    enabled: true
+    datasource:
+      url: jdbc:postgresql://localhost:5432/postgres?currentSchema=scos
+      username: scos_user
+      password: scos_user
+      connection-timeout: 100000
+      idle-timeout: 150000
+      max-lifetime: 300000
+      minimum-idle: 10
+      maximum-pool-size: 30
+  security:
+    keycloak:
+      client-id: Scos
+      authorization-grant-type: password
+      scope: openid
+      issuer-uri: http://localhost:7080/realms/Scos
+      resourceId: "Scos"
+  jdempotent:
+    enable: false
+    expiration-time-hour: 2
+    dial-timeout-second: 3
+    read-timeout-second: 3
+    write-timeout-second: 3
+    max-retry-count: 3
+    expire-timeout-hour: 3
+  cache:
+    enable: false
+    key-prefix: 'api::'
+    time-to-live: 12000000
+    port: 26379
+    database: 0
+    master: inside_flow_master
+    password: inside_flow
+    sentinels: localhost:26379
+  liquibase:
+    enabled: false

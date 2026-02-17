@@ -13,7 +13,6 @@
 
 package br.com.sawcunhaos.organization.domain.model.company;
 
-import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -30,7 +29,7 @@ import lombok.ToString;
 @Builder
 @Embeddable
 @ToString
-public class CompanyAddressPk extends BaseEntity {
+public class CompanyAddressPk {
     @Column(name = "COMPANY_ID")
     private Long companyId;
     @Column(name = "ADDRESS_ID")

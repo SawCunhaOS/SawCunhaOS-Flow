@@ -1,0 +1,27 @@
+databaseChangeLog:
+- changeSet:
+    id: v_scos_cache_login
+    author: Samuel Cunha
+    changes:
+      - tagDatabase:
+          tag: v1.0.0
+      - sqlFile:
+          path: v_scos_cache_login.sql
+          relativeToChangelogFile: true
+          encoding: utf8
+          stripComments: true
+          splitStatements: true
+          endDelimiter: ";"
+- changeSet:
+    id: v_scos_cache_permission
+    author: Samuel Cunha
+    changes:
+      - tagDatabase:
+          tag: v1.0.0
+      - sqlFile:
+          path: v_scos_cache_permission.sql
+          relativeToChangelogFile: true
+          encoding: utf8
+          stripComments: true
+          splitStatements: true
+          endDelimiter: ";"

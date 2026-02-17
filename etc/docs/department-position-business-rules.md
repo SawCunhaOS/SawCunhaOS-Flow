@@ -243,7 +243,7 @@ Success (200)
   "data": [
     { "id": 10, "code": "IT", "description": "Information Technology", "createdAt": "2026-02-16T10:00:00", "updatedAt": "2026-02-17T12:00:00", "userAt": "system" }
   ],
-  "insidePaginatedDTO": { "sizePerPage": 10, "totalPages": 1, "totalElements": 1, "totalElementsPerPage": 1 }
+  "PaginatedDTO": { "sizePerPage": 10, "totalPages": 1, "totalElements": 1, "totalElementsPerPage": 1 }
 }
 ```
 
@@ -348,7 +348,7 @@ Success (200)
   "data": [
     { "id": 21, "code": "DEV", "description": "Developer", "departmentId": 10, "createdAt": "2026-02-16T10:00:00", "updatedAt": "2026-02-17T12:00:00", "userAt": "system" }
   ],
-  "insidePaginatedDTO": { "sizePerPage": 10, "totalPages": 1, "totalElements": 1, "totalElementsPerPage": 1 }
+  "PaginatedDTO": { "sizePerPage": 10, "totalPages": 1, "totalElements": 1, "totalElementsPerPage": 1 }
 }
 ```
 

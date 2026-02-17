@@ -15,6 +15,7 @@ package br.com.sawcunhaos.organization.application.mapper.department;
 
 
 import br.com.sawcunhaos.organization.application.dto.CreateDepartmentDTO;
+import br.com.sawcunhaos.organization.application.dto.DepartmentDTO;
 import br.com.sawcunhaos.organization.application.dto.UpdateDepartmentDTO;
 import br.com.sawcunhaos.organization.domain.model.department.Department;
 import org.mapstruct.Mapper;
@@ -24,5 +25,6 @@ public interface DepartmentMapper {
 
     Department toDepartment(CreateDepartmentDTO createDepartmentDTO);
     Department toDepartment(UpdateDepartmentDTO updateDepartmentDTO);
+    DepartmentDTO toDepartmentDTO(Department department);
 
 }

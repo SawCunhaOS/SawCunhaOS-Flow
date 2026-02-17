@@ -1,0 +1,524 @@
+{
+  "dashboard": {
+    "title": "JVM Java 25 - Complete Monitoring",
+    "tags": ["jvm", "java25", "spring-boot", "g1gc"],
+    "timezone": "browser",
+    "refresh": "30s",
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "panels": [
+      {
+        "id": 1,
+        "title": "Heap Memory Usage",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "jvm_memory_used_bytes{area=\"heap\"}",
+            "legendFormat": "Used - {{instance}}"
+          },
+          {
+            "expr": "jvm_memory_committed_bytes{area=\"heap\"}",
+            "legendFormat": "Committed - {{instance}}"
+          },
+          {
+            "expr": "jvm_memory_max_bytes{area=\"heap\"}",
+            "legendFormat": "Max (2GB) - {{instance}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "bytes",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Metaspace Usage",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "jvm_memory_used_bytes{area=\"nonheap\",id=\"Metaspace\"}",
+            "legendFormat": "Used"
+          },
+          {
+            "expr": "jvm_memory_committed_bytes{area=\"nonheap\",id=\"Metaspace\"}",
+            "legendFormat": "Committed"
+          },
+          {
+            "expr": "jvm_memory_max_bytes{area=\"nonheap\",id=\"Metaspace\"}",
+            "legendFormat": "Max (512MB)"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "bytes",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "G1 Young Generation",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 8, "w": 8, "h": 8},
+        "targets": [
+          {
+            "expr": "jvm_memory_used_bytes{id=~\"G1 Eden Space|G1 Survivor Space\"}",
+            "legendFormat": "{{id}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "bytes",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "G1 Old Generation",
+        "type": "timeseries",
+        "gridPos": {"x": 8, "y": 8, "w": 8, "h": 8},
+        "targets": [
+          {
+            "expr": "jvm_memory_used_bytes{id=\"G1 Old Gen\"}",
+            "legendFormat": "Old Gen Used"
+          },
+          {
+            "expr": "jvm_memory_committed_bytes{id=\"G1 Old Gen\"}",
+            "legendFormat": "Old Gen Committed"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "bytes",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "GC Pause Time",
+        "type": "timeseries",
+        "gridPos": {"x": 16, "y": 8, "w": 8, "h": 8},
+        "targets": [
+          {
+            "expr": "rate(jvm_gc_pause_seconds_sum[5m])",
+            "legendFormat": "{{action}} - {{cause}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s",
+            "color": {"mode": "palette-classic"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "green"},
+                {"value": 0.1, "color": "yellow"},
+                {"value": 0.2, "color": "red"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 6,
+        "title": "GC Count",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 16, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "rate(jvm_gc_pause_seconds_count[1m]) * 60",
+            "legendFormat": "{{action}} - {{cause}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ops",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "GC Allocation Rate",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 16, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "rate(jvm_gc_memory_allocated_bytes_total[1m])",
+            "legendFormat": "Allocation Rate"
+          },
+          {
+            "expr": "rate(jvm_gc_memory_promoted_bytes_total[1m])",
+            "legendFormat": "Promotion Rate"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "Bps",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 8,
+        "title": "Thread Count",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 24, "w": 8, "h": 8},
+        "targets": [
+          {
+            "expr": "jvm_threads_live_threads",
+            "legendFormat": "Live Threads"
+          },
+          {
+            "expr": "jvm_threads_daemon_threads",
+            "legendFormat": "Daemon Threads"
+          },
+          {
+            "expr": "jvm_threads_peak_threads",
+            "legendFormat": "Peak Threads"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 9,
+        "title": "Virtual Threads (Project Loom)",
+        "type": "stat",
+        "gridPos": {"x": 8, "y": 24, "w": 8, "h": 8},
+        "targets": [
+          {
+            "expr": "jvm_threads_live_threads{name=~\".*virtual.*\"}",
+            "legendFormat": "Virtual Threads Active"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "green"},
+                {"value": 1000, "color": "yellow"},
+                {"value": 5000, "color": "red"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 10,
+        "title": "CPU Usage",
+        "type": "timeseries",
+        "gridPos": {"x": 16, "y": 24, "w": 8, "h": 8},
+        "targets": [
+          {
+            "expr": "system_cpu_usage",
+            "legendFormat": "System CPU"
+          },
+          {
+            "expr": "process_cpu_usage",
+            "legendFormat": "Process CPU"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percentunit",
+            "min": 0,
+            "max": 1,
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 11,
+        "title": "JVM Memory Pool Details",
+        "type": "table",
+        "gridPos": {"x": 0, "y": 32, "w": 24, "h": 8},
+        "targets": [
+          {
+            "expr": "jvm_memory_used_bytes",
+            "format": "table",
+            "instant": true
+          }
+        ],
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {"Time": true, "__name__": true},
+              "indexByName": {
+                "id": 0,
+                "area": 1,
+                "Value": 2
+              },
+              "renameByName": {
+                "id": "Memory Pool",
+                "area": "Area",
+                "Value": "Used (Bytes)"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "title": "GC Pause Time Distribution (P50, P95, P99)",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 40, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(jvm_gc_pause_seconds_bucket[5m])) by (le))",
+            "legendFormat": "P50"
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(jvm_gc_pause_seconds_bucket[5m])) by (le))",
+            "legendFormat": "P95"
+          },
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(jvm_gc_pause_seconds_bucket[5m])) by (le))",
+            "legendFormat": "P99"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s",
+            "color": {"mode": "palette-classic"},
+            "custom": {
+              "fillOpacity": 10
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {"id": "byName", "options": "P99"},
+              "properties": [{"id": "color", "value": {"mode": "fixed", "fixedColor": "red"}}]
+            }
+          ]
+        }
+      },
+      {
+        "id": 13,
+        "title": "Direct Buffer Memory",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 40, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "jvm_buffer_memory_used_bytes{id=\"direct\"}",
+            "legendFormat": "Used"
+          },
+          {
+            "expr": "jvm_buffer_total_capacity_bytes{id=\"direct\"}",
+            "legendFormat": "Capacity"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "bytes",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 14,
+        "title": "String Deduplication Stats",
+        "type": "stat",
+        "gridPos": {"x": 0, "y": 48, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "jvm_gc_overhead_percent",
+            "legendFormat": "GC Overhead %"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "green"},
+                {"value": 5, "color": "yellow"},
+                {"value": 10, "color": "red"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 15,
+        "title": "Heap Usage %",
+        "type": "gauge",
+        "gridPos": {"x": 6, "y": 48, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "(jvm_memory_used_bytes{area=\"heap\"} / jvm_memory_max_bytes{area=\"heap\"}) * 100",
+            "legendFormat": "Heap Usage"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "green"},
+                {"value": 70, "color": "yellow"},
+                {"value": 85, "color": "red"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 16,
+        "title": "Metaspace Usage %",
+        "type": "gauge",
+        "gridPos": {"x": 12, "y": 48, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "(jvm_memory_used_bytes{area=\"nonheap\",id=\"Metaspace\"} / jvm_memory_max_bytes{area=\"nonheap\",id=\"Metaspace\"}) * 100",
+            "legendFormat": "Metaspace Usage"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "percent",
+            "min": 0,
+            "max": 100,
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "green"},
+                {"value": 80, "color": "yellow"},
+                {"value": 95, "color": "red"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 17,
+        "title": "JVM Uptime",
+        "type": "stat",
+        "gridPos": {"x": 18, "y": 48, "w": 6, "h": 4},
+        "targets": [
+          {
+            "expr": "process_uptime_seconds",
+            "legendFormat": "Uptime"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s",
+            "color": {"mode": "thresholds"},
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {"value": 0, "color": "blue"}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 18,
+        "title": "Class Loading",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 52, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "jvm_classes_loaded_classes",
+            "legendFormat": "Loaded Classes"
+          },
+          {
+            "expr": "jvm_classes_unloaded_classes_total",
+            "legendFormat": "Unloaded Classes (Total)"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "short",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 19,
+        "title": "JIT Compilation Time",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 52, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "rate(jvm_compilation_time_ms_total[5m])",
+            "legendFormat": "Compilation Time Rate"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ms",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 20,
+        "title": "HTTP Request Rate",
+        "type": "timeseries",
+        "gridPos": {"x": 0, "y": 60, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "rate(http_server_requests_seconds_count[1m]) * 60",
+            "legendFormat": "{{method}} {{uri}} {{status}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "reqpm",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      },
+      {
+        "id": 21,
+        "title": "HTTP Request Duration (P50, P95, P99)",
+        "type": "timeseries",
+        "gridPos": {"x": 12, "y": 60, "w": 12, "h": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.50, sum(rate(http_server_requests_seconds_bucket[5m])) by (le, uri))",
+            "legendFormat": "P50 - {{uri}}"
+          },
+          {
+            "expr": "histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket[5m])) by (le, uri))",
+            "legendFormat": "P95 - {{uri}}"
+          },
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(http_server_requests_seconds_bucket[5m])) by (le, uri))",
+            "legendFormat": "P99 - {{uri}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "s",
+            "color": {"mode": "palette-classic"}
+          }
+        }
+      }
+    ]
+  }
+}
