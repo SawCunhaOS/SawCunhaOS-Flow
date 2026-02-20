@@ -29,7 +29,7 @@
 - ✅ **Hierarquia Multinível**: Suporte a estruturas organizacionais complexas
 - ✅ **Gestão de Usuários**: Controle de usuários de negócio com roles e permissões
 - ✅ **Integração com IdP**: Sincronização com Keycloak para autenticação centralizada
-- ✅ **Configuração Flexível**: Personalização por empresa (timezone, idioma, multi-tenant)
+- ✅ **Configuração Flexível**: Personalização por empresa (timezone, idioma)
 - ✅ **Auditoria Completa**: Rastreabilidade de todas as operações
 - ✅ **Eventos de Domínio**: Comunicação assíncrona via Kafka
 
@@ -231,7 +231,7 @@ domain/
 | **Repository Interface** | Contrato de persistência | `CompanyRepository` |
 | **Domain Service** | Lógica multi-entidade | Validar CNPJ duplicado |
 | **Specification** | Queries reutilizáveis | Filtros dinâmicos |
-| **Domain Event** | POJOs para eventos | `CompanyCreatedEvent` |
+| **Domain Event** | POJOs para eventos | `CompanyCreatedEvent` (classe disponível **para histórico/compatibilidade**, mas **NÃO** publicada em runtime para qualquer operação de `Company` ou sub‑recursos; operações são audit‑only) |
 | **Exception** | Exceções de negócio | `CompanyNotFoundException` |
 
 #### O que NÃO tem no Domain
@@ -388,8 +388,8 @@ public class CreateCompanyUseCase {
         Company company = mapper.toEntity(dto);
         Company saved = repository.save(company);
         
-        // 3. Publicar evento (via Port)
-        eventPublisher.publish(new CompanyCreatedEvent(saved.getId()));
+        // 3. Registrar auditoria (POLÍTICA DO PROJETO: não publicar evento Kafka nem sincronizar com Keycloak para CREATE/UPDATE de Company)
+        //    eventPublisher.publish(new CompanyCreatedEvent(saved.getId())); // **não usar** para criação/edição de Company
         
         // 4. Retornar DTO
         return mapper.toDetailDTO(saved);
@@ -440,8 +440,7 @@ infrastructure/
 │   └── CacheConfig.java
 │
 └── interceptor/
-    ├── AuditInterceptor.java
-    └── TenantInterceptor.java
+    └── AuditInterceptor.java
 ```
 
 #### Adapters (Implementam Ports)
@@ -527,7 +526,8 @@ public class CreateCompanyUseCase {
         identityProvider.createUser(...);
         
         // Port: publicar evento
-        eventPublisher.publish(new CompanyCreatedEvent(...));
+        // **POLÍTICA DO PROJETO**: não publicar evento Kafka nem sincronizar com Keycloak para CREATE/UPDATE de `Company`.
+        // eventPublisher.publish(new CompanyCreatedEvent(...)); // não usar para criação/edição de Company
         
         return ...;
     }
@@ -980,7 +980,7 @@ logging:
             <!-- Configuration (Embeddable) -->
             <column name="timezone" type="varchar(50)"/>
             <column name="default_language" type="varchar(10)"/>
-            <column name="multi_tenant_enabled" type="boolean" defaultValueBoolean="false"/>
+
             
             <!-- Audit Info (Embeddable) -->
             <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">

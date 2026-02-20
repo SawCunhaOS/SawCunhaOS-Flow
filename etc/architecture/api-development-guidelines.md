@@ -110,7 +110,7 @@ Documentar as **regras, convenções e checklist** para criar/alterar uma API de
 ---
 
 ## Domain Events & Kafka
-- Publique eventos de domínio na camada `application` (ex.: `CompanyCreatedEvent`).
+- Publique eventos de domínio na camada `application` quando o negócio exigir. **Observação de política**: para a entidade `Company` e seus sub‑recursos este projeto **NÃO** publica eventos Kafka nem sincroniza com Keycloak em nenhuma operação (CREATE, UPDATE, STATUS CHANGE, DELETE). Todas as ações são _audit‑only_.
 - Nome de tópico e payload: siga o padrão do repositório (consulte outros eventos).
 - Garanta idempotência e schema‑versioning.
 

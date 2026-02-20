@@ -106,7 +106,7 @@ Antes de implementar qualquer feature, **SEMPRE**:
 
 ### Exemplos de Contexto Crítico
 - **Estrutura multinível**: Empresas podem ter filiais com até 5 níveis de profundidade
-- **Multi-tenant**: Cada empresa tem sua própria configuração (timezone, idioma)
+- **Configuração por organização**: Cada empresa/grupo tem sua própria configuração (timezone, idioma)
 - **Sincronização Keycloak**: Usuários devem ser criados/atualizados no IdP
 - **Eventos de Domínio**: Mudanças críticas geram eventos via Kafka para outros serviços
 - **Regras de exclusão**: Entidades em uso não podem ser deletadas sem validação prévia

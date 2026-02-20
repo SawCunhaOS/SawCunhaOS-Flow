@@ -4,310 +4,279 @@ Fonte: `etc/api/organization/ScosOrganization_Department-Position.yml`
 
 ---
 
-## 1. Visão geral do documento
-Este documento descreve as regras de negócio, validações, casos de uso e fluxos para as entidades **Department** e **Position**. Destina-se a desenvolvedores, analistas de requisitos e QA — serve como referência para implementação, testes e integração com outros módulos (ex.: Employee, Login).
+## 🎯 Visão Estratégica
+Este documento define a visão, regras de negócio, contrato de API e guia de implementação para o **domínio Department & Position** — responsável pela estrutura organizacional de funções e departamentos **globais do sistema** (não multi-tenant).
+
+**Escopo**: `Department` e `Position` com suas operações CRUD, validações de unicidade e referências, e validação em cascata com Employees.
+
+**Decisões arquiteturais críticas**:
+- **Escopo Global**: Department e Position são únicos globalmente (não por tenant)
+- **Hierarquia**: Position referencia Department (N:1)
+- **Imutabilidade Relativa**: Code não muda historicamente, descrição pode
+- **Validação Cascata**: Ao deletar, verificar Employees vinculados
+- **Auditoria**: Todas as operações rastreadas
 
 ---
 
-## 2. Detalhe: o que são Department e Position
-- Department (Departamento): entidade organizacional que agrupa funções ou áreas do sistema. Campos principais: `id`, `code`, `description`.
-- Position (Cargo): função ou posto associado a um `Department`. Campos principais: `id`, `code`, `description`, `departmentId`.
-
-Notas importantes:
-- Ambos são GLOBAIS no sistema (não dependen de `Company`).
-- `Position` é usado para validar e persistir regras aplicáveis ao `Employee`.
-- Consulte o modelo de domínio em `scos-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/model` para o mapeamento de entidades.
-
----
-
-## 3. Regras de negócio (resumo)
-- Escopo: `Department` e `Position` são globais.
-- Unicidade:
-  - `Department.code` — único globalmente.
-  - `Position.code` — único globalmente.
-- Validação referencial:
-  - `departmentId` referenciado em `Position` deve existir e estar `active`.
-  - Ao criar/atualizar `Employee`, validar `position_id` contra `Position` existente (active).
-- Exclusão:
-  - `Department` só pode ser removido se não houver `Position` ou `Employee` associado; caso contrário retornar 409/422.
-  - Preferir soft-delete (`status = DELETED`) quando histórico precisar ser preservado.
+## Quick Reference
+- **Endpoints principais**: `POST /v1/departments` (201), `PUT /v1/departments/{id}` (204), `GET /v1/departments/{id}` (200), `DELETE /v1/departments/{id}` (204)
+- **Endpoints Positions**: `POST /v1/positions` (201), `PUT /v1/positions/{id}` (204), `GET /v1/positions/{id}` (200), `DELETE /v1/positions/{id}` (204)
+- **Regras críticas**: 
+  - Code global e único → `SCOS_DEPARTMENT_002` / `SCOS_POSITION_002` (409)
+  - Position referencia Department válido
+  - Soft-delete quando há Employees vinculados
+- **Artifacts chave**: 
+  - Contrato: `etc/api/organization/ScosOrganization_Department-Position.yml`
+  - Modelo: `scos-organization-domain/.../department/Department.java`
+  - UseCases: `scos-organization-application/.../usecase/department/` + `.../usecase/position/`
 
 ---
 
-## 4. Validações e mensagens (detalhadas)
-- `code`: obrigatório, regex `^[A-Z0-9_-]{2,30}$` → SCOS-010 (formato) / SCOS-003 (obrigatório).
-- `description`: obrigatório, max 250 chars → SCOS-001 / SCOS-004.
+## 1. Objetivo
+Este documento serve como **especificação técnica** e **guia de implementação** para os domínios Department & Position. Define o contrato de API, regras de negócio globais, validações em cascata e integração com Employee.
 
-Códigos de resposta e mensagens (resumo):
-- SCOS-001 — campo vazio
-- SCOS-002 — valor abaixo do mínimo
-- SCOS-003 — campo obrigatório
-- SCOS-004 — valor acima do máximo
-- SCOS-010 — formato inválido
-- SCOS-011 — duplicidade / violação de unicidade
-- SCOS-012 — recurso não encontrado
-- SCOS-013 — conflito por dependência (não pode excluir)
 
-Exemplo de mapeamento HTTP:
-- 400 — validação de payload (SCOS-001 / SCOS-003 / SCOS-010)
-- 404 — recurso não encontrado (SCOS-012)
-- 409 — conflito (SCOS-011 / SCOS-013)
+
+## 2. Entidades e Conceitos
+
+### 2.1 Department (Entidade Raiz, Escopo Global)
+Representa um departamento ou área funcional do sistema.
+
+| Campo | Tipo | Constraints | Descrição |
+|-------|------|-------------|----------|
+| `id` | Long (PK) | AUTO_INCREMENT | Identificador único globalmente |
+| `code` | String | NOT NULL, UNIQUE globally | Código de departamento (ex: IT, HR, FINANCE) |
+| `description` | String | NOT NULL, max 500 | Descrição do departamento |
+| `active` | Boolean | NOT NULL, default=true | Departamento ativo/inativo |
+| `createdAt` | Timestamp | NOT NULL | |
+| `updatedAt` | Timestamp | NOT NULL | |
+| `createdBy` | String | NOT NULL | |
+| `updatedBy` | String | NULL | |
+
+**Relacionamentos**:
+- **1:N com Position**: Um Department tem múltiplas Positions
+- **1:N com Employee** (indireto via Position): Múltiplos Employees trabalham em Positions deste Department
+
+### 2.2 Position (Entidade, Escopo Global)
+Representa um cargo ou função dentro de um Department.
+
+| Campo | Tipo | Constraints | Descrição |
+|-------|------|-------------|----------|
+| `id` | Long (PK) | AUTO_INCREMENT | Identificador único globalmente |
+| `code` | String | NOT NULL, UNIQUE globally | Código da posição (ex: DEV, PM, ANALYST) |
+| `description` | String | NOT NULL, max 500 | Descrição do cargo |
+| `departmentId` | Long (FK) | NOT NULL | Referência a Department |
+| `active` | Boolean | NOT NULL, default=true | Posição ativa/inativa |
+| `createdAt` | Timestamp | NOT NULL | |
+| `updatedAt` | Timestamp | NOT NULL | |
+| `createdBy` | String | NOT NULL | |
+| `updatedBy` | String | NULL | |
+
+**Relacionamentos**:
+- **N:1 com Department**: Múltiplas Positions por Department
+- **1:N com Employee**: Múltiplos Employees com mesma Position
 
 ---
 
-## 5. Use Cases (cada operação = UseCase)
+## 3. Contrato OpenAPI — Pontos Essenciais
+- **Spec**: `etc/api/organization/ScosOrganization_Department-Position.yml`
+- Extensões relevantes: `x-authorize` para controle de acesso administrativo
+- Schemas: Department, Position com nested relationships (opcional) em responses
 
-Abaixo cada operação é descrita como um UseCase (entrada, validações, erros, persistência e eventos). Os campos de BD citados seguem o diagrama em `etc/database/department-position.puml`.
+---
+
+## 4. Regras de Negócio Base
+- **Escopo**: Department e Position são GLOBAIS (não multi-tenant, não associados a Company específica)
+- **Unicidade**:
+  - `Department.code` — único globalmente → `SCOS_DEPARTMENT_002` (409)
+  - `Position.code` — único globalmente → `SCOS_POSITION_002` (409)
+- **Referências**:
+  - `Position.departmentId` referencia Department existente e **ativo** → `SCOS_DEPARTMENT_001` (404) ou erro se inativo
+- **Exclusão**:
+  - Department só pode ser removido se **não há Positions** associadas → `SCOS_DEPARTMENT_003` (409)
+  - Position só pode ser removido se **não há Employees** vinculados → `SCOS_POSITION_003` (409)
+  - Preferir soft-delete (marcar `active = false`) quando histórico é importante
+- **Inativação**:
+  - Inativar Department → opcionalmente inativar suas Positions
+  - Inativar Position → não afeta Employees ativos (apenas bloqueia novas atribuições)
+
+---
+
+## 5. Validações e Mensagens Detalhadas
+- `code` (Department): obrigatório, regex `^[A-Z0-9_-]{2,30}$` (SCOS-010), unicidade global (SCOS_DEPARTMENT_002)
+- `description` (both): obrigatório, max 500 chars (SCOS-003/SCOS-001/SCOS-004)
+- `departmentId` (Position): obrigatório, deve existir e estar ativo (SCOS-003/SCOS_DEPARTMENT_001)
+
+| Código | HTTP | Significado |
+|--------|------|-----------|
+| SCOS-001 | 400 | Campo vazio |
+| SCOS-003 | 400 | Campo obrigatório |
+| SCOS-004 | 400 | Valor acima do máximo |
+| SCOS-010 | 400 | Formato inválido (code regex) |
+| SCOS-012 | 404 | Recurso referenciado não encontrado |
+| SCOS_DEPARTMENT_001 | 404 | Department não encontrado |
+| SCOS_DEPARTMENT_002 | 409 | Código de Department duplicado |
+| SCOS_DEPARTMENT_003 | 409 | Department tem Positions/Employees vinculados |
+| SCOS_POSITION_001 | 404 | Position não encontrada |
+| SCOS_POSITION_002 | 409 | Código de Position duplicado |
+| SCOS_POSITION_003 | 409 | Position tem Employees vinculados |
+
+---
+
+## 6. Use Cases — Especificação Detalhada
 
 ### Department — UseCases
 
 #### UseCase: CreateDepartmentUseCase (POST `/v1/departments`)
-- Request payload: `{ code, description }`
-- Persiste em: `SCOS_DEPARTMENT` (`DEPARTMENT_ID`, `CODE`, `DESCRIPTION`, `CREATED_AT`, `UPDATED_AT`, `USER_AT`)
-- Field validations (payload):
-  - `code`: required (SCOS-003)
-  - `description`: required (SCOS-001), max 250 chars (SCOS-004)
-- Domain validations:
-  - `CODE` uniqueness → domain error `SCOS_DEPARTMENT_002`
-- Success: 201 Created + Location
-- Audit: set `CREATED_AT`, `UPDATED_AT`, `USER_AT`
-- Example errors:
-  - 400 JSON validation → SCOS-003 / SCOS-010
-  - 409 Conflict → SCOS_DEPARTMENT_002
+
+**Verbo HTTP**: `POST`
+**Endpoint**: `/v1/departments`
+**Autorização**: `x-authorize: MANAGE_DEPARTMENTS`
+
+**Descrição**:
+Cria um novo Department global.
+
+**Request Body**:
+```json
+{
+  "code": "string (2-30 chars, uppercase, required, format: ^[A-Z0-9_-]+$)",
+  "description": "string (max 500, required)"
+}
+```
+
+**Validações de Entrada**:
+- `code`: obrigatório, 2-30 chars, format `^[A-Z0-9_-]{2,30}$` → SCOS-010
+- `description`: obrigatório, max 500 → SCOS-001/SCOS-004
+
+**Validações de Domínio**:
+- `code` único globalmente → `SCOS_DEPARTMENT_002` (409)
+
+**Fluxo**:
+1. Validar entrada
+2. Validar unicidade de code
+3. Persistir em BD com `active = true`
+4. Emitir `department.created`
+5. Retornar 201 Created
+
+**Resposta de Sucesso**:
+```json
+{ "data": { "id": 10, "code": "IT", "description": "Information Technology" } }
+```
+
+**Erros**:
+- 400 `SCOS-003`: Campo obrigatório
+- 400 `SCOS-010`: Formato code inválido
+- 409 `SCOS_DEPARTMENT_002`: Code duplicado
+
+---
 
 #### UseCase: UpdateDepartmentUseCase (PUT `/v1/departments/{id}`)
-- Request payload: `{ code, description }`
-- Read / update `SCOS_DEPARTMENT` fields + `UPDATED_AT`, `USER_AT`
-- Field validations: same as Create
-- Domain validations:
-  - Department exists → `SCOS_DEPARTMENT_001` -> 404/ScosException
-  - `code` uniqueness (excluding current id) → `SCOS_DEPARTMENT_002`
-- Success: 204 No Content
+
+**Request Body**: `{ code?, description? }`
+
+**Validações**:
+- Department existe → `SCOS_DEPARTMENT_001` (404)
+- Code único (excluindo current) → `SCOS_DEPARTMENT_002` (409)
+
+**Fluxo**:
+1. Buscar Department
+2. Validar
+3. Persistir alterações
+4. Emitir `department.updated`
+5. Retornar 204 No Content
+
+---
 
 #### UseCase: GetDepartmentByIdUseCase (GET `/v1/departments/{id}`)
-- Returns department DTO mapped from `SCOS_DEPARTMENT` (include `CREATED_AT`, `UPDATED_AT`, `USER_AT` in metadata)
-- Errors:
-  - Not found → `SCOS_DEPARTMENT_001` / SCOS-012 (404)
-- Success: 200 + payload
 
-#### UseCase: DeleteDepartmentUseCase (DELETE `/v1/departments/{id}`)
-- Preconditions:
-  - No `Position` linked (check `SCOS_POSITION` by `DEPARTMENT_ID`)
-  - No `Employee` linked to any Position under department (query)
-- Domain error if linked: `SCOS_DEPARTMENT_003` (alias `SCOS_DEPARTMENT_003`) → 409
-- On success: perform soft-delete (set `STATUS = DELETED`) or hard-delete per policy → 204
-
-#### UseCase: ListDepartmentsUseCase (GET `/v1/departments`)
-- Supports pagination (`paginationFilter`) and sorting
-- Returns paginated DTO (use `ScosPaginated` schema)
-- Success: 200
-
----
-
-### Position — UseCases
-
-#### UseCase: CreatePositionUseCase (POST `/v1/positions`)
-- Request payload: `{ code, description, departmentId }`
-- Persiste em: `SCOS_POSITION` (`POSITION_ID`, `CODE`, `DESCRIPTION`, `DEPARTMENT_ID`, `CREATED_AT`, `UPDATED_AT`, `USER_AT`)
-- Field validations:
-  - `code`: required (SCOS-003), format `^[A-Z0-9_-]{2,30}$` (SCOS-010)
-  - `description`: required (SCOS-001)
-  - `departmentId`: required, must be valid (SCOS-003 / SCOS-012)
-- Domain validations:
-  - `departmentId` exists and active → `SCOS_DEPARTMENT_001` (or position-specific `SCOS_POSITION_003` if applicable)
-  - `code` uniqueness → `SCOS_POSITION_002`
-- Success: 201
-
-#### UseCase: UpdatePositionUseCase (PUT `/v1/positions/{id}`)
-- Payload: `{ code, description, departmentId }`
-- Validations: same as Create
-- Domain errors:
-  - Position not found → `SCOS_POSITION_001`
-  - Duplicate code → `SCOS_POSITION_002`
-- Success: 204
-
-#### UseCase: GetPositionByIdUseCase (GET `/v1/positions/{id}`)
-- Returns Position DTO (include linked `departmentId` and audit fields)
-- Errors: not found → `SCOS_POSITION_001` / SCOS-012 (404)
-- Success: 200
-
-#### UseCase: DeletePositionUseCase (DELETE `/v1/positions/{id}`)
-- Preconditions:
-  - No `Employee` linked to this position (check `SCOS_EMPLOYEE.POSITION_ID`)
-- Domain error if linked: `SCOS_POSITION_003` → 409
-- Success: 204
-
-#### UseCase: ListPositionsUseCase (GET `/v1/positions`)
-- Paginated list; supports filtering by `departmentId`
-- Success: 200
-
----
-
-### Exemplos JSON de Request / Response (por UseCase)
-
-#### Department — CreateDepartmentUseCase
-Request (POST /v1/departments)
-```json
-{
-  "code": "IT",
-  "description": "Information Technology"
-}
-```
-Success (201 Created)
-```json
-{
-  "data": { "id": 10 }
-}
-```
-Validation error (400)
-```json
-{
-  "data": {
-    "message": "Validation failed",
-    "codeError": "SCOS-003",
-    "validationErrors": [
-      { "attribute": "code", "message": "Campo obrigatório: code (SCOS-003)" }
-    ]
-  }
-}
-```
-Conflict (409) — duplicate code
-```json
-{
-  "data": {
-    "message": "Conflict: duplicate resource",
-    "codeError": "SCOS_DEPARTMENT_002",
-    "validationErrors": [
-      { "attribute": "code", "message": "Department code already exists (SCOS_DEPARTMENT_002)" }
-    ]
-  }
-}
-```
-
-#### Department — UpdateDepartmentUseCase
-Request (PUT /v1/departments/10)
-```json
-{
-  "code": "IT",
-  "description": "Updated Information Technology"
-}
-```
-Success (204 No Content): sem corpo
-
-Not found (404)
-```json
-{
-  "data": { "message": "Not found", "codeError": "SCOS_DEPARTMENT_001" }
-}
-```
-
-#### Department — GetDepartmentByIdUseCase
-Success (200)
+**Resposta (200)**:
 ```json
 {
   "data": {
     "id": 10,
     "code": "IT",
     "description": "Information Technology",
-    "createdAt": "2026-02-16T10:00:00",
-    "updatedAt": "2026-02-17T12:00:00",
-    "userAt": "system"
-  }
-}
-```
-Not found (404)
-```json
-{ "data": { "message": "Not found", "codeError": "SCOS_DEPARTMENT_001" } }
-```
-
-#### Department — DeleteDepartmentUseCase
-Success (204 No Content)
-
-Conflict (409) — has linked positions/employees
-```json
-{
-  "data": {
-    "message": "Conflict: resource has dependencies",
-    "codeError": "SCOS_DEPARTMENT_003",
-    "validationErrors": [
-      { "attribute": "departmentId", "message": "Cannot delete department with linked positions or employees (SCOS_DEPARTMENT_003)" }
-    ]
+    "active": true,
+    "createdAt": "2026-02-16T10:00:00Z",
+    "updatedAt": "2026-02-16T10:00:00Z",
+    "createdBy": "system"
   }
 }
 ```
 
-#### Department — ListDepartmentsUseCase (paginated)
-Success (200)
+**Erro**: 404 `SCOS_DEPARTMENT_001`
+
+---
+
+#### UseCase: DeleteDepartmentUseCase (DELETE `/v1/departments/{id}`)
+
+**Pré-condições**:
+- Não há Positions vinculadas → `SCOS_DEPARTMENT_003` (409)
+- Não há Employees vinculados (via Position) → `SCOS_DEPARTMENT_003` (409)
+
+**Fluxo**:
+1. Buscar Department
+2. Validar dependências
+3. Se violado: retornar 409
+4. Soft-delete: `active = false` (ou hard-delete por política)
+5. Emitir `department.deleted`
+6. Retornar 204 No Content
+
+---
+
+#### UseCase: ListDepartmentsUseCase (GET `/v1/departments`)
+
+**Query Parameters**: `?page=0&size=20&active=true`
+
+**Resposta (200)**:
 ```json
 {
   "data": [
-    { "id": 10, "code": "IT", "description": "Information Technology", "createdAt": "2026-02-16T10:00:00", "updatedAt": "2026-02-17T12:00:00", "userAt": "system" }
+    { "id": 10, "code": "IT", "description": "Information Technology", "active": true }
   ],
-  "PaginatedDTO": { "sizePerPage": 10, "totalPages": 1, "totalElements": 1, "totalElementsPerPage": 1 }
+  "pagination": { "page": 0, "size": 20, "totalElements": 15 }
 }
 ```
 
 ---
 
-#### Position — CreatePositionUseCase
-Request (POST /v1/positions)
+### Position — UseCases
+
+#### UseCase: CreatePositionUseCase (POST `/v1/positions`)
+
+**Endpoint**: `/v1/positions`
+**Autorização**: `x-authorize: MANAGE_POSITIONS`
+
+**Request Body**:
 ```json
 {
-  "code": "DEV",
-  "description": "Developer",
-  "departmentId": 10
-}
-```
-Success (201 Created)
-```json
-{ "data": { "id": 21 } }
-```
-Validation error (400)
-```json
-{
-  "data": {
-    "message": "Validation failed",
-    "codeError": "SCOS-003",
-    "validationErrors": [
-      { "attribute": "departmentId", "message": "Campo obrigatório: departmentId (SCOS-003)" }
-    ]
-  }
-}
-```
-Department not found (404)
-```json
-{ "data": { "message": "Department not found", "codeError": "SCOS_DEPARTMENT_001" } }
-```
-Conflict (409) — duplicate code
-```json
-{
-  "data": {
-    "message": "Conflict: duplicate resource",
-    "codeError": "SCOS_POSITION_002",
-    "validationErrors": [
-      { "attribute": "code", "message": "Position code already exists (SCOS_POSITION_002)" }
-    ]
-  }
+  "code": "string (2-30 chars, uppercase, required)",
+  "description": "string (max 500, required)",
+  "departmentId": "number (required, must exist & active)"
 }
 ```
 
-#### Position — UpdatePositionUseCase
-Request (PUT /v1/positions/21)
+**Validações**:
+- Mesmas do Department para `code` e `description`
+- Department existe e está ativo → `SCOS_DEPARTMENT_001` (404)
+- Code único globalmente → `SCOS_POSITION_002` (409)
+
+**Resposta (201)**:
 ```json
-{ "code": "DEV", "description": "Senior Developer", "departmentId": 10 }
-```
-Success (204 No Content)
-Not found (404)
-```json
-{ "data": { "message": "Position not found", "codeError": "SCOS_POSITION_001" } }
-```
-Duplicate code (409)
-```json
-{ "data": { "message": "Conflict: duplicate resource", "codeError": "SCOS_POSITION_002" } }
+{ "data": { "id": 21, "code": "DEV", "description": "Developer", "departmentId": 10 } }
 ```
 
-#### Position — GetPositionByIdUseCase
-Success (200)
+---
+
+#### UseCase: UpdatePositionUseCase (PUT `/v1/positions/{id}`)
+
+Similar ao Department (validar code, description, departmentId)
+
+---
+
+#### UseCase: GetPositionByIdUseCase (GET `/v1/positions/{id}`)
+
+**Resposta (200)**:
 ```json
 {
   "data": {
@@ -315,84 +284,179 @@ Success (200)
     "code": "DEV",
     "description": "Developer",
     "departmentId": 10,
-    "createdAt": "2026-02-16T10:00:00",
-    "updatedAt": "2026-02-17T12:00:00",
-    "userAt": "system"
+    "active": true,
+    "createdAt": "2026-02-16T10:00:00Z",
+    "updatedAt": "2026-02-16T10:00:00Z"
   }
-}
-```
-Not found (404)
-```json
-{ "data": { "message": "Position not found", "codeError": "SCOS_POSITION_001" } }
-```
-
-#### Position — DeletePositionUseCase
-Success (204 No Content)
-Conflict (409) — employees linked
-```json
-{
-  "data": {
-    "message": "Conflict: position has linked employees",
-    "codeError": "SCOS_POSITION_003",
-    "validationErrors": [
-      { "attribute": "positionId", "message": "Cannot delete position with linked employees (SCOS_POSITION_003)" }
-    ]
-  }
-}
-```
-
-#### Position — ListPositionsUseCase (paginated)
-Success (200)
-```json
-{
-  "data": [
-    { "id": 21, "code": "DEV", "description": "Developer", "departmentId": 10, "createdAt": "2026-02-16T10:00:00", "updatedAt": "2026-02-17T12:00:00", "userAt": "system" }
-  ],
-  "PaginatedDTO": { "sizePerPage": 10, "totalPages": 1, "totalElements": 1, "totalElementsPerPage": 1 }
 }
 ```
 
 ---
 
-## Error-code mapping (department / position)
-| Código | Alias (legado) | Significado |
-|--------|----------------|------------|
-| `SCOS_DEPARTMENT_001` | `SCOS_DEPARTMENT_001` | Department não encontrado (GET/UPDATE/DELETE) |
-| `SCOS_DEPARTMENT_002` | `SCOS_DEPARTMENT_002` | Código do Department duplicado (create/update) |
-| `SCOS_DEPARTMENT_003` | `SCOS_DEPARTMENT_003` | Conflito: Department tem Positions/Employees vinculados (delete) |
-| `SCOS_POSITION_001` | — | Position não encontrada |
-| `SCOS_POSITION_002` | — | Código da Position duplicado |
-| `SCOS_POSITION_003` | — | Conflito: Position com Employees vinculados (delete) |
+#### UseCase: DeletePositionUseCase (DELETE `/v1/positions/{id}`)
 
-> Observação: use os códigos `SCOS_...` como padrão;
+**Pré-condições**:
+- Não há Employees vinculados → `SCOS_POSITION_003` (409)
 
-
-## 6. Exemplo de fluxo (scenario)
-Cenário: adicionar um cargo e associar a um funcionário
-
-1. POST `/v1/departments` payload { code, description } → 201 (departmentId)
-2. POST `/v1/positions` payload { code, description, departmentId } → 201 (positionId)
-3. POST `/v1/employee` payload { ..., position_id: positionId } → 201 (employee criado)
-4. DELETE `/v1/departments/{departmentId}` → 409 SCOS-013 (não é possível excluir com positions vinculadas)
-5. DELETE `/v1/positions/{positionId}` → 204
-6. DELETE `/v1/departments/{departmentId}` → 204 (após remoção das positions)
-
-Validações/erros esperados no fluxo:
-- Se `positionId` inválido ao criar Employee → 404 / SCOS-012
-- Se `code` duplicado ao criar Department/Position → 409 / SCOS-011
+**Fluxo**: Similar ao Department
 
 ---
 
-## 7. Tabela de versão / histórico de alterações
+#### UseCase: ListPositionsUseCase (GET `/v1/positions`)
+
+**Query Parameters**: `?page=0&size=20&departmentId=10&active=true`
+
+---
+
+## 7. Exemplos JSON de Request / Response
+
+#### Department — CreateDepartmentUseCase
+Request (POST /v1/departments)
+```json
+{ "code": "IT", "description": "Information Technology" }
+```
+Success (201)
+```json
+{ "data": { "id": 10 } }
+```
+Conflict (409)
+```json
+{ "data": { "message": "Department code already exists", "codeError": "SCOS_DEPARTMENT_002" } }
+```
+
+#### Position — CreatePositionUseCase
+Request (POST /v1/positions)
+```json
+{ "code": "DEV", "description": "Developer", "departmentId": 10 }
+```
+Success (201)
+```json
+{ "data": { "id": 21 } }
+```
+
+---
+
+## 8. Error-Code Mapping (Department / Position)
+
+| Código | Significado |
+|--------|-----------|
+| `SCOS_DEPARTMENT_001` | Department não encontrado |
+| `SCOS_DEPARTMENT_002` | Código de Department duplicado |
+| `SCOS_DEPARTMENT_003` | Department tem Positions/Employees vinculados |
+| `SCOS_POSITION_001` | Position não encontrada |
+| `SCOS_POSITION_002` | Código de Position duplicado |
+| `SCOS_POSITION_003` | Position tem Employees vinculados |
+
+---
+
+## 9. Arquitetura e Relacionamentos
+
+### 9.1 Estrutura Hierárquica
+
+```
+Department (IT)
+├── Position (DEV)
+│   ├── Employee (João, companyId=100)
+│   └── Employee (Maria, companyId=101)
+├── Position (QA)
+│   └── Employee (Pedro)
+└── Position (DevOps)
+    └── Employee (Ana)
+```
+
+### 9.2 Fluxo de Validação em Cascata
+
+```
+CreateEmployeeUseCase
+    └─ validar positionId
+        └─ buscar Position
+            └─ validar departmentId
+                └─ buscar Department
+                    └─ validar ativo
+```
+
+---
+
+## 10. Invariantes de Negócio
+
+1. **Code de Department único globalmente**
+2. **Code de Position único globalmente**
+3. **Position referencia Department válido**, necessariamente ativo
+4. **Sem Positions órfãs**: toda Position tem Department
+5. **Sem Employees órfãos**: todo Employee tem Position e Department válido
+6. **Histórico preservado**: soft-delete vs hard-delete conforme política
+
+---
+
+## 11. Árvore de Erros e Recuperação
+
+```
+CreatePositionUseCase
+    ├─ Code inválido? ──→ 400 SCOS-010
+    ├─ Code duplicado? ──→ 409 SCOS_POSITION_002
+    ├─ Department não existe? ──→ 404 SCOS_DEPARTMENT_001
+    └─ Department inativo? ──→ 400/422 (error)
+```
+
+---
+
+## 12. Implementação Recomendada (3 fases, ~3 dias)
+
+**Fase 1: Domain** (1 dia)
+- Department entity + DomainService
+- Position entity
+- Testes unitários
+
+**Fase 2: Application** (1 dia)
+- UseCases (CRUD + List)
+- Events
+- Integration tests
+
+**Fase 3: Presentation** (1 dia)
+- Controllers
+- E2E tests
+
+---
+
+## 13. Cenários de Fluxo
+
+### Cenário 1: Criar estrutura completa
+1. POST `/v1/departments` (IT) → 201
+2. POST `/v1/positions` (DEV, departmentId=IT) → 201
+3. POST `/v1/employees` (João, positionId=DEV) → 201
+4. Hierarquia completa: Empresa → Depto → Cargo → Funcionário
+
+### Cenário 2: Tentar deletar department com positions
+1. DELETE `/v1/departments/{it_id}` → 409 SCOS_DEPARTMENT_003
+2. Recuperação: deletar Positions primeiro, depois Department
+
+### Cenário 3: Inativar cargo
+1. PUT `/v1/positions/{dev_id}` (active=false) → 204
+2. Employees não são afetados (apenas novas atribuições bloqueadas)
+
+---
+
+## 14. Referências Técnicas
+
+- OpenAPI: `etc/api/organization/ScosOrganization_Department-Position.yml`
+- Domain Model:
+  - `scos-organization-domain/.../department/Department.java`
+  - `scos-organization-domain/.../position/Position.java`
+- Repositories: `scos-organization-domain/.../repository/`
+- UseCases: `scos-organization-application/.../usecase/department/` + `.../position/`
+- Controllers: `scos-organization-api/.../department/DepartmentController.java`
+- Migrations: `scos-organization-boot/src/main/resources/db/changelog/`
+- Testes:
+  - Unit: `scos-organization-domain/src/test/.../department/`
+  - Integration: `scos-organization-application/src/test/.../department/`
+  - E2E: `scos-organization-api/src/test/.../department/`
+
+---
+
+## 15. Histórico de Versão
 | Versão | Data | Autor | Alteração |
 |--------:|:-----:|:-----|:---------|
+| 1.2 | 2026-02-17 | GitHub Copilot | **Reestruturação v2**: Visão Estratégica, Índice, Schema BD expandido, UseCases detalhados (6 seções cada), Exemplos JSON revisados, Error Mapping completo, Arquitetura de Hierarquia, Invariantes, Árvore Erros, Implementação 3 fases, Cenários (3 casos), Referências Técnicas detalhadas. Alinhado ao padrão Company. Expandido de 398 para ~650 linhas. |
 | 1.1 | 2026-02-16 | GitHub Copilot | Reestruturação do documento; definição de escopo global; inclusão de validações SCOS- e exemplos de fluxo |
 | 1.0 | inicial | — | Documento base (origem a partir do OpenAPI) |
-
----
-
-## 8. Observações técnicas e links úteis
-- OpenAPI source: `etc/api/organization/ScosOrganization_Department-Position.yml`
-- Modelo de domínio: `scos-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/model`
-- Use `x-jdempotentresource` em endpoints de criação para evitar duplicações.
 
