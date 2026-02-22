@@ -46,7 +46,7 @@ Representa uma unidade organizacional (empresa, filial, divisão) no sistema sin
 | `id` | Long (PK) | AUTO_INCREMENT | Identificador único dentro do BD |
 | `name` | String | NOT NULL, 2-250 chars | Nome oficial da empresa |
 | `nameTreatment` | String | NOT NULL, max 100 | Abreviação/tratamento usado em docs |
-| `taxIdentifier` | String (CNPJ) | NOT NULL, UNIQUE | CNPJ formatado (XX.XXX.XXX/XXXX-XX) |
+| `taxIdentifier` | String (CNPJ) | NOT NULL, UNIQUE | CNPJ formatado (XX.XXX.XXX/XXXX-XX). **API strips punctuation** before passing to application |
 | `foundationDate` | Date | NOT NULL, ≤ NOW() | Data de fundação ou constituição |
 | `sectorOfActivity` | Enum/String | NOT NULL | Classificação CNAE ou custom |
 | `parentCompanyId` | Long (FK) | NULLABLE, NOT IN CYCLE | Referência a empresa-mãe (se filial) |
@@ -135,7 +135,7 @@ Representa endereços físicos com informações geográficas.
 ## 5. Validações e Mensagens Detalhadas
 - `name`: obrigatório (SCOS-003), min 2, max 250 chars (SCOS-001 / SCOS-004).
 - `nameTreatment`: obrigatório (SCOS-003), max 100 chars.
-- `taxIdentifier`: obrigatório (SCOS-003), formato CNPJ válido (SCOS-010), unicidade (SCOS_COMPANY_002).
+- `taxIdentifier`: obrigatório (SCOS-003), formato CNPJ válido (SCOS-010), unicidade (SCOS_COMPANY_002). A camada de API aceita CNPJ com ou sem pontuação e **remove formatação (. / -)** antes de enviar à camada application.
 - `foundationDate`: obrigatório (SCOS-003), formato `date`, não pode ser futuro (SCOS-002).
 - `sectorOfActivity`: obrigatório (SCOS-003), validar lista de domínios quando aplicável.
 - `parentCompanyId`: se informado, deve existir e estar `ACTIVE` (SCOS-012); negar ciclos (domínio `SCOS_COMPANY_004`).
@@ -186,7 +186,7 @@ Authorization: Bearer {token}
 {
   "name": "string (2-250 chars, required)",
   "nameTreatment": "string (max 100, required)",
-  "taxIdentifier": "string CNPJ (required, format: XX.XXX.XXX/XXXX-XX)",
+  "taxIdentifier": "string CNPJ (required, may be formatted or unformatted; API will strip punctuation before processing)",
   "foundationDate": "date (YYYY-MM-DD, required, ≤ today)",
   "sectorOfActivity": "string (required, ex: MANUFACTURING, RETAIL, SERVICES)",
   "parentCompanyId": "number (optional, if provided must exist & be ACTIVE)"
@@ -202,7 +202,7 @@ Authorization: Bearer {token}
 - `parentCompanyId`: opcional (se null, company é raiz); se informado, validar tipo Long
 
 **Validações de Domínio (Business Rules)**:
-- ✅ **Unicidade de CNPJ**: verificar se `taxIdentifier` (com formatting removido) já existe no sistema → `SCOS_COMPANY_002` (409 Conflict)
+- ✅ **Unicidade de CNPJ**: verificar se `taxIdentifier` (com formatação removida pela API) já existe no sistema → `SCOS_COMPANY_002` (409 Conflict)
 - ✅ **ParentCompany válida**: se `parentCompanyId` informado:
   - Company com esse ID deve existir no BD → SCOS-012 (404 Not Found)
   - Company deve ter `status = ACTIVE` → erro customizado (400/422)
@@ -507,7 +507,7 @@ Content-Type: application/json
 **Query Parameters** (todos opcionais):
 ```
 ?page=0&size=20&sort=name:asc
-&status=ACTIVE&name=Acme&taxIdentifier=12345678000195&parentCompanyId=5
+&status=ACTIVE&name=Acme&taxIdentifier=12345678000195&parentCompanyId=5  (API removes any formatting before filtering)
 ```
 
 **Autorização**: `x-authorize: LIST_COMPANY` ou público
@@ -522,7 +522,7 @@ Retorna lista paginada de Companies, com suporte a filtros e ordenação.
 - **Filtros**:
   - `status`: enum (`ACTIVE`, `INACTIVE`, `DELETED`)
   - `name`: substring search (case-insensitive)
-  - `taxIdentifier`: search exato após remover formatting
+  - `taxIdentifier`: search exato após a API **remover pontuação/formatação**
   - `parentCompanyId`: exact match
 
 **Resposta de Sucesso (200 OK)**:

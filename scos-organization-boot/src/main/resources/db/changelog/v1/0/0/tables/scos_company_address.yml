@@ -9,6 +9,13 @@ databaseChangeLog:
             tableName: SCOS_COMPANY_ADDRESS
             columns:
               - column:
+                  name: COMPANY_ADDRESS_ID
+                  type: serial
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_COMPANY_ADDRESS
+                    nullable: false
+              - column:
                   name:  COMPANY_ID
                   type: BIGINT
                   constraints:
@@ -59,10 +66,12 @@ databaseChangeLog:
                   type: varchar(100)
                   constraints:
                     nullable: true
-        - addPrimaryKey:
-            columnNames: COMPANY_ID, ADDRESS_ID
-            constraintName: PK_SCOS_COMPANY_ADDRESS
+        - renameSequence:
+            oldSequenceName: SCOS_COMPANY_ADDRESS_COMPANY_ADDRESS_ID_SEQ
+            newSequenceName: SEQ_COMPANY_ADDRESS_ID
+        - addUniqueConstraint:
             tableName: SCOS_COMPANY_ADDRESS
+            columnNames: COMPANY_ID, ADDRESS_ID, TYPE
       rollback:
         - dropTable:
             cascadeConstraints: true

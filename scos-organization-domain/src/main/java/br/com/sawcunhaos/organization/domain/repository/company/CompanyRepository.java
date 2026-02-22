@@ -20,11 +20,8 @@ import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,26 +32,47 @@ public interface CompanyRepository extends BaseJpaRepository<Company, Long>, Jpa
     QCompany company = QCompany.company;
 
     default Page<Company> findAllNotDeleted(Pageable pageable) {
-        return findAll(company.status.ne(StatusCompany.DISABLED), pageable);
+        return findAll(company.status.ne(StatusCompany.DELETED), pageable);
     }
 
     default Optional<Company> findNotDeletedById(Long id) {
         return findOne(
-                company.status.ne(StatusCompany.DISABLED)
+                company.status.ne(StatusCompany.DELETED)
                         .and(company.id.eq(id))
         );
     }
 
     List<Company> findAll();
 
-    @Modifying
-    @Query("""
-    update Company c
-    set    c.active = :active,
-           c.status = :statusCompany
-    where  c.id     = :companyId
-    """)
-    void updateCompanyStatusById(Long companyId, StatusCompany statusCompany, boolean active);
+    /**
+     * Verifica se existe uma empresa com o CNPJ informado.
+     *
+     * @param taxIdentifier CNPJ formatado ou não
+     * @return true se existe, false caso contrário
+     */
+    default boolean existsByTaxIdentifier(String taxIdentifier) {
+        return exists(
+                company.taxIdentifier.cnpj.eq(taxIdentifier)
+        );
+    }
 
+    /**
+     * Verifica se existe uma empresa-mãe com o ID informado.
+     *
+     * @param parentCompanyId ID da empresa-mãe
+     * @return true se existe, false caso contrário
+     */
+    boolean existsByParentCompanyId(Long parentCompanyId);
+
+    /**
+     * Verifica se existe alguma empresa com o status informado.
+     *
+     * @param companyId ID da empresa para nao ser validado
+     * @param status Status a verificar
+     * @return true se existe, false caso contrário
+     */
+    default boolean existsByStatus(Long companyId, StatusCompany status) {
+        return exists(company.id.ne(companyId).and(company.status.eq(status)));
+    }
 
 }

@@ -14,6 +14,7 @@
 package br.com.sawcunhaos.organization.application.usecase.position;
 
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
 import br.com.sawcunhaos.organization.application.dto.UpdatePositionDTO;
 import br.com.sawcunhaos.organization.application.mapper.position.PositionMapper;
 import br.com.sawcunhaos.organization.domain.exception.ExceptionCodeError;
@@ -28,6 +29,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.Optional;
 
@@ -39,6 +42,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("UpdatePositionUseCase Tests")
+@MockitoSettings(strictness = Strictness.LENIENT)
 class UpdatePositionUseCaseTest {
 
     @Mock
@@ -49,6 +53,9 @@ class UpdatePositionUseCaseTest {
 
     @Mock
     private PositionMapper positionMapper;
+
+    @Mock
+    private ScosUserAuthentication scosUserAuthentication;
 
     @InjectMocks
     private UpdatePositionUseCase updatePositionUseCase;
@@ -77,6 +84,7 @@ class UpdatePositionUseCaseTest {
                 .code("DEV")
                 .description("Developer Position")
                 .build();
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn("test-user");
     }
 
     @Test

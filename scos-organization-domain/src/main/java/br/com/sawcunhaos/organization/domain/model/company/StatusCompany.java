@@ -15,7 +15,22 @@ package br.com.sawcunhaos.organization.domain.model.company;
 
 import lombok.Getter;
 
+/**
+ * Enum representando os status possíveis de uma empresa.
+ *
+ * ACTIVE: Empresa está ativa e operacional
+ * INACTIVE: Empresa está inativa, mas não deletada (soft-delete)
+ * DELETED: Empresa foi deletada (soft-delete)
+ */
 @Getter
 public enum StatusCompany {
-    ACTIVE, INACTIVE, DISABLED;
+    ACTIVE("Ativa"),
+    INACTIVE("Inativa"),
+    DELETED("Deletada");
+
+    private final String displayName;
+
+    StatusCompany(String displayName) {
+        this.displayName = displayName;
+    }
 }

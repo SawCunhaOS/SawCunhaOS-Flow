@@ -34,7 +34,7 @@ public interface CompanyContactRepository extends BaseJpaRepository<CompanyConta
     default Page<CompanyContact> findAll(final Long companyId, final Pageable pageable) {
         return findAll(
                 qCompanyContact.company.id.eq(companyId)
-                        .and(qCompanyContact.company.status.ne(StatusCompany.DISABLED)),
+                        .and(qCompanyContact.company.status.ne(StatusCompany.DELETED)),
                 pageable
         );
     }
@@ -42,7 +42,7 @@ public interface CompanyContactRepository extends BaseJpaRepository<CompanyConta
     default Optional<CompanyContact> findCompanyContactByCompany(final Long companyId, final Long contactId) {
         return findOne(
                 qCompanyContact.company.id.eq(companyId)
-                        .and(qCompanyContact.company.status.ne(StatusCompany.DISABLED))
+                        .and(qCompanyContact.company.status.ne(StatusCompany.DELETED))
                         .and(qCompanyContact.id.eq(contactId))
         );
     }

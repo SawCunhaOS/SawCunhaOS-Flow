@@ -17,13 +17,14 @@ package br.com.sawcunhaos.organization.domain.model.company;
 import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
 import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,8 +42,13 @@ import org.locationtech.jts.geom.Point;
 @Auditable
 public class CompanyAddress extends BaseEntity {
 
-    @EmbeddedId
-    private CompanyAddressPk id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "COMPANY_ADDRESS_ID")
+    private Long id;
+
+    @Column(name = "ADDRESS_ID")
+    private Long addressId;
 
     @Column(name = "TYPE")
     private String type;

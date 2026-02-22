@@ -14,6 +14,7 @@
 package br.com.sawcunhaos.organization.application.usecase.position;
 
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
 import br.com.sawcunhaos.organization.application.dto.CreatePositionDTO;
 import br.com.sawcunhaos.organization.application.mapper.position.PositionMapper;
 import br.com.sawcunhaos.organization.domain.exception.ExceptionCodeError;
@@ -28,14 +29,23 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("CreatePositionUseCase Integration Tests")
+@MockitoSettings(strictness = Strictness.LENIENT)
 class CreatePositionUseCaseIntegrationTest {
 
     @Mock
@@ -46,6 +56,9 @@ class CreatePositionUseCaseIntegrationTest {
 
     @Mock
     private PositionMapper positionMapper;
+
+    @Mock
+    private ScosUserAuthentication scosUserAuthentication;
 
     @InjectMocks
     private CreatePositionUseCase createPositionUseCase;
@@ -72,6 +85,7 @@ class CreatePositionUseCaseIntegrationTest {
                 .code("DEV")
                 .description("Developer Position")
                 .build();
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn("test-user");
     }
 
     @Test

@@ -13,6 +13,7 @@
 package br.com.sawcunhaos.organization.application.usecase.department;
 
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
 import br.com.sawcunhaos.organization.application.dto.UpdateDepartmentDTO;
 import br.com.sawcunhaos.organization.application.mapper.department.DepartmentMapper;
 import br.com.sawcunhaos.organization.domain.exception.ExceptionCodeError;
@@ -27,6 +28,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.Optional;
 
@@ -38,6 +41,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("UpdateDepartmentUseCase Tests")
+@MockitoSettings(strictness = Strictness.LENIENT)
 class UpdateDepartmentUseCaseTest {
 
     @Mock
@@ -48,6 +52,9 @@ class UpdateDepartmentUseCaseTest {
 
     @Mock
     private DepartmentMapper departmentMapper;
+
+    @Mock
+    private ScosUserAuthentication scosUserAuthentication;
 
     @InjectMocks
     private UpdateDepartmentUseCase updateDepartmentUseCase;
@@ -75,6 +82,7 @@ class UpdateDepartmentUseCaseTest {
                 .code("IT")
                 .description("Information Technology Department")
                 .build();
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn("test-user");
     }
 
     @Test

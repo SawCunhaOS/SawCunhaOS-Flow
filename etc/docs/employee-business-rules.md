@@ -47,7 +47,7 @@ Representa um colaborador/funcionário da organização.
 | `id` | Long (PK) | AUTO_INCREMENT | Identificador único |
 | `name` | String | NOT NULL, 2-250 chars | Nome completo |
 | `nameTreatment` | String | NOT NULL, max 100 | Apelido/abreviação |
-| `taxIdentifier` | String (CPF) | NOT NULL, UNIQUE | CPF formatado (XXX.XXX.XXX-XX) |
+| `taxIdentifier` | String (CPF) | NOT NULL, UNIQUE | CPF formatado (XXX.XXX.XXX-XX). **API strips punctuation** before passing to application |
 | `email` | String | NOT NULL, UNIQUE | Email do colaborador |
 | `birthDate` | Date | NOT NULL, < hireDate | Data de nascimento |
 | `hireDate` | Date | NOT NULL, ≤ NOW() | Data de contratação |
@@ -146,7 +146,7 @@ Endereços do funcionário (residência, segunda residência, etc.).
 |-------|-----------|--------|
 | `name` | Obrigatório, 2-250 chars | SCOS-003 / SCOS-001 / SCOS-004 |
 | `email` | Obrigatório, formato email, único | SCOS-003 / SCOS-010 / SCOS_EMPLOYEE_003 |
-| `taxIdentifier` | Obrigatório, CPF válido, único | SCOS-003 / SCOS-010 / SCOS_EMPLOYEE_002 |
+| `taxIdentifier` | Obrigatório, CPF válido, único; API remove formatação (pontos e traço) antes de encaminhar | SCOS-003 / SCOS-010 / SCOS_EMPLOYEE_002 |
 | `birthDate` | Obrigatório, < hireDate | SCOS-003 / SCOS-002 |
 | `hireDate` | Obrigatório, ≤ hoje | SCOS-003 / SCOS-002 |
 | `companyId` | Obrigatório, deve existir | SCOS-003 / SCOS_COMPANY_001 |
@@ -178,7 +178,7 @@ Cria um novo Employee vinculado a Company e Position.
 {
   "name": "string (2-250 chars, required)",
   "nameTreatment": "string (max 100, required)",
-  "taxIdentifier": "string CPF (XXX.XXX.XXX-XX, required)",
+  "taxIdentifier": "string CPF (XXX.XXX.XXX-XX or unformatted; API will strip punctuation)",
   "email": "string (email format, required)",
   "birthDate": "date (YYYY-MM-DD, required, < hireDate)",
   "hireDate": "date (YYYY-MM-DD, required, ≤ today)",
@@ -191,7 +191,7 @@ Cria um novo Employee vinculado a Company e Position.
 **Validações de Entrada**:
 - `name`: obrigatório, 2-250 chars
 - `email`: obrigatório, formato email
-- `taxIdentifier`: obrigatório, formato CPF válido
+- `taxIdentifier`: obrigatório, formato CPF válido; API remove qualquer pontuação antes de transmitir ao domínio
 - `birthDate`, `hireDate`: obrigatórios, datas válidas
 - `companyId`, `positionId`: obrigatórios
 
