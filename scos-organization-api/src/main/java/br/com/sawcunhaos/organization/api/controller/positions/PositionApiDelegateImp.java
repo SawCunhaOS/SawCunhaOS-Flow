@@ -107,11 +107,13 @@ public class PositionApiDelegateImp implements PositionApiDelegate {
                         .id(positionDTO.getId())
                         .code(positionDTO.getCode())
                         .description(positionDTO.getDescription())
+                        .active(positionDTO.isActive())
                         .department(
                                 Department.builder()
                                         .id(positionDTO.getDepartmentId())
                                         .code(positionDTO.getDepartmentCode())
                                         .description(positionDTO.getDepartmentDescription())
+                                        .active(positionDTO.isDepartmentActive())
                                         .build()
                         )
                         .build())

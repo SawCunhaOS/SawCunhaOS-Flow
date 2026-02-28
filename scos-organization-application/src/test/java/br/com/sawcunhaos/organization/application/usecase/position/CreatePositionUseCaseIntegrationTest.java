@@ -92,7 +92,7 @@ class CreatePositionUseCaseIntegrationTest {
     @DisplayName("Should create position successfully with valid data")
     void shouldCreatePositionSuccessfullyWithValidData() {
         // Given
-        doNothing().when(positionDomainService).validateDepartmentExistsValidation(validCreateDTO.getDepartmentId());
+        doNothing().when(positionDomainService).validateDepartmentExistsAndActiveValidation(validCreateDTO.getDepartmentId());
         doNothing().when(positionDomainService).validatePositionCodeExistsValidation(validCreateDTO.getCode());
         when(positionMapper.toPosition(validCreateDTO)).thenReturn(mappedPosition);
         when(positionRepository.persist(any(Position.class))).thenReturn(savedPosition);
@@ -105,7 +105,7 @@ class CreatePositionUseCaseIntegrationTest {
         assertThat(positionId).isEqualTo(1L);
 
         // Verify interactions
-        verify(positionDomainService, times(1)).validateDepartmentExistsValidation(validCreateDTO.getDepartmentId());
+        verify(positionDomainService, times(1)).validateDepartmentExistsAndActiveValidation(validCreateDTO.getDepartmentId());
         verify(positionDomainService, times(1)).validatePositionCodeExistsValidation(validCreateDTO.getCode());
         verify(positionMapper, times(1)).toPosition(validCreateDTO);
         verify(positionRepository, times(1)).persist(any(Position.class));
@@ -117,7 +117,7 @@ class CreatePositionUseCaseIntegrationTest {
         // Given
         doThrow(new ScosException(ExceptionCodeError.SCOS_DEPARTMENT_001))
                 .when(positionDomainService)
-                .validateDepartmentExistsValidation(validCreateDTO.getDepartmentId());
+                .validateDepartmentExistsAndActiveValidation(validCreateDTO.getDepartmentId());
 
         // When / Then
         assertThatThrownBy(() -> createPositionUseCase.execute(validCreateDTO))
@@ -125,7 +125,7 @@ class CreatePositionUseCaseIntegrationTest {
                 .hasFieldOrPropertyWithValue("code", ExceptionCodeError.SCOS_DEPARTMENT_001.getCode());
 
         // Verify that mapper and repository were never called
-        verify(positionDomainService, times(1)).validateDepartmentExistsValidation(validCreateDTO.getDepartmentId());
+        verify(positionDomainService, times(1)).validateDepartmentExistsAndActiveValidation(validCreateDTO.getDepartmentId());
         verify(positionDomainService, never()).validatePositionCodeExistsValidation(any());
         verify(positionMapper, never()).toPosition(any(CreatePositionDTO.class));
         verify(positionRepository, never()).persist(any());
@@ -135,7 +135,7 @@ class CreatePositionUseCaseIntegrationTest {
     @DisplayName("Should throw exception when position code already exists")
     void shouldThrowExceptionWhenPositionCodeAlreadyExists() {
         // Given
-        doNothing().when(positionDomainService).validateDepartmentExistsValidation(validCreateDTO.getDepartmentId());
+        doNothing().when(positionDomainService).validateDepartmentExistsAndActiveValidation(validCreateDTO.getDepartmentId());
         doThrow(new ScosException(ExceptionCodeError.SCOS_POSITION_002))
                 .when(positionDomainService)
                 .validatePositionCodeExistsValidation(validCreateDTO.getCode());
@@ -146,7 +146,7 @@ class CreatePositionUseCaseIntegrationTest {
                 .hasFieldOrPropertyWithValue("code", ExceptionCodeError.SCOS_POSITION_002.getCode());
 
         // Verify that mapper and repository were never called
-        verify(positionDomainService, times(1)).validateDepartmentExistsValidation(validCreateDTO.getDepartmentId());
+        verify(positionDomainService, times(1)).validateDepartmentExistsAndActiveValidation(validCreateDTO.getDepartmentId());
         verify(positionDomainService, times(1)).validatePositionCodeExistsValidation(validCreateDTO.getCode());
         verify(positionMapper, never()).toPosition(any(CreatePositionDTO.class));
         verify(positionRepository, never()).persist(any());
@@ -156,7 +156,7 @@ class CreatePositionUseCaseIntegrationTest {
     @DisplayName("Should validate department before code validation")
     void shouldValidateDepartmentBeforeCodeValidation() {
         // Given
-        doNothing().when(positionDomainService).validateDepartmentExistsValidation(validCreateDTO.getDepartmentId());
+        doNothing().when(positionDomainService).validateDepartmentExistsAndActiveValidation(validCreateDTO.getDepartmentId());
         doNothing().when(positionDomainService).validatePositionCodeExistsValidation(validCreateDTO.getCode());
         when(positionMapper.toPosition(validCreateDTO)).thenReturn(mappedPosition);
         when(positionRepository.persist(any(Position.class))).thenReturn(savedPosition);
@@ -166,7 +166,7 @@ class CreatePositionUseCaseIntegrationTest {
 
         // Then - verify order of operations
         var inOrder = inOrder(positionDomainService, positionMapper, positionRepository);
-        inOrder.verify(positionDomainService).validateDepartmentExistsValidation(validCreateDTO.getDepartmentId());
+        inOrder.verify(positionDomainService).validateDepartmentExistsAndActiveValidation(validCreateDTO.getDepartmentId());
         inOrder.verify(positionDomainService).validatePositionCodeExistsValidation(validCreateDTO.getCode());
         inOrder.verify(positionMapper).toPosition(validCreateDTO);
         inOrder.verify(positionRepository).persist(any(Position.class));
@@ -193,7 +193,7 @@ class CreatePositionUseCaseIntegrationTest {
                 .description("Developer Position Level 1")
                 .build();
 
-        doNothing().when(positionDomainService).validateDepartmentExistsValidation(dtoWithSpecialChars.getDepartmentId());
+        doNothing().when(positionDomainService).validateDepartmentExistsAndActiveValidation(dtoWithSpecialChars.getDepartmentId());
         doNothing().when(positionDomainService).validatePositionCodeExistsValidation(dtoWithSpecialChars.getCode());
         when(positionMapper.toPosition(dtoWithSpecialChars)).thenReturn(mappedPos);
         when(positionRepository.persist(any(Position.class))).thenReturn(savedPos);
@@ -232,7 +232,7 @@ class CreatePositionUseCaseIntegrationTest {
                 .description(longDescription)
                 .build();
 
-        doNothing().when(positionDomainService).validateDepartmentExistsValidation(dtoWithLongDesc.getDepartmentId());
+        doNothing().when(positionDomainService).validateDepartmentExistsAndActiveValidation(dtoWithLongDesc.getDepartmentId());
         doNothing().when(positionDomainService).validatePositionCodeExistsValidation(dtoWithLongDesc.getCode());
         when(positionMapper.toPosition(dtoWithLongDesc)).thenReturn(mappedPos);
         when(positionRepository.persist(any(Position.class))).thenReturn(savedPos);
@@ -253,7 +253,7 @@ class CreatePositionUseCaseIntegrationTest {
     @DisplayName("Should handle repository persistence failure")
     void shouldHandleRepositoryPersistenceFailure() {
         // Given
-        doNothing().when(positionDomainService).validateDepartmentExistsValidation(validCreateDTO.getDepartmentId());
+        doNothing().when(positionDomainService).validateDepartmentExistsAndActiveValidation(validCreateDTO.getDepartmentId());
         doNothing().when(positionDomainService).validatePositionCodeExistsValidation(validCreateDTO.getCode());
         when(positionMapper.toPosition(validCreateDTO)).thenReturn(mappedPosition);
         when(positionRepository.persist(any(Position.class)))
@@ -265,6 +265,48 @@ class CreatePositionUseCaseIntegrationTest {
                 .hasMessage("Database connection error");
 
         verify(positionRepository, times(1)).persist(any(Position.class));
+    }
+
+    @Test
+    @DisplayName("Should throw SCOS_DEPARTMENT_006 when department exists but is inactive")
+    void shouldThrowScosDepartment006WhenDepartmentIsInactive() {
+        // Given
+        doThrow(new ScosException(ExceptionCodeError.SCOS_DEPARTMENT_006))
+                .when(positionDomainService)
+                .validateDepartmentExistsAndActiveValidation(validCreateDTO.getDepartmentId());
+
+        // When / Then
+        assertThatThrownBy(() -> createPositionUseCase.execute(validCreateDTO))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", ExceptionCodeError.SCOS_DEPARTMENT_006.getCode());
+
+        verify(positionDomainService, times(1)).validateDepartmentExistsAndActiveValidation(validCreateDTO.getDepartmentId());
+        verify(positionDomainService, never()).validatePositionCodeExistsValidation(any());
+        verify(positionRepository, never()).persist(any());
+    }
+
+    @Test
+    @DisplayName("Should verify active = true is set on new Position creation")
+    void shouldVerifyActiveTrueIsSetOnNewPositionCreation() {
+        // Given
+        doNothing().when(positionDomainService).validateDepartmentExistsAndActiveValidation(validCreateDTO.getDepartmentId());
+        doNothing().when(positionDomainService).validatePositionCodeExistsValidation(validCreateDTO.getCode());
+
+        Position positionWithActive = Position.builder()
+                .code("DEV")
+                .description("Developer Position")
+                .active(true)
+                .build();
+        when(positionMapper.toPosition(validCreateDTO)).thenReturn(positionWithActive);
+        when(positionRepository.persist(any(Position.class))).thenReturn(savedPosition);
+
+        // When
+        createPositionUseCase.execute(validCreateDTO);
+
+        // Then
+        ArgumentCaptor<Position> captor = ArgumentCaptor.forClass(Position.class);
+        verify(positionRepository).persist(captor.capture());
+        assertThat(captor.getValue().isActive()).isTrue();
     }
 
 }

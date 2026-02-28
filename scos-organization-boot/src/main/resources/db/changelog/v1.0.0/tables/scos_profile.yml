@@ -1,0 +1,80 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260228-Samuel.Cunha-011
+      author: Samuel.Cunha
+      comment: "Criação da sequence e tabela SCOS_PROFILE com índice GIN em FEATURES"
+      dbms: postgresql
+      changes:
+        - createSequence:
+            sequenceName: SEQ_PROFILE_ID
+            schemaName: scos
+            startValue: 1
+            incrementBy: 50
+            cycle: false
+
+        - createTable:
+            tableName: SCOS_PROFILE
+            schemaName: scos
+            columns:
+              - column:
+                  name: PROFILE_ID
+                  type: BIGINT
+                  defaultValueSequenceNext: SEQ_PROFILE_ID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_PROFILE
+                    nullable: false
+              - column:
+                  name: CODE
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ACTIVE
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: FEATURES
+                  type: TEXT[]
+                  defaultValue: '{}'
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: USER_AT
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+        - addUniqueConstraint:
+            tableName: SCOS_PROFILE
+            schemaName: scos
+            columnNames: CODE
+            constraintName: UK_CODE_SCOS_PROFILE
+            validate: true
+        - sql:
+            sql: CREATE INDEX IDX_GIN_FEATURES_SCOS_PROFILE ON scos.SCOS_PROFILE USING GIN (FEATURES);
+      rollback:
+        - dropTable:
+            tableName: SCOS_PROFILE
+            schemaName: scos
+            cascadeConstraints: true
+        - dropSequence:
+            sequenceName: SEQ_PROFILE_ID
+            schemaName: scos

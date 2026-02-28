@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260228-Samuel.Cunha-015
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_INTEGRATION_MESSAGE_INVALID (UUID PK)"
+      changes:
+        - createTable:
+            tableName: SCOS_INTEGRATION_MESSAGE_INVALID
+            schemaName: scos
+            columns:
+              - column:
+                  name: INTEGRATION_MESSAGE_INVALID_ID
+                  type: UUID
+                  defaultValueComputed: ${uuid_function}
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_INTEGRATION_MESSAGE_INVALID
+                    nullable: false
+              - column:
+                  name: MESSAGE_INVALID
+                  type: varchar(5000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: USER_AT
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+      rollback:
+        - dropTable:
+            tableName: SCOS_INTEGRATION_MESSAGE_INVALID
+            schemaName: scos
+            cascadeConstraints: true

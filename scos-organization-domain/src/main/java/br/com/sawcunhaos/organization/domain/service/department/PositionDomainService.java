@@ -17,7 +17,6 @@ import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.exception.ExceptionCodeError;
 import br.com.sawcunhaos.organization.domain.repository.department.PositionRepository;
 import br.com.sawcunhaos.organization.domain.repository.employee.EmployeeQueryRepository;
-import br.com.sawcunhaos.organization.domain.repository.department.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
@@ -32,7 +31,7 @@ public class PositionDomainService {
 
     private final PositionRepository positionRepository;
     private final EmployeeQueryRepository employeeQueryRepository;
-    private final DepartmentRepository departmentRepository;
+    private final DepartmentDomainService departmentDomainService;
 
     /**
      * Valida se o código da Position já existe
@@ -80,14 +79,12 @@ public class PositionDomainService {
     }
 
     /**
-     * Valida se o Department existe e está ativo
-     * Erro: SCOS_DEPARTMENT_001
+     * Valida se o Department existe e está ativo.
+     * Delega para DepartmentDomainService (A-ARQ-01).
+     * Erro: SCOS_DEPARTMENT_001 (404) se não existir, SCOS_DEPARTMENT_006 (422) se inativo.
      */
-    public void validateDepartmentExistsValidation(@NonNull Long departmentId) {
-        log.info("Validating department exists: {}", departmentId);
-        if (!departmentRepository.existsById(departmentId)) {
-            throw new ScosException(ExceptionCodeError.SCOS_DEPARTMENT_001);
-        }
+    public void validateDepartmentExistsAndActiveValidation(@NonNull Long departmentId) {
+        departmentDomainService.validateDepartmentExistsAndActiveValidation(departmentId);
     }
 
 }

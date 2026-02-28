@@ -1,5 +1,0 @@
-CREATE OR REPLACE TRIGGER trg_check_employee_supervisor
-BEFORE INSERT OR UPDATE
-ON SCOS_EMPLOYEE
-FOR EACH ROW
-EXECUTE FUNCTION check_employee_supervisor();

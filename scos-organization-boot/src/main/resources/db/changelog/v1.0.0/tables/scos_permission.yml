@@ -1,0 +1,67 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260228-Samuel.Cunha-010
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_PERMISSION com índice GIN em FEATURES"
+      dbms: postgresql
+      changes:
+        - createTable:
+            tableName: SCOS_PERMISSION
+            schemaName: scos
+            columns:
+              - column:
+                  name: PERMISSION
+                  type: varchar(100)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_PERMISSION
+                    nullable: false
+              - column:
+                  name: SYSTEM_MODULE
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION_PTBR
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION_ENG
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: END_POINT
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: FEATURES
+                  type: TEXT[]
+                  defaultValue: '{}'
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: USER_AT
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+        - sql:
+            sql: CREATE INDEX IDX_GIN_FEATURES_SCOS_PERMISSION ON scos.SCOS_PERMISSION USING GIN (FEATURES);
+      rollback:
+        - dropTable:
+            tableName: SCOS_PERMISSION
+            schemaName: scos
+            cascadeConstraints: true

@@ -31,6 +31,7 @@ public final class ScosLiquibaseConfiguration {
         liquibase.setDatabaseChangeLogTable(liquibaseProperties.getDatabaseChangeLogTable());
         liquibase.setDatabaseChangeLogLockTable(liquibaseProperties.getDatabaseChangeLogLockTable());
         liquibase.setDefaultSchema(liquibaseProperties.getDefaultSchema());
+        liquibase.setShouldRun(liquibaseProperties.isEnabled());
         return liquibase;
     }
 }

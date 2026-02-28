@@ -21,7 +21,7 @@ import br.com.sawcunhaos.organization.api.dto.GetAllDepartmentsResponse;
 import br.com.sawcunhaos.organization.api.dto.GetDepartmentResponse;
 import br.com.sawcunhaos.organization.api.dto.PaginationFilter;
 import br.com.sawcunhaos.organization.api.dto.UpdateDepartmentRequest;
-import br.com.sawcunhaos.organization.api.enumeration.PositionOrder;
+import br.com.sawcunhaos.organization.api.enumeration.DepartmentOrder;
 import br.com.sawcunhaos.organization.application.dto.CreateDepartmentDTO;
 import br.com.sawcunhaos.organization.application.dto.DepartmentDTO;
 import br.com.sawcunhaos.organization.application.dto.UpdateDepartmentDTO;
@@ -68,7 +68,7 @@ public class DepartmentApiDelegateImp implements DepartmentApiDelegate {
     public GetAllDepartmentsResponse getAllDepartments(PaginationFilter paginationFilter, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
         log.info("Getting all departments with pagination: {}", paginationFilter);
         Page<DepartmentDTO> departmentDTOPage = listDepartmentsUseCase.execute(
-                createPageable(paginationFilter, PositionOrder.ID)
+                createPageable(paginationFilter, DepartmentOrder.ID)
         );
 
         return GetAllDepartmentsResponse.builder()
@@ -78,6 +78,7 @@ public class DepartmentApiDelegateImp implements DepartmentApiDelegate {
                                         .id(departmentDTO.getId())
                                         .code(departmentDTO.getCode())
                                         .description(departmentDTO.getDescription())
+                                        .active(departmentDTO.isActive())
                                         .build()
                         ).toList()
                 )
@@ -116,6 +117,7 @@ public class DepartmentApiDelegateImp implements DepartmentApiDelegate {
                         .id(departmentDTO.getId())
                         .code(departmentDTO.getCode())
                         .description(departmentDTO.getDescription())
+                        .active(departmentDTO.isActive())
                         .build())
                 .build();
     }

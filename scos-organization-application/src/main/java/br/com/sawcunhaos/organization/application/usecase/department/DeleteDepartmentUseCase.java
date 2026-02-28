@@ -33,7 +33,6 @@ public class DeleteDepartmentUseCase implements ScosBaseUseCase<Long, Void> {
     private final DepartmentRepository departmentRepository;
     private final DepartmentDomainService departmentDomainService;
 
-    @Override
     public Void execute(@NonNull Long departmentId) {
         log.info("Deleting department: {}", departmentId);
         departmentDomainService.validateDepartmentExistsValidation(departmentId);

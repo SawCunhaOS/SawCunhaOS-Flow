@@ -1,0 +1,86 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260228-Samuel.Cunha-006
+      author: Samuel.Cunha
+      comment: "Criação da sequence e tabela SCOS_COMPANY_CONTACT"
+      changes:
+        - createSequence:
+            sequenceName: SEQ_COMPANY_CONTACT_ID
+            schemaName: scos
+            startValue: 1
+            incrementBy: 50
+            cycle: false
+
+        - createTable:
+            tableName: SCOS_COMPANY_CONTACT
+            schemaName: scos
+            columns:
+              - column:
+                  name: CONTACT_ID
+                  type: BIGINT
+                  defaultValueSequenceNext: SEQ_COMPANY_CONTACT_ID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_COMPANY_CONTACT
+                    nullable: false
+              - column:
+                  name: COMPANY_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_COMPANY_ID_SCOS_COMPANY_CONTACT
+                    validateForeignKey: true
+                    referencedColumnNames: COMPANY_ID
+                    referencedTableSchemaName: scos
+                    referencedTableName: SCOS_COMPANY
+              - column:
+                  name: TYPE
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: RESPONSIBLE_PERSON
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: EMAIL
+                  type: varchar(320)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PHONE
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: USER_AT
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+        - createIndex:
+            tableName: SCOS_COMPANY_CONTACT
+            schemaName: scos
+            indexName: IDX_COMPANY_ID_SCOS_COMPANY_CONTACT
+            columns:
+              - column:
+                  name: COMPANY_ID
+      rollback:
+        - dropTable:
+            tableName: SCOS_COMPANY_CONTACT
+            schemaName: scos
+            cascadeConstraints: true
+        - dropSequence:
+            sequenceName: SEQ_COMPANY_CONTACT_ID
+            schemaName: scos

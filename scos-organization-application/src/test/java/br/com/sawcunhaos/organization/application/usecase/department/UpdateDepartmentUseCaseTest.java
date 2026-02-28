@@ -243,4 +243,53 @@ class UpdateDepartmentUseCaseTest {
         assertThatThrownBy(() -> updateDepartmentUseCase.execute(validUpdateDTO))
                 .isInstanceOf(Exception.class);
     }
+
+    @Test
+    @DisplayName("Should preserve active field of existing department on update")
+    void shouldPreserveActiveFieldOfExistingDepartmentOnUpdate() {
+        // Given
+        Department activeDepartment = Department.builder()
+                .id(1L)
+                .code("IT")
+                .description("Information Technology")
+                .active(true)
+                .build();
+
+        doNothing().when(departmentDomainService).validateDepartmentExistsValidation(validUpdateDTO.getDepartmentId());
+        doNothing().when(departmentDomainService).validateDepartmentCodeUniquenessValidation(validUpdateDTO.getCode(), validUpdateDTO.getDepartmentId());
+        when(departmentMapper.toDepartment(validUpdateDTO)).thenReturn(mappedDepartment);
+        when(departmentRepository.findById(1L)).thenReturn(Optional.of(activeDepartment));
+
+        // When
+        updateDepartmentUseCase.execute(validUpdateDTO);
+
+        // Then — active must not be overwritten by update
+        ArgumentCaptor<Department> captor = ArgumentCaptor.forClass(Department.class);
+        verify(departmentRepository).update(captor.capture());
+        assertThat(captor.getValue().isActive()).isTrue();
+    }
+
+    @Test
+    @DisplayName("Should allow updating an inactive department (operations on inactive are permitted)")
+    void shouldAllowUpdatingInactiveDepartment() {
+        // Given — inactive department (business rule: operations on inactive are PERMITTED)
+        Department inactiveDepartment = Department.builder()
+                .id(1L)
+                .code("IT")
+                .description("Information Technology")
+                .active(false)
+                .build();
+
+        doNothing().when(departmentDomainService).validateDepartmentExistsValidation(validUpdateDTO.getDepartmentId());
+        doNothing().when(departmentDomainService).validateDepartmentCodeUniquenessValidation(validUpdateDTO.getCode(), validUpdateDTO.getDepartmentId());
+        when(departmentMapper.toDepartment(validUpdateDTO)).thenReturn(mappedDepartment);
+        when(departmentRepository.findById(1L)).thenReturn(Optional.of(inactiveDepartment));
+
+        // When
+        Void result = updateDepartmentUseCase.execute(validUpdateDTO);
+
+        // Then — no exception thrown; update proceeds normally
+        assertThat(result).isNull();
+        verify(departmentRepository, times(1)).update(any(Department.class));
+    }
 }

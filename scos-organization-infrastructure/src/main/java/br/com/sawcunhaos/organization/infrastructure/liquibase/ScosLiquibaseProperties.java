@@ -7,7 +7,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @Component
-@ConfigurationProperties(prefix = "liquibase.scos")
+@ConfigurationProperties(prefix = "scos.liquibase")
 public class ScosLiquibaseProperties extends BaseLiquibaseProperties {
 
 }

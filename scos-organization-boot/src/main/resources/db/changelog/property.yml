@@ -1,49 +1,21 @@
 databaseChangeLog:
   - property:
-      dbms: 'mysql, postgresql'
       name: now
       value: now()
-  - property:
-      dbms: oracle
-      name: now
-      value: sysdate
-  - property:
       dbms: postgresql
-      name: typeBoolean
-      value: bool
   - property:
-      dbms: 'mysql'
-      name: typeBoolean
-      value: TINYINT(1)
-  - property:
-      dbms: 'postgresql'
       name: POINTType
-      value: public.geometry(Point, 4326)
-  - property:
-      dbms: 'mysql'
-      name: POINTType
-      value: POINT
-  - property:
+      value: point
       dbms: postgresql
+  - property:
       name: defaultValueBoolean
-      value: 'false'
-  - property:
-      dbms: 'mysql'
-      name: defaultValueBoolean
-      value: '0'
-  - property:
+      value: "false"
       dbms: postgresql
-      name: trueValueBoolean
-      value: 'true'
   - property:
-      dbms: 'mysql'
       name: trueValueBoolean
-      value: '1'
-  - property:
+      value: "true"
       dbms: postgresql
-      name: uuid_function
-      value: uuid_generate_v4()
   - property:
-      dbms: mssql
       name: uuid_function
-      value: NEWID()
+      value: gen_random_uuid()
+      dbms: postgresql

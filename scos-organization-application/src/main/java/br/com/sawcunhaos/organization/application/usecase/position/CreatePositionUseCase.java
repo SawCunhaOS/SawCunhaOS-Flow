@@ -42,8 +42,8 @@ public class CreatePositionUseCase implements ScosBaseUseCase<CreatePositionDTO,
     public Long execute(CreatePositionDTO createPositionDTO) {
         log.info("Creating position: {}", createPositionDTO);
 
-        // Validate department exists
-        positionDomainService.validateDepartmentExistsValidation(createPositionDTO.getDepartmentId());
+        // Validate department exists and is active
+        positionDomainService.validateDepartmentExistsAndActiveValidation(createPositionDTO.getDepartmentId());
 
         // Validate position code uniqueness
         positionDomainService.validatePositionCodeExistsValidation(createPositionDTO.getCode());

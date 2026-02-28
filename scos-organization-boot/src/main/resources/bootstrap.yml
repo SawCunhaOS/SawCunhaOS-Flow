@@ -175,12 +175,12 @@ management:
 
 scos:
   liquibase:
-    enabled: ${scos.liquibase.enabled:true}
-    contexts: ${scos.liquibase.contexts:prod}
+    enabled: true
+    contexts: prod
     database-change-log-lock-table: SCOS_DATABASECHANGELOGLOCK
     database-change-log-table: SCOS_DATABASECHANGELOG
-    change-log: classpath:/db/changelog/db.changelog-master.yaml
-    default-schema: ${scos.datasource.default-schema:scos}
+    change-log: classpath:/db/changelog/db.changelog-master.yml
+    default-schema: scos
   filter:
     show-request-body: false
     show-request-headers: false
@@ -188,6 +188,13 @@ scos:
   audit:
     system: SCOS_ORGANIZATION
     enabled: ${scos.audit.enabled}
+    liquibase:
+      enabled: true
+      contexts: prod
+      database-change-log-lock-table: IF_DATABASECHANGELOGLOCK
+      database-change-log-table: IF_DATABASECHANGELOG
+      change-log: classpath:db/changelog/db_audit.changelog-master.yaml
+      default-schema: scos
   jdempotent:
     enabled: ${scos.jdempotent.enable:false}
     cache:

@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260228-Samuel.Cunha-017
+      author: Samuel.Cunha
+      comment: "Carga inicial do sistema: empresa, departamento, cargo, funcionário, perfil e login ADMIN"
+      context: prod
+      changes:
+        - sqlFile:
+            path: configure_system.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+            endDelimiter: ";"
+      rollback:
+        - sql:
+            sql: |
+              DELETE FROM scos.scos_login   WHERE login = 'scosadmin';
+              DELETE FROM scos.scos_profile WHERE code  = 'ADMIN';
+              DELETE FROM scos.scos_employee WHERE tax_identifier = '00000000000';
+              DELETE FROM scos.scos_position WHERE code = 'ADMIN';
+              DELETE FROM scos.scos_department WHERE code = 'ADMIN';
+              DELETE FROM scos.scos_company WHERE tax_identifier = 'ULX45AEH000133';

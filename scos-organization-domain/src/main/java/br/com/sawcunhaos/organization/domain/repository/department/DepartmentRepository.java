@@ -50,4 +50,13 @@ public interface DepartmentRepository extends BaseJpaRepository<Department, Long
         return exists(booleanBuilder.getValue());
     }
 
+    default boolean existsByIdAndActive(Long departmentId) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        booleanBuilder.and(qDepartment.id.eq(departmentId))
+                      .and(qDepartment.active.isTrue());
+
+        return exists(booleanBuilder.getValue());
+    }
+
 }

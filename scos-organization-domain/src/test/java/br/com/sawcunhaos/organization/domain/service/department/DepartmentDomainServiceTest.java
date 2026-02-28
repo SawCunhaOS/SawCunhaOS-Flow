@@ -14,6 +14,7 @@ package br.com.sawcunhaos.organization.domain.service.department;
 
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.exception.ExceptionCodeError;
+import br.com.sawcunhaos.organization.domain.model.department.Department;
 import br.com.sawcunhaos.organization.domain.repository.department.DepartmentRepository;
 import br.com.sawcunhaos.organization.domain.repository.department.PositionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -155,6 +156,90 @@ class DepartmentDomainServiceTest {
                 .hasFieldOrPropertyWithValue("code", ExceptionCodeError.SCOS_DEPARTMENT_002.getCode());
 
         verify(departmentRepository, times(1)).existsByCodeAndNotId(VALID_DEPARTMENT_ID, VALID_DEPARTMENT_CODE);
+    }
+
+    // --- validateDepartmentExistsAndActiveValidation ---
+
+    @Test
+    @DisplayName("Should validate successfully when department exists and is active")
+    void shouldValidateSuccessfullyWhenDepartmentExistsAndIsActive() {
+        // Given
+        when(departmentRepository.existsById(VALID_DEPARTMENT_ID)).thenReturn(true);
+        when(departmentRepository.existsByIdAndActive(VALID_DEPARTMENT_ID)).thenReturn(true);
+
+        // When / Then
+        assertThatCode(() -> departmentDomainService.validateDepartmentExistsAndActiveValidation(VALID_DEPARTMENT_ID))
+                .doesNotThrowAnyException();
+
+        verify(departmentRepository, times(1)).existsById(VALID_DEPARTMENT_ID);
+        verify(departmentRepository, times(1)).existsByIdAndActive(VALID_DEPARTMENT_ID);
+    }
+
+    @Test
+    @DisplayName("Should throw SCOS_DEPARTMENT_001 when department does not exist on active validation")
+    void shouldThrowScosDepartment001WhenDepartmentDoesNotExistOnActiveValidation() {
+        // Given
+        when(departmentRepository.existsById(VALID_DEPARTMENT_ID)).thenReturn(false);
+
+        // When / Then
+        assertThatThrownBy(() -> departmentDomainService.validateDepartmentExistsAndActiveValidation(VALID_DEPARTMENT_ID))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", ExceptionCodeError.SCOS_DEPARTMENT_001.getCode());
+
+        verify(departmentRepository, times(1)).existsById(VALID_DEPARTMENT_ID);
+        verify(departmentRepository, never()).existsByIdAndActive(anyLong());
+    }
+
+    @Test
+    @DisplayName("Should throw SCOS_DEPARTMENT_006 when department exists but is inactive")
+    void shouldThrowScosDepartment006WhenDepartmentExistsButIsInactive() {
+        // Given
+        when(departmentRepository.existsById(VALID_DEPARTMENT_ID)).thenReturn(true);
+        when(departmentRepository.existsByIdAndActive(VALID_DEPARTMENT_ID)).thenReturn(false);
+
+        // When / Then
+        assertThatThrownBy(() -> departmentDomainService.validateDepartmentExistsAndActiveValidation(VALID_DEPARTMENT_ID))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", ExceptionCodeError.SCOS_DEPARTMENT_006.getCode());
+
+        verify(departmentRepository, times(1)).existsById(VALID_DEPARTMENT_ID);
+        verify(departmentRepository, times(1)).existsByIdAndActive(VALID_DEPARTMENT_ID);
+    }
+
+    // --- Department entity activate() / deactivate() ---
+
+    @Test
+    @DisplayName("Should throw SCOS_DEPARTMENT_004 when activating an already active department")
+    void shouldThrowScosDepartment004WhenActivatingAlreadyActiveDepartment() {
+        // Given
+        Department activeDepartment = Department.builder()
+                .id(VALID_DEPARTMENT_ID)
+                .code(VALID_DEPARTMENT_CODE)
+                .description("Test Department")
+                .active(true)
+                .build();
+
+        // When / Then
+        assertThatThrownBy(activeDepartment::activate)
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", ExceptionCodeError.SCOS_DEPARTMENT_004.getCode());
+    }
+
+    @Test
+    @DisplayName("Should throw SCOS_DEPARTMENT_005 when deactivating an already inactive department")
+    void shouldThrowScosDepartment005WhenDeactivatingAlreadyInactiveDepartment() {
+        // Given
+        Department inactiveDepartment = Department.builder()
+                .id(VALID_DEPARTMENT_ID)
+                .code(VALID_DEPARTMENT_CODE)
+                .description("Test Department")
+                .active(false)
+                .build();
+
+        // When / Then
+        assertThatThrownBy(inactiveDepartment::deactivate)
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", ExceptionCodeError.SCOS_DEPARTMENT_005.getCode());
     }
 }
 

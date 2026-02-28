@@ -27,6 +27,7 @@ public class DepartmentDTO {
     private Long id;
     private String code;
     private String description;
+    private boolean active;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String userAt;

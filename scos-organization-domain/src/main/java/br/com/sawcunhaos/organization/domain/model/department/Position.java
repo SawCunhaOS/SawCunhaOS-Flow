@@ -13,7 +13,9 @@
 
 package br.com.sawcunhaos.organization.domain.model.department;
 
+import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,6 +30,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static br.com.sawcunhaos.organization.domain.exception.ExceptionCodeError.SCOS_POSITION_004;
+import static br.com.sawcunhaos.organization.domain.exception.ExceptionCodeError.SCOS_POSITION_005;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -35,18 +40,45 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "SCOS_POSITION")
+@Auditable
 public class Position extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "POSITION_ID")
     private Long id;
-    @Column(name = "CODE")
+    @Column(name = "CODE", nullable = false)
     private String code;
-    @Column(name = "DESCRIPTION")
+    @Column(name = "DESCRIPTION", nullable = false)
     private String description;
+    @Builder.Default
+    @Column(name = "ACTIVE", nullable = false)
+    private boolean active = true;
 
     @ManyToOne
     @JoinColumn(name = "DEPARTMENT_ID")
     private Department department;
+
+    /**
+     * Ativa a position.
+     * @throws ScosException SCOS_POSITION_004 se já estiver ativa.
+     */
+    public void activate() {
+        if (this.active) {
+            throw new ScosException(SCOS_POSITION_004);
+        }
+        this.active = true;
+    }
+
+    /**
+     * Inativa a position.
+     * @throws ScosException SCOS_POSITION_005 se já estiver inativa.
+     */
+    public void deactivate() {
+        if (!this.active) {
+            throw new ScosException(SCOS_POSITION_005);
+        }
+        this.active = false;
+    }
+
 }

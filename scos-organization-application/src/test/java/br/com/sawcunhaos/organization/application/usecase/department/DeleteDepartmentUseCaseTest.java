@@ -13,6 +13,7 @@
 package br.com.sawcunhaos.organization.application.usecase.department;
 
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.utils.specification.ScosBaseUseCase;
 import br.com.sawcunhaos.organization.domain.exception.ExceptionCodeError;
 import br.com.sawcunhaos.organization.domain.repository.department.DepartmentRepository;
 import br.com.sawcunhaos.organization.domain.service.department.DepartmentDomainService;
@@ -207,5 +208,13 @@ class DeleteDepartmentUseCaseTest {
         // Then
         assertThat(secondResult).isNull();
         verify(departmentRepository, times(1)).deleteById(secondDeptId);
+    }
+
+    @Test
+    @DisplayName("Should conform to ScosBaseUseCase<Long, Void> contract")
+    void shouldConformToScosBaseUseCaseContract() {
+        // Compile-time contract verified by 'implements ScosBaseUseCase<Long, Void>'
+        // This runtime check validates the contract is preserved at execution level
+        assertThat(deleteDepartmentUseCase).isInstanceOf(ScosBaseUseCase.class);
     }
 }

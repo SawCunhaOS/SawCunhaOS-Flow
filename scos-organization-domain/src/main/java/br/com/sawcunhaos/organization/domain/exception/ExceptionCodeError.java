@@ -21,11 +21,21 @@ public enum ExceptionCodeError implements ExceptionCode {
     SCOS_DEPARTMENT_001("SCOS_DEPARTMENT_001"),
     SCOS_DEPARTMENT_002("SCOS_DEPARTMENT_002"),
     SCOS_DEPARTMENT_003("SCOS_DEPARTMENT_003"),
+    /** Department já está ativo — impossível ativar novamente. HTTP 422. */
+    SCOS_DEPARTMENT_004("SCOS_DEPARTMENT_004"),
+    /** Department já está inativo — impossível inativar novamente. HTTP 422. */
+    SCOS_DEPARTMENT_005("SCOS_DEPARTMENT_005"),
+    /** Department referenciado está inativo — Position não pode ser criada/atualizada. HTTP 422. */
+    SCOS_DEPARTMENT_006("SCOS_DEPARTMENT_006"),
 
     // Position
     SCOS_POSITION_001("SCOS_POSITION_001"),
     SCOS_POSITION_002("SCOS_POSITION_002"),
     SCOS_POSITION_003("SCOS_POSITION_003"),
+    /** Position já está ativa — impossível ativar novamente. HTTP 422. */
+    SCOS_POSITION_004("SCOS_POSITION_004"),
+    /** Position já está inativa — impossível inativar novamente. HTTP 422. */
+    SCOS_POSITION_005("SCOS_POSITION_005"),
 
     // Company
     SCOS_COMPANY_001("SCOS_COMPANY_001"),

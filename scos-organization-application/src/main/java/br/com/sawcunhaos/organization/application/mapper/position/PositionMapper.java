@@ -35,15 +35,14 @@ public interface PositionMapper {
     @Mapping(target = "departmentId", source = "department.id")
     @Mapping(target = "departmentCode", source = "department.code")
     @Mapping(target = "departmentDescription", source = "department.description")
+    @Mapping(target = "departmentActive", source = "department.active")
     PositionDTO toPositionDTO(Position position);
 
     default Department mapDepartmentFromId(Long departmentId) {
         if (departmentId == null) {
             return null;
         }
-        Department department = new Department();
-        department.setId(departmentId);
-        return department;
+        return Department.builder().id(departmentId).build();
     }
 
 }

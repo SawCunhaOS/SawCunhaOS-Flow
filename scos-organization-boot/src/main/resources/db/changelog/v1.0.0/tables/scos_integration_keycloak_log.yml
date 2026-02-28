@@ -1,0 +1,72 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260228-Samuel.Cunha-014
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_INTEGRATION_KEYCLOAK_LOG (UUID PK)"
+      changes:
+        - createTable:
+            tableName: SCOS_INTEGRATION_KEYCLOAK_LOG
+            schemaName: scos
+            columns:
+              - column:
+                  name: INTEGRATION_KEYCLOAK_LOG_ID
+                  type: UUID
+                  defaultValueComputed: ${uuid_function}
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_INTEGRATION_KEYCLOAK_LOG
+                    nullable: false
+              - column:
+                  name: INTEGRATION_KEYCLOAK_ID
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_INTEGRATION_KEYCLOAK_ID_SCOS_INTEGRATION_KEYCLOAK_LOG
+                    validateForeignKey: true
+                    referencedColumnNames: INTEGRATION_KEYCLOAK_ID
+                    referencedTableSchemaName: scos
+                    referencedTableName: SCOS_INTEGRATION_KEYCLOAK
+              - column:
+                  name: SUCCESS
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: RESPONSE
+                  type: varchar(5000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: DATE_REQUEST
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: USER_AT
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+        - createIndex:
+            tableName: SCOS_INTEGRATION_KEYCLOAK_LOG
+            schemaName: scos
+            indexName: IDX_INTEGRATION_KEYCLOAK_ID_SCOS_INTEGRATION_KEYCLOAK_LOG
+            columns:
+              - column:
+                  name: INTEGRATION_KEYCLOAK_ID
+      rollback:
+        - dropTable:
+            tableName: SCOS_INTEGRATION_KEYCLOAK_LOG
+            schemaName: scos
+            cascadeConstraints: true

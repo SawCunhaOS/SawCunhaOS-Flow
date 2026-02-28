@@ -1,0 +1,94 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260228-Samuel.Cunha-013
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_INTEGRATION_KEYCLOAK (UUID PK)"
+      changes:
+        - createTable:
+            tableName: SCOS_INTEGRATION_KEYCLOAK
+            schemaName: scos
+            columns:
+              - column:
+                  name: INTEGRATION_KEYCLOAK_ID
+                  type: UUID
+                  defaultValueComputed: ${uuid_function}
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_INTEGRATION_KEYCLOAK
+                    nullable: false
+              - column:
+                  name: KEYCLOAK_ID
+                  type: UUID
+                  constraints:
+                    nullable: true
+              - column:
+                  name: REALM
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: EMAIL
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USERNAME
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: REQUESTING
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: TYPE
+                  type: varchar(25)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: STATUS
+                  type: varchar(25)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DATE_START
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: DATE_END
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: MESSAGE
+                  type: varchar(2500)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: REQUEST
+                  type: JSONB
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: USER_AT
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+      rollback:
+        - dropTable:
+            tableName: SCOS_INTEGRATION_KEYCLOAK
+            schemaName: scos
+            cascadeConstraints: true

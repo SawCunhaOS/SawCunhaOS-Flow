@@ -52,4 +52,14 @@ public class DepartmentDomainService {
         if (departmentRepository.existsByCodeAndNotId(departmentId, departmentCode)) throw new ScosException(ExceptionCodeError.SCOS_DEPARTMENT_002);
     }
 
+    public void validateDepartmentExistsAndActiveValidation(@NonNull Long departmentId) {
+        log.info("Validating department exists and is active: {}", departmentId);
+        // Passo 1: garante que existe → SCOS_DEPARTMENT_001 (404) se não houver
+        validateDepartmentExistsValidation(departmentId);
+        // Passo 2: garante que está ativo → SCOS_DEPARTMENT_006 (422) se inativo
+        if (!departmentRepository.existsByIdAndActive(departmentId)) {
+            throw new ScosException(ExceptionCodeError.SCOS_DEPARTMENT_006);
+        }
+    }
+
 }

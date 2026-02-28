@@ -92,7 +92,7 @@ class UpdatePositionUseCaseTest {
     void shouldUpdatePositionSuccessfullyWithValidData() {
         // Given
         doNothing().when(positionDomainService).validatePositionExistsValidation(validUpdateDTO.getPositionId());
-        doNothing().when(positionDomainService).validateDepartmentExistsValidation(validUpdateDTO.getDepartmentId());
+        doNothing().when(positionDomainService).validateDepartmentExistsAndActiveValidation(validUpdateDTO.getDepartmentId());
         doNothing().when(positionDomainService).validatePositionCodeUniquenessValidation(validUpdateDTO.getCode(), validUpdateDTO.getPositionId());
         when(positionMapper.toPosition(validUpdateDTO)).thenReturn(mappedPosition);
         when(positionRepository.findById(1L)).thenReturn(Optional.of(existingPosition));
@@ -103,7 +103,7 @@ class UpdatePositionUseCaseTest {
         // Then
         assertThat(result).isNull();
         verify(positionDomainService, times(1)).validatePositionExistsValidation(validUpdateDTO.getPositionId());
-        verify(positionDomainService, times(1)).validateDepartmentExistsValidation(validUpdateDTO.getDepartmentId());
+        verify(positionDomainService, times(1)).validateDepartmentExistsAndActiveValidation(validUpdateDTO.getDepartmentId());
         verify(positionDomainService, times(1)).validatePositionCodeUniquenessValidation(validUpdateDTO.getCode(), validUpdateDTO.getPositionId());
         verify(positionRepository, times(1)).update(any(Position.class));
     }
@@ -133,7 +133,7 @@ class UpdatePositionUseCaseTest {
         doNothing().when(positionDomainService).validatePositionExistsValidation(validUpdateDTO.getPositionId());
         doThrow(new ScosException(ExceptionCodeError.SCOS_DEPARTMENT_001))
                 .when(positionDomainService)
-                .validateDepartmentExistsValidation(validUpdateDTO.getDepartmentId());
+                .validateDepartmentExistsAndActiveValidation(validUpdateDTO.getDepartmentId());
 
         // When / Then
         assertThatThrownBy(() -> updatePositionUseCase.execute(validUpdateDTO))
@@ -141,7 +141,7 @@ class UpdatePositionUseCaseTest {
                 .hasFieldOrPropertyWithValue("code", ExceptionCodeError.SCOS_DEPARTMENT_001.getCode());
 
         verify(positionDomainService, times(1)).validatePositionExistsValidation(validUpdateDTO.getPositionId());
-        verify(positionDomainService, times(1)).validateDepartmentExistsValidation(validUpdateDTO.getDepartmentId());
+        verify(positionDomainService, times(1)).validateDepartmentExistsAndActiveValidation(validUpdateDTO.getDepartmentId());
         verify(positionRepository, never()).findById(anyLong());
     }
 
@@ -150,7 +150,7 @@ class UpdatePositionUseCaseTest {
     void shouldThrowExceptionWhenPositionCodeIsDuplicate() {
         // Given
         doNothing().when(positionDomainService).validatePositionExistsValidation(validUpdateDTO.getPositionId());
-        doNothing().when(positionDomainService).validateDepartmentExistsValidation(validUpdateDTO.getDepartmentId());
+        doNothing().when(positionDomainService).validateDepartmentExistsAndActiveValidation(validUpdateDTO.getDepartmentId());
         doThrow(new ScosException(ExceptionCodeError.SCOS_POSITION_002))
                 .when(positionDomainService)
                 .validatePositionCodeUniquenessValidation(validUpdateDTO.getCode(), validUpdateDTO.getPositionId());
@@ -161,7 +161,7 @@ class UpdatePositionUseCaseTest {
                 .hasFieldOrPropertyWithValue("code", ExceptionCodeError.SCOS_POSITION_002.getCode());
 
         verify(positionDomainService, times(1)).validatePositionExistsValidation(validUpdateDTO.getPositionId());
-        verify(positionDomainService, times(1)).validateDepartmentExistsValidation(validUpdateDTO.getDepartmentId());
+        verify(positionDomainService, times(1)).validateDepartmentExistsAndActiveValidation(validUpdateDTO.getDepartmentId());
         verify(positionDomainService, times(1)).validatePositionCodeUniquenessValidation(validUpdateDTO.getCode(), validUpdateDTO.getPositionId());
         verify(positionRepository, never()).findById(anyLong());
     }
@@ -171,7 +171,7 @@ class UpdatePositionUseCaseTest {
     void shouldUpdatePositionFieldsCorrectly() {
         // Given
         doNothing().when(positionDomainService).validatePositionExistsValidation(validUpdateDTO.getPositionId());
-        doNothing().when(positionDomainService).validateDepartmentExistsValidation(validUpdateDTO.getDepartmentId());
+        doNothing().when(positionDomainService).validateDepartmentExistsAndActiveValidation(validUpdateDTO.getDepartmentId());
         doNothing().when(positionDomainService).validatePositionCodeUniquenessValidation(validUpdateDTO.getCode(), validUpdateDTO.getPositionId());
         when(positionMapper.toPosition(validUpdateDTO)).thenReturn(mappedPosition);
         when(positionRepository.findById(1L)).thenReturn(Optional.of(existingPosition));
@@ -193,7 +193,7 @@ class UpdatePositionUseCaseTest {
     void shouldHandlePositionNotFoundOnFindById() {
         // Given
         doNothing().when(positionDomainService).validatePositionExistsValidation(validUpdateDTO.getPositionId());
-        doNothing().when(positionDomainService).validateDepartmentExistsValidation(validUpdateDTO.getDepartmentId());
+        doNothing().when(positionDomainService).validateDepartmentExistsAndActiveValidation(validUpdateDTO.getDepartmentId());
         doNothing().when(positionDomainService).validatePositionCodeUniquenessValidation(validUpdateDTO.getCode(), validUpdateDTO.getPositionId());
         when(positionMapper.toPosition(validUpdateDTO)).thenReturn(mappedPosition);
         when(positionRepository.findById(1L)).thenReturn(Optional.empty());
@@ -204,6 +204,51 @@ class UpdatePositionUseCaseTest {
                 .hasFieldOrPropertyWithValue("code", ExceptionCodeError.SCOS_POSITION_001.getCode());
 
         verify(positionRepository, never()).update((Position) any());
+    }
+
+    @Test
+    @DisplayName("Should throw SCOS_DEPARTMENT_006 when department exists but is inactive")
+    void shouldThrowScosDepartment006WhenDepartmentIsInactive() {
+        // Given
+        doNothing().when(positionDomainService).validatePositionExistsValidation(validUpdateDTO.getPositionId());
+        doThrow(new ScosException(ExceptionCodeError.SCOS_DEPARTMENT_006))
+                .when(positionDomainService)
+                .validateDepartmentExistsAndActiveValidation(validUpdateDTO.getDepartmentId());
+
+        // When / Then
+        assertThatThrownBy(() -> updatePositionUseCase.execute(validUpdateDTO))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", ExceptionCodeError.SCOS_DEPARTMENT_006.getCode());
+
+        verify(positionDomainService, times(1)).validatePositionExistsValidation(validUpdateDTO.getPositionId());
+        verify(positionDomainService, times(1)).validateDepartmentExistsAndActiveValidation(validUpdateDTO.getDepartmentId());
+        verify(positionRepository, never()).findById(anyLong());
+    }
+
+    @Test
+    @DisplayName("Should preserve active field of Position on update")
+    void shouldPreserveActiveFieldOfPositionOnUpdate() {
+        // Given
+        Position existingActivePosition = Position.builder()
+                .id(1L)
+                .code("DEV")
+                .description("Developer Position")
+                .active(true)
+                .build();
+
+        doNothing().when(positionDomainService).validatePositionExistsValidation(validUpdateDTO.getPositionId());
+        doNothing().when(positionDomainService).validateDepartmentExistsAndActiveValidation(validUpdateDTO.getDepartmentId());
+        doNothing().when(positionDomainService).validatePositionCodeUniquenessValidation(validUpdateDTO.getCode(), validUpdateDTO.getPositionId());
+        when(positionMapper.toPosition(validUpdateDTO)).thenReturn(mappedPosition);
+        when(positionRepository.findById(1L)).thenReturn(Optional.of(existingActivePosition));
+
+        // When
+        updatePositionUseCase.execute(validUpdateDTO);
+
+        // Then — active is NOT explicitly set in UpdatePositionUseCase; it's preserved from the loaded entity
+        ArgumentCaptor<Position> captor = ArgumentCaptor.forClass(Position.class);
+        verify(positionRepository).update(captor.capture());
+        assertThat(captor.getValue().isActive()).isTrue();
     }
 
 }

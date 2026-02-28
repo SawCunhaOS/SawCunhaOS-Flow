@@ -47,8 +47,8 @@ public class UpdatePositionUseCase implements ScosBaseUseCase<UpdatePositionDTO,
         // Validate position exists
         positionDomainService.validatePositionExistsValidation(updatePositionDTO.getPositionId());
 
-        // Validate department exists
-        positionDomainService.validateDepartmentExistsValidation(updatePositionDTO.getDepartmentId());
+        // Validate department exists and is active
+        positionDomainService.validateDepartmentExistsAndActiveValidation(updatePositionDTO.getDepartmentId());
 
         // Validate code uniqueness (excluding current position)
         positionDomainService.validatePositionCodeUniquenessValidation(updatePositionDTO.getCode(), updatePositionDTO.getPositionId());

@@ -15,7 +15,6 @@ package br.com.sawcunhaos.organization.domain.service.department;
 
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.exception.ExceptionCodeError;
-import br.com.sawcunhaos.organization.domain.repository.department.DepartmentRepository;
 import br.com.sawcunhaos.organization.domain.repository.department.PositionRepository;
 import br.com.sawcunhaos.organization.domain.repository.employee.EmployeeQueryRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +39,7 @@ class PositionDomainServiceTest {
     private EmployeeQueryRepository employeeQueryRepository;
 
     @Mock
-    private DepartmentRepository departmentRepository;
+    private DepartmentDomainService departmentDomainService;
 
     @InjectMocks
     private PositionDomainService positionDomainService;
@@ -159,45 +158,63 @@ class PositionDomainServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw ScosException when department does not exist")
-    void shouldThrowScosExceptionWhenDepartmentDoesNotExist() {
+    @DisplayName("Should delegate to DepartmentDomainService without throwing when department exists and is active")
+    void shouldDelegateToDepartmentDomainServiceWithoutThrowingWhenDepartmentExistsAndIsActive() {
         // Given
-        when(departmentRepository.existsById(VALID_DEPARTMENT_ID)).thenReturn(false);
+        doNothing().when(departmentDomainService).validateDepartmentExistsAndActiveValidation(VALID_DEPARTMENT_ID);
 
-        // When / Then
-        assertThatThrownBy(() -> positionDomainService.validateDepartmentExistsValidation(VALID_DEPARTMENT_ID))
-                .isInstanceOf(ScosException.class)
-                .hasFieldOrPropertyWithValue("code", ExceptionCodeError.SCOS_DEPARTMENT_001.getCode());
+        // When / Then - should not throw
+        positionDomainService.validateDepartmentExistsAndActiveValidation(VALID_DEPARTMENT_ID);
 
-        verify(departmentRepository, times(1)).existsById(VALID_DEPARTMENT_ID);
+        verify(departmentDomainService, times(1)).validateDepartmentExistsAndActiveValidation(VALID_DEPARTMENT_ID);
     }
 
     @Test
-    @DisplayName("Should not throw exception when department exists")
-    void shouldNotThrowExceptionWhenDepartmentExists() {
+    @DisplayName("Should propagate SCOS_DEPARTMENT_001 from DepartmentDomainService when department does not exist")
+    void shouldPropagateScosException001WhenDepartmentDoesNotExist() {
         // Given
-        when(departmentRepository.existsById(VALID_DEPARTMENT_ID)).thenReturn(true);
+        doThrow(new ScosException(ExceptionCodeError.SCOS_DEPARTMENT_001))
+                .when(departmentDomainService)
+                .validateDepartmentExistsAndActiveValidation(VALID_DEPARTMENT_ID);
 
-        // When / Then - should not throw
-        positionDomainService.validateDepartmentExistsValidation(VALID_DEPARTMENT_ID);
+        // When / Then
+        assertThatThrownBy(() -> positionDomainService.validateDepartmentExistsAndActiveValidation(VALID_DEPARTMENT_ID))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", ExceptionCodeError.SCOS_DEPARTMENT_001.getCode());
 
-        verify(departmentRepository, times(1)).existsById(VALID_DEPARTMENT_ID);
+        verify(departmentDomainService, times(1)).validateDepartmentExistsAndActiveValidation(VALID_DEPARTMENT_ID);
+    }
+
+    @Test
+    @DisplayName("Should propagate SCOS_DEPARTMENT_006 from DepartmentDomainService when department is inactive")
+    void shouldPropagateScosException006WhenDepartmentIsInactive() {
+        // Given
+        doThrow(new ScosException(ExceptionCodeError.SCOS_DEPARTMENT_006))
+                .when(departmentDomainService)
+                .validateDepartmentExistsAndActiveValidation(VALID_DEPARTMENT_ID);
+
+        // When / Then
+        assertThatThrownBy(() -> positionDomainService.validateDepartmentExistsAndActiveValidation(VALID_DEPARTMENT_ID))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", ExceptionCodeError.SCOS_DEPARTMENT_006.getCode());
+
+        verify(departmentDomainService, times(1)).validateDepartmentExistsAndActiveValidation(VALID_DEPARTMENT_ID);
     }
 
     @Test
     @DisplayName("Should handle multiple validations in sequence")
     void shouldHandleMultipleValidationsInSequence() {
         // Given
-        when(departmentRepository.existsById(VALID_DEPARTMENT_ID)).thenReturn(true);
+        doNothing().when(departmentDomainService).validateDepartmentExistsAndActiveValidation(VALID_DEPARTMENT_ID);
         when(positionRepository.existsByCode(VALID_POSITION_CODE)).thenReturn(false);
         when(positionRepository.existsById(VALID_POSITION_ID)).thenReturn(true);
 
         // When / Then - should not throw
-        positionDomainService.validateDepartmentExistsValidation(VALID_DEPARTMENT_ID);
+        positionDomainService.validateDepartmentExistsAndActiveValidation(VALID_DEPARTMENT_ID);
         positionDomainService.validatePositionCodeExistsValidation(VALID_POSITION_CODE);
         positionDomainService.validatePositionExistsValidation(VALID_POSITION_ID);
 
-        verify(departmentRepository, times(1)).existsById(VALID_DEPARTMENT_ID);
+        verify(departmentDomainService, times(1)).validateDepartmentExistsAndActiveValidation(VALID_DEPARTMENT_ID);
         verify(positionRepository, times(1)).existsByCode(VALID_POSITION_CODE);
         verify(positionRepository, times(1)).existsById(VALID_POSITION_ID);
     }

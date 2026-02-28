@@ -337,5 +337,22 @@ class CreateDepartmentUseCaseIntegrationTest {
         verify(departmentDomainService, times(1)).validateDepartmentCodeExistsValidation("HR");
         verify(departmentRepository, times(2)).persist(any(Department.class));
     }
+
+    @Test
+    @DisplayName("Should set active=true by default when creating a new department")
+    void shouldSetActiveTrueByDefaultOnNewDepartmentCreation() {
+        // Given
+        doNothing().when(departmentDomainService).validateDepartmentCodeExistsValidation(validCreateDTO.getCode());
+        when(departmentMapper.toDepartment(validCreateDTO)).thenReturn(mappedDepartment);
+        when(departmentRepository.persist(any(Department.class))).thenReturn(savedDepartment);
+
+        // When
+        createDepartmentUseCase.execute(validCreateDTO);
+
+        // Then
+        ArgumentCaptor<Department> captor = ArgumentCaptor.forClass(Department.class);
+        verify(departmentRepository).persist(captor.capture());
+        assertThat(captor.getValue().isActive()).isTrue();
+    }
 }
 

@@ -1,0 +1,11 @@
+CREATE OR REPLACE FUNCTION scos.check_employee_supervisor()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.SUPERVISOR_ID = NEW.EMPLOYEE_ID THEN
+        RAISE EXCEPTION 'EMPLOYEE_ID (%), não pode ser igual ao SUPERVISOR_ID (%)',
+            NEW.EMPLOYEE_ID, NEW.SUPERVISOR_ID;
+    END IF;
+    RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;

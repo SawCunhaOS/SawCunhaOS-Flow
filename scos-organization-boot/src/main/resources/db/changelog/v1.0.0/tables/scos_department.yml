@@ -1,0 +1,71 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260228-Samuel.Cunha-002
+      author: Samuel.Cunha
+      comment: "Criação da sequence e tabela SCOS_DEPARTMENT"
+      changes:
+        - createSequence:
+            sequenceName: SEQ_DEPARTMENT_ID
+            schemaName: scos
+            startValue: 1
+            incrementBy: 50
+            cycle: false
+
+        - createTable:
+            tableName: SCOS_DEPARTMENT
+            schemaName: scos
+            columns:
+              - column:
+                  name: DEPARTMENT_ID
+                  type: BIGINT
+                  defaultValueSequenceNext: SEQ_DEPARTMENT_ID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_DEPARTMENT
+                    nullable: false
+              - column:
+                  name: CODE
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  type: varchar(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ACTIVE
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: USER_AT
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+        - addUniqueConstraint:
+            tableName: SCOS_DEPARTMENT
+            schemaName: scos
+            columnNames: CODE
+            constraintName: UK_CODE_SCOS_DEPARTMENT
+            validate: true
+      rollback:
+        - dropTable:
+            tableName: SCOS_DEPARTMENT
+            schemaName: scos
+            cascadeConstraints: true
+        - dropSequence:
+            sequenceName: SEQ_DEPARTMENT_ID
+            schemaName: scos

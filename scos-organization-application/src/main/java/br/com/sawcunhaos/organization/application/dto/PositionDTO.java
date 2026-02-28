@@ -27,9 +27,11 @@ public class PositionDTO {
     private Long id;
     private String code;
     private String description;
+    private boolean active;
     private Long departmentId;
     private String departmentCode;
     private String departmentDescription;
+    private boolean departmentActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String userAt;

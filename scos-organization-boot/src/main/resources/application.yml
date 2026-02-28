@@ -45,4 +45,4 @@ scos:
     password: inside_flow
     sentinels: localhost:26379
   liquibase:
-    enabled: false
+    enabled: true

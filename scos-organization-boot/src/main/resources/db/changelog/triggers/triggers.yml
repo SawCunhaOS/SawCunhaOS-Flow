@@ -1,0 +1,60 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260228-Samuel.Cunha-022
+      author: Samuel.Cunha
+      comment: "Trigger trg_check_employee_supervisor: impede que SUPERVISOR_ID == EMPLOYEE_ID"
+      changes:
+        - sqlFile:
+            path: trg_check_employee_supervisor.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP TRIGGER IF EXISTS trg_check_employee_supervisor ON scos.SCOS_EMPLOYEE;
+
+  - changeSet:
+      id: 20260228-Samuel.Cunha-023
+      author: Samuel.Cunha
+      comment: "Trigger trg_check_company_parent_company: impede que PARENT_COMPANY_ID == COMPANY_ID"
+      changes:
+        - sqlFile:
+            path: trg_check_company_parent_company.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP TRIGGER IF EXISTS trg_check_company_parent_company ON scos.SCOS_COMPANY;
+
+  - changeSet:
+      id: 20260228-Samuel.Cunha-024
+      author: Samuel.Cunha
+      comment: "Trigger trg_remove_formatting_tax_identifier_company: normaliza TAX_IDENTIFIER em SCOS_COMPANY"
+      changes:
+        - sqlFile:
+            path: trg_remove_formatting_tax_identifier_company.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP TRIGGER IF EXISTS trg_remove_formatting_tax_identifier_company ON scos.SCOS_COMPANY;
+
+  - changeSet:
+      id: 20260228-Samuel.Cunha-025
+      author: Samuel.Cunha
+      comment: "Trigger trg_remove_formatting_tax_identifier_employee: normaliza TAX_IDENTIFIER em SCOS_EMPLOYEE"
+      changes:
+        - sqlFile:
+            path: trg_remove_formatting_tax_identifier_employee.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP TRIGGER IF EXISTS trg_remove_formatting_tax_identifier_employee ON scos.SCOS_EMPLOYEE;

@@ -289,6 +289,8 @@ components:
           type: string
         description:
           type: string
+        active:
+          type: boolean
     GetDepartmentResponse:
       type: object
       properties:
@@ -342,6 +344,8 @@ components:
           type: string
         description:
           type: string
+        active:
+          type: boolean
         department:
           $ref: '#/components/schemas/Department'
     GetPositionResponse:
