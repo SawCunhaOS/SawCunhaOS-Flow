@@ -60,6 +60,6 @@ public class CompanyAddress extends BaseEntity {
     private Point geolocation;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "COMPANY_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "COMPANY_ID")
     private Company company;
 }

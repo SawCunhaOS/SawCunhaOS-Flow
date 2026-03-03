@@ -12,37 +12,23 @@
 
 package br.com.sawcunhaos.organization.application.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 
-/**
- * DTO para atualização de uma empresa existente.
- *
- * Validações:
- * - name: 2-250 caracteres
- * - nameTreatment: máx 100 caracteres
- * - foundationDate: data válida, não futura
- * - sectorOfActivity: valor válido do enum
- * - taxIdentifier: IMUTÁVEL, não pode ser alterado neste DTO
- * - parentCompanyId: opcional, se alterado valida ciclos e existência
- */
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class UpdateCompanyDTO {
-    private Long companyId;
+public class CreateCompanyDTO {
+
     private String name;
     private String nameTreatment;
+    private String taxIdentifier;
     private LocalDate foundationDate;
     private String sectorOfActivity;
     private String observation;
     private Long parentCompanyId;
-}
 
+}

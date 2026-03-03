@@ -47,4 +47,6 @@ public interface CompanyAddressRepository extends BaseJpaRepository<CompanyAddre
         );
     }
 
+    void deleteByCompanyIdAndId(final Long companyId, final Long addressId);
+
 }
