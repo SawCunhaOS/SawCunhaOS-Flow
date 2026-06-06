@@ -1,27 +1,17 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260228-Samuel.Cunha-005
+      id: 20260606-Samuel.Cunha-004
       author: Samuel.Cunha
-      comment: "Criação da sequence e tabela SCOS_COMPANY_ADDRESS"
+      comment: "Criação da tabela SCOS_COMPANY_ADDRESS"
       changes:
-        - createSequence:
-            sequenceName: SEQ_COMPANY_ADDRESS_ID
-            schemaName: scos
-            startValue: 1
-            incrementBy: 50
-            cycle: false
-
         - createTable:
             tableName: SCOS_COMPANY_ADDRESS
             schemaName: scos
             columns:
               - column:
-                  name: COMPANY_ADDRESS_ID
+                  name: COMPANY_ID_ADDRESS
                   type: BIGINT
-                  defaultValueSequenceNext: SEQ_COMPANY_ADDRESS_ID
                   constraints:
-                    primaryKey: true
-                    primaryKeyName: PK_SCOS_COMPANY_ADDRESS
                     nullable: false
               - column:
                   name: COMPANY_ID
@@ -29,15 +19,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_COMPANY_ID_SCOS_COMPANY_ADDRESS
-                    validateForeignKey: true
-                    referencedColumnNames: COMPANY_ID
-                    referencedTableSchemaName: scos
-                    referencedTableName: SCOS_COMPANY
-              - column:
-                  name: ADDRESS_ID
-                  type: BIGINT
-                  constraints:
-                    nullable: false
+                    references: scos.SCOS_COMPANY(COMPANY_ID)
               - column:
                   name: TYPE
                   type: varchar(50)
@@ -50,15 +32,14 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: COMPLEMENT
-                  type: TEXT
+                  type: varchar(250)
                   constraints:
                     nullable: true
               - column:
                   name: GEOLOCATION
                   type: ${POINTType}
-                  remarks: Informs the latitude and longitude of the address
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
                   name: CREATED_AT
                   type: TIMESTAMPTZ
@@ -69,17 +50,22 @@ databaseChangeLog:
                   name: UPDATED_AT
                   type: TIMESTAMPTZ
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
                   name: USER_AT
-                  type: varchar(100)
+                  type: varchar(255)
                   constraints:
-                    nullable: true
+                    nullable: false
+        - addPrimaryKey:
+            tableName: SCOS_COMPANY_ADDRESS
+            schemaName: scos
+            columnNames: COMPANY_ID_ADDRESS, COMPANY_ID
+            constraintName: PK_SCOS_COMPANY_ADDRESS
         - addUniqueConstraint:
             tableName: SCOS_COMPANY_ADDRESS
             schemaName: scos
-            columnNames: COMPANY_ID, ADDRESS_ID, TYPE
-            constraintName: UK_COMPANY_ADDRESS_TYPE_SCOS_COMPANY_ADDRESS
+            columnNames: TYPE
+            constraintName: UK_TYPE_SCOS_COMPANY_ADDRESS
             validate: true
         - createIndex:
             tableName: SCOS_COMPANY_ADDRESS
@@ -93,6 +79,3 @@ databaseChangeLog:
             tableName: SCOS_COMPANY_ADDRESS
             schemaName: scos
             cascadeConstraints: true
-        - dropSequence:
-            sequenceName: SEQ_COMPANY_ADDRESS_ID
-            schemaName: scos

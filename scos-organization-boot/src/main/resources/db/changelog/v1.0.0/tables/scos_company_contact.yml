@@ -1,24 +1,17 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260228-Samuel.Cunha-006
+      id: 20260606-Samuel.Cunha-005
       author: Samuel.Cunha
-      comment: "Criação da sequence e tabela SCOS_COMPANY_CONTACT"
+      comment: "Criação da tabela SCOS_COMPANY_CONTACT"
       changes:
-        - createSequence:
-            sequenceName: SEQ_COMPANY_CONTACT_ID
-            schemaName: scos
-            startValue: 1
-            incrementBy: 50
-            cycle: false
-
         - createTable:
             tableName: SCOS_COMPANY_CONTACT
             schemaName: scos
             columns:
               - column:
-                  name: CONTACT_ID
+                  name: COMPANY_ID_CONTACT
                   type: BIGINT
-                  defaultValueSequenceNext: SEQ_COMPANY_CONTACT_ID
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     primaryKeyName: PK_SCOS_COMPANY_CONTACT
@@ -29,27 +22,19 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_COMPANY_ID_SCOS_COMPANY_CONTACT
-                    validateForeignKey: true
-                    referencedColumnNames: COMPANY_ID
-                    referencedTableSchemaName: scos
-                    referencedTableName: SCOS_COMPANY
+                    references: scos.SCOS_COMPANY(COMPANY_ID)
               - column:
-                  name: TYPE
+                  name: PHONE
                   type: varchar(50)
                   constraints:
                     nullable: false
               - column:
-                  name: RESPONSIBLE_PERSON
+                  name: EMAIL
                   type: varchar(255)
                   constraints:
                     nullable: false
               - column:
-                  name: EMAIL
-                  type: varchar(320)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: PHONE
+                  name: TYPE
                   type: varchar(50)
                   constraints:
                     nullable: false
@@ -63,12 +48,30 @@ databaseChangeLog:
                   name: UPDATED_AT
                   type: TIMESTAMPTZ
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
                   name: USER_AT
-                  type: varchar(100)
+                  type: varchar(255)
                   constraints:
-                    nullable: true
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: SCOS_COMPANY_CONTACT
+            schemaName: scos
+            columnNames: PHONE
+            constraintName: UK_PHONE_SCOS_COMPANY_CONTACT
+            validate: true
+        - addUniqueConstraint:
+            tableName: SCOS_COMPANY_CONTACT
+            schemaName: scos
+            columnNames: EMAIL
+            constraintName: UK_EMAIL_SCOS_COMPANY_CONTACT
+            validate: true
+        - addUniqueConstraint:
+            tableName: SCOS_COMPANY_CONTACT
+            schemaName: scos
+            columnNames: TYPE
+            constraintName: UK_TYPE_SCOS_COMPANY_CONTACT
+            validate: true
         - createIndex:
             tableName: SCOS_COMPANY_CONTACT
             schemaName: scos
@@ -81,6 +84,3 @@ databaseChangeLog:
             tableName: SCOS_COMPANY_CONTACT
             schemaName: scos
             cascadeConstraints: true
-        - dropSequence:
-            sequenceName: SEQ_COMPANY_CONTACT_ID
-            schemaName: scos

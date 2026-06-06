@@ -1,45 +1,39 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260228-Samuel.Cunha-010
+      id: 20260606-Samuel.Cunha-010
       author: Samuel.Cunha
-      comment: "Criação da tabela SCOS_PERMISSION com índice GIN em FEATURES"
-      dbms: postgresql
+      comment: "Criação da tabela SCOS_SYSTEM"
       changes:
         - createTable:
-            tableName: SCOS_PERMISSION
+            tableName: SCOS_SYSTEM
             schemaName: scos
             columns:
               - column:
-                  name: PERMISSION
-                  type: varchar(100)
+                  name: SYSTEM_ID
+                  type: UUID
+                  defaultValueComputed: ${uuid_function}
                   constraints:
                     primaryKey: true
-                    primaryKeyName: PK_SCOS_PERMISSION
+                    primaryKeyName: PK_SCOS_SYSTEM
                     nullable: false
               - column:
-                  name: SYSTEM_MODULE
-                  type: varchar(100)
+                  name: CODE
+                  type: varchar(25)
                   constraints:
                     nullable: false
               - column:
-                  name: DESCRIPTION_PTBR
-                  type: varchar(100)
+                  name: DESCRIPTION
+                  type: varchar(200)
                   constraints:
                     nullable: false
               - column:
-                  name: DESCRIPTION_ENG
-                  type: varchar(100)
+                  name: SECRET_KEY
+                  type: TEXT
                   constraints:
                     nullable: false
               - column:
-                  name: END_POINT
-                  type: varchar(256)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: FEATURES
-                  type: TEXT[]
-                  defaultValue: '{}'
+                  name: STATUS
+                  type: varchar(50)
                   constraints:
                     nullable: false
               - column:
@@ -52,16 +46,20 @@ databaseChangeLog:
                   name: UPDATED_AT
                   type: TIMESTAMPTZ
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
                   name: USER_AT
-                  type: varchar(100)
+                  type: varchar(255)
                   constraints:
-                    nullable: true
-        - sql:
-            sql: CREATE INDEX IDX_GIN_FEATURES_SCOS_PERMISSION ON scos.SCOS_PERMISSION USING GIN (FEATURES);
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: SCOS_SYSTEM
+            schemaName: scos
+            columnNames: CODE
+            constraintName: UK_CODE_SCOS_SYSTEM
+            validate: true
       rollback:
         - dropTable:
-            tableName: SCOS_PERMISSION
+            tableName: SCOS_SYSTEM
             schemaName: scos
             cascadeConstraints: true

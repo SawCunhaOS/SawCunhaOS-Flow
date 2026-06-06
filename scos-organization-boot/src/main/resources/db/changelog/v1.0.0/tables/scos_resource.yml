@@ -1,36 +1,42 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260606-Samuel.Cunha-008
+      id: 20260606-Samuel.Cunha-011
       author: Samuel.Cunha
-      comment: "Criação da tabela SCOS_EMPLOYEE_CONTACT"
+      comment: "Criação da tabela SCOS_RESOURCE"
       changes:
         - createTable:
-            tableName: SCOS_EMPLOYEE_CONTACT
+            tableName: SCOS_RESOURCE
             schemaName: scos
             columns:
               - column:
-                  name: EMPLOYEE_ID_CONTACT
-                  type: BIGINT
-                  autoIncrement: true
+                  name: RESOURCE_ID
+                  type: UUID
+                  defaultValueComputed: ${uuid_function}
                   constraints:
                     primaryKey: true
-                    primaryKeyName: PK_SCOS_EMPLOYEE_CONTACT
+                    primaryKeyName: PK_SCOS_RESOURCE
                     nullable: false
               - column:
-                  name: EMPLOYEE_ID
-                  type: BIGINT
+                  name: SYSTEM_ID
+                  type: UUID
                   constraints:
                     nullable: false
-                    foreignKeyName: FK_EMPLOYEE_ID_SCOS_EMPLOYEE_CONTACT
-                    references: scos.SCOS_EMPLOYEE(EMPLOYEE_ID)
+                    foreignKeyName: FK_SYSTEM_ID_SCOS_RESOURCE
+                    references: scos.SCOS_SYSTEM(SYSTEM_ID)
               - column:
-                  name: PHONE
+                  name: CODE
                   type: varchar(50)
                   constraints:
                     nullable: false
               - column:
-                  name: TYPE
-                  type: varchar(50)
+                  name: DESCRIPTION
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ACTIVE
+                  type: BOOLEAN
+                  defaultValueBoolean: true
                   constraints:
                     nullable: false
               - column:
@@ -50,26 +56,20 @@ databaseChangeLog:
                   constraints:
                     nullable: false
         - addUniqueConstraint:
-            tableName: SCOS_EMPLOYEE_CONTACT
+            tableName: SCOS_RESOURCE
             schemaName: scos
-            columnNames: PHONE
-            constraintName: UK_PHONE_SCOS_EMPLOYEE_CONTACT
-            validate: true
-        - addUniqueConstraint:
-            tableName: SCOS_EMPLOYEE_CONTACT
-            schemaName: scos
-            columnNames: TYPE
-            constraintName: UK_TYPE_SCOS_EMPLOYEE_CONTACT
+            columnNames: CODE
+            constraintName: UK_CODE_SCOS_RESOURCE
             validate: true
         - createIndex:
-            tableName: SCOS_EMPLOYEE_CONTACT
+            tableName: SCOS_RESOURCE
             schemaName: scos
-            indexName: IDX_EMPLOYEE_ID_SCOS_EMPLOYEE_CONTACT
+            indexName: IDX_SYSTEM_ID_SCOS_RESOURCE
             columns:
               - column:
-                  name: EMPLOYEE_ID
+                  name: SYSTEM_ID
       rollback:
         - dropTable:
-            tableName: SCOS_EMPLOYEE_CONTACT
+            tableName: SCOS_RESOURCE
             schemaName: scos
             cascadeConstraints: true

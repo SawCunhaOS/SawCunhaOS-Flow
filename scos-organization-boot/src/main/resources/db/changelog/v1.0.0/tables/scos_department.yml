@@ -1,16 +1,9 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260228-Samuel.Cunha-002
+      id: 20260606-Samuel.Cunha-001
       author: Samuel.Cunha
-      comment: "Criação da sequence e tabela SCOS_DEPARTMENT"
+      comment: "Criação da tabela SCOS_DEPARTMENT"
       changes:
-        - createSequence:
-            sequenceName: SEQ_DEPARTMENT_ID
-            schemaName: scos
-            startValue: 1
-            incrementBy: 50
-            cycle: false
-
         - createTable:
             tableName: SCOS_DEPARTMENT
             schemaName: scos
@@ -18,7 +11,7 @@ databaseChangeLog:
               - column:
                   name: DEPARTMENT_ID
                   type: BIGINT
-                  defaultValueSequenceNext: SEQ_DEPARTMENT_ID
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     primaryKeyName: PK_SCOS_DEPARTMENT
@@ -30,7 +23,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: DESCRIPTION
-                  type: varchar(500)
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
@@ -49,12 +42,12 @@ databaseChangeLog:
                   name: UPDATED_AT
                   type: TIMESTAMPTZ
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
                   name: USER_AT
-                  type: varchar(100)
+                  type: varchar(255)
                   constraints:
-                    nullable: true
+                    nullable: false
         - addUniqueConstraint:
             tableName: SCOS_DEPARTMENT
             schemaName: scos
@@ -66,6 +59,3 @@ databaseChangeLog:
             tableName: SCOS_DEPARTMENT
             schemaName: scos
             cascadeConstraints: true
-        - dropSequence:
-            sequenceName: SEQ_DEPARTMENT_ID
-            schemaName: scos

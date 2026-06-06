@@ -1,46 +1,28 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260228-Samuel.Cunha-016
+      id: 20260606-Samuel.Cunha-014
       author: Samuel.Cunha
-      comment: "Criação da sequence e tabela SCOS_CONFIGURATION"
+      comment: "Criação da tabela SCOS_CONFIGURATION"
       changes:
-        - createSequence:
-            sequenceName: SEQ_CONFIGURATION_ID
-            schemaName: scos
-            startValue: 1
-            incrementBy: 50
-            cycle: false
-
         - createTable:
             tableName: SCOS_CONFIGURATION
             schemaName: scos
             columns:
               - column:
                   name: CONFIGURATION_ID
-                  type: BIGINT
-                  defaultValueSequenceNext: SEQ_CONFIGURATION_ID
+                  type: varchar(50)
                   constraints:
                     primaryKey: true
                     primaryKeyName: PK_SCOS_CONFIGURATION
                     nullable: false
               - column:
-                  name: CONFIGURATION_KEY
-                  type: varchar(255)
+                  name: VALUE
+                  type: TEXT
                   constraints:
                     nullable: false
               - column:
-                  name: DESCRIPTION
-                  type: varchar(255)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: CONFIGURATION_VALUE
-                  type: varchar(255)
-                  constraints:
-                    nullable: true
-              - column:
-                  name: DEFAULT_VALUE
-                  type: varchar(255)
+                  name: TYPE
+                  type: varchar(50)
                   constraints:
                     nullable: false
               - column:
@@ -53,23 +35,14 @@ databaseChangeLog:
                   name: UPDATED_AT
                   type: TIMESTAMPTZ
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
                   name: USER_AT
-                  type: varchar(100)
+                  type: varchar(255)
                   constraints:
-                    nullable: true
-        - addUniqueConstraint:
-            tableName: SCOS_CONFIGURATION
-            schemaName: scos
-            columnNames: CONFIGURATION_KEY
-            constraintName: UK_CONFIGURATION_KEY_SCOS_CONFIGURATION
-            validate: true
+                    nullable: false
       rollback:
         - dropTable:
             tableName: SCOS_CONFIGURATION
             schemaName: scos
             cascadeConstraints: true
-        - dropSequence:
-            sequenceName: SEQ_CONFIGURATION_ID
-            schemaName: scos

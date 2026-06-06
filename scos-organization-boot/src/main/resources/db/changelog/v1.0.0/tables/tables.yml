@@ -24,13 +24,22 @@ databaseChangeLog:
       file: scos_employee_contact.yml
       relativeToChangelogFile: true
   - include:
-      file: scos_permission.yml
-      relativeToChangelogFile: true
-  - include:
       file: scos_profile.yml
       relativeToChangelogFile: true
   - include:
+      file: scos_system.yml
+      relativeToChangelogFile: true
+  - include:
+      file: scos_resource.yml
+      relativeToChangelogFile: true
+  - include:
+      file: scos_profile_resource.yml
+      relativeToChangelogFile: true
+  - include:
       file: scos_login.yml
+      relativeToChangelogFile: true
+  - include:
+      file: scos_configuration.yml
       relativeToChangelogFile: true
   - include:
       file: scos_integration_keycloak.yml
@@ -40,7 +49,4 @@ databaseChangeLog:
       relativeToChangelogFile: true
   - include:
       file: scos_integration_message_invalid.yml
-      relativeToChangelogFile: true
-  - include:
-      file: scos_configuration.yml
       relativeToChangelogFile: true

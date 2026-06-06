@@ -1,16 +1,9 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260228-Samuel.Cunha-012
+      id: 20260606-Samuel.Cunha-013
       author: Samuel.Cunha
-      comment: "Criação da sequence e tabela SCOS_LOGIN"
+      comment: "Criação da tabela SCOS_LOGIN"
       changes:
-        - createSequence:
-            sequenceName: SEQ_LOGIN_ID
-            schemaName: scos
-            startValue: 1
-            incrementBy: 50
-            cycle: false
-
         - createTable:
             tableName: SCOS_LOGIN
             schemaName: scos
@@ -18,7 +11,7 @@ databaseChangeLog:
               - column:
                   name: LOGIN_ID
                   type: BIGINT
-                  defaultValueSequenceNext: SEQ_LOGIN_ID
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     primaryKeyName: PK_SCOS_LOGIN
@@ -29,38 +22,22 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_PROFILE_ID_SCOS_LOGIN
-                    validateForeignKey: true
-                    referencedColumnNames: PROFILE_ID
-                    referencedTableSchemaName: scos
-                    referencedTableName: SCOS_PROFILE
+                    references: scos.SCOS_PROFILE(PROFILE_ID)
               - column:
                   name: EMPLOYEE_ID
                   type: BIGINT
                   constraints:
-                    nullable: false
+                    nullable: true
                     foreignKeyName: FK_EMPLOYEE_ID_SCOS_LOGIN
-                    validateForeignKey: true
-                    referencedColumnNames: EMPLOYEE_ID
-                    referencedTableSchemaName: scos
-                    referencedTableName: SCOS_EMPLOYEE
-              - column:
-                  name: LOGIN
-                  type: varchar(100)
-                  constraints:
-                    nullable: false
+                    references: scos.SCOS_EMPLOYEE(EMPLOYEE_ID)
               - column:
                   name: KEYCLOAK_ID
                   type: UUID
                   constraints:
                     nullable: true
               - column:
-                  name: PASSWORD
-                  type: TEXT
-                  constraints:
-                    nullable: false
-              - column:
-                  name: SALT
-                  type: TEXT
+                  name: LOGIN
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
@@ -69,9 +46,8 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: DATE_LAST_CHANGE_PASSWORD
-                  type: TIMESTAMPTZ
-                  defaultValueComputed: NOW()
+                  name: TYPE
+                  type: varchar(50)
                   constraints:
                     nullable: false
               - column:
@@ -84,18 +60,25 @@ databaseChangeLog:
                   name: UPDATED_AT
                   type: TIMESTAMPTZ
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
                   name: USER_AT
-                  type: varchar(100)
+                  type: varchar(255)
                   constraints:
-                    nullable: true
+                    nullable: false
         - addUniqueConstraint:
             tableName: SCOS_LOGIN
             schemaName: scos
             columnNames: LOGIN
             constraintName: UK_LOGIN_SCOS_LOGIN
             validate: true
+        - createIndex:
+            tableName: SCOS_LOGIN
+            schemaName: scos
+            indexName: IDX_PROFILE_ID_SCOS_LOGIN
+            columns:
+              - column:
+                  name: PROFILE_ID
         - createIndex:
             tableName: SCOS_LOGIN
             schemaName: scos
@@ -106,15 +89,12 @@ databaseChangeLog:
         - createIndex:
             tableName: SCOS_LOGIN
             schemaName: scos
-            indexName: IDX_PROFILE_ID_SCOS_LOGIN
+            indexName: IDX_KEYCLOAK_ID_SCOS_LOGIN
             columns:
               - column:
-                  name: PROFILE_ID
+                  name: KEYCLOAK_ID
       rollback:
         - dropTable:
             tableName: SCOS_LOGIN
             schemaName: scos
             cascadeConstraints: true
-        - dropSequence:
-            sequenceName: SEQ_LOGIN_ID
-            schemaName: scos

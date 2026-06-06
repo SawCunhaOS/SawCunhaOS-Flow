@@ -1,16 +1,9 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260228-Samuel.Cunha-004
+      id: 20260606-Samuel.Cunha-003
       author: Samuel.Cunha
-      comment: "Criação da sequence e tabela SCOS_COMPANY"
+      comment: "Criação da tabela SCOS_COMPANY"
       changes:
-        - createSequence:
-            sequenceName: SEQ_COMPANY_ID
-            schemaName: scos
-            startValue: 1
-            incrementBy: 50
-            cycle: false
-
         - createTable:
             tableName: SCOS_COMPANY
             schemaName: scos
@@ -18,19 +11,26 @@ databaseChangeLog:
               - column:
                   name: COMPANY_ID
                   type: BIGINT
-                  defaultValueSequenceNext: SEQ_COMPANY_ID
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     primaryKeyName: PK_SCOS_COMPANY
                     nullable: false
               - column:
+                  name: PARENT_COMPANY_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: FK_PARENT_COMPANY_ID_SCOS_COMPANY
+                    references: scos.SCOS_COMPANY(COMPANY_ID)
+              - column:
                   name: NAME
-                  type: varchar(255)
+                  type: varchar(250)
                   constraints:
                     nullable: false
               - column:
                   name: NAME_TREATMENT
-                  type: varchar(255)
+                  type: varchar(100)
                   constraints:
                     nullable: false
               - column:
@@ -49,26 +49,10 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: PARENT_COMPANY_ID
-                  type: BIGINT
-                  constraints:
-                    nullable: true
-                    foreignKeyName: FK_PARENT_COMPANY_ID_SCOS_COMPANY
-                    validateForeignKey: true
-                    referencedColumnNames: COMPANY_ID
-                    referencedTableSchemaName: scos
-                    referencedTableName: SCOS_COMPANY
-              - column:
                   name: OBSERVATION
                   type: TEXT
                   constraints:
                     nullable: true
-              - column:
-                  name: ACTIVE
-                  type: BOOLEAN
-                  defaultValueBoolean: true
-                  constraints:
-                    nullable: false
               - column:
                   name: STATUS
                   type: varchar(20)
@@ -84,12 +68,12 @@ databaseChangeLog:
                   name: UPDATED_AT
                   type: TIMESTAMPTZ
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
                   name: USER_AT
-                  type: varchar(100)
+                  type: varchar(255)
                   constraints:
-                    nullable: true
+                    nullable: false
         - addUniqueConstraint:
             tableName: SCOS_COMPANY
             schemaName: scos
@@ -103,11 +87,15 @@ databaseChangeLog:
             columns:
               - column:
                   name: PARENT_COMPANY_ID
+        - createIndex:
+            tableName: SCOS_COMPANY
+            schemaName: scos
+            indexName: IDX_STATUS_SCOS_COMPANY
+            columns:
+              - column:
+                  name: STATUS
       rollback:
         - dropTable:
             tableName: SCOS_COMPANY
             schemaName: scos
             cascadeConstraints: true
-        - dropSequence:
-            sequenceName: SEQ_COMPANY_ID
-            schemaName: scos

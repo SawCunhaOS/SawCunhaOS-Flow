@@ -1,28 +1,25 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260228-Samuel.Cunha-008
+      id: 20260606-Samuel.Cunha-007
       author: Samuel.Cunha
-      comment: "Criação da tabela SCOS_EMPLOYEE_ADDRESS (chave composta, sem sequence)"
+      comment: "Criação da tabela SCOS_EMPLOYEE_ADDRESS"
       changes:
         - createTable:
             tableName: SCOS_EMPLOYEE_ADDRESS
             schemaName: scos
             columns:
               - column:
+                  name: EMPLOYEE_ID_ADDRESS
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
                   name: EMPLOYEE_ID
                   type: BIGINT
                   constraints:
                     nullable: false
                     foreignKeyName: FK_EMPLOYEE_ID_SCOS_EMPLOYEE_ADDRESS
-                    validateForeignKey: true
-                    referencedColumnNames: EMPLOYEE_ID
-                    referencedTableSchemaName: scos
-                    referencedTableName: SCOS_EMPLOYEE
-              - column:
-                  name: ADDRESS_ID
-                  type: BIGINT
-                  constraints:
-                    nullable: false
+                    references: scos.SCOS_EMPLOYEE(EMPLOYEE_ID)
               - column:
                   name: TYPE
                   type: varchar(50)
@@ -35,15 +32,14 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: COMPLEMENT
-                  type: TEXT
+                  type: varchar(250)
                   constraints:
                     nullable: true
               - column:
                   name: GEOLOCATION
                   type: ${POINTType}
-                  remarks: Informs the latitude and longitude of the address
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
                   name: CREATED_AT
                   type: TIMESTAMPTZ
@@ -54,17 +50,30 @@ databaseChangeLog:
                   name: UPDATED_AT
                   type: TIMESTAMPTZ
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
                   name: USER_AT
-                  type: varchar(100)
+                  type: varchar(255)
                   constraints:
-                    nullable: true
+                    nullable: false
         - addPrimaryKey:
             tableName: SCOS_EMPLOYEE_ADDRESS
             schemaName: scos
-            columnNames: EMPLOYEE_ID, ADDRESS_ID
+            columnNames: EMPLOYEE_ID_ADDRESS, EMPLOYEE_ID
             constraintName: PK_SCOS_EMPLOYEE_ADDRESS
+        - addUniqueConstraint:
+            tableName: SCOS_EMPLOYEE_ADDRESS
+            schemaName: scos
+            columnNames: TYPE
+            constraintName: UK_TYPE_SCOS_EMPLOYEE_ADDRESS
+            validate: true
+        - createIndex:
+            tableName: SCOS_EMPLOYEE_ADDRESS
+            schemaName: scos
+            indexName: IDX_EMPLOYEE_ID_SCOS_EMPLOYEE_ADDRESS
+            columns:
+              - column:
+                  name: EMPLOYEE_ID
       rollback:
         - dropTable:
             tableName: SCOS_EMPLOYEE_ADDRESS

@@ -1,16 +1,9 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260228-Samuel.Cunha-003
+      id: 20260606-Samuel.Cunha-002
       author: Samuel.Cunha
-      comment: "Criação da sequence e tabela SCOS_POSITION"
+      comment: "Criação da tabela SCOS_POSITION"
       changes:
-        - createSequence:
-            sequenceName: SEQ_POSITION_ID
-            schemaName: scos
-            startValue: 1
-            incrementBy: 50
-            cycle: false
-
         - createTable:
             tableName: SCOS_POSITION
             schemaName: scos
@@ -18,7 +11,7 @@ databaseChangeLog:
               - column:
                   name: POSITION_ID
                   type: BIGINT
-                  defaultValueSequenceNext: SEQ_POSITION_ID
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     primaryKeyName: PK_SCOS_POSITION
@@ -29,10 +22,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_DEPARTMENT_ID_SCOS_POSITION
-                    validateForeignKey: true
-                    referencedColumnNames: DEPARTMENT_ID
-                    referencedTableSchemaName: scos
-                    referencedTableName: SCOS_DEPARTMENT
+                    references: scos.SCOS_DEPARTMENT(DEPARTMENT_ID)
               - column:
                   name: CODE
                   type: varchar(30)
@@ -40,7 +30,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: DESCRIPTION
-                  type: varchar(500)
+                  type: varchar(30)
                   constraints:
                     nullable: false
               - column:
@@ -59,12 +49,12 @@ databaseChangeLog:
                   name: UPDATED_AT
                   type: TIMESTAMPTZ
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
                   name: USER_AT
-                  type: varchar(100)
+                  type: varchar(255)
                   constraints:
-                    nullable: true
+                    nullable: false
         - addUniqueConstraint:
             tableName: SCOS_POSITION
             schemaName: scos
@@ -83,6 +73,3 @@ databaseChangeLog:
             tableName: SCOS_POSITION
             schemaName: scos
             cascadeConstraints: true
-        - dropSequence:
-            sequenceName: SEQ_POSITION_ID
-            schemaName: scos

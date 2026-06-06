@@ -1,8 +1,8 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260228-Samuel.Cunha-014
+      id: 20260606-Samuel.Cunha-016
       author: Samuel.Cunha
-      comment: "Criação da tabela SCOS_INTEGRATION_KEYCLOAK_LOG (UUID PK)"
+      comment: "Criação da tabela SCOS_INTEGRATION_KEYCLOAK_LOG (imutável)"
       changes:
         - createTable:
             tableName: SCOS_INTEGRATION_KEYCLOAK_LOG
@@ -22,10 +22,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_INTEGRATION_KEYCLOAK_ID_SCOS_INTEGRATION_KEYCLOAK_LOG
-                    validateForeignKey: true
-                    referencedColumnNames: INTEGRATION_KEYCLOAK_ID
-                    referencedTableSchemaName: scos
-                    referencedTableName: SCOS_INTEGRATION_KEYCLOAK
+                    references: scos.SCOS_INTEGRATION_KEYCLOAK(INTEGRATION_KEYCLOAK_ID)
               - column:
                   name: SUCCESS
                   type: BOOLEAN
@@ -37,22 +34,11 @@ databaseChangeLog:
                   constraints:
                     nullable: true
               - column:
-                  name: DATE_REQUEST
-                  type: TIMESTAMPTZ
-                  defaultValueComputed: NOW()
-                  constraints:
-                    nullable: false
-              - column:
                   name: CREATED_AT
                   type: TIMESTAMPTZ
                   defaultValueComputed: NOW()
                   constraints:
                     nullable: false
-              - column:
-                  name: UPDATED_AT
-                  type: TIMESTAMPTZ
-                  constraints:
-                    nullable: true
               - column:
                   name: USER_AT
                   type: varchar(100)

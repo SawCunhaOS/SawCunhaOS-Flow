@@ -1,16 +1,9 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260228-Samuel.Cunha-007
+      id: 20260606-Samuel.Cunha-006
       author: Samuel.Cunha
-      comment: "Criação da sequence e tabela SCOS_EMPLOYEE"
+      comment: "Criação da tabela SCOS_EMPLOYEE"
       changes:
-        - createSequence:
-            sequenceName: SEQ_EMPLOYEE_ID
-            schemaName: scos
-            startValue: 1
-            incrementBy: 50
-            cycle: false
-
         - createTable:
             tableName: SCOS_EMPLOYEE
             schemaName: scos
@@ -18,49 +11,40 @@ databaseChangeLog:
               - column:
                   name: EMPLOYEE_ID
                   type: BIGINT
-                  defaultValueSequenceNext: SEQ_EMPLOYEE_ID
+                  autoIncrement: true
                   constraints:
                     primaryKey: true
                     primaryKeyName: PK_SCOS_EMPLOYEE
                     nullable: false
-              - column:
-                  name: COMPANY_ID
-                  type: BIGINT
-                  constraints:
-                    nullable: true
-                    foreignKeyName: FK_COMPANY_ID_SCOS_EMPLOYEE
-                    validateForeignKey: true
-                    referencedColumnNames: COMPANY_ID
-                    referencedTableSchemaName: scos
-                    referencedTableName: SCOS_COMPANY
-              - column:
-                  name: POSITION_ID
-                  type: BIGINT
-                  constraints:
-                    nullable: true
-                    foreignKeyName: FK_POSITION_ID_SCOS_EMPLOYEE
-                    validateForeignKey: true
-                    referencedColumnNames: POSITION_ID
-                    referencedTableSchemaName: scos
-                    referencedTableName: SCOS_POSITION
               - column:
                   name: SUPERVISOR_ID
                   type: BIGINT
                   constraints:
                     nullable: true
                     foreignKeyName: FK_SUPERVISOR_ID_SCOS_EMPLOYEE
-                    validateForeignKey: true
-                    referencedColumnNames: EMPLOYEE_ID
-                    referencedTableSchemaName: scos
-                    referencedTableName: SCOS_EMPLOYEE
+                    references: scos.SCOS_EMPLOYEE(EMPLOYEE_ID)
+              - column:
+                  name: POSITION_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_POSITION_ID_SCOS_EMPLOYEE
+                    references: scos.SCOS_POSITION(POSITION_ID)
+              - column:
+                  name: COMPANY_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_COMPANY_ID_SCOS_EMPLOYEE
+                    references: scos.SCOS_COMPANY(COMPANY_ID)
               - column:
                   name: NAME
-                  type: varchar(255)
+                  type: varchar(250)
                   constraints:
                     nullable: false
               - column:
                   name: NAME_TREATMENT
-                  type: varchar(255)
+                  type: varchar(100)
                   constraints:
                     nullable: false
               - column:
@@ -70,7 +54,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: EMAIL
-                  type: varchar(320)
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
@@ -89,9 +73,8 @@ databaseChangeLog:
                   constraints:
                     nullable: true
               - column:
-                  name: ACTIVE
-                  type: BOOLEAN
-                  defaultValueBoolean: true
+                  name: STATUS
+                  type: varchar(20)
                   constraints:
                     nullable: false
               - column:
@@ -104,17 +87,23 @@ databaseChangeLog:
                   name: UPDATED_AT
                   type: TIMESTAMPTZ
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
                   name: USER_AT
-                  type: varchar(100)
+                  type: varchar(255)
                   constraints:
-                    nullable: true
+                    nullable: false
         - addUniqueConstraint:
             tableName: SCOS_EMPLOYEE
             schemaName: scos
             columnNames: TAX_IDENTIFIER
             constraintName: UK_TAX_IDENTIFIER_SCOS_EMPLOYEE
+            validate: true
+        - addUniqueConstraint:
+            tableName: SCOS_EMPLOYEE
+            schemaName: scos
+            columnNames: EMAIL
+            constraintName: UK_EMAIL_SCOS_EMPLOYEE
             validate: true
         - createIndex:
             tableName: SCOS_EMPLOYEE
@@ -137,11 +126,15 @@ databaseChangeLog:
             columns:
               - column:
                   name: SUPERVISOR_ID
+        - createIndex:
+            tableName: SCOS_EMPLOYEE
+            schemaName: scos
+            indexName: IDX_STATUS_SCOS_EMPLOYEE
+            columns:
+              - column:
+                  name: STATUS
       rollback:
         - dropTable:
             tableName: SCOS_EMPLOYEE
             schemaName: scos
             cascadeConstraints: true
-        - dropSequence:
-            sequenceName: SEQ_EMPLOYEE_ID
-            schemaName: scos

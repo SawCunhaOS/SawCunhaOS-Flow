@@ -1,8 +1,8 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260228-Samuel.Cunha-015
+      id: 20260606-Samuel.Cunha-017
       author: Samuel.Cunha
-      comment: "Criação da tabela SCOS_INTEGRATION_MESSAGE_INVALID (UUID PK)"
+      comment: "Criação da tabela SCOS_INTEGRATION_MESSAGE_INVALID (imutável)"
       changes:
         - createTable:
             tableName: SCOS_INTEGRATION_MESSAGE_INVALID
@@ -20,18 +20,13 @@ databaseChangeLog:
                   name: MESSAGE_INVALID
                   type: varchar(5000)
                   constraints:
-                    nullable: true
+                    nullable: false
               - column:
                   name: CREATED_AT
                   type: TIMESTAMPTZ
                   defaultValueComputed: NOW()
                   constraints:
                     nullable: false
-              - column:
-                  name: UPDATED_AT
-                  type: TIMESTAMPTZ
-                  constraints:
-                    nullable: true
               - column:
                   name: USER_AT
                   type: varchar(100)
