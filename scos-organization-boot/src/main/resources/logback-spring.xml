@@ -1,7 +1,20 @@
 <configuration>
 
+    <!--
+        Regras de conversão do módulo scos-foundation-privacy. Declaradas no XML (parse-time) porque o
+        Logback inicializa antes do contexto Spring; assim %mask/%maskmdc resolvem na partida, independente
+        do registro programático. O converter lê o engine de forma tardia (no evento de log): durante a
+        partida, sem engine, ele devolve o texto sem alteração (fail-open).
+        %mask(%msg)      -> mascara texto livre (maskText)
+        %maskmdc{chave}  -> mascara um valor de MDC por chave (maskStructured)
+    -->
+    <conversionRule conversionWord="mask"
+                    converterClass="br.com.sawcunhaos.foundation.privacy.logback.ScosMaskingConverter"/>
+    <conversionRule conversionWord="maskmdc"
+                    converterClass="br.com.sawcunhaos.foundation.privacy.logback.ScosMaskingMdcConverter"/>
+
     <!-- Define o padrão dos logs -->
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n - MDC: %mdc%n" />
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %mask(%msg)%n - MDC: %mdc%n" />
     <!-- Define o diretório onde os logs serão salvos -->
     <property name="LOG_DIR" value="logs" />
 
@@ -9,7 +22,7 @@
     <appender name="ScosConsole" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>
-                %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n - MDC: %mdc%n
+                %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %mask(%msg)%n - MDC: %mdc%n
             </pattern>
         </encoder>
     </appender>

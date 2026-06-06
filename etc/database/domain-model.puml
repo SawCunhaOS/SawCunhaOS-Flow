@@ -1,9 +1,0 @@
-@startuml
-' Master domain model - includes per-aggregate diagrams
-!include department-position.puml
-!include company.puml
-!include employee.puml
-!include login.puml
-
-title SCOS - Domain Model (aggregates)
-@enduml

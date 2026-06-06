@@ -46,3 +46,13 @@ scos:
     sentinels: localhost:26379
   liquibase:
     enabled: true
+  privacy:
+    enabled: true                                 # loads on import
+    strict: false                                 # prod: error if hash/encrypt has no key
+    max-payload-kb: 64                            # truncate before masking, bounds worst case
+    masking:
+      default-patterns: true
+    log:
+      register-converter: true                    # %mask registered programmatically (see below)
+    crypto:
+      secret: 'ASDASDASDA'

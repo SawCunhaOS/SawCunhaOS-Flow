@@ -88,6 +88,7 @@ public class CompanyApiDelegateImp implements CompanyApiDelegate {
     @Override
     public CreateResponse createCompany(CreateCompanyRequest createCompanyRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
         log.info("Creating company: {}", createCompanyRequest.name());
+        log.info("Address: {}", createCompanyRequest);
 
         CreateCompanyDTO createCompanyDTO = CreateCompanyDTO.builder()
                 .name(createCompanyRequest.name())

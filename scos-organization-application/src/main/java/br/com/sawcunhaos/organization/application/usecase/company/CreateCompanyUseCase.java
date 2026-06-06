@@ -43,7 +43,7 @@ public class CreateCompanyUseCase implements ScosBaseUseCase<CreateCompanyDTO, L
         log.info("Creating company: {}", createCompanyDTO.getName());
 
         // Normalize CNPJ (remove formatting) before uniqueness check
-        String cnpjNormalized = createCompanyDTO.getTaxIdentifier().replaceAll("[^0-9]", "");
+        String cnpjNormalized = createCompanyDTO.getTaxIdentifier().replaceAll("([\\/\\-\\.])+", "");
         createCompanyDTO.setTaxIdentifier(cnpjNormalized);
 
         // Validate CNPJ uniqueness
