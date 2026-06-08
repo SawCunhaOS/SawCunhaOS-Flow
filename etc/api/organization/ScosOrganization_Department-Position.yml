@@ -148,6 +148,52 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_DEPARTMENT ]
+  /v1/departments/{id}/enable:
+    put:
+      tags:
+        - Department
+      summary: Activate department
+      description: Activate department
+      operationId: activateDepartment
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          description: No_Content
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ ENABLE_DEPARTMENT ]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
+        ttl: 1
+      x-cache: [ SCOS_ORGANIZATION_DEPARTMENT ]
+  /v1/departments/{id}/disable:
+    put:
+      tags:
+        - Department
+      summary: Inactivate department
+      description: Inactivate department
+      operationId: inactivateDepartment
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          description: No_Content
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ DISABLE_DEPARTMENT ]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
+        ttl: 1
+      x-cache: [ SCOS_ORGANIZATION_DEPARTMENT ]
   /v1/positions:
     get:
       tags:
@@ -276,6 +322,53 @@ paths:
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_POSITION ]
 
+
+  /v1/positions/{id}/enable:
+    put:
+      tags:
+        - Position
+      summary: Activate position
+      description: Activate position
+      operationId: activatePosition
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          description: No_Content
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ ENABLE_POSITION ]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
+        ttl: 1
+      x-cache: [ SCOS_ORGANIZATION_POSITION ]
+  /v1/positions/{id}/disable:
+    put:
+      tags:
+        - Position
+      summary: Inactivate position
+      description: Inactivate position
+      operationId: inactivatePosition
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          description: No_Content
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ DISABLE_POSITION ]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
+        ttl: 1
+      x-cache: [ SCOS_ORGANIZATION_POSITION ]
 
 components:
   schemas:

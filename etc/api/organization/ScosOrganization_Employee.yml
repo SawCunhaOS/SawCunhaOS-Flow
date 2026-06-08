@@ -23,7 +23,7 @@ tags:
     description: APIs para registro do endereços do Empregado
 
 paths:
-  /v1/employee:
+  /v1/employees:
     get:
       tags:
         - Employee
@@ -75,7 +75,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_EMPLOYEE, SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE_CONTACT ]
-  /v1/employee/{id}:
+  /v1/employees/{id}:
     get:
       tags:
         - Employee
@@ -150,7 +150,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_EMPLOYEE, SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE_CONTACT ]
-  /v1/employee/{id}/enable:
+  /v1/employees/{id}/enable:
     put:
       tags:
         - Employee
@@ -173,7 +173,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_EMPLOYEE, SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE_CONTACT ]
-  /v1/employee/{id}/disable:
+  /v1/employees/{id}/disable:
     put:
       tags:
         - Employee
@@ -196,7 +196,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_EMPLOYEE, SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE_CONTACT ]
-  /v1/employee/{employeeId}/contact:
+  /v1/employees/{employeeId}/contacts:
     get:
       tags:
         - Employee Contact
@@ -250,7 +250,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_CONTACT
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_CONTACT, SCOS_ORGANIZATION_EMPLOYEE ]
-  /v1/employee/{employeeId}/contact/{id}:
+  /v1/employees/{employeeId}/contacts/{id}:
     get:
       tags:
         - Employee Contact
@@ -327,7 +327,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_CONTACT
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_CONTACT, SCOS_ORGANIZATION_EMPLOYEE ]
-  /v1/employee/{employeeId}/address:
+  /v1/employees/{employeeId}/addresses:
     get:
       tags:
         - Employee Address
@@ -381,7 +381,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_ADDRESS
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE ]
-  /v1/employee/{employeeId}/address/{id}:
+  /v1/employees/{employeeId}/addresses/{id}:
     get:
       tags:
         - Employee Address

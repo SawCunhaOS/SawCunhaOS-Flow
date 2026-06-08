@@ -23,7 +23,7 @@ tags:
     description: APIs para retornar as funcionalidades do sistema
 
 paths:
-  /v1/employee/{employeeId}/login:
+  /v1/employees/{employeeId}/logins:
     get:
       tags:
         - Employee Login
@@ -76,7 +76,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_LOGIN
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN ]
-  /v1/employee/{employeeId}/login/{id}:
+  /v1/employees/{employeeId}/logins/{id}:
     get:
       tags:
         - Employee Login
@@ -154,7 +154,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_LOGIN
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN ]
-  /v1/employee/{employeeId}/login/{id}/block:
+  /v1/employees/{employeeId}/logins/{id}/block:
     put:
       tags:
         - Employee Login
@@ -178,7 +178,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_LOGIN
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN ]
-  /v1/employee/{employeeId}/login/{id}/unblock:
+  /v1/employees/{employeeId}/logins/{id}/unblock:
     put:
       tags:
         - Employee Login
@@ -202,7 +202,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_LOGIN
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN ]
-  /v1/employee/{employeeId}/login/{id}/password:
+  /v1/employees/{employeeId}/logins/{id}/password:
     put:
       tags:
         - Employee Login
@@ -233,7 +233,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_LOGIN
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN ]
-  /v1/employee/login/info:
+  /v1/logins/me:
     get:
       tags:
         - Employee Login
@@ -257,7 +257,7 @@ paths:
       x-authorize: [ GET_EMPLOYEE_LOGIN_INFO ]
       x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN_INFO ]
       
-  /v1/employee/{employeeId}/login/{id}/profile/{profileId}:
+  /v1/employees/{employeeId}/logins/{id}/profile/{profileId}:
     put:
       tags:
         - Employee Login
@@ -282,7 +282,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_LOGIN
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN ]
-  /v1/profile:
+  /v1/profiles:
     get:
       tags:
         - Profile
@@ -299,7 +299,7 @@ paths:
           content:
               application/json:
                 schema:
-                  $ref: '#/components/schemas/GetAllProfilesDTO'
+                  $ref: '#/components/schemas/GetAllProfilesResponse'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
@@ -320,7 +320,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateProfileDTO'
+              $ref: '#/components/schemas/CreateProfileRequest'
         x-jdempotentrequestpayload: true
       responses:
         '201':
@@ -334,7 +334,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_PROFILE
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_PROFILE ]
-  /v1/profile/{id}:
+  /v1/profiles/{id}:
     get:
       tags:
         - Profile
@@ -351,7 +351,7 @@ paths:
           content:
               application/json:
                 schema:
-                  $ref: '#/components/schemas/GetProfileDTO'
+                  $ref: '#/components/schemas/GetProfileResponse'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
@@ -373,7 +373,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateProfileDTO'
+              $ref: '#/components/schemas/UpdateProfileRequest'
         x-jdempotentrequestpayload: true
       responses:
         '204':
@@ -406,39 +406,13 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_PROFILE
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_PROFILE ]
-  /v1/profile/{id}/features:
+  /v1/profiles/{id}/features:
     put:
       tags:
         - Profile
       summary: Update features in profile
       description: Update features in profile
       operationId: updateFeaturesInProfile
-      parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FeaturesInProfileDTO'
-        x-jdempotentrequestpayload: true
-      responses:
-        '204':
-          description: No_Content
-        '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
-        '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_PROFILE ]
-      x-cache: [ SCOS_ORGANIZATION_PROFILE ]
-    delete:
-      tags:
-        - Profile
-      summary: Delete features in profile
-      description: Delete features in profile
-      operationId: deleteFeaturesInProfile
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -571,12 +545,12 @@ components:
           type: string
         description:
           type: string
-    GetProfileDTO:
+    GetProfileResponse:
       type: object
       properties:
         data:
           $ref: '#/components/schemas/ProfileDTO'
-    GetAllProfilesDTO:
+    GetAllProfilesResponse:
       type: object
       properties:
         data:
@@ -585,7 +559,7 @@ components:
             $ref: '#/components/schemas/ProfileDTO'
         PaginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
-    CreateProfileDTO:
+    CreateProfileRequest:
       required:
         - code
         - description
@@ -600,7 +574,7 @@ components:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-    UpdateProfileDTO:
+    UpdateProfileRequest:
       required:
         - code
         - description
@@ -627,7 +601,7 @@ components:
         dateCreated:
           type: string
           format: date
-    GetAllEmployeeLoginDTO:
+    GetAllEmployeeLoginsResponse:
       type: object
       properties:
         data:
@@ -653,12 +627,12 @@ components:
           format: date
         profile:
           $ref: '#/components/schemas/ProfileDTO'
-    GetEmployeeLoginDTO:
+    GetEmployeeLoginResponse:
       type: object
       properties:
         data:
           $ref: '#/components/schemas/LoginDTO'
-    CreatedEmployeeLoginDTO:
+    CreateEmployeeLoginRequest:
       required:
       - login
       - profileId
@@ -679,7 +653,7 @@ components:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-    UpdateEmployeeLoginDTO:
+    UpdateEmployeeLoginRequest:
       required:
         - login
         - profileId
@@ -712,7 +686,7 @@ components:
     LoginStatus:
       type: string
       enum:
-        - ENABLE
+        - ENABLED
         - BLOCKED
         - INACTIVE
         - PENDING

@@ -25,7 +25,7 @@ tags:
     description: APIs para registro dos documentos da Empresa
 
 paths:
-  /v1/company:
+  /v1/companies:
     get:
       tags:
         - Company
@@ -77,7 +77,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
-  /v1/company/{id}:
+  /v1/companies/{id}:
     get:
       tags:
         - Company
@@ -152,7 +152,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_COMPANY ]
-  /v1/company/{id}/enable:
+  /v1/companies/{id}/enable:
     put:
       tags:
         - Company
@@ -175,7 +175,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
-  /v1/company/{id}/disable:
+  /v1/companies/{id}/disable:
     put:
       tags:
         - Company
@@ -198,7 +198,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
-  /v1/company/{companyId}/contact:
+  /v1/companies/{companyId}/contacts:
     get:
       tags:
         - Company Contact
@@ -252,7 +252,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_CONTACT
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
-  /v1/company/{companyId}/contact/{id}:
+  /v1/companies/{companyId}/contacts/{id}:
     get:
       tags:
         - Company Contact
@@ -330,7 +330,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_CONTACT
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
-  /v1/company/{companyId}/address:
+  /v1/companies/{companyId}/addresses:
     get:
       tags:
         - Company Address
@@ -384,7 +384,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_ADDRESS
         ttl: 1
       x-cache: [ SCOS_ORGANIZATION_COMPANY_ADDRESS, SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT ]
-  /v1/company/{companyId}/address/{id}:
+  /v1/companies/{companyId}/addresses/{id}:
     get:
       tags:
         - Company Address
