@@ -37,12 +37,12 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "SCOS_EMPLOYEE_CONTACT")
-@Auditable
+@Auditable(auditRead = true)
 public class EmployeeContact extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CONTACT_ID")
+    @Column(name = "EMPLOYEE_ID_CONTACT")
     private Long id;
     @Column(name = "TYPE")
     private String type;

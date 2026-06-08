@@ -16,7 +16,10 @@ package br.com.sawcunhaos.organization.domain.model.employee;
 
 import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.foundation.utils.valueobjects.Cpf;
+import br.com.sawcunhaos.foundation.utils.valueobjects.Email;
+import br.com.sawcunhaos.organization.domain.exception.ExceptionCodeError;
 import br.com.sawcunhaos.organization.domain.model.company.Company;
 import br.com.sawcunhaos.organization.domain.model.department.Position;
 import br.com.sawcunhaos.organization.domain.model.login.Login;
@@ -24,6 +27,8 @@ import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -48,7 +53,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "SCOS_EMPLOYEE")
-@Auditable
+@Auditable(auditRead = true)
 public class Employee extends BaseEntity {
 
     @Id
@@ -63,18 +68,18 @@ public class Employee extends BaseEntity {
     @Embedded
     @AttributeOverride(name = "cpf", column = @Column(name = "TAX_IDENTIFIER"))
     private Cpf taxIdentifier;
-    @Column(name = "EMAIL")
-    private String email;
+    @Embedded
+    @AttributeOverride(name = "email", column = @Column(name = "EMAIL"))
+    private Email email;
     @Column(name = "BIRTH_DATE")
     private LocalDate birthDate;
     @Column(name = "OBSERVATION")
     private String observation;
-    @Column(name = "DATE_CREATED")
-    private LocalDate dateCreated;
-    @Column(name = "ACTIVE")
-    private boolean active;
     @Column(name = "DATE_OF_HIRING")
     private LocalDate dateOfHiring;
+    @Column(name = "STATUS")
+    @Enumerated(EnumType.STRING)
+    private StatusEmployee status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SUPERVISOR_ID")
@@ -88,7 +93,28 @@ public class Employee extends BaseEntity {
     @JoinColumn(name = "COMPANY_ID")
     private Company company;
 
-    @OneToMany(mappedBy = "employee",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
     private Set<Login> login;
 
+    public void activate() {
+        if (this.status == StatusEmployee.DISABLED || this.status == StatusEmployee.DELETED) {
+            throw new ScosException(ExceptionCodeError.SCOS_EMPLOYEE_001);
+        }
+        this.status = StatusEmployee.ACTIVE;
+    }
+
+    public void inactivate() {
+        if (this.status == StatusEmployee.DISABLED || this.status == StatusEmployee.DELETED) {
+            throw new ScosException(ExceptionCodeError.SCOS_EMPLOYEE_001);
+        }
+        this.status = StatusEmployee.INACTIVE;
+    }
+
+    public void disable() {
+        this.status = StatusEmployee.DISABLED;
+    }
+
+    public void delete() {
+        this.status = StatusEmployee.DELETED;
+    }
 }

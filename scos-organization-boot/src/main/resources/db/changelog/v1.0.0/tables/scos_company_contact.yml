@@ -39,6 +39,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: RESPONSIBLE_PERSON
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
                   name: CREATED_AT
                   type: TIMESTAMPTZ
                   defaultValueComputed: NOW()

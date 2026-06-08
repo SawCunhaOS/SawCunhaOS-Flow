@@ -31,13 +31,13 @@ import java.util.Optional;
 public interface CompanyRepository extends BaseJpaRepository<Company, Long>, JpaSpecificationExecutor<Company>, QuerydslPredicateExecutor<Company> {
     QCompany company = QCompany.company;
 
-    default Page<Company> findAllNotDeleted(Pageable pageable) {
-        return findAll(company.status.ne(StatusCompany.DELETED), pageable);
+    default Page<Company> findAllNotDisabled(Pageable pageable) {
+        return findAll(company.status.ne(StatusCompany.DISABLED), pageable);
     }
 
-    default Optional<Company> findNotDeletedById(Long id) {
+    default Optional<Company> findNotDisabledById(Long id) {
         return findOne(
-                company.status.ne(StatusCompany.DELETED)
+                company.status.ne(StatusCompany.DISABLED)
                         .and(company.id.eq(id))
         );
     }

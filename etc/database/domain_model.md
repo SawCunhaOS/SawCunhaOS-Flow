@@ -118,14 +118,15 @@ erDiagram
     }
 
     SCOS_COMPANY_CONTACT {
-        BIGINT         COMPANY_ID_CONTACT PK
-        BIGINT         COMPANY_ID         FK  "NOT NULL"
-        VARCHAR(50)    PHONE              UK  "NOT NULL"
-        VARCHAR(255)   EMAIL              UK  "NOT NULL"
-        VARCHAR(50)    TYPE               UK  "NOT NULL"
-        LOCALDATETIME  CREATED_AT             "NOT NULL"
-        LOCALDATETIME  UPDATED_AT             "NOT NULL"
-        VARCHAR(255)   USER_AT               "NOT NULL"
+        BIGINT         COMPANY_ID_CONTACT  PK
+        BIGINT         COMPANY_ID          FK  "NOT NULL"
+        VARCHAR(50)    PHONE               UK  "NOT NULL"
+        VARCHAR(255)   EMAIL               UK  "NOT NULL"
+        VARCHAR(50)    TYPE                UK  "NOT NULL"
+        VARCHAR(255)   RESPONSIBLE_PERSON      "NOT NULL"
+        LOCALDATETIME  CREATED_AT              "NOT NULL"
+        LOCALDATETIME  UPDATED_AT              "NOT NULL"
+        VARCHAR(255)   USER_AT                 "NOT NULL"
     }
 
     SCOS_PROFILE {
@@ -373,6 +374,7 @@ erDiagram
 | PHONE | VARCHAR(50) | UK, NOT NULL | Número de telefone com DDD |
 | EMAIL | VARCHAR(255) | UK, NOT NULL | E-mail de contato da empresa |
 | TYPE | VARCHAR(50) | UK, NOT NULL | Tipo do contato — ex: `COMMERCIAL`, `FINANCIAL`, `SUPPORT` |
+| RESPONSIBLE_PERSON | VARCHAR(255) | NOT NULL | Nome da pessoa responsável pelo contato na empresa |
 | CREATED_AT | LOCALDATETIME | NOT NULL | Data e hora em que o registro foi criado |
 | UPDATED_AT | LOCALDATETIME | NOT NULL | Data e hora da última atualização do registro |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou a última alteração |

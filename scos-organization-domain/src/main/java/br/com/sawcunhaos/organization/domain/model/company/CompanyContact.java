@@ -45,10 +45,8 @@ public class CompanyContact extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "CONTACT_ID")
+    @Column(name = "COMPANY_ID_CONTACT")
     private Long id;
-    @Column(name = "RESPONSIBLE_PERSON")
-    private String responsiblePerson;
     @Column(name = "TYPE")
     private String type;
     @Embedded
@@ -56,6 +54,8 @@ public class CompanyContact extends BaseEntity {
     private Email email;
     @Column(name = "PHONE")
     private String phone;
+    @Column(name = "RESPONSIBLE_PERSON")
+    private String responsiblePerson;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "COMPANY_ID")

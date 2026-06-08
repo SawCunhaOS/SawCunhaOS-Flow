@@ -27,8 +27,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Setter
 @Getter
 @NoArgsConstructor
@@ -51,8 +49,4 @@ public class Profile extends BaseEntity {
 
     @Column(name = "ACTIVE")
     private boolean active;
-
-    @Column(name = "FEATURES", columnDefinition = "text[]")
-    private List<String> features;
-
 }

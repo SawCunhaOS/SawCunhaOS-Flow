@@ -40,7 +40,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 import static br.com.sawcunhaos.organization.domain.exception.ExceptionCodeError.SCOS_COMPANY_007;
@@ -74,13 +73,9 @@ public class Company extends BaseEntity {
     private String sectorOfActivity;
     @Column(name = "OBSERVATION")
     private String observation;
-    @Column(name = "DATE_CREATED")
-    private LocalDate dateCreated;
     @Column(name = "STATUS")
     @Enumerated(EnumType.STRING)
     private StatusCompany status;
-    @Column(name = "ACTIVE")
-    private boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_COMPANY_ID")
@@ -92,58 +87,33 @@ public class Company extends BaseEntity {
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     private Set<CompanyAddress> companyAddresses = new HashSet<>();
 
-    // Métodos de negócio
-    /**
-     * Verifica se a empresa é uma matriz (não tem empresa-mãe)
-     */
     public boolean isMatrix() {
         return parentCompany == null;
     }
 
-    /**
-     * Verifica se a empresa está ativa
-     */
     public boolean isActive() {
-        return StatusCompany.ACTIVE == this.status && this.active;
+        return StatusCompany.ACTIVE == this.status;
     }
 
-    /**
-     * Inativa a empresa
-     */
     public void inactivate() {
-        if (this.status == StatusCompany.DELETED) {
+        if (this.status == StatusCompany.DISABLED || this.status == StatusCompany.DELETED) {
             throw new ScosException(SCOS_COMPANY_007);
         }
-        this.active = false;
         this.status = StatusCompany.INACTIVE;
     }
 
-    /**
-     * Ativa a empresa
-     */
     public void activate() {
-        if (this.status == StatusCompany.DELETED) {
+        if (this.status == StatusCompany.DISABLED || this.status == StatusCompany.DELETED) {
             throw new ScosException(SCOS_COMPANY_007);
         }
-        this.active = true;
         this.status = StatusCompany.ACTIVE;
     }
 
-    /**
-     * Desativa a empresa (soft-delete)
-     */
-    public void delete() {
-        this.active = false;
-        this.status = StatusCompany.DELETED;
+    public void disable() {
+        this.status = StatusCompany.DISABLED;
     }
 
-    /**
-     * Define a data de criação se ainda não estiver definida.
-     * Deve ser chamado antes de persistir a entidade.
-     */
-    public void defineDateCreated() {
-        if (Objects.isNull(this.dateCreated)) {
-            this.dateCreated = LocalDate.now();
-        }
+    public void delete() {
+        this.status = StatusCompany.DELETED;
     }
 }

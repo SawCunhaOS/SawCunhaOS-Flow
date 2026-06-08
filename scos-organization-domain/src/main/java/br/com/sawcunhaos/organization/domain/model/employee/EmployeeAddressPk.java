@@ -30,6 +30,6 @@ import lombok.Setter;
 public class EmployeeAddressPk {
     @Column(name = "EMPLOYEE_ID")
     private Long employeeId;
-    @Column(name = "ADDRESS_ID")
-    private Long addressId;
+    @Column(name = "EMPLOYEE_ID_ADDRESS")
+    private Long employeeIdAddress;
 }

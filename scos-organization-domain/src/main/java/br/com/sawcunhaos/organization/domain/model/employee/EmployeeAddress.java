@@ -36,7 +36,7 @@ import org.locationtech.jts.geom.Point;
 @Builder
 @Entity
 @Table(name = "SCOS_EMPLOYEE_ADDRESS")
-@Auditable
+@Auditable(auditRead = true)
 public class EmployeeAddress extends BaseEntity {
 
     @EmbeddedId

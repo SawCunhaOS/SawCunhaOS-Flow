@@ -18,6 +18,8 @@ import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
 import br.com.sawcunhaos.organization.domain.model.employee.Employee;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,7 +33,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Setter
@@ -41,7 +42,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "SCOS_LOGIN")
-@Auditable
+@Auditable(auditRead = true)
 public class Login extends BaseEntity {
 
     @Id
@@ -53,16 +54,11 @@ public class Login extends BaseEntity {
     private UUID keycloakId;
     @Column(name = "LOGIN")
     private String login;
-    @Column(name = "PASSWORD")
-    private String password;
-    @Column(name = "SALT")
-    private String salt;
     @Column(name = "STATUS")
     private String status;
-    @Column(name = "DATE_CREATED")
-    private LocalDate dateCreated;
-    @Column(name = "DATE_LAST_CHANGE_PASSWORD")
-    private LocalDate dateLastChangePassword;
+    @Column(name = "TYPE")
+    @Enumerated(EnumType.STRING)
+    private LoginType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PROFILE_ID")
@@ -71,5 +67,4 @@ public class Login extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "EMPLOYEE_ID")
     private Employee employee;
-
 }

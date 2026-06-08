@@ -46,6 +46,9 @@ public enum ExceptionCodeError implements ExceptionCode {
     SCOS_COMPANY_006("SCOS_COMPANY_006"),
     SCOS_COMPANY_007("SCOS_COMPANY_007"),
 
+    // Employee
+    SCOS_EMPLOYEE_001("SCOS_EMPLOYEE_001"),
+
     // User / Login
     SCOS_USER_001("SCOS_USER_001"),
     SCOS_USER_002("SCOS_USER_002"),

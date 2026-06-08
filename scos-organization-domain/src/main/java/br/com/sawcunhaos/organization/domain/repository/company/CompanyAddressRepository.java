@@ -14,6 +14,7 @@
 package br.com.sawcunhaos.organization.domain.repository.company;
 
 import br.com.sawcunhaos.organization.domain.model.company.CompanyAddress;
+import br.com.sawcunhaos.organization.domain.model.company.CompanyAddressPk;
 import br.com.sawcunhaos.organization.domain.model.company.QCompanyAddress;
 import br.com.sawcunhaos.organization.domain.model.company.StatusCompany;
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
@@ -27,26 +28,26 @@ import java.util.Optional;
 
 
 @Repository
-public interface CompanyAddressRepository extends BaseJpaRepository<CompanyAddress, Long>, JpaSpecificationExecutor<CompanyAddress>, QuerydslPredicateExecutor<CompanyAddress> {
+public interface CompanyAddressRepository extends BaseJpaRepository<CompanyAddress, CompanyAddressPk>, JpaSpecificationExecutor<CompanyAddress>, QuerydslPredicateExecutor<CompanyAddress> {
     QCompanyAddress qCompanyAddress = QCompanyAddress.companyAddress;
-
 
     default Page<CompanyAddress> findAll(final Long companyId, final Pageable pageable) {
         return findAll(
-                qCompanyAddress.company.id.eq(companyId)
-                        .and(qCompanyAddress.company.status.ne(StatusCompany.DELETED)),
+                qCompanyAddress.id.companyId.eq(companyId)
+                        .and(qCompanyAddress.company.status.ne(StatusCompany.DISABLED)),
                 pageable
         );
     }
 
-    default Optional<CompanyAddress> findCompanyContactByCompany(final Long companyId, final Long companyAddressId) {
+    default Optional<CompanyAddress> findByCompanyAndAddress(final Long companyId, final Long companyIdAddress) {
         return findOne(
-                qCompanyAddress.company.id.eq(companyId)
-                        .and(qCompanyAddress.company.status.ne(StatusCompany.DELETED))
-                        .and(qCompanyAddress.id.eq(companyAddressId))
+                qCompanyAddress.id.companyId.eq(companyId)
+                        .and(qCompanyAddress.company.status.ne(StatusCompany.DISABLED))
+                        .and(qCompanyAddress.id.companyIdAddress.eq(companyIdAddress))
         );
     }
 
-    void deleteByCompanyIdAndId(final Long companyId, final Long addressId);
-
+    default void deleteByCompanyIdAndAddressId(final Long companyId, final Long companyIdAddress) {
+        deleteById(new CompanyAddressPk(companyIdAddress, companyId));
+    }
 }
