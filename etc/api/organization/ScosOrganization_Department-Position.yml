@@ -12,7 +12,7 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0
   version: '1.0'
 servers:
-  - url: organization/api
+  - url: /organization/api
     description: Generated server url
 tags:
   - name: Department

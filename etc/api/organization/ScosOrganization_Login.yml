@@ -12,7 +12,7 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0
   version: '1.0'
 servers:
-  - url: organization/api
+  - url: /organization/api
     description: Generated server url
 tags:
   - name: Employee Login
@@ -50,9 +50,9 @@ paths:
     post:
       tags:
         - Employee Login
-      summary: Update employee contact
-      description: Update employee contact
-      operationId: updateEmployeeContact
+      summary: Create employee login
+      description: Create employee login
+      operationId: createEmployeeLogin
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -243,8 +243,6 @@ paths:
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: '#/components/parameters/idEmployee'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -395,7 +393,6 @@ paths:
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: '#/components/parameters/idEmployee'
         - $ref: './ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':

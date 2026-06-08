@@ -12,7 +12,7 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0
   version: '1.0'
 servers:
-  - url: organization/api
+  - url: /organization/api
     description: Generated server url
 tags:
   - name: Employee
@@ -114,7 +114,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateEmployeeAddressRequest'
+              $ref: '#/components/schemas/UpdateEmployeeRequest'
         x-jdempotentrequestpayload: true
       responses:
         '204':
@@ -291,7 +291,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateEmployeeContactDTO'
+              $ref: '#/components/schemas/UpdateEmployeeContactRequest'
       responses:
         '204':
           description: No_Content
@@ -422,7 +422,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateEmployeeContactRequest'
+              $ref: '#/components/schemas/UpdateEmployeeAddressRequest'
         x-jdempotentrequestpayload: true
       responses:
         '204':
@@ -520,7 +520,7 @@ components:
         company:
           $ref: '#/components/schemas/Company'
         position:
-          $ref: './InsideFlowPartners_Department-Position.yml#/components/schemas/Position'
+          $ref: './ScosOrganization_Department-Position.yml#/components/schemas/Position'
     Supervisor:
       type: object
       properties:
@@ -601,7 +601,7 @@ components:
           type: integer
           format: int64
           x-required-message: SCOS-003
-    UpdateEmployeeDTO:
+    UpdateEmployeeRequest:
       required:
         - name
         - nameTreatment
