@@ -13,8 +13,8 @@
 ## 3. Conformidade REST Level 2 e RFC 9110 nas Specs OpenAPI
 
 - [x] 3.1 Remover operação `DELETE /v1/profiles/{id}/features` com `requestBody` de `ScosOrganization_Login.yml` — manter apenas o `PUT` existente para substituição completa da lista
-- [x] 3.2 Adicionar `PUT /v1/departments/{id}/enable` e `PUT /v1/departments/{id}/disable` em `ScosOrganization_Department-Position.yml` com resposta `204 No Content` e `x-authorize: [ENABLE_DEPARTMENT]` / `[DISABLE_DEPARTMENT]`
-- [x] 3.3 Adicionar `PUT /v1/positions/{id}/enable` e `PUT /v1/positions/{id}/disable` em `ScosOrganization_Department-Position.yml` com resposta `204 No Content` e `x-authorize: [ENABLE_POSITION]` / `[DISABLE_POSITION]`
+- [x] 3.2 Adicionar `PUT /v1/departments/{id}/enable` e `PUT /v1/departments/{id}/disable` em `ScosOrganization_Department-Position.yml` com resposta `204 No_Content` e `x-authorize: [ENABLE_DEPARTMENT]` / `[DISABLE_DEPARTMENT]`
+- [x] 3.3 Adicionar `PUT /v1/positions/{id}/enable` e `PUT /v1/positions/{id}/disable` em `ScosOrganization_Department-Position.yml` com resposta `204 No_Content` e `x-authorize: [ENABLE_POSITION]` / `[DISABLE_POSITION]`
 
 ## 4. Padronização de Schemas nas Specs OpenAPI
 
@@ -42,5 +42,5 @@
 - [x] 6.3 Verificar que schemas renomeados em 4.1/4.2 usam sufixo `*Request`/`*Response` e nomes antigos `*DTO` foram removidos — PASS; DTOs restantes (`FeaturesDTO`, `ProfileDTO`, `LoginsDTO`, etc.) são schemas internos fora do escopo desta change
 - [x] 6.4 Verificar que `LoginStatus` contém `ENABLED` e não contém `ENABLE` — PASS (linha 689: `- ENABLED`)
 - [ ] 6.5 Verificar que `GET /v1/logins/me` retorna os dados do usuário autenticado quando chamado com JWT válido
-- [ ] 6.6 Verificar que `PUT /v1/departments/{id}/enable` e `PUT /v1/departments/{id}/disable` retornam `204 No Content`
-- [ ] 6.7 Verificar que `PUT /v1/positions/{id}/enable` e `PUT /v1/positions/{id}/disable` retornam `204 No Content`
+- [ ] 6.6 Verificar que `PUT /v1/departments/{id}/enable` e `PUT /v1/departments/{id}/disable` retornam `204 No_Content`
+- [ ] 6.7 Verificar que `PUT /v1/positions/{id}/enable` e `PUT /v1/positions/{id}/disable` retornam `204 No_Content`
