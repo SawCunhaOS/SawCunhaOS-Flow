@@ -14,7 +14,7 @@
                     converterClass="br.com.sawcunhaos.foundation.privacy.logback.ScosMaskingMdcConverter"/>
 
     <!-- Define o padrão dos logs -->
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %mask(%msg)%n - MDC: %mdc%n" />
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %mask(%msg) - MDC: %mdc%n" />
     <!-- Define o diretório onde os logs serão salvos -->
     <property name="LOG_DIR" value="logs" />
 
@@ -22,7 +22,7 @@
     <appender name="ScosConsole" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>
-                %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %mask(%msg)%n - MDC: %mdc%n
+                %d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %mask(%msg) - MDC: %mdc%n
             </pattern>
         </encoder>
     </appender>

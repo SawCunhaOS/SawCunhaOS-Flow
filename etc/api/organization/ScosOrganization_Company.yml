@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: SawCunhaOS Organization - Company
-  description: The SawCunhaOS Organization system contains APIs to use in organization management.
+  description: APIs para gestão de empresas, filiais, contatos e endereços.
   termsOfService: https://www.apache.org/licenses/LICENSE-2.0
   contact:
     name: Samuel Cunha
@@ -13,29 +13,27 @@ info:
   version: '1.0'
 servers:
   - url: /organization/api
-    description: Generated server url
 tags:
   - name: Company
     description: APIs para registro dos dados da Empresa
   - name: Company Contact
     description: APIs para registro dos dados de contato da Empresa
   - name: Company Address
-    description: APIs para registro do endereços da Empresa
-  - name: Company Document
-    description: APIs para registro dos documentos da Empresa
+    description: APIs para registro dos endereços da Empresa
 
 paths:
   /v1/companies:
     get:
-      tags:
-        - Company
-      summary: Get all Companies
-      description: Get all Companies
+      tags: [Company]
+      summary: Get all companies
+      description: UC-004 - Lista todas as empresas e filiais com paginação
       operationId: getAllCompanies
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/statusFilter'
+        - $ref: '#/components/parameters/nameFilter'
       responses:
         '200':
           description: OK
@@ -47,13 +45,14 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_COMPANY ]
-      x-cache: [ SCOS_ORGANIZATION_COMPANY ]
+      x-authorize: [GET_COMPANY]
+      x-cache: [SCOS_ORGANIZATION_COMPANY]
+      security:
+        - BearerAuth: []
     post:
-      tags:
-        - Company
+      tags: [Company]
       summary: Create a company
-      description: Create a company
+      description: UC-001/UC-002 - Cadastra empresa matriz (parentCompanyId nulo) ou filial
       operationId: createCompany
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -72,17 +71,19 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ CREATE_COMPANY ]
+      x-authorize: [CREATE_COMPANY]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
         ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
+      x-cache: [SCOS_ORGANIZATION_COMPANY]
+      security:
+        - BearerAuth: []
+
   /v1/companies/{id}:
     get:
-      tags:
-        - Company
-      summary: Get Company by id
-      description: Get Company by id
+      tags: [Company]
+      summary: Get company by id
+      description: UC-003 - Retorna os dados completos de uma empresa pelo ID
       operationId: getCompanyById
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -99,13 +100,14 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_COMPANY ]
-      x-cache: [ SCOS_ORGANIZATION_COMPANY ]
+      x-authorize: [GET_COMPANY]
+      x-cache: [SCOS_ORGANIZATION_COMPANY]
+      security:
+        - BearerAuth: []
     put:
-      tags:
-        - Company
-      summary: Update Company
-      description: Update Company
+      tags: [Company]
+      summary: Update company
+      description: UC-005 - Atualiza os dados cadastrais. Não altera o vínculo com a empresa mãe
       operationId: updateCompany
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -125,16 +127,17 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_COMPANY ]
+      x-authorize: [UPDATE_COMPANY]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
         ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
+      x-cache: [SCOS_ORGANIZATION_COMPANY]
+      security:
+        - BearerAuth: []
     delete:
-      tags:
-        - Company
-      summary: Delete Company
-      description: Delete Company
+      tags: [Company]
+      summary: Delete company
+      description: UC-008 - Exclusão lógica. Registro permanece com status DISABLED
       operationId: deleteCompany
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -147,17 +150,16 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ DELETE_COMPANY ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_COMPANY ]
+      x-authorize: [DELETE_COMPANY]
+      x-cache: [SCOS_ORGANIZATION_COMPANY]
+      security:
+        - BearerAuth: []
+
   /v1/companies/{id}/enable:
     put:
-      tags:
-        - Company
-      summary: Activate Company
-      description: Activate Company
+      tags: [Company]
+      summary: Activate company
+      description: UC-006 - Reativa empresa com status INACTIVE
       operationId: activateCompany
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -170,17 +172,16 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ ENABLE_COMPANY ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
+      x-authorize: [ENABLE_COMPANY]
+      x-cache: [SCOS_ORGANIZATION_COMPANY]
+      security:
+        - BearerAuth: []
+
   /v1/companies/{id}/disable:
     put:
-      tags:
-        - Company
+      tags: [Company]
       summary: Inactivate company
-      description: Inactivate company
+      description: UC-007 - Inativa empresa com status ACTIVE
       operationId: inactivateCompany
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -193,17 +194,70 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ DISABLE_COMPANY ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
+      x-authorize: [DISABLE_COMPANY]
+      x-cache: [SCOS_ORGANIZATION_COMPANY]
+      security:
+        - BearerAuth: []
+
+  /v1/companies/{id}/hierarchy:
+    get:
+      tags: [Company]
+      summary: Get company hierarchy
+      description: UC-009 - Retorna a hierarquia completa em árvore recursiva - matriz e filiais em todos os níveis
+      operationId: getCompanyHierarchy
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCompanyHierarchyResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_COMPANY]
+      x-cache: [SCOS_ORGANIZATION_COMPANY]
+      security:
+        - BearerAuth: []
+
+  /v1/companies/{id}/branches:
+    get:
+      tags: [Company]
+      summary: Get company branches
+      description: UC-010 - Lista as filiais diretamente vinculadas - primeiro nível, sem recursividade
+      operationId: getCompanyBranches
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '#/components/parameters/statusFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllCompaniesResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_COMPANY]
+      x-cache: [SCOS_ORGANIZATION_COMPANY]
+      security:
+        - BearerAuth: []
+
   /v1/companies/{companyId}/contacts:
     get:
-      tags:
-        - Company Contact
+      tags: [Company Contact]
       summary: Get all company contacts
-      description: Get all company contacts
+      description: UC-011 - Lista todos os contatos de uma empresa
       operationId: getAllCompanyContacts
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -214,20 +268,21 @@ paths:
         '200':
           description: OK
           content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/GetAllCompanyContactsResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllCompanyContactsResponse'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_COMPANY_CONTACT ]
-      x-cache: [ SCOS_ORGANIZATION_COMPANY_CONTACT ]
+      x-authorize: [GET_COMPANY_CONTACT]
+      x-cache: [SCOS_ORGANIZATION_COMPANY_CONTACT]
+      security:
+        - BearerAuth: []
     post:
-      tags:
-        - Company Contact
+      tags: [Company Contact]
       summary: Create a company contact
-      description: Create a company contact
+      description: UC-012 - Adiciona um contato à empresa
       operationId: createCompanyContact
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -247,17 +302,19 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ CREATE_COMPANY_CONTACT ]
+      x-authorize: [CREATE_COMPANY_CONTACT]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_CONTACT
         ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
+      x-cache: [SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY]
+      security:
+        - BearerAuth: []
+
   /v1/companies/{companyId}/contacts/{id}:
     get:
-      tags:
-        - Company Contact
+      tags: [Company Contact]
       summary: Get company contact by id
-      description: Get company contact by id
+      description: UC-013 - Retorna um contato específico da empresa
       operationId: getCompanyContactById
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -275,13 +332,14 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_COMPANY_CONTACT ]
-      x-cache: [ SCOS_ORGANIZATION_COMPANY_CONTACT ]
+      x-authorize: [GET_COMPANY_CONTACT]
+      x-cache: [SCOS_ORGANIZATION_COMPANY_CONTACT]
+      security:
+        - BearerAuth: []
     put:
-      tags:
-        - Company Contact
+      tags: [Company Contact]
       summary: Update company contact
-      description: Update company contact
+      description: UC-014 - Atualiza os dados de um contato da empresa
       operationId: updateCompanyContact
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -302,16 +360,14 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_COMPANY_CONTACT ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_CONTACT
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
+      x-authorize: [UPDATE_COMPANY_CONTACT]
+      x-cache: [SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY]
+      security:
+        - BearerAuth: []
     delete:
-      tags:
-        - Company Contact
+      tags: [Company Contact]
       summary: Delete company contact
-      description: Delete company contact
+      description: UC-015 - Remove um contato da empresa
       operationId: deleteCompanyContact
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -325,17 +381,16 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ DELETE_COMPANY_CONTACT ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_CONTACT
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_ADDRESS ]
+      x-authorize: [DELETE_COMPANY_CONTACT]
+      x-cache: [SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY]
+      security:
+        - BearerAuth: []
+
   /v1/companies/{companyId}/addresses:
     get:
-      tags:
-        - Company Address
-      summary: Get all company address
-      description: Get all company address
+      tags: [Company Address]
+      summary: Get all company addresses
+      description: UC-016 - Lista todos os endereços vinculados a uma empresa
       operationId: getAllCompanyAddress
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -353,13 +408,14 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_COMPANY_ADDRESS ]
-      x-cache: [ SCOS_ORGANIZATION_COMPANY_ADDRESS ]
+      x-authorize: [GET_COMPANY_ADDRESS]
+      x-cache: [SCOS_ORGANIZATION_COMPANY_ADDRESS]
+      security:
+        - BearerAuth: []
     post:
-      tags:
-        - Company Address
+      tags: [Company Address]
       summary: Create a company address
-      description: Create a company address
+      description: UC-017 - Vincula um endereço externo à empresa. Integridade do addressId garantida pela aplicação
       operationId: createCompanyAddress
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -379,17 +435,19 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ CREATE_COMPANY_ADDRESS ]
+      x-authorize: [CREATE_COMPANY_ADDRESS]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_ADDRESS
         ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_COMPANY_ADDRESS, SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT ]
+      x-cache: [SCOS_ORGANIZATION_COMPANY_ADDRESS, SCOS_ORGANIZATION_COMPANY]
+      security:
+        - BearerAuth: []
+
   /v1/companies/{companyId}/addresses/{id}:
     get:
-      tags:
-        - Company Address
+      tags: [Company Address]
       summary: Get company address by id
-      description: Get company address by id
+      description: UC-018 - Retorna o vínculo de endereço da empresa
       operationId: getCompanyAddressById
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -407,13 +465,14 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_COMPANY_ADDRESS ]
-      x-cache: [ SCOS_ORGANIZATION_COMPANY_ADDRESS ]
+      x-authorize: [GET_COMPANY_ADDRESS]
+      x-cache: [SCOS_ORGANIZATION_COMPANY_ADDRESS]
+      security:
+        - BearerAuth: []
     put:
-      tags:
-        - Company Address
+      tags: [Company Address]
       summary: Update company address
-      description: Update company address
+      description: UC-019 - Atualiza os dados do vínculo. Não altera o addressId externo
       operationId: updateCompanyAddress
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -434,16 +493,14 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_COMPANY_ADDRESS ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_ADDRESS
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_COMPANY_ADDRESS, SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT ]
+      x-authorize: [UPDATE_COMPANY_ADDRESS]
+      x-cache: [SCOS_ORGANIZATION_COMPANY_ADDRESS, SCOS_ORGANIZATION_COMPANY]
+      security:
+        - BearerAuth: []
     delete:
-      tags:
-        - Company Address
+      tags: [Company Address]
       summary: Delete company address
-      description: Delete company address
+      description: UC-020 - Remove o vínculo de endereço. O registro externo não é afetado
       operationId: deleteCompanyAddress
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -457,141 +514,17 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ DELETE_COMPANY_ADDRESS ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_ADDRESS
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_COMPANY_ADDRESS, SCOS_ORGANIZATION_COMPANY, SCOS_ORGANIZATION_COMPANY_CONTACT ]
-#  /v1/company/{companyId}/document:
-#    get:
-#      tags:
-#        - Company Document
-#      summary: Search company Documents
-#      description: Search company Documents
-#      operationId: searchCompanyDocuments
-#      parameters:
-#        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-#        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-#        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
-#        - $ref: '#/components/parameters/idCompany'
-#      responses:
-#        '200':
-#          description: OK
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/GetAllCompanyDocumentsDTO'
-#        '4XX':
-#          $ref: './ScosComponents.yml#/components/responses/4XX'
-#        '5XX':
-#          $ref: './ScosComponents.yml#/components/responses/5XX'
-#      x-authorize: [ GET_COMPANY_DOCUMENT ]
-#      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY_DOCUMENT ]
-#    post:
-#      tags:
-#        - Company Document
-#      summary: Create a company Document
-#      description: Create a company Document
-#      operationId: createCompanyDocument
-#      parameters:
-#        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-#        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-#        - $ref: '#/components/parameters/idCompany'
-#      requestBody:
-#        required: true
-#        content:
-#          application/json:
-#            schema:
-#              $ref: '#/components/schemas/CreateCompanyDocumentDTO'
-#        x-jdempotentrequestpayload: true
-#      responses:
-#        '201':
-#          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
-#        '4XX':
-#          $ref: './ScosComponents.yml#/components/responses/4XX'
-#        '5XX':
-#          $ref: './ScosComponents.yml#/components/responses/5XX'
-#      x-authorize: [ CREATE_COMPANY_DOCUMENT ]
-#      x-jdempotentresource:
-#        cachePrefix: INSIDE_FLOW_PARTNERS_IDP_COMPANY_DOCUMENT
-#        ttl: 1
-#      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY_DOCUMENT ]
-#  /v1/company/{companyId}/document/{idRequest}:
-#    get:
-#      tags:
-#        - Company Document
-#      summary: Search company Document
-#      description: Search company Document
-#      operationId: searchCompanyDocumentById
-#      parameters:
-#        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-#        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-#        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-#        - $ref: '#/components/parameters/idCompany'
-#      responses:
-#        '200':
-#          description: OK
-#          content:
-#            application/json:
-#              schema:
-#                $ref: '#/components/schemas/GetCompanyDocumentDTO'
-#        '4XX':
-#          $ref: './ScosComponents.yml#/components/responses/4XX'
-#        '5XX':
-#          $ref: './ScosComponents.yml#/components/responses/5XX'
-#      x-authorize: [ GET_COMPANY_DOCUMENT ]
-#      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY_DOCUMENT ]
-#    delete:
-#        tags:
-#          - Company Document
-#        summary: Delete company Document
-#        description: Delete company Document
-#        operationId: deleteCompanyDocument
-#        parameters:
-#          - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-#          - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-#          - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-#          - $ref: '#/components/parameters/idCompany'
-#        responses:
-#          '204':
-#            description: No_Content
-#          '4XX':
-#            $ref: './ScosComponents.yml#/components/responses/4XX'
-#          '5XX':
-#            $ref: './ScosComponents.yml#/components/responses/5XX'
-#        x-authorize: [ DELETE_COMPANY_DOCUMENT ]
-#        x-jdempotentresource:
-#          cachePrefix: INSIDE_FLOW_PARTNERS_IDP_COMPANY_DOCUMENT
-#          ttl: 1
-#        x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY_DOCUMENT ]
-#  /v1/company/{companyId}/document/{idRequest}/download:
-#    get:
-#      tags:
-#        - Company Document
-#      summary: Download company Document file
-#      description: Download company Document file
-#      operationId: downloadCompanyDocumentFile
-#      parameters:
-#        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-#        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-#        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-#        - $ref: '#/components/parameters/idCompany'
-#      responses:
-#        '200':
-#          $ref: './ScosComponents.yml#/components/responses/200_OK_BINARY'
-#        '4XX':
-#          $ref: './ScosComponents.yml#/components/responses/4XX'
-#        '5XX':
-#          $ref: './ScosComponents.yml#/components/responses/5XX'
-#      x-authorize: [ DOWNLOAD_COMPANY_DOCUMENT ]
-#      x-cache: [ INSIDE_FLOW_PARTNERS_COMPANY_DOCUMENT ]
+      x-authorize: [DELETE_COMPANY_ADDRESS]
+      x-cache: [SCOS_ORGANIZATION_COMPANY_ADDRESS, SCOS_ORGANIZATION_COMPANY]
+      security:
+        - BearerAuth: []
+
 components:
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-  
   parameters:
     idCompany:
       name: companyId
@@ -601,7 +534,18 @@ components:
         type: integer
         format: int64
       x-jdempotentrequestpayload: true
-
+    statusFilter:
+      name: status
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/StatusCompany'
+    nameFilter:
+      name: name
+      in: query
+      required: false
+      schema:
+        type: string
   schemas:
     Companies:
       type: object
@@ -617,8 +561,6 @@ components:
           type: string
         observation:
           type: string
-        active:
-          type: boolean
         status:
           $ref: '#/components/schemas/StatusCompany'
     Company:
@@ -636,15 +578,10 @@ components:
         foundationDate:
           type: string
           format: date
-        dateCreated:
-          type: string
-          format: date
         sectorOfActivity:
           type: string
         observation:
           type: string
-        active:
-          type: boolean
         parentCompany:
           $ref: '#/components/schemas/ParentCompany'
         status:
@@ -661,6 +598,24 @@ components:
           type: string
         taxIdentifier:
           type: string
+    CompanyHierarchyNode:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        nameTreatment:
+          type: string
+        taxIdentifier:
+          type: string
+        status:
+          $ref: '#/components/schemas/StatusCompany'
+        branches:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyHierarchyNode'
     GetCompanyResponse:
       type: object
       properties:
@@ -673,15 +628,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Companies'
-        PaginatedDTO:
+        paginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    GetCompanyHierarchyResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CompanyHierarchyNode'
     CreateCompanyRequest:
-      required:
-        - name
-        - nameTreatment
-        - taxIdentifier
-        - foundationDate
-        - sectorOfActivity
+      required: [name, nameTreatment, taxIdentifier, foundationDate, sectorOfActivity]
       type: object
       properties:
         name:
@@ -711,32 +666,34 @@ components:
         parentCompanyId:
           type: integer
           format: int64
+          description: Preenchido apenas para filiais. Nulo indica empresa matriz
     UpdateCompanyRequest:
-      required:
-        - name
-        - nameTreatment
-        - taxIdentifier
-        - foundationDate
-        - sectorOfActivity
+      required: [name, nameTreatment, taxIdentifier, foundationDate, sectorOfActivity]
       type: object
       properties:
         name:
           type: string
+          x-required-message: SCOS-003
+          x-empty-message: SCOS-001
         nameTreatment:
           type: string
+          x-required-message: SCOS-003
+          x-empty-message: SCOS-001
         taxIdentifier:
           type: string
+          x-required-message: SCOS-003
+          x-empty-message: SCOS-001
           x-is-cnpj: true
         foundationDate:
           type: string
           format: date
+          x-required-message: SCOS-003
         sectorOfActivity:
           type: string
+          x-required-message: SCOS-003
+          x-empty-message: SCOS-001
         observation:
           type: string
-        parentCompanyId:
-          type: integer
-          format: int64
     CompanyContact:
       type: object
       properties:
@@ -763,14 +720,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CompanyContact'
-        PaginatedDTO:
+        paginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateCompanyContactRequest:
-      required:
-        - type
-        - phone
-        - email
-        - responsiblePerson
+      required: [type, phone, email, responsiblePerson]
       type: object
       properties:
         type:
@@ -792,35 +745,26 @@ components:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-          x-jdempotentrequestpayload: true
     UpdateCompanyContactRequest:
-      required:
-        - type
-        - phone
-        - email
-        - responsiblePerson
+      required: [type, phone, email, responsiblePerson]
       type: object
       properties:
         type:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-          x-jdempotentrequestpayload: true
         phone:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-          x-jdempotentrequestpayload: true
         email:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-          x-jdempotentrequestpayload: true
         responsiblePerson:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-          x-jdempotentrequestpayload: true
     CompanyAddresses:
       type: object
       properties:
@@ -842,23 +786,11 @@ components:
         addressId:
           type: integer
           format: int64
-        street:
-          type: string
-        zipCode:
-          type: string
         type:
           type: string
         number:
           type: number
         complement:
-          type: string
-        district:
-          type: string
-        city:
-          type: string
-        state:
-          type: string
-        country:
           type: string
         latitude:
           type: number
@@ -876,16 +808,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CompanyAddresses'
-        PaginatedDTO:
+        paginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateCompanyAddressRequest:
-      required:
-        - type
-        - number
-        - complement
-        - latitude
-        - longitude
-        - addressId
+      required: [type, number, latitude, longitude, addressId]
       type: object
       properties:
         type:
@@ -899,7 +825,6 @@ components:
           x-jdempotentrequestpayload: true
         complement:
           type: string
-          x-required-message: SCOS-003
         latitude:
           type: number
           x-required-message: SCOS-003
@@ -912,12 +837,7 @@ components:
           x-required-message: SCOS-003
           x-jdempotentrequestpayload: true
     UpdateCompanyAddressRequest:
-      required:
-        - type
-        - number
-        - complement
-        - latitude
-        - longitude
+      required: [type, number, latitude, longitude]
       type: object
       properties:
         type:
@@ -929,7 +849,6 @@ components:
           x-required-message: SCOS-003
         complement:
           type: string
-          x-required-message: SCOS-003
         latitude:
           type: number
           x-required-message: SCOS-003
@@ -941,7 +860,7 @@ components:
       enum:
         - ACTIVE
         - INACTIVE
-        - DELETED
-          
+        - DISABLED
+
 security:
   - BearerAuth: []

@@ -41,11 +41,11 @@
         </dependency>
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>
-            <artifactId>scos-foundation-security</artifactId>
+            <artifactId>scos-foundation-privacy</artifactId>
         </dependency>
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>
-            <artifactId>scos-foundation-privacy</artifactId>
+            <artifactId>scos-security-starter</artifactId>
         </dependency>
 
         <dependency>
@@ -98,6 +98,10 @@
         <dependency>
             <groupId>com.github.ben-manes.caffeine</groupId>
             <artifactId>caffeine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
 
         <!-- Test -->

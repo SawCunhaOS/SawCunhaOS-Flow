@@ -23,6 +23,9 @@
         <module>scos-organization-application</module>
         <module>scos-organization-boot</module>
         <module>scos-organization-infrastructure</module>
+        <module>scos-security-starter</module>
+        <module>scos-organization-grpc-boot</module>
+        <module>scos-organization-grpc-proto</module>
     </modules>
 
     <parent>
@@ -109,6 +112,14 @@
             </dependency>
 
             <dependency>
+                <groupId>org.springframework.grpc</groupId>
+                <artifactId>spring-grpc-dependencies</artifactId>
+                <version>1.1.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>br.com.sawcunhaos</groupId>
                 <artifactId>scos-organization-domain</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
@@ -126,6 +137,18 @@
             <dependency>
                 <groupId>br.com.sawcunhaos</groupId>
                 <artifactId>scos-organization-infrastructure</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.sawcunhaos</groupId>
+                <artifactId>scos-security-starter</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <!-- GRPC -->
+            <dependency>
+                <groupId>br.com.sawcunhaos</groupId>
+                <artifactId>scos-organization-grpc-proto</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 

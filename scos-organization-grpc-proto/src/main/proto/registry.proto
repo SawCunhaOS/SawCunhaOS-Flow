@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "br.com.sawcunhaos.organization.grpc.proto";
+option java_outer_classname = "RegistryProto";
+
+package br.com.sawcunhaos.organization.grpc.proto;
+
+service ValidateAuthorityService {
+  rpc validate(AuthorityRequest) returns (AuthorityResponse);
+}
+
+service RegistryService {
+  rpc registrySystem(RegistrySystemRequest) returns (RegistrySystemResponse);
+  rpc registryResources(RegistryResourcesRequest) returns (Empty);
+}
+
+message AuthorityRequest {
+  string login = 1;
+}
+
+message AuthorityResponse {
+  string login = 1;
+  string name = 2;
+  string email = 3;
+  int64 company_id = 4;
+  string company_name = 5;
+  int64 branch_id = 6;
+  string branch_name = 7;
+  int64 employee_id = 8;
+  repeated string permissions = 9;
+}
+
+message RegistrySystemRequest {
+  string code = 1;
+  string description = 2;
+}
+
+message RegistrySystemResponse {
+  string system_id = 1;
+  string secret_key = 2;
+}
+
+message Resource {
+  string code = 1;
+  string description_pt = 2;
+  string description_en = 3;
+  bool active = 4;
+}
+
+message RegistryResourcesRequest {
+  string system_id = 1;
+  repeated Resource resources = 2;
+}
+
+message Empty {
+
+}

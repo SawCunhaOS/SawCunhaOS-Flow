@@ -8,11 +8,12 @@ databaseChangeLog:
             tag: v1.0.0
       rollback:
         - empty
-
   - include:
       file: tables/tables.yml
       relativeToChangelogFile: true
-
   - include:
       file: insert/insert.yml
+      relativeToChangelogFile: true
+  - include:
+      file: indexes/indexes.yml
       relativeToChangelogFile: true

@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: SawCunhaOS Organization - Department and Position
-  description: The SawCunhaOS Organization system contains APIs to use in organization management.
+  description: APIs para gestão de departamentos e cargos.
   termsOfService: https://www.apache.org/licenses/LICENSE-2.0
   contact:
     name: Samuel Cunha
@@ -13,7 +13,6 @@ info:
   version: '1.0'
 servers:
   - url: /organization/api
-    description: Generated server url
 tags:
   - name: Department
     description: APIs para registro e atualização dos departamentos
@@ -23,15 +22,15 @@ tags:
 paths:
   /v1/departments:
     get:
-      tags:
-        - Department
+      tags: [Department]
       summary: Get all departments
-      description: Get all departments
+      description: UC-022 - Lista todos os departamentos com paginação
       operationId: getAllDepartments
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/activeFilter'
       responses:
         '200':
           description: OK
@@ -43,13 +42,14 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_DEPARTMENT ]
-      x-cache: [ SCOS_ORGANIZATION_DEPARTMENT ]
+      x-authorize: [GET_DEPARTMENT]
+      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
+      security:
+        - BearerAuth: []
     post:
-      tags:
-        - Department
+      tags: [Department]
       summary: Create a department
-      description: Create a department
+      description: UC-021 - Cria um novo departamento
       operationId: createDepartment
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -68,17 +68,19 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ CREATE_DEPARTMENT ]
+      x-authorize: [CREATE_DEPARTMENT]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
         ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_DEPARTMENT ]
+      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
+      security:
+        - BearerAuth: []
+
   /v1/departments/{id}:
     get:
-      tags:
-        - Department
+      tags: [Department]
       summary: Get department by id
-      description: Get department by id
+      description: UC-023 - Retorna os dados de um departamento
       operationId: getDepartmentById
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -95,13 +97,14 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_DEPARTMENT ]
-      x-cache: [ SCOS_ORGANIZATION_DEPARTMENT ]
+      x-authorize: [GET_DEPARTMENT]
+      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
+      security:
+        - BearerAuth: []
     put:
-      tags:
-        - Department
+      tags: [Department]
       summary: Update department
-      description: Update department
+      description: UC-024 - Atualiza o código ou descrição de um departamento
       operationId: updateDepartment
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -121,16 +124,17 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_DEPARTMENT ]
+      x-authorize: [UPDATE_DEPARTMENT]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
         ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_DEPARTMENT ]
+      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
+      security:
+        - BearerAuth: []
     delete:
-      tags:
-        - Department
+      tags: [Department]
       summary: Delete department
-      description: Delete department
+      description: UC-027 - Exclusão lógica. Registro permanece com status DISABLED
       operationId: deleteDepartment
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -143,17 +147,16 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ DELETE_DEPARTMENT ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_DEPARTMENT ]
+      x-authorize: [DELETE_DEPARTMENT]
+      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
+      security:
+        - BearerAuth: []
+
   /v1/departments/{id}/enable:
     put:
-      tags:
-        - Department
+      tags: [Department]
       summary: Activate department
-      description: Activate department
+      description: UC-025 - Reativa departamento com status INACTIVE
       operationId: activateDepartment
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -166,17 +169,16 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ ENABLE_DEPARTMENT ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_DEPARTMENT ]
+      x-authorize: [ENABLE_DEPARTMENT]
+      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
+      security:
+        - BearerAuth: []
+
   /v1/departments/{id}/disable:
     put:
-      tags:
-        - Department
+      tags: [Department]
       summary: Inactivate department
-      description: Inactivate department
+      description: UC-026 - Inativa departamento com status ACTIVE
       operationId: inactivateDepartment
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -189,22 +191,23 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ DISABLE_DEPARTMENT ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_DEPARTMENT ]
+      x-authorize: [DISABLE_DEPARTMENT]
+      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
+      security:
+        - BearerAuth: []
+
   /v1/positions:
     get:
-      tags:
-        - Position
+      tags: [Position]
       summary: Get all positions
-      description: Get all positions
+      description: UC-029 - Lista todos os cargos com paginação. Pode filtrar por departamento
       operationId: getAllPositions
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/departmentIdFilter'
+        - $ref: '#/components/parameters/activeFilter'
       responses:
         '200':
           description: OK
@@ -216,13 +219,14 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_POSITION ]
-      x-cache: [ SCOS_ORGANIZATION_POSITION ]
+      x-authorize: [GET_POSITION]
+      x-cache: [SCOS_ORGANIZATION_POSITION]
+      security:
+        - BearerAuth: []
     post:
-      tags:
-        - Position
+      tags: [Position]
       summary: Create a position
-      description: Create a position
+      description: UC-028 - Cria um cargo vinculado a um departamento ativo
       operationId: createPosition
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -241,17 +245,19 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ CREATE_POSITION ]
+      x-authorize: [CREATE_POSITION]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
         ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_POSITION ]
-  /v1/positions/{id}: 
+      x-cache: [SCOS_ORGANIZATION_POSITION]
+      security:
+        - BearerAuth: []
+
+  /v1/positions/{id}:
     get:
-      tags:
-        - Position
+      tags: [Position]
       summary: Get position by id
-      description: Get position by id
+      description: UC-030 - Retorna os dados de um cargo incluindo o departamento
       operationId: getPositionById
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -268,13 +274,14 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_POSITION ]
-      x-cache: [ SCOS_ORGANIZATION_POSITION ]
+      x-authorize: [GET_POSITION]
+      x-cache: [SCOS_ORGANIZATION_POSITION]
+      security:
+        - BearerAuth: []
     put:
-      tags:
-        - Position
+      tags: [Position]
       summary: Update position
-      description: Update position
+      description: UC-031 - Atualiza o código, descrição ou departamento de um cargo
       operationId: updatePosition
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -294,16 +301,17 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_POSITION ]
+      x-authorize: [UPDATE_POSITION]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
         ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_POSITION ]
+      x-cache: [SCOS_ORGANIZATION_POSITION]
+      security:
+        - BearerAuth: []
     delete:
-      tags:
-        - Position
+      tags: [Position]
       summary: Delete position
-      description: Delete position
+      description: UC-034 - Exclusão lógica. Registro permanece com status DISABLED
       operationId: deletePosition
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -316,19 +324,16 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ DELETE_POSITION ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_POSITION ]
-
+      x-authorize: [DELETE_POSITION]
+      x-cache: [SCOS_ORGANIZATION_POSITION]
+      security:
+        - BearerAuth: []
 
   /v1/positions/{id}/enable:
     put:
-      tags:
-        - Position
+      tags: [Position]
       summary: Activate position
-      description: Activate position
+      description: UC-032 - Reativa cargo com status INACTIVE
       operationId: activatePosition
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -341,17 +346,16 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ ENABLE_POSITION ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_POSITION ]
+      x-authorize: [ENABLE_POSITION]
+      x-cache: [SCOS_ORGANIZATION_POSITION]
+      security:
+        - BearerAuth: []
+
   /v1/positions/{id}/disable:
     put:
-      tags:
-        - Position
+      tags: [Position]
       summary: Inactivate position
-      description: Inactivate position
+      description: UC-033 - Inativa cargo com status ACTIVE
       operationId: inactivatePosition
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -364,13 +368,31 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ DISABLE_POSITION ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_POSITION ]
+      x-authorize: [DISABLE_POSITION]
+      x-cache: [SCOS_ORGANIZATION_POSITION]
+      security:
+        - BearerAuth: []
 
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    activeFilter:
+      name: active
+      in: query
+      required: false
+      schema:
+        type: boolean
+    departmentIdFilter:
+      name: departmentId
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int64
   schemas:
     Department:
       type: object
@@ -396,26 +418,23 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Department'
-        PaginatedDTO:
+        paginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateDepartmentRequest:
-      required:
-        - code
-        - description
+      required: [code, description]
       type: object
       properties:
         code:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
+          x-jdempotentrequestpayload: true
         description:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
     UpdateDepartmentRequest:
-      required:
-        - code
-        - description
+      required: [code, description]
       type: object
       properties:
         code:
@@ -426,7 +445,6 @@ components:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-    
     Position:
       type: object
       properties:
@@ -453,19 +471,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Position'
-        PaginatedDTO:
+        paginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     CreatePositionRequest:
-      required:
-        - code
-        - description
-        - departmentId
+      required: [code, description, departmentId]
       type: object
       properties:
         code:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
+          x-jdempotentrequestpayload: true
         description:
           type: string
           x-required-message: SCOS-003
@@ -475,10 +491,7 @@ components:
           format: int64
           x-required-message: SCOS-003
     UpdatePositionRequest:
-      required:
-        - code
-        - description
-        - departmentId
+      required: [code, description, departmentId]
       type: object
       properties:
         code:
@@ -493,3 +506,6 @@ components:
           type: integer
           format: int64
           x-required-message: SCOS-003
+
+security:
+  - BearerAuth: []

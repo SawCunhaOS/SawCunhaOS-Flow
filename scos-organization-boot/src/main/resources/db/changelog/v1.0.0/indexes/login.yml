@@ -1,0 +1,99 @@
+databaseChangeLog:
+  # ============================================================
+  # idx_scos_login_login
+  # Hot path: toda requisição autenticada busca o login por username.
+  # ============================================================
+  - changeSet:
+      id: 20260612-Index-001
+      author: Samuel.Cunha
+      changes:
+        - createIndex:
+            schemaName: scos
+            tableName: scos_login
+            indexName: idx_scos_login_login
+            columns:
+              - column:
+                  name: login
+
+  # ============================================================
+  # idx_scos_login_keycloak_id (parcial — somente registros não nulos)
+  # Reconciliação pós-Saga: busca do login pelo ID do Keycloak.
+  # ============================================================
+  - changeSet:
+      id: 20260612-Index-002
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX IF NOT EXISTS idx_scos_login_keycloak_id
+              ON scos.scos_login (keycloak_id)
+              WHERE keycloak_id IS NOT NULL;
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_scos_login_keycloak_id;
+
+  # ============================================================
+  # idx_scos_login_status
+  # Filtro de logins ativos nas queries das views de autorização.
+  # ============================================================
+  - changeSet:
+      id: 20260612-Index-003
+      author: Samuel.Cunha
+      changes:
+        - createIndex:
+            schemaName: scos
+            tableName: scos_login
+            indexName: idx_scos_login_status
+            columns:
+              - column:
+                  name: status
+
+  # ============================================================
+  # idx_scos_profile_resource_profile_id
+  # Join central das views: varredura de todos os recursos de um perfil.
+  # ============================================================
+  - changeSet:
+      id: 20260612-Index-004
+      author: Samuel.Cunha
+      changes:
+        - createIndex:
+            schemaName: scos
+            tableName: scos_profile_resource
+            indexName: idx_scos_profile_resource_profile_id
+            columns:
+              - column:
+                  name: profile_id
+
+  # ============================================================
+  # idx_scos_resource_system_active (parcial — somente recursos ativos)
+  # Filtra recursos ativos por sistema evitando varredura completa.
+  # ============================================================
+  - changeSet:
+      id: 20260612-Index-005
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX IF NOT EXISTS idx_scos_resource_system_active
+              ON scos.scos_resource (system_id, active)
+              WHERE active = true;
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_scos_resource_system_active;
+
+  # ============================================================
+  # idx_scos_company_parent_company_id (parcial — somente filiais)
+  # Resolução empresa/filial: localiza a matriz a partir de uma filial.
+  # ============================================================
+  - changeSet:
+      id: 20260612-Index-006
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX IF NOT EXISTS idx_scos_company_parent_company_id
+              ON scos.scos_company (parent_company_id)
+              WHERE parent_company_id IS NOT NULL;
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_scos_company_parent_company_id;

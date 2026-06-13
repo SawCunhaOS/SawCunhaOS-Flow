@@ -1,7 +1,10 @@
 openapi: 3.0.3
 info:
   title: SawCunhaOS Organization - Login
-  description: The SawCunhaOS Organization system contains APIs to use in organization management.
+  description: |
+    APIs para gestão de usuários de acesso, perfis e recursos.
+    A autenticação (senha, sessão, troca de senha) é gerenciada pelo Keycloak.
+    Este módulo gerencia o vínculo do usuário, seu perfil e suas permissões.
   termsOfService: https://www.apache.org/licenses/LICENSE-2.0
   contact:
     name: Samuel Cunha
@@ -13,26 +16,277 @@ info:
   version: '1.0'
 servers:
   - url: /organization/api
-    description: Generated server url
 tags:
-  - name: Employee Login
-    description: APIs para gerenciar o login do empregado
+  - name: Login
+    description: APIs para gerenciar logins de funcionários, externos e serviços
   - name: Profile
-    description: APIs para gerenciar o perfil do login do empregado
-  - name: Features
-    description: APIs para retornar as funcionalidades do sistema
+    description: APIs para gerenciar perfis de acesso e seus recursos
+  - name: Resource
+    description: APIs para listar os recursos disponíveis por sistema
 
 paths:
-  /v1/employees/{employeeId}/logins:
+  /v1/logins:
     get:
-      tags:
-        - Employee Login
-      summary: Get all employee login
-      description: Get all employee login
-      operationId: getAllEmployeeLogin
+      tags: [Login]
+      summary: Get all logins
+      description: UC-058 - Lista todos os logins do sistema - funcionários, externos e serviços
+      operationId: getAllLogins
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/typeFilter'
+        - $ref: '#/components/parameters/statusFilter'
+        - $ref: '#/components/parameters/employeeIdFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllLoginsResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_LOGIN]
+      x-cache: [SCOS_ORGANIZATION_LOGIN]
+      security:
+        - BearerAuth: []
+    post:
+      tags: [Login]
+      summary: Create a login
+      description: UC-057 - Cria login sem vínculo com funcionário para EXTERNAL ou SERVICE. Inicia a Saga Keycloak
+      operationId: createLogin
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoginRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_LOGIN]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        ttl: 1
+      x-cache: [SCOS_ORGANIZATION_LOGIN]
+      security:
+        - BearerAuth: []
+
+  /v1/logins/me:
+    get:
+      tags: [Login]
+      summary: Get current login information
+      description: UC-059 - Retorna o contexto completo do usuário autenticado - dados pessoais, empresa, filial, perfil e permissões
+      operationId: getLoginMe
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLoginMeResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_LOGIN_INFO]
+      x-cache: [SCOS_ORGANIZATION_LOGIN_INFO]
+      security:
+        - BearerAuth: []
+
+  /v1/logins/{id}:
+    get:
+      tags: [Login]
+      summary: Get login by id
+      description: UC-060 - Retorna os dados de um login pelo identificador interno
+      operationId: getLoginById
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLoginResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_LOGIN]
+      x-cache: [SCOS_ORGANIZATION_LOGIN]
+      security:
+        - BearerAuth: []
+    put:
+      tags: [Login]
+      summary: Update login
+      description: UC-062 - Atualiza o e-mail de login. Dispara Saga Keycloak TYPE=UPDATE
+      operationId: updateLogin
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLoginRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          description: No_Content
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_LOGIN]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        ttl: 1
+      x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+      security:
+        - BearerAuth: []
+    delete:
+      tags: [Login]
+      summary: Delete login
+      description: UC-066 - Exclusão definitiva. Dispara Saga Keycloak TYPE=DELETE. Falha após MAX_RETRIES pode ser reprocessada via Integration API
+      operationId: deleteLogin
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          description: No_Content
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DELETE_LOGIN]
+      x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+      security:
+        - BearerAuth: []
+
+  /v1/logins/{id}/block:
+    put:
+      tags: [Login]
+      summary: Block login
+      description: UC-063 - Bloqueia o acesso por segurança. Dispara Saga Keycloak TYPE=UPDATE desabilitando o usuário (enabled=false)
+      operationId: blockLogin
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          description: No_Content
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_LOGIN_STATUS]
+      x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+      security:
+        - BearerAuth: []
+
+  /v1/logins/{id}/unblock:
+    put:
+      tags: [Login]
+      summary: Unblock login
+      description: UC-064 - Restaura o acesso de um login BLOCKED. Dispara Saga Keycloak TYPE=UPDATE reabilitando o usuário (enabled=true)
+      operationId: unblockLogin
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          description: No_Content
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_LOGIN_STATUS]
+      x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+      security:
+        - BearerAuth: []
+
+  /v1/logins/{id}/profile/{profileId}:
+    put:
+      tags: [Login]
+      summary: Update login profile
+      description: UC-065 - Substitui o perfil do login. Novas permissões valem na próxima validação
+      operationId: updateLoginProfile
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '#/components/parameters/idProfile'
+      responses:
+        '204':
+          description: No_Content
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_LOGIN]
+      x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+      security:
+        - BearerAuth: []
+
+  /v1/logins/keycloak/{keycloakId}:
+    get:
+      tags: [Login]
+      summary: Get login by Keycloak ID
+      description: UC-061 - Busca o login pelo identificador do Keycloak. Logins com KEYCLOAK_ID nulo não são retornados
+      operationId: getLoginByKeycloakId
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/keycloakId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLoginResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_LOGIN]
+      x-cache: [SCOS_ORGANIZATION_LOGIN]
+      security:
+        - BearerAuth: []
+
+  /v1/employees/{employeeId}/logins:
+    get:
+      tags: [Login]
+      summary: Get all employee logins
+      description: UC-055 - Lista os logins de um funcionário incluindo todos os status para histórico
+      operationId: getAllEmployeeLogins
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/idEmployee'
       responses:
         '200':
@@ -40,18 +294,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetAllEmployeeLoginResponse'
+                $ref: '#/components/schemas/GetAllLoginsResponse'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_EMPLOYEE_LOGIN ]
-      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN ]
+      x-authorize: [GET_LOGIN]
+      x-cache: [SCOS_ORGANIZATION_LOGIN]
+      security:
+        - BearerAuth: []
     post:
-      tags:
-        - Employee Login
+      tags: [Login]
       summary: Create employee login
-      description: Create employee login
+      description: UC-054 - Cria login tipo EMPLOYEE vinculado ao funcionário. Inicia a Saga Keycloak com atributos de empresa e filial
       operationId: createEmployeeLogin
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -71,17 +326,19 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_EMPLOYEE_LOGIN ]
+      x-authorize: [CREATE_LOGIN]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
         ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN ]
+      x-cache: [SCOS_ORGANIZATION_LOGIN]
+      security:
+        - BearerAuth: []
+
   /v1/employees/{employeeId}/logins/{id}:
     get:
-      tags:
-        - Employee Login
+      tags: [Login]
       summary: Get employee login by id
-      description: Get employee login by id
+      description: UC-056 - Retorna um login específico do funcionário incluindo perfil e status da integração
       operationId: getEmployeeLoginById
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -94,227 +351,50 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetEmployeeLoginResponse'
+                $ref: '#/components/schemas/GetLoginResponse'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_EMPLOYEE_LOGIN ]
-      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN ]
-    put:
-      tags:
-        - Employee Login
-      summary: Update employee login
-      description: Update employee login
-      operationId: updateEmployeeLogin
-      parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: '#/components/parameters/idEmployee'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateEmployeeLoginRequest'
-        x-jdempotentrequestpayload: true
-      responses:
-        '204':
-          description: No_Content
-        '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
-        '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_EMPLOYEE_LOGIN ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_LOGIN
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN ]
-    delete:
-      tags:
-        - Employee Login
-      summary: Delete employee login
-      description: Delete employee login
-      operationId: deleteEmployeeLogin
-      parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: '#/components/parameters/idEmployee'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-      responses:
-        '204':
-          description: No_Content
-        '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
-        '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ DELETE_EMPLOYEE_LOGIN ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_LOGIN
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN ]
-  /v1/employees/{employeeId}/logins/{id}/block:
-    put:
-      tags:
-        - Employee Login
-      summary: Block login
-      description: Block login
-      operationId: blockEmployeeLogin
-      parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: '#/components/parameters/idEmployee'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-      responses:
-        '204':
-          description: No_Content
-        '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
-        '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_EMPLOYEE_LOGIN_STATUS ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_LOGIN
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN ]
-  /v1/employees/{employeeId}/logins/{id}/unblock:
-    put:
-      tags:
-        - Employee Login
-      summary: Unblock login
-      description: Unblock login
-      operationId: unblockEmployeeLogin
-      parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: '#/components/parameters/idEmployee'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-      responses:
-        '204':
-          description: No_Content
-        '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
-        '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_EMPLOYEE_LOGIN_STATUS ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_LOGIN
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN ]
-  /v1/employees/{employeeId}/logins/{id}/password:
-    put:
-      tags:
-        - Employee Login
-      summary: Change password Login
-      description: Change password Login
-      operationId: changePasswordLogin
-      parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: '#/components/parameters/idEmployee'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ChangePasswordLoginDTO'
-        x-jdempotentrequestpayload: true
-      responses:
-        '204':
-          description: No_Content
-        '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
-        '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_EMPLOYEE_LOGIN_PASSWORD ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_LOGIN
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN ]
-  /v1/logins/me:
+      x-authorize: [GET_LOGIN]
+      x-cache: [SCOS_ORGANIZATION_LOGIN]
+      security:
+        - BearerAuth: []
+
+  /v1/profiles:
     get:
-      tags:
-        - Employee Login
-      summary: get Information login
-      description: get Information login
-      operationId: getInformationLogin
+      tags: [Profile]
+      summary: Get all profiles
+      description: UC-068 - Lista todos os perfis com paginação
+      operationId: getAllProfiles
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/activeFilter'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetInformationLoginDTO'
+                $ref: '#/components/schemas/GetAllProfilesResponse'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_EMPLOYEE_LOGIN_INFO ]
-      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN_INFO ]
-      
-  /v1/employees/{employeeId}/logins/{id}/profile/{profileId}:
-    put:
-      tags:
-        - Employee Login
-      summary: Update profile login
-      description: Update profile login
-      operationId: updateEmployeeLoginProfile
+      x-authorize: [GET_PROFILE]
+      x-cache: [SCOS_ORGANIZATION_PROFILE]
+      security:
+        - BearerAuth: []
+    post:
+      tags: [Profile]
+      summary: Create profile
+      description: UC-067 - Cria um perfil de acesso. Sem recursos atribuídos não concede nenhum acesso
+      operationId: createProfile
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: '#/components/parameters/idEmployee'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-        - $ref: '#/components/parameters/idProfile'
-      responses:
-        '204':
-          description: No_Content
-        '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
-        '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_EMPLOYEE_LOGIN ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_LOGIN
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_EMPLOYEE_LOGIN ]
-  /v1/profiles:
-    get:
-      tags:
-        - Profile
-      summary: Get all profiles
-      description: Get all profiles
-      operationId: getAllProfiles
-      parameters:
-          - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-          - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-          - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
-      responses:
-        '200':
-          description: OK
-          content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/GetAllProfilesResponse'
-        '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
-        '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_PROFILE ]
-      x-cache: [ SCOS_ORGANIZATION_PROFILE ]
-    post:
-      tags:
-        - Profile
-      summary: Create profile
-      description: Create profile
-      operationId: createProfile
-      parameters:
-          - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-          - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
       requestBody:
         required: true
         content:
@@ -329,40 +409,43 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ CREATE_PROFILE ]
+      x-authorize: [CREATE_PROFILE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_PROFILE
         ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_PROFILE ]
+      x-cache: [SCOS_ORGANIZATION_PROFILE]
+      security:
+        - BearerAuth: []
+
   /v1/profiles/{id}:
     get:
-      tags:
-        - Profile
+      tags: [Profile]
       summary: Get profile by id
-      description: Get profile by id
+      description: UC-069 - Retorna os dados do perfil incluindo recursos atribuídos
       operationId: getProfileById
       parameters:
-          - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-          - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-          - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
           content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/GetProfileResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProfileResponse'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_PROFILE ]
-      x-cache: [ SCOS_ORGANIZATION_PROFILE ]
+      x-authorize: [GET_PROFILE]
+      x-cache: [SCOS_ORGANIZATION_PROFILE]
+      security:
+        - BearerAuth: []
     put:
-      tags:
-        - Profile
+      tags: [Profile]
       summary: Update profile
-      description: Update profile
+      description: UC-070 - Atualiza o código ou descrição. Para os recursos use o endpoint de resources
       operationId: updateProfile
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -382,13 +465,17 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_PROFILE ]
-      x-cache: [ SCOS_ORGANIZATION_PROFILE ]
+      x-authorize: [UPDATE_PROFILE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_PROFILE
+        ttl: 1
+      x-cache: [SCOS_ORGANIZATION_PROFILE]
+      security:
+        - BearerAuth: []
     delete:
-      tags:
-        - Profile
+      tags: [Profile]
       summary: Delete profile
-      description: Delete profile
+      description: UC-073 - Exclusão lógica. Registro permanece com status DISABLED
       operationId: deleteProfile
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -401,18 +488,86 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ DELETE_PROFILE ]
-      x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_PROFILE
-        ttl: 1
-      x-cache: [ SCOS_ORGANIZATION_PROFILE ]
-  /v1/profiles/{id}/features:
+      x-authorize: [DELETE_PROFILE]
+      x-cache: [SCOS_ORGANIZATION_PROFILE]
+      security:
+        - BearerAuth: []
+
+  /v1/profiles/{id}/enable:
     put:
-      tags:
-        - Profile
-      summary: Update features in profile
-      description: Update features in profile
-      operationId: updateFeaturesInProfile
+      tags: [Profile]
+      summary: Activate profile
+      description: UC-071 - Reativa perfil com status INACTIVE
+      operationId: activateProfile
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          description: No_Content
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ENABLE_PROFILE]
+      x-cache: [SCOS_ORGANIZATION_PROFILE]
+      security:
+        - BearerAuth: []
+
+  /v1/profiles/{id}/disable:
+    put:
+      tags: [Profile]
+      summary: Inactivate profile
+      description: UC-072 - Inativa perfil. Logins existentes não são afetados - impede apenas novas atribuições
+      operationId: inactivateProfile
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          description: No_Content
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DISABLE_PROFILE]
+      x-cache: [SCOS_ORGANIZATION_PROFILE]
+      security:
+        - BearerAuth: []
+
+  /v1/profiles/{id}/resources:
+    get:
+      tags: [Profile]
+      summary: Get profile resources
+      description: UC-074 - Lista os recursos atribuídos ao perfil
+      operationId: getProfileResources
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetProfileResourcesResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_PROFILE]
+      x-cache: [SCOS_ORGANIZATION_PROFILE]
+      security:
+        - BearerAuth: []
+    put:
+      tags: [Profile]
+      summary: Update resources in profile
+      description: UC-075 - Substitui a lista completa de recursos do perfil. Logins refletem na próxima validação
+      operationId: updateProfileResources
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -422,7 +577,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FeaturesInProfileDTO'
+              $ref: '#/components/schemas/UpdateProfileResourcesRequest'
         x-jdempotentrequestpayload: true
       responses:
         '204':
@@ -431,33 +586,38 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ UPDATE_PROFILE ]
-      x-cache: [ SCOS_ORGANIZATION_PROFILE ]
-  /v1/features:
+      x-authorize: [UPDATE_PROFILE]
+      x-cache: [SCOS_ORGANIZATION_PROFILE, SCOS_ORGANIZATION_LOGIN_INFO]
+      security:
+        - BearerAuth: []
+
+  /v1/resources:
     get:
-      tags:
-        - Features
-      summary: Get all features
-      description: Get all features
-      operationId: getAllFeatures
+      tags: [Resource]
+      summary: Get all resources
+      description: UC-076 - Lista os recursos cadastrados pelos sistemas externos. Somente leitura - cadastro via scos-registry (gRPC)
+      operationId: getAllResources
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
-        - $ref: '#/components/parameters/module'
+        - $ref: '#/components/parameters/systemIdFilter'
+        - $ref: '#/components/parameters/activeFilter'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetAllFeaturesDTO'
+                $ref: '#/components/schemas/GetAllResourcesResponse'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ GET_FEATURES ]
-      x-cache: [ SCOS_ORGANIZATION_FEATURES ]
+      x-authorize: [GET_RESOURCE]
+      x-cache: [SCOS_ORGANIZATION_RESOURCE]
+      security:
+        - BearerAuth: []
 
 components:
   securitySchemes:
@@ -482,60 +642,211 @@ components:
         type: integer
         format: int64
       x-jdempotentrequestpayload: true
-    module:
-      name: module
-      in: header
-      required: false
-      description: Indica o modulo do sistema inside flow
+    keycloakId:
+      name: keycloakId
+      in: path
+      required: true
+      description: Identificador do usuário no Keycloak (UUID)
       schema:
         type: string
         format: uuid
-        example: "ORGANIZATION"
-
+    typeFilter:
+      name: type
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/LoginType'
+    statusFilter:
+      name: status
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/LoginStatus'
+    employeeIdFilter:
+      name: employeeId
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int64
+    systemIdFilter:
+      name: systemId
+      in: query
+      required: false
+      description: Filtra recursos por sistema cadastrado
+      schema:
+        type: string
+        format: uuid
+    activeFilter:
+      name: active
+      in: query
+      required: false
+      schema:
+        type: boolean
   schemas:
-    GetAllModulesDTO:
+    LoginStatus:
+      type: string
+      enum:
+        - ACTIVE
+        - BLOCKED
+        - INACTIVE
+        - PENDING
+    LoginType:
+      type: string
+      enum:
+        - EMPLOYEE
+        - EXTERNAL
+        - SERVICE
+    LoginSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        login:
+          type: string
+        type:
+          $ref: '#/components/schemas/LoginType'
+        status:
+          $ref: '#/components/schemas/LoginStatus'
+    Login:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        login:
+          type: string
+        keycloakId:
+          type: string
+          format: uuid
+        type:
+          $ref: '#/components/schemas/LoginType'
+        status:
+          $ref: '#/components/schemas/LoginStatus'
+        profile:
+          $ref: '#/components/schemas/ProfileSummary'
+        employee:
+          $ref: '#/components/schemas/LoginEmployee'
+    LoginEmployee:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    LoginMe:
+      type: object
+      description: Contexto completo do usuário autenticado
+      properties:
+        loginId:
+          type: integer
+          format: int64
+        login:
+          type: string
+        type:
+          $ref: '#/components/schemas/LoginType'
+        status:
+          $ref: '#/components/schemas/LoginStatus'
+        employeeId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        nameTreatment:
+          type: string
+        position:
+          type: string
+        department:
+          type: string
+        company:
+          $ref: '#/components/schemas/LoginMeCompany'
+        branch:
+          $ref: '#/components/schemas/LoginMeCompany'
+        profileId:
+          type: integer
+          format: int64
+        profileCode:
+          type: string
+        profileDescription:
+          type: string
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceSummary'
+    LoginMeCompany:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+    GetLoginResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Login'
+    GetAllLoginsResponse:
       type: object
       properties:
         data:
           type: array
           items:
-            type: object
-            properties:
-              name:
-                type: string
-    FeaturesDTO:
-      type: object
-      properties:
-        feature:
-          type: string
-        descriptionPtBr:
-          type: string
-        descriptionEng:
-          type: string
-        module:
-          type: string
-    PermissionDTO:
-      type: object
-      properties:
-        permission:
-          type: string
-    GetAllPermissionDTO:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FeaturesDTO'
-        PaginatedDTO:
+            $ref: '#/components/schemas/LoginSummary'
+        paginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
-    FeaturesInProfileDTO:
+    GetLoginMeResponse:
       type: object
       properties:
-        features:
-          type: array
-          items:
-            $ref: '#/components/schemas/FeaturesDTO'
-    ProfileDTO:
+        data:
+          $ref: '#/components/schemas/LoginMe'
+    CreateLoginRequest:
+      required: [login, profileId, type]
+      type: object
+      description: Para usuários externos ou contas de serviço sem vínculo com funcionário
+      properties:
+        login:
+          type: string
+          x-required-message: SCOS-003
+          x-empty-message: SCOS-001
+          x-jdempotentrequestpayload: true
+        profileId:
+          type: integer
+          format: int64
+          x-required-message: SCOS-003
+        type:
+          type: string
+          description: Tipo EMPLOYEE deve ser criado via POST /v1/employees/{employeeId}/logins
+          enum:
+            - EXTERNAL
+            - SERVICE
+          x-required-message: SCOS-003
+    CreateEmployeeLoginRequest:
+      required: [login, profileId]
+      type: object
+      description: Para funcionários - o tipo é automaticamente EMPLOYEE
+      properties:
+        login:
+          type: string
+          x-required-message: SCOS-003
+          x-empty-message: SCOS-001
+          x-jdempotentrequestpayload: true
+        profileId:
+          type: integer
+          format: int64
+          x-required-message: SCOS-003
+    UpdateLoginRequest:
+      required: [login]
+      type: object
+      properties:
+        login:
+          type: string
+          x-required-message: SCOS-003
+          x-empty-message: SCOS-001
+          x-jdempotentrequestpayload: true
+    ProfileSummary:
       type: object
       properties:
         id:
@@ -545,24 +856,38 @@ components:
           type: string
         description:
           type: string
+    Profile:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        code:
+          type: string
+        description:
+          type: string
+        active:
+          type: boolean
+        resources:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceSummary'
     GetProfileResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/ProfileDTO'
+          $ref: '#/components/schemas/Profile'
     GetAllProfilesResponse:
       type: object
       properties:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/ProfileDTO'
-        PaginatedDTO:
+            $ref: '#/components/schemas/ProfileSummary'
+        paginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateProfileRequest:
-      required:
-        - code
-        - description
+      required: [code, description]
       type: object
       properties:
         code:
@@ -575,172 +900,58 @@ components:
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
     UpdateProfileRequest:
-      required:
-        - code
-        - description
+      required: [code, description]
       type: object
       properties:
         code:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-          x-jdempotentrequestpayload: true
         description:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-    LoginsDTO:
-      properties:
-        id:
-          type: integer
-          format: int64
-        login:
-          type: string
-        status:
-          type: string
-        dateCreated:
-          type: string
-          format: date
-    GetAllEmployeeLoginsResponse:
+    GetProfileResourcesResponse:
       type: object
       properties:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/LoginsDTO'
-        PaginatedDTO:
+            $ref: '#/components/schemas/ResourceSummary'
+        paginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
-    LoginDTO:
+    UpdateProfileResourcesRequest:
+      required: [resourceIds]
+      type: object
       properties:
-        id:
-          type: integer
-          format: int64
-        login:
+        resourceIds:
+          type: array
+          description: Lista completa de UUIDs dos recursos a atribuir ao perfil. Lista vazia remove todas as permissões
+          items:
+            type: string
+            format: uuid
+          x-required-message: SCOS-003
+    ResourceSummary:
+      type: object
+      properties:
+        resourceId:
           type: string
-        status:
+          format: uuid
+        code:
           type: string
-        dateCreated:
+        description:
           type: string
-          format: date
-        dateLastChangePassword:
+        systemCode:
           type: string
-          format: date
-        profile:
-          $ref: '#/components/schemas/ProfileDTO'
-    GetEmployeeLoginResponse:
+    GetAllResourcesResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/LoginDTO'
-    CreateEmployeeLoginRequest:
-      required:
-      - login
-      - profileId
-      - password
-      type: object
-      properties:
-        login:
-          type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
-          x-jdempotentrequestpayload: true
-        profileId:
-          type: integer
-          format: int64
-          x-required-message: SCOS-003
-          x-jdempotentrequestpayload: true
-        password:
-          type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
-    UpdateEmployeeLoginRequest:
-      required:
-        - login
-        - profileId
-      type: object
-      properties:
-        login:
-          type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
-          x-jdempotentrequestpayload: true
-        profileId:
-          type: integer
-          format: int64
-          x-required-message: SCOS-003
-    ChangePasswordLoginDTO:
-      required:
-        - passwordOld
-        - passwordNew
-      type: object
-      properties:
-        passwordOld:
-          type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
-        passwordNew:
-          type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          type: array
+          items:
+            $ref: '#/components/schemas/ResourceSummary'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
 
-    LoginStatus:
-      type: string
-      enum:
-        - ENABLED
-        - BLOCKED
-        - INACTIVE
-        - PENDING
-        - PENDING_PASSWORD_CHANGE
-    GetAllFeaturesByLoginDTO:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FeaturesDTO'
-    InformationLoginDTO:
-      type: object
-      properties:
-        loginId:
-          type: integer
-          format: int64
-        login:
-          type: string
-        employeeId:
-          type: integer
-          format: int64
-        name:
-          type: string
-        nameTreatment:
-          type: string
-        profileId:
-          type: integer
-          format: int64
-        profileCode:
-          type: string
-        profileDescription:
-          type: string
-        position:
-          type: string
-        department:
-          type: string
-        status:
-          $ref: '#/components/schemas/LoginStatus'
-        features:
-            type: array
-            items:
-                $ref: '#/components/schemas/FeaturesDTO'
-    GetInformationLoginDTO:
-        type: object
-        properties:
-            data:
-              $ref: '#/components/schemas/InformationLoginDTO'
-    GetAllFeaturesDTO:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/FeaturesDTO'
-        PaginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+security:
+  - BearerAuth: []

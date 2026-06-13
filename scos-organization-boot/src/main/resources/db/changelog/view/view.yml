@@ -1,32 +1,30 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260228-Samuel.Cunha-026
+      id: 20260612-Samuel.Cunha-026
       author: Samuel.Cunha
-      comment: "View scos.v_scos_cache_login: dados de autenticação para cache"
       runOnChange: true
       changes:
         - sqlFile:
-            path: v_scos_cache_login.sql
+            path: vw_login_context.sql
             relativeToChangelogFile: true
             encoding: utf8
             stripComments: true
             splitStatements: false
       rollback:
         - sql:
-            sql: DROP VIEW IF EXISTS scos.v_scos_cache_login;
+            sql: DROP VIEW IF EXISTS scos.vw_login_context;
 
   - changeSet:
-      id: 20260228-Samuel.Cunha-027
+      id: 20260612-Samuel.Cunha-027
       author: Samuel.Cunha
-      comment: "View scos.v_scos_cache_permission: permissões agrupadas por feature para cache"
       runOnChange: true
       changes:
         - sqlFile:
-            path: v_scos_cache_permission.sql
+            path: vw_authority_response.sql
             relativeToChangelogFile: true
             encoding: utf8
             stripComments: true
             splitStatements: false
       rollback:
         - sql:
-            sql: DROP VIEW IF EXISTS scos.v_scos_cache_permission;
+            sql: DROP VIEW IF EXISTS scos.vw_authority_response;

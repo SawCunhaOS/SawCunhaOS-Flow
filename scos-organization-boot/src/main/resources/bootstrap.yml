@@ -141,6 +141,9 @@ management:
     web:
       exposure:
         include: '*'
+  info:
+    build:
+      enabled: true
   endpoint:
     prometheus:
       enabled: true
@@ -213,31 +216,10 @@ scos:
     redis-time-to-live: ${scos.cache.time-to-live}
     key-prefix: ${scos.cache.key-prefix}
   security:
-    datasource:
-      url: ${scos.datasource.url}
-      username: ${scos.datasource.username}
-      password: ${scos.datasource.password}
-      hikari:
-        pool-name: Inside_Flow_Security
-        registerMbeans: false
-        connection-timeout: ${scos.datasource.connection-timeout}
-        idle-timeout: ${scos.datasource.idle-timeout}
-        max-lifetime: ${scos.datasource.max-lifetime}
-        minimum-idle: ${scos.datasource.minimum-idle}
-        maximum-pool-size: ${scos.datasource.maximum-pool-size}
-        leak-detection-threshold: 20000
-        connection-test-query: SELECT 1
-        validation-timeout: 5000
-        auto-commit: false
-        data-source-properties:
-          cachePrepStmts: true
-          prepStmtCacheSize: 1000
-          prepStmtCacheSqlLimit: 4096
-          useServerPrepStmts: true
-    password:
-      salt:
-        length: 24
-      algorithm: PBKDF2WithHmacSHA512
-      key:
-        length: 512
-      iterations: 210000
+    enabled: true
+  registry:
+    host: localhost           # host do scos-registry
+    port: 9090                # porta gRPC
+    system-code: SCOS_ORGANIZATION
+    system-description: Sistema de Gestão de Empresas e Funcionarios
+    tls-enabled: false        # true em produção
