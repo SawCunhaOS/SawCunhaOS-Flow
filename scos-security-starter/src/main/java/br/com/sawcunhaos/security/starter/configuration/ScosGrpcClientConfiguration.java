@@ -31,8 +31,10 @@ public class ScosGrpcClientConfiguration implements DisposableBean {
     private ManagedChannel scosRegistryChannel;
 
     @Bean
-    public ScosSystemAuthInterceptor scosSystemAuthInterceptor() {
-        return new ScosSystemAuthInterceptor();
+    public ScosSystemAuthInterceptor scosSystemAuthInterceptor(
+            ScosRegistryProperties properties
+    ) {
+        return new ScosSystemAuthInterceptor(properties);
     }
 
     @Bean

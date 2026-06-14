@@ -19,8 +19,12 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface SystemRepository extends BaseJpaRepository<ScosSystem, UUID>, JpaSpecificationExecutor<ScosSystem>, QuerydslPredicateExecutor<ScosSystem> {
+public interface ScosSystemRepository extends BaseJpaRepository<ScosSystem, UUID>, JpaSpecificationExecutor<ScosSystem>, QuerydslPredicateExecutor<ScosSystem> {
+
+    Optional<ScosSystem> findByCode(String code);
+
 }

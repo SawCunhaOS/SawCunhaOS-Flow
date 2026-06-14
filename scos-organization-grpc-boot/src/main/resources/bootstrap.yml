@@ -1,55 +1,23 @@
 server:
-  port: ${scos.port:8080}
+  port: ${scos.port:8090}
   http2:
     enabled: true
-  servlet:
-    context-path: /organization
-  compression:
-    enabled: true
-    min-response-size: 1024
-    mime-types: text/html,text/xml,text/plain,application/json,application/xml
-  tomcat:
-    connection-timeout: 120000
-    keep-alive-timeout: 60000
-    max-connections: 5000
-    max-http-header-size: 8192
-    max-swallow-size: 20971520
-    max-post-size: 20971520
-    remoteip:
-      remote-ip-header: x-forwarded-for
-      protocol-header: x-forwarded-proto
 
 spring:
+  cache:
+    enabled: false
   threads:
     virtual:
       enabled: true
   main:
     allow-bean-definition-overriding: true
   application:
-    name: ScosOrganizationBoot
+    name: ScosOrganizationGrpcBoot
   cloud:
     config:
       enabled: false
     compatibility-verifier:
       enabled: false
-  cache:
-    enabled: ${scos.cache.enable:false}
-    type: redis
-    redis:
-      key-prefix: ${scos.cache.key-prefix}
-      time-to-live: ${scos.cache.time-to-live}
-  data:
-    redis:
-      database: ${scos.cache.database}
-      repositories:
-        enabled: false
-      port: ${scos.cache.port}
-      password: ${scos.cache.password}
-      timeout: 5000ms
-      sentinel:
-        master: ${scos.cache.master}
-        nodes: ${scos.cache.sentinels}
-        
   datasource:
     url: ${scos.datasource.url}
     username: ${scos.datasource.username}
@@ -119,23 +87,6 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant-path-matcher
-  security:
-    oauth2:
-      client:
-        registration:
-          keycloak:
-            client-id: ${scos.security.keycloak.client-id}
-            authorization-grant-type: ${scos.security.keycloak.authorization-grant-type}
-            scope: ${scos.security.keycloak.scope}
-        provider:
-          keycloak:
-            issuer-uri: ${scos.security.keycloak.issuer-uri}
-            user-name-attribute: preferred_username
-          
-      resourceserver:
-        jwt:
-          issuer-uri: ${scos.security.keycloak.issuer-uri}
-
 management:
   endpoints:
     web:
@@ -178,12 +129,7 @@ management:
 
 scos:
   liquibase:
-    enabled: true
-    contexts: prod
-    database-change-log-lock-table: SCOS_DATABASECHANGELOGLOCK
-    database-change-log-table: SCOS_DATABASECHANGELOG
-    change-log: classpath:/db/changelog/db.changelog-master.yml
-    default-schema: scos
+    enabled: false
   filter:
     show-request-body: false
     show-request-headers: false
@@ -192,35 +138,6 @@ scos:
     system: SCOS_ORGANIZATION
     enabled: ${scos.audit.enabled}
     liquibase:
-      enabled: true
-      contexts: prod
-      database-change-log-lock-table: IF_DATABASECHANGELOGLOCK
-      database-change-log-table: IF_DATABASECHANGELOG
-      change-log: classpath:db/changelog/db_audit.changelog-master.yaml
-      default-schema: scos
-  jdempotent:
-    enabled: ${scos.jdempotent.enable:false}
-    cache:
-      redis:
-        expirationTimeHour: ${scos.jdempotent.expiration-time-hour}
-        dialTimeoutSecond: ${scos.jdempotent.dial-timeout-second}
-        readTimeoutSecond: ${scos.jdempotent.read-timeout-second}
-        writeTimeoutSecond: ${scos.jdempotent.write-timeout-second}
-        maxRetryCount: ${scos.jdempotent.max-retry-count}
-        expireTimeoutHour: ${scos.jdempotent.expire-timeout-hour}
-    cryptography:
-      algorithm: md5
-  cache:
-    caches:
-      []
-    redis-time-to-live: ${scos.cache.time-to-live}
-    key-prefix: ${scos.cache.key-prefix}
+      enabled: false
   security:
-    enabled: true
-  registry:
-    host: localhost           # host do scos-registry
-    port: 8090                # porta gRPC
-    key-access: ABLABLABLA
-    system-code: SCOS_ORGANIZATION
-    system-description: Sistema de Gestão de Empresas e Funcionarios
-    tls-enabled: false        # true em produção
+    enabled: false

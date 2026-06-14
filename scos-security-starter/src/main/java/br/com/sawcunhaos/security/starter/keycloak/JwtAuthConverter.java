@@ -3,7 +3,7 @@ package br.com.sawcunhaos.security.starter.keycloak;
 import br.com.sawcunhaos.foundation.exception.error.ScosSecurityException;
 import br.com.sawcunhaos.security.starter.model.ScosAuthentication;
 import br.com.sawcunhaos.security.starter.model.ScosSecurityContext;
-import br.com.sawcunhaos.security.starter.service.ScosSecurityService;
+import br.com.sawcunhaos.security.starter.specification.ScosSecurity;
 import br.com.sawcunhaos.security.starter.utils.SecurityExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
 
     private static final String PREFERRED_USERNAME = "preferred_username";
-    private final ScosSecurityService scosSecurityService;
+    private final ScosSecurity scosSecurityService;
 
     @Override
     public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {

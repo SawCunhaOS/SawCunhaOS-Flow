@@ -8,6 +8,9 @@ import br.com.sawcunhaos.security.starter.service.ScosSecurityStartupListener;
 import br.com.sawcunhaos.security.starter.service.ScosSystemRegistrationService;
 import br.com.sawcunhaos.security.starter.service.grpc.ScosAuthorityService;
 import br.com.sawcunhaos.security.starter.service.grpc.ScosRegistryService;
+import br.com.sawcunhaos.security.starter.specification.ScosSecurity;
+import br.com.sawcunhaos.security.starter.specification.ScosSystemRegistration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
@@ -26,12 +29,13 @@ public class ScosServiceConfiguration {
     }
 
     @Bean
-    public ScosSecurityService scosSecurityService(ScosAuthorityService scosAuthorityService) {
+    @ConditionalOnMissingBean(ScosSecurity.class)
+    public ScosSecurity scosSecurityService(ScosAuthorityService scosAuthorityService) {
         return new ScosSecurityService(scosAuthorityService);
     }
 
     @Bean
-    public ScosSystemRegistrationService scosSystemRegistrationService(
+    public ScosSystemRegistration scosSystemRegistrationService(
             ScosRegistryService scosRegistryService,
             ScosRegistryProperties scosRegistryProperties) {
         return new ScosSystemRegistrationService(scosRegistryService, scosRegistryProperties);
@@ -40,7 +44,7 @@ public class ScosServiceConfiguration {
     @Bean
     @Primary
     public ScosSecurityStartupListener scosSecurityStartupListener(
-            ScosSystemRegistrationService scosSystemRegistrationService) {
+            ScosSystemRegistration scosSystemRegistrationService) {
         return new ScosSecurityStartupListener(scosSystemRegistrationService);
     }
 }

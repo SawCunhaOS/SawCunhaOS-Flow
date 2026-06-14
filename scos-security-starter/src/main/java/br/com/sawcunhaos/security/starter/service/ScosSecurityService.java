@@ -4,16 +4,18 @@ package br.com.sawcunhaos.security.starter.service;
 import br.com.sawcunhaos.organization.grpc.proto.AuthorityResponse;
 import br.com.sawcunhaos.security.starter.model.ScosSecurityContext;
 import br.com.sawcunhaos.security.starter.service.grpc.ScosAuthorityService;
+import br.com.sawcunhaos.security.starter.specification.ScosSecurity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 
 @Slf4j
 @RequiredArgsConstructor
-public class ScosSecurityService {
+public class ScosSecurityService implements ScosSecurity {
 
     private final ScosAuthorityService scosAuthorityService;
 
+    @Override
     public ScosSecurityContext getSecurityContext(@NonNull String login) {
         log.info("Getting all granted authority for login: {}", login);
 

@@ -44,6 +44,8 @@ public class ScosSystem extends BaseEntity {
     @Column(name = "SYSTEM_ID")
     private UUID id;
 
+    @Column(name = "NAME")
+    private String name;
     @Column(name = "CODE")
     private String code;
     @Column(name = "DESCRIPTION")

@@ -3,6 +3,7 @@ package br.com.sawcunhaos.organization.infrastructure.liquibase;
 import liquibase.integration.spring.MultiTenantSpringLiquibase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -10,11 +11,18 @@ import org.springframework.context.annotation.Primary;
 
 import javax.sql.DataSource;
 
+@ConditionalOnProperty(
+        prefix = "scos.liquibase",
+        name = "enabled",
+        havingValue = "true",
+        matchIfMissing = true)
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
 public final class ScosLiquibaseConfiguration {
 
     private final ScosLiquibaseProperties liquibaseProperties;
+
+
 
     @Bean("ScosLiquibase")
     @Primary

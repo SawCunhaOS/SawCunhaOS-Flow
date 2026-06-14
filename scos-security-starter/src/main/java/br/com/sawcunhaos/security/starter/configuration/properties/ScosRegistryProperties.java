@@ -33,10 +33,16 @@ public class ScosRegistryProperties {
     private Integer port;
 
     @NotBlank
+    private String systemName;
+
+    @NotBlank
     private String systemCode;
 
     @NotBlank
     private String systemDescription;
+
+    @NotBlank
+    private String keyAccess;
 
     private boolean tlsEnabled = false;   // ← plaintext por padrão (dev), true em produção
 }

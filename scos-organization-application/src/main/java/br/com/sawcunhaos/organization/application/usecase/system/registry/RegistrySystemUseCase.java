@@ -11,9 +11,8 @@
  *
  */
 
-package br.com.sawcunhaos.organization.application.port.in.configuration;
+package br.com.sawcunhaos.organization.application.usecase.system.registry;
 
-public interface UpdateConfigurationUseCase {
-
-    void execute(String id, String value);
+public interface RegistrySystemUseCase {
+    RegistrySystemOutput execute(RegistrySystemInput request);
 }

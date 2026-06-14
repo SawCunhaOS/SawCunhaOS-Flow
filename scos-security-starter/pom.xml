@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>scos-security-starter</artifactId>
-    <name>SCOS Foundation Security</name>
+    <name>Scos Organization Security Start</name>
     <description>Security control module to prevent unauthorized access to critical operations in SCOS projects.</description>
     <url>https://github.com/SawCunhaOS/SawCunhaOS-Organization</url>
     <inceptionYear>2026</inceptionYear>

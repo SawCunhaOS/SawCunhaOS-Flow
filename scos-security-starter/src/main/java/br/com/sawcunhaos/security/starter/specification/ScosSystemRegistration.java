@@ -11,11 +11,10 @@
  *
  */
 
-package br.com.sawcunhaos.organization.application.port.in.configuration;
+package br.com.sawcunhaos.security.starter.specification;
 
-import br.com.sawcunhaos.organization.application.dto.configuration.ConfigurationDTO;
+public interface ScosSystemRegistration {
 
-public interface GetConfigurationUseCase {
+    void register(int attempt);
 
-    ConfigurationDTO execute(String id);
 }

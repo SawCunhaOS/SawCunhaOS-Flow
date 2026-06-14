@@ -11,7 +11,10 @@
  *
  */
 
-package br.com.sawcunhaos.organization.application.dto.configuration;
+package br.com.sawcunhaos.organization.application.usecase.system.registry;
 
-public record ConfigurationDTO(String id, String value, String type) {
+import lombok.Builder;
+
+@Builder
+public record RegistrySystemInput(String name, String code, String description) {
 }

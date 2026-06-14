@@ -22,6 +22,7 @@ import br.com.sawcunhaos.security.starter.model.ScosSystemContext;
 import br.com.sawcunhaos.security.starter.model.ScosSystemContextHolder;
 import br.com.sawcunhaos.security.starter.service.grpc.ScosRegistryService;
 import br.com.sawcunhaos.security.starter.specification.ScosPermission;
+import br.com.sawcunhaos.security.starter.specification.ScosSystemRegistration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
@@ -33,7 +34,7 @@ import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Slf4j
-public class ScosSystemRegistrationService {
+public class ScosSystemRegistrationService implements ScosSystemRegistration {
 
     private static final int MAX_RETRIES  = 5;
     private static final int DELAY_MS     = 3000;
@@ -41,6 +42,7 @@ public class ScosSystemRegistrationService {
     private final ScosRegistryService scosRegistryService;
     private final ScosRegistryProperties properties;
 
+    @Override
     public void register(int attempt) {
         try {
             RegistrySystemRequest request = RegistrySystemRequest.newBuilder()

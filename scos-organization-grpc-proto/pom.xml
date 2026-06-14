@@ -18,7 +18,7 @@
 
         <!-- Versões alinhadas com spring-grpc-dependencies 1.0.3 -->
         <grpc.version>1.81.0</grpc.version>
-        <protobuf.version>4.35.0</protobuf.version>
+        <protobuf.version>4.34.2</protobuf.version>
     </properties>
 
     <dependencies>
