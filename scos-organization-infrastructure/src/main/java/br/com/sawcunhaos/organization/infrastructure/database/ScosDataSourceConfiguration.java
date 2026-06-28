@@ -45,7 +45,7 @@ import javax.sql.DataSource;
 @EnableConfigurationProperties({ScosHikariConfigProperties.class})
 @EnableJpaAuditing
 @RequiredArgsConstructor
-public final class ScosDataSourceConfiguration {
+final class ScosDataSourceConfiguration {
 
     @Autowired(required = false)
     private MeterRegistry meterRegistry;

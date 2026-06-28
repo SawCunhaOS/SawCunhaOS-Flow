@@ -10,7 +10,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 @Configuration(proxyBeanMethods = false)
-public final class ThreadsScosConfiguration {
+final class ThreadsScosConfiguration {
 
     @Bean
     public WebServerFactoryCustomizer<TomcatServletWebServerFactory> tomcatFactoryCustomizer() {

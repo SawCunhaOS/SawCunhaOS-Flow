@@ -18,7 +18,7 @@ import javax.sql.DataSource;
         matchIfMissing = true)
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
-public final class ScosLiquibaseConfiguration {
+final class ScosLiquibaseConfiguration {
 
     private final ScosLiquibaseProperties liquibaseProperties;
 

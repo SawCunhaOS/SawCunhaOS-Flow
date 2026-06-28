@@ -15,6 +15,8 @@ package br.com.sawcunhaos.organization.domain.access.login.internal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -44,7 +46,8 @@ public class VwAuthorityResponse {
     private String type;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private LoginStatus status;
 
     @Column(name = "keycloak_id")
     private UUID keycloakId;

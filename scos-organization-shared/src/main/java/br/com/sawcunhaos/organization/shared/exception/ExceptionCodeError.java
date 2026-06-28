@@ -76,6 +76,14 @@ public enum ExceptionCodeError implements ExceptionCode {
 
     SCOS_AUTHORITY_001("SCOS_AUTHORITY_001"),
 
+    SCOS_LOGIN_001("SCOS_LOGIN_001"),
+    SCOS_LOGIN_002("SCOS_LOGIN_002"),
+    SCOS_LOGIN_003("SCOS_LOGIN_003"),
+    SCOS_LOGIN_010("SCOS_LOGIN_010"),
+    SCOS_LOGIN_011("SCOS_LOGIN_011"),
+    SCOS_LOGIN_012("SCOS_LOGIN_012"),
+
+
     ;
 
     private final String code;

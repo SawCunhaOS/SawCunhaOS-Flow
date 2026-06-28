@@ -32,6 +32,7 @@ class AuthorityResponseServiceBean implements AuthorityResponseService {
 
     private final VwAuthorityResponseRepository vwAuthorityResponseRepository;
     private final AuthorityResponseMapper authorityResponseMapper;
+    private final LoginRolesService loginRolesService;
 
     @Override
     public AuthorityResponseOutput validate(@NonNull String login) {
@@ -40,7 +41,7 @@ class AuthorityResponseServiceBean implements AuthorityResponseService {
         VwAuthorityResponse authorityResponse = vwAuthorityResponseRepository.findByLogin(login).orElseThrow(
                 () -> new ScosException(SCOS_AUTHORITY_001)
         );
-
+        loginRolesService.validateStatusLogin(authorityResponse.getStatus());
 
         return authorityResponseMapper.toOutput(authorityResponse);
     }

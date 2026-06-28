@@ -17,7 +17,7 @@ import org.springframework.context.annotation.DependsOn;
 @Configuration(proxyBeanMethods = false)
 @DependsOn("ScosEntityManagerFactory")
 @ConditionalOnProperty(prefix="SawCunhaOS.audit", name = "enable", havingValue = "true")
-public final class ScosAuditDataSourceConfiguration {
+final class ScosAuditDataSourceConfiguration {
 
     @Autowired
     private ScosAuditService insideAuditService;

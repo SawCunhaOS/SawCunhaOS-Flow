@@ -8,6 +8,12 @@ import br.com.sawcunhaos.security.starter.specification.ScosSecurity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
+import org.slf4j.MDC;
+
+import java.util.Objects;
+import java.util.UUID;
+
+import static br.com.sawcunhaos.foundation.utils.configuration.rest.filter.LoggingInitialFilter.REQUEST_ID_HEADER;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -18,7 +24,9 @@ public class ScosSecurityService implements ScosSecurity {
     @Override
     public ScosSecurityContext getSecurityContext(@NonNull String login) {
         log.info("Getting all granted authority for login: {}", login);
-
+        if(Objects.isNull(MDC.get(REQUEST_ID_HEADER)) || MDC.get(REQUEST_ID_HEADER).isBlank()){
+            MDC.put(REQUEST_ID_HEADER, UUID.randomUUID().toString());
+        }
         try {
             AuthorityResponse authorityResponse = scosAuthorityService.validate(login);
 

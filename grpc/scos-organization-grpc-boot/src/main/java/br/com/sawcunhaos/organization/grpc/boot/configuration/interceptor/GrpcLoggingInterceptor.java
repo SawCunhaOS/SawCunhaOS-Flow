@@ -35,6 +35,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static br.com.sawcunhaos.foundation.utils.configuration.rest.filter.LoggingInitialFilter.REQUEST_ID_HEADER;
+
 /**
  * Global gRPC interceptor ({@code @Order(0)}) — gRPC equivalent of
  * {@link br.com.sawcunhaos.foundation.utils.configuration.rest.filter.LoggingInitialFilter}
@@ -60,8 +62,6 @@ import java.util.concurrent.atomic.AtomicReference;
 @Order(0)
 @RequiredArgsConstructor
 public class GrpcLoggingInterceptor implements ServerInterceptor {
-
-    public static final String REQUEST_ID_HEADER = "X-Request-ID";
 
     // gRPC Metadata keys (lowercase — HTTP/2 headers are case-insensitive)
     private static final Metadata.Key<String> REQUEST_ID_KEY =

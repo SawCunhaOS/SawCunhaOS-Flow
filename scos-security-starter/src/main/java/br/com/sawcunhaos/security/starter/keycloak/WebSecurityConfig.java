@@ -16,7 +16,8 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             @Qualifier("InsideHttpSecurityConfiguration") HttpSecurity httpSecurity,
-            JwtAuthConverter jwtAuthConverter) throws Exception {
+            JwtAuthConverter jwtAuthConverter
+    ) {
         httpSecurity
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt

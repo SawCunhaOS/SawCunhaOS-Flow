@@ -11,7 +11,7 @@ import java.util.Locale;
 
 @Component
 @RequiredArgsConstructor
-public final class LocaleUtilsBean implements LocaleService {
+final class LocaleUtilsBean implements LocaleService {
 
     private final MessageSource messageSource;
 

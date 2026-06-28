@@ -56,7 +56,8 @@ public class Login extends BaseEntity {
     @Column(name = "LOGIN")
     private String login;
     @Column(name = "STATUS")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private LoginStatus status;
     @Column(name = "TYPE")
     @Enumerated(EnumType.STRING)
     private LoginType type;

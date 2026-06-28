@@ -13,13 +13,16 @@
 
 package br.com.sawcunhaos.organization.grpc.boot.configuration.handler;
 
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.utils.specification.LocaleService;
 import io.grpc.Status;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.grpc.server.advice.GrpcAdvice;
 import org.springframework.grpc.server.advice.GrpcExceptionHandler;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.stereotype.Component;
 
 /**
  * gRPC equivalent of {@code @ExceptionHandler}.
@@ -27,8 +30,11 @@ import org.springframework.stereotype.Component;
  * always receives a valid trailer frame instead of an unexpected EOS.
  */
 @Slf4j
-@Component
+@GrpcAdvice
+@RequiredArgsConstructor
 public class GrpcGlobalExceptionHandler {
+
+    private final LocaleService localeService;
 
     @GrpcExceptionHandler(AccessDeniedException.class)
     public Status handleAccessDenied(AccessDeniedException ex) {
@@ -71,5 +77,20 @@ public class GrpcGlobalExceptionHandler {
     public Status handleGeneric(Exception ex) {
         log.error("gRPC INTERNAL unhandled exception", ex);
         return Status.INTERNAL.withDescription("Internal server error");
+    }
+
+    @GrpcExceptionHandler(ScosException.class)
+    public Status handleScosException(ScosException ex) {
+        log.error("gRPC INTERNAL unhandled exception", ex);
+        return Status.INTERNAL.withDescription(safeMessage(ex.getCode())).withCause(ex);
+    }
+
+    private String safeMessage(String code) {
+        try {
+            return localeService.getMessage(code);
+        } catch (Exception ex) {
+            log.error("Falha ao resolver mensagem para code={}", code, ex);
+            return "Erro: " + code;
+        }
     }
 }
