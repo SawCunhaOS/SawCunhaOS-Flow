@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "br.com.sawcunhaos.organization.grpc.proto";
+option java_outer_classname = "AuthorityProto";
+
+package br.com.sawcunhaos.organization.grpc.proto;
+
+service ValidateAuthorityService {
+  rpc validateAuthority(AuthorityRequest) returns (AuthorityResponse);
+}
+
+message AuthorityRequest {
+  string login = 1;
+}
+
+message AuthorityResponse {
+  string login = 1;
+  string name = 2;
+  string email = 3;
+  int64 company_id = 4;
+  string company_name = 5;
+  int64 branch_id = 6;
+  string branch_name = 7;
+  int64 employee_id = 8;
+  repeated string permissions = 9;
+}

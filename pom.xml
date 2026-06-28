@@ -20,12 +20,13 @@
     <modules>
         <module>scos-organization-domain</module>
         <module>scos-organization-api</module>
-        <module>scos-organization-application</module>
+        <module>scos-organization-usecase</module>
         <module>scos-organization-boot</module>
         <module>scos-organization-infrastructure</module>
         <module>scos-security-starter</module>
-        <module>scos-organization-grpc-boot</module>
-        <module>scos-organization-grpc-proto</module>
+        <module>grpc/scos-organization-grpc-boot</module>
+        <module>grpc/scos-organization-grpc-proto</module>
+        <module>scos-organization-shared</module>
     </modules>
 
     <parent>
@@ -118,7 +119,7 @@
             </dependency>
             <dependency>
                 <groupId>br.com.sawcunhaos</groupId>
-                <artifactId>scos-organization-application</artifactId>
+                <artifactId>scos-organization-usecase</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
@@ -134,6 +135,11 @@
             <dependency>
                 <groupId>br.com.sawcunhaos</groupId>
                 <artifactId>scos-security-starter</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.sawcunhaos</groupId>
+                <artifactId>scos-organization-shared</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 

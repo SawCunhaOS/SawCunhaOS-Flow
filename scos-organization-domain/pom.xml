@@ -46,6 +46,10 @@
             <groupId>br.com.sawcunhaos</groupId>
             <artifactId>scos-foundation-exception</artifactId>
         </dependency>
+        <dependency>
+            <groupId>br.com.sawcunhaos</groupId>
+            <artifactId>scos-organization-shared</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>io.github.openfeign.querydsl</groupId>

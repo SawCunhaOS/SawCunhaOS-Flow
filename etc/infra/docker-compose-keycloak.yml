@@ -1,10 +1,11 @@
 networks:
   scos_network:
+    name: scos_network
     driver: bridge
 
 services:
   keycloak:
-    image: quay.io/keycloak/keycloak:26.6.2
+    image: quay.io/keycloak/keycloak:26.6.4
     deploy:
       resources:
         limits:
@@ -12,19 +13,26 @@ services:
           memory: 1GB
     environment:
       KC_HOSTNAME: localhost
-      KC_HOSTNAME_PORT: 7080
-      KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_PORT: 7080
+      KC_HTTPS_PORT: 7443
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME_STRICT: "false"
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgresql:5432/${KC_DB_NAME}
+      KC_DB_USERNAME: ${KC_DB_USER}
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_HEALTH_ENABLED: "true"
       KC_LOG_LEVEL: info
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:7080/health/ready" ]
+      test: ["CMD", "curl", "-f", "http://localhost:9000/health/ready"]
       interval: 15s
-      timeout: 2s
+      timeout: 5s
       retries: 15
+      start_period: 60s
     command:
-      [ "start-dev", "--http-port", "7080", "--https-port", "7443", "--import-realm" ]
+      ["start", "--http-port=7080", "--https-port=7443", "--import-realm"]
     volumes:
       - ./keycloak:/opt/keycloak/data/import/
     ports:

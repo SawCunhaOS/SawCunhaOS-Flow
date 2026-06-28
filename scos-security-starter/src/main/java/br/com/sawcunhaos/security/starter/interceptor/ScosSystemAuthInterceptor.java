@@ -23,7 +23,10 @@ import io.grpc.ClientInterceptor;
 import io.grpc.ForwardingClientCall;
 import io.grpc.Metadata;
 import io.grpc.MethodDescriptor;
+import org.slf4j.MDC;
+
 import java.util.Base64;
+import java.util.Objects;
 import java.util.UUID;
 
 import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
@@ -51,14 +54,22 @@ public class ScosSystemAuthInterceptor implements ClientInterceptor {
                     ScosSystemContext sys = ScosSystemContextHolder.get();
 
                     headers.put(
-                            Metadata.Key.of("Authentication", ASCII_STRING_MARSHALLER),
+                            Metadata.Key.of("authentication", ASCII_STRING_MARSHALLER),
                             Base64.getEncoder().encodeToString(
                                     String.format("%s:%s",sys.getSystemCode(), sys.getSecretKey()).getBytes()
                             )
                     );
                 }
                 headers.put(Metadata.Key.of("KEY-ACCESS", ASCII_STRING_MARSHALLER), scosRegistryProperties.getKeyAccess());
-                headers.put(Metadata.Key.of("X-Request-ID", ASCII_STRING_MARSHALLER), UUID.randomUUID().toString());
+                String xRequestId = UUID.randomUUID().toString();
+                if (Objects.nonNull(MDC.get("X-Request-ID"))) {
+                    xRequestId = MDC.get("X-Request-ID");
+                }
+                headers.put(Metadata.Key.of("X-Request-ID", ASCII_STRING_MARSHALLER), xRequestId);
+
+                if (Objects.nonNull(MDC.get("IS_IP"))) {
+                    headers.put(Metadata.Key.of("IS_IP", ASCII_STRING_MARSHALLER), MDC.get("IS_IP"));
+                }
                 super.start(responseListener, headers);
             }
         };

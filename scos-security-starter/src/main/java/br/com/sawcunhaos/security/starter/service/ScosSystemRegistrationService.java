@@ -26,6 +26,7 @@ import br.com.sawcunhaos.security.starter.specification.ScosSystemRegistration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
+import org.springframework.boot.info.BuildProperties;
 
 import java.util.List;
 import java.util.Set;
@@ -41,13 +42,16 @@ public class ScosSystemRegistrationService implements ScosSystemRegistration {
 
     private final ScosRegistryService scosRegistryService;
     private final ScosRegistryProperties properties;
+    private final BuildProperties buildProperties;
 
     @Override
     public void register(int attempt) {
         try {
             RegistrySystemRequest request = RegistrySystemRequest.newBuilder()
+                    .setName(properties.getSystemName())
                     .setCode(properties.getSystemCode())
                     .setDescription(properties.getSystemDescription())
+                    .setVersion(buildProperties.getVersion())
                     .build();
 
             RegistrySystemResponse response = scosRegistryService.registrySystem(request);
@@ -58,17 +62,19 @@ public class ScosSystemRegistrationService implements ScosSystemRegistration {
                     properties.getSystemCode()
             ));
 
-            log.info("[SCOS] Sistema registrado. systemId={}",
-                    response.getSystemId());
+            if (response.getUpdate()) {
+                log.info("[SCOS] System registered. systemId={}", response.getSystemId());
 
-            RegistryResourcesRequest registryResourcesRequest = RegistryResourcesRequest.newBuilder()
-                    .setSystemId(response.getSystemId())
-                    .addAllResources(createResources())
-                    .build();
+                RegistryResourcesRequest registryResourcesRequest = RegistryResourcesRequest.newBuilder()
+                        .setSystemId(response.getSystemId())
+                        .addAllResources(createResources())
+                        .build();
 
-            scosRegistryService.registryResources(registryResourcesRequest);
-            log.info("[SCOS] Resources registrados.");
-
+                scosRegistryService.registryResources(registryResourcesRequest);
+                log.info("[SCOS] Resources registered.");
+            } else {
+                log.info("[SCOS] System already registered. systemId={}", response.getSystemId());
+            }
         } catch (Exception ex) {
             if (attempt >= MAX_RETRIES) {
                 // sem registro o sistema não consegue validar permissões

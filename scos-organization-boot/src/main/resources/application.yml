@@ -1,9 +1,9 @@
 scos:
   port: 8081
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=scos
-    username: scos_user
-    password: scos_user
+    url: jdbc:postgresql://localhost:5432/scos?currentSchema=scos
+    username: scos
+    password: scos#2026
     connection-timeout: 600000
     idle-timeout: 150000
     max-lifetime: 1800000
@@ -12,9 +12,9 @@ scos:
   audit:
     enabled: true
     datasource:
-      url: jdbc:postgresql://localhost:5432/postgres?currentSchema=scos
-      username: scos_user
-      password: scos_user
+      url: jdbc:postgresql://localhost:5432/scos?currentSchema=scos
+      username: scos
+      password: scos#2026
       connection-timeout: 100000
       idle-timeout: 150000
       max-lifetime: 300000
@@ -42,7 +42,7 @@ scos:
     port: 26379
     database: 0
     master: inside_flow_master
-    password: inside_flow
+    password: scos#2026
     sentinels: localhost:26379
   liquibase:
     enabled: true

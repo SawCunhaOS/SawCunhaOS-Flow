@@ -14,6 +14,3 @@ databaseChangeLog:
   - include:
       file: view/view.yml
       relativeToChangelogFile: true
-  - include:
-      file: procedure/procedure.yml
-      relativeToChangelogFile: true

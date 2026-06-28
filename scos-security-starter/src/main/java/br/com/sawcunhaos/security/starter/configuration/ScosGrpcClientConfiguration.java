@@ -63,10 +63,10 @@ public class ScosGrpcClientConfiguration implements DisposableBean {
     }
 
     @Bean
-    public ValidateAuthorityServiceGrpc.ValidateAuthorityServiceBlockingV2Stub
-    validateAuthorityServiceBlockingV2Stub(
+    public ValidateAuthorityServiceGrpc.ValidateAuthorityServiceBlockingV2Stub validateAuthorityServiceBlockingV2Stub(
             ManagedChannel scosRegistryChannel,
-            ScosSystemAuthInterceptor scosSystemAuthInterceptor) {
+            ScosSystemAuthInterceptor scosSystemAuthInterceptor
+    ) {
 
         return ValidateAuthorityServiceGrpc
                 .newBlockingV2Stub(scosRegistryChannel)

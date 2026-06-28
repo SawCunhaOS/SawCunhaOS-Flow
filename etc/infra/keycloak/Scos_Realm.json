@@ -314,169 +314,7 @@
           "attributes": {}
         }
       ],
-      "DayOffMarker": [
-        {
-          "id": "6ce5f92a-6fcb-47c9-85eb-d7d692fc82a9",
-          "name": "DayOff.Holiday.Read",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "f472bd12-def0-4c5e-8e91-0d56d734795a",
-          "name": "DayOff.Country.Read",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "c74f4af9-983e-46f2-9f2c-ffe978923671",
-          "name": "DayOff.Day.Read",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "b6e2d3fd-55a5-4f11-8d06-e95d42e184fc",
-          "name": "DayOff.State.Write",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "530ac12a-f4ac-4afe-964d-97e154d7d327",
-          "name": "DayOff.Tag.Write",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "fc9262a3-31e3-430f-8903-6b195d4b3094",
-          "name": "DayOff.Read",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "83a252a8-2878-4625-906a-5d46ddacd06b",
-          "name": "DayOff.Country.Write",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "5addf5dd-f3e6-431b-80e2-f71b61e0b8bf",
-          "name": "DayOff.FixedHoliday.Write",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "f52b0b55-f0c4-459a-b18e-9efdf6958d79",
-          "name": "DayOff.Day.Write",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "b0cefafe-854e-4ccd-b68e-66253fbe626b",
-          "name": "DayOff.City.Read",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "8651eb14-a067-4343-a9ec-7f8699a9e5a3",
-          "name": "DayOff.City.Write",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "7041198b-c43f-4451-afa4-c4507a82aca3",
-          "name": "uma_protection",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "07b76668-5236-435b-ba4b-b4ef1ca21569",
-          "name": "DayOff.FixedHoliday.Read",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "33025fff-0a60-45c1-bcc6-a22e2bb04bcc",
-          "name": "DayOff.State.Read",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "d2a33b74-4e88-4808-8437-494cc69c3eec",
-          "name": "DayOff.Tag.Read",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "0b5be6d8-bebb-4cf4-87ef-88b5657be2d6",
-          "name": "DayOff.Holiday.Write",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "0063d6c1-ab65-4d77-a0f2-b4a24120c8bd",
-          "name": "DayOff.WorkingState.Read",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        },
-        {
-          "id": "96bc6166-910e-4004-83a3-342db55a38b3",
-          "name": "DayOff.Write",
-          "description": "",
-          "composite": false,
-          "clientRole": true,
-          "containerId": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-          "attributes": {}
-        }
-      ],
+      "Scos": [],
       "account": [
         {
           "id": "bc8d8c09-2318-4bfe-bce2-6be0fce853d3",
@@ -569,150 +407,29 @@
   },
   "groups": [
     {
-      "id": "5ea6997a-b43f-4e23-ba80-32d40bd443d4",
-      "name": "DayOffMarker",
-      "path": "/DayOffMarker",
+      "id": "e1000000-0000-0000-0000-000000000001",
+      "name": "SawCunhaOS",
+      "path": "/SawCunhaOS",
       "attributes": {},
       "realmRoles": [],
       "clientRoles": {},
       "subGroups": [
         {
-          "id": "fc1b1e1a-287f-46c0-beb9-d1a29830cf17",
-          "name": "State",
-          "path": "/DayOffMarker/State",
-          "attributes": {},
-          "realmRoles": [],
-          "clientRoles": {
-            "DayOffMarker": [
-              "DayOff.State.Write",
-              "DayOff.State.Read"
-            ]
-          },
-          "subGroups": []
-        },
-        {
-          "id": "5a215a7e-e467-4f0f-a266-2aa9cac925f2",
-          "name": "Holiday",
-          "path": "/DayOffMarker/Holiday",
-          "attributes": {},
-          "realmRoles": [],
-          "clientRoles": {
-            "DayOffMarker": [
-              "DayOff.Holiday.Read",
-              "DayOff.Holiday.Write"
-            ]
-          },
-          "subGroups": []
-        },
-        {
-          "id": "77a82a54-7680-488d-a0e5-235ad0af9d4c",
-          "name": "FixedHoliday",
-          "path": "/DayOffMarker/FixedHoliday",
-          "attributes": {},
-          "realmRoles": [],
-          "clientRoles": {
-            "DayOffMarker": [
-              "DayOff.FixedHoliday.Write",
-              "DayOff.FixedHoliday.Read"
-            ]
-          },
-          "subGroups": []
-        },
-        {
-          "id": "d39ca2da-f9f8-4f52-93b8-c3cef3c17c7d",
-          "name": "City",
-          "path": "/DayOffMarker/City",
-          "attributes": {},
-          "realmRoles": [],
-          "clientRoles": {
-            "DayOffMarker": [
-              "DayOff.City.Read",
-              "DayOff.City.Write"
-            ]
-          },
-          "subGroups": []
-        },
-        {
-          "id": "703905cc-0d5e-4ded-80a7-a09c05fffe24",
-          "name": "Tag",
-          "path": "/DayOffMarker/Tag",
-          "attributes": {},
-          "realmRoles": [],
-          "clientRoles": {
-            "DayOffMarker": [
-              "DayOff.Tag.Read",
-              "DayOff.Tag.Write"
-            ]
-          },
-          "subGroups": []
-        },
-        {
-          "id": "54a2cb5e-b6bd-4c7d-911a-3e1e9f04e277",
-          "name": "Country",
-          "path": "/DayOffMarker/Country",
-          "attributes": {},
-          "realmRoles": [],
-          "clientRoles": {
-            "DayOffMarker": [
-              "DayOff.Country.Write",
-              "DayOff.Country.Read"
-            ]
-          },
-          "subGroups": []
-        },
-        {
-          "id": "a3f6b4aa-8c7a-462c-928c-4a1534e0c03c",
-          "name": "Day",
-          "path": "/DayOffMarker/Day",
-          "attributes": {},
-          "realmRoles": [],
-          "clientRoles": {
-            "DayOffMarker": [
-              "DayOff.Day.Read",
-              "DayOff.Day.Write"
-            ]
-          },
-          "subGroups": []
-        },
-        {
-          "id": "c085f1ca-34ca-451d-bebf-b8db6c1f9dfc",
-          "name": "Configuration",
-          "path": "/DayOffMarker/Configuration",
-          "attributes": {},
-          "realmRoles": [],
-          "clientRoles": {
-            "DayOffMarker": [
-              "DayOff.Read",
-              "DayOff.Write"
-            ]
-          },
-          "subGroups": []
-        },
-        {
-          "id": "56221737-71f1-4b32-8f13-5587d1756b46",
+          "id": "e1000000-0000-0000-0000-000000000002",
           "name": "Admin",
-          "path": "/DayOffMarker/Admin",
+          "path": "/SawCunhaOS/Admin",
           "attributes": {},
           "realmRoles": [],
-          "clientRoles": {
-            "DayOffMarker": [
-              "DayOff.Read",
-              "DayOff.Write"
-            ]
-          },
+          "clientRoles": {},
           "subGroups": []
         },
         {
-          "id": "f4f0f315-b178-421b-b4b6-afd2d9fda8df",
-          "name": "Working",
-          "path": "/DayOffMarker/Working",
+          "id": "e1000000-0000-0000-0000-000000000003",
+          "name": "API",
+          "path": "/SawCunhaOS/API",
           "attributes": {},
           "realmRoles": [],
-          "clientRoles": {
-            "DayOffMarker": [
-              "DayOff.WorkingState.Read"
-            ]
-          },
+          "clientRoles": {},
           "subGroups": []
         }
       ]
@@ -729,7 +446,7 @@
   "requiredCredentials": [
     "password"
   ],
-  "passwordPolicy": "forceExpiredPasswordChange(180) and digits(1) and maxLength(64) and notUsername(undefined) and notEmail(undefined) and length(8) and upperCase(1) and specialChars(1) and lowerCase(1)",
+  "passwordPolicy": "digits(1) and maxLength(64) and notUsername(undefined) and notEmail(undefined) and length(8) and upperCase(1) and specialChars(1) and lowerCase(1)",
   "otpPolicyType": "totp",
   "otpPolicyAlgorithm": "HmacSHA1",
   "otpPolicyInitialCounter": 0,
@@ -966,10 +683,10 @@
       ]
     },
     {
-      "id": "bece9f07-aa5e-4d22-b545-7a2dc1711281",
-      "clientId": "DayOffMarker",
-      "name": "Day Off Marker",
-      "description": "",
+      "id": "b1e00000-0000-0000-0000-000000000001",
+      "clientId": "Scos",
+      "name": "SawCunhaOS Organization",
+      "description": "Cliente principal do sistema SawCunhaOS Organization",
       "rootUrl": "",
       "adminUrl": "",
       "baseUrl": "",
@@ -995,68 +712,35 @@
       "protocol": "openid-connect",
       "attributes": {
         "oidc.ciba.grant.enabled": "false",
-        "client.secret.creation.time": "1687551916",
         "backchannel.logout.session.required": "true",
         "post.logout.redirect.uris": "+",
         "display.on.consent.screen": "false",
-        "oauth2.device.authorization.grant.enabled": "true",
+        "oauth2.device.authorization.grant.enabled": "false",
         "backchannel.logout.revoke.offline.tokens": "false"
       },
       "authenticationFlowBindingOverrides": {},
-      "fullScopeAllowed": true,
+      "fullScopeAllowed": false,
       "nodeReRegistrationTimeout": -1,
       "protocolMappers": [
         {
-          "id": "c2667865-9d7b-4d64-aa37-4382140e3860",
-          "name": "Client ID",
+          "id": "b1e00000-0000-0000-0000-000000000020",
+          "name": "idCompany",
           "protocol": "openid-connect",
-          "protocolMapper": "oidc-usersessionmodel-note-mapper",
+          "protocolMapper": "oidc-usermodel-attribute-mapper",
           "consentRequired": false,
           "config": {
-            "user.session.note": "client_id",
             "userinfo.token.claim": "true",
+            "user.attribute": "idCompany",
             "id.token.claim": "true",
             "access.token.claim": "true",
-            "claim.name": "client_id",
-            "jsonType.label": "String"
-          }
-        },
-        {
-          "id": "6c14bf61-88bc-4bbe-a027-4b9978994414",
-          "name": "Client Host",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-usersessionmodel-note-mapper",
-          "consentRequired": false,
-          "config": {
-            "user.session.note": "clientHost",
-            "userinfo.token.claim": "true",
-            "id.token.claim": "true",
-            "access.token.claim": "true",
-            "claim.name": "clientHost",
-            "jsonType.label": "String"
-          }
-        },
-        {
-          "id": "8ce0f291-a50f-4c51-a543-5445ecae032d",
-          "name": "Client IP Address",
-          "protocol": "openid-connect",
-          "protocolMapper": "oidc-usersessionmodel-note-mapper",
-          "consentRequired": false,
-          "config": {
-            "user.session.note": "clientAddress",
-            "userinfo.token.claim": "true",
-            "id.token.claim": "true",
-            "access.token.claim": "true",
-            "claim.name": "clientAddress",
+            "claim.name": "idCompany",
             "jsonType.label": "String"
           }
         }
       ],
       "defaultClientScopes": [
         "web-origins",
-        "acr",
         "profile",
-        "roles",
         "email"
       ],
       "optionalClientScopes": [
@@ -2525,12 +2209,93 @@
     "acr.loa.map": "{}",
     "shortVerificationUri": ""
   },
-  "keycloakVersion": "22.0.1",
+  "keycloakVersion": "26.6.4",
   "userManagedAccessAllowed": false,
   "clientProfiles": {
     "profiles": []
   },
   "clientPolicies": {
     "policies": []
-  }
+  },
+  "users": [
+    {
+      "id": "01000000-0000-0000-0000-000000000001",
+      "username": "scos-admin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Scos",
+      "lastName": "Admin",
+      "email": "admin@scos.local",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Admin@1234!",
+          "temporary": true
+        }
+      ],
+      "requiredActions": [
+        "UPDATE_PASSWORD"
+      ],
+      "groups": [
+        "/SawCunhaOS/Admin"
+      ],
+      "attributes": {
+        "idCompany": [
+          "00000000-0000-0000-0000-000000000001"
+        ]
+      }
+    },
+    {
+      "id": "02000000-0000-0000-0000-000000000002",
+      "username": "scos-api",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Scos",
+      "lastName": "API",
+      "email": "api@scos.local",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Api@1234!",
+          "temporary": true
+        }
+      ],
+      "requiredActions": [
+        "UPDATE_PASSWORD"
+      ],
+      "groups": [
+        "/SawCunhaOS/API"
+      ],
+      "attributes": {
+        "idCompany": [
+          "00000000-0000-0000-0000-000000000002"
+        ]
+      }
+    },
+    {
+      "id": "03000000-0000-0000-0000-000000000003",
+      "username": "keycloak-admin",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Keycloak",
+      "lastName": "Admin",
+      "email": "keycloak-admin@scos.local",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "Keycloak@1234!",
+          "temporary": true
+        }
+      ],
+      "requiredActions": [
+        "UPDATE_PASSWORD"
+      ],
+      "clientRoles": {
+        "realm-management": [
+          "realm-admin"
+        ]
+      },
+      "groups": []
+    }
+  ]
 }

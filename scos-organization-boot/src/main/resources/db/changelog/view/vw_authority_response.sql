@@ -1,5 +1,5 @@
 -- =============================================================================
--- VW_AUTHORITY_RESPONSE
+-- VW_AUTHORITY_RESPONSE (MATERIALIZED)
 -- =============================================================================
 -- Uma linha por login com permissões agregadas em array.
 -- Mapeamento direto para o proto AuthorityResponse:
@@ -21,8 +21,13 @@
 --   SELECT * FROM scos.vw_authority_response
 --   WHERE  login  = $1
 --   AND    status = 'ACTIVE';
+--
+-- Refresh: pg_cron a cada 30 minutos via scos.refresh_authority_views()
 -- =============================================================================
-CREATE VIEW scos.vw_authority_response AS
+
+DROP MATERIALIZED VIEW IF EXISTS scos.vw_authority_response;
+
+CREATE MATERIALIZED VIEW scos.vw_authority_response AS
 SELECT
     login_id,
     login,
@@ -41,8 +46,8 @@ SELECT
 
     -- ARRAY_REMOVE elimina NULL gerado pelo LEFT JOIN quando o perfil está vazio
     ARRAY_REMOVE(
-            ARRAY_AGG(permission ORDER BY permission),
-            NULL
+        ARRAY_AGG(permission ORDER BY permission),
+        NULL
     ) AS permissions
 
 FROM scos.vw_login_context
@@ -62,3 +67,6 @@ GROUP BY
     branch_name,
     profile_id,
     profile_code;
+
+CREATE UNIQUE INDEX uidx_vw_authority_response_login_id
+    ON scos.vw_authority_response (login_id);

@@ -49,7 +49,7 @@
         </dependency>
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>
-            <artifactId>scos-organization-application</artifactId>
+            <artifactId>scos-organization-usecase</artifactId>
         </dependency>
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>

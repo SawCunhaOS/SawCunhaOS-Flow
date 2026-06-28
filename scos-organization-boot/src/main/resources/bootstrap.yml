@@ -20,6 +20,14 @@ server:
       protocol-header: x-forwarded-proto
 
 spring:
+  grpc:
+    server:
+      # Aumenta o tempo de tolerância para fechar conexões antigas de forma segura
+      max-connection-age-grace: 30s
+      # Define o tempo máximo que uma conexão pode ficar ociosa
+      max-connection-idle: 30m
+      # Evita que o servidor derrube conexões ativas muito rápido
+      max-connection-age: 1h
   threads:
     virtual:
       enabled: true
@@ -222,5 +230,6 @@ scos:
     port: 8090                # porta gRPC
     key-access: ABLABLABLA
     system-code: SCOS_ORGANIZATION
+    system-name: Scos Organization
     system-description: Sistema de Gestão de Empresas e Funcionarios
     tls-enabled: false        # true em produção

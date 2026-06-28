@@ -34,8 +34,8 @@ erDiagram
         VARCHAR(30)    CODE          UK  "NOT NULL"
         VARCHAR(255)   DESCRIPTION       "NOT NULL"
         BOOLEAN        ACTIVE            "NOT NULL DEFAULT TRUE"
-        LOCALDATETIME  CREATED_AT        "NOT NULL"
-        LOCALDATETIME  UPDATED_AT        "NOT NULL"
+        TIMESTAMPTZ  CREATED_AT        "NOT NULL"
+        TIMESTAMPTZ  UPDATED_AT        "NOT NULL"
         VARCHAR(255)   USER_AT           "NOT NULL"
     }
 
@@ -43,10 +43,10 @@ erDiagram
         BIGINT         POSITION_ID   PK
         BIGINT         DEPARTMENT_ID FK  "NOT NULL"
         VARCHAR(30)    CODE          UK  "NOT NULL"
-        VARCHAR(255)   DESCRIPTION       "NOT NULL"
+        VARCHAR(30)    DESCRIPTION       "NOT NULL"
         BOOLEAN        ACTIVE            "NOT NULL DEFAULT TRUE"
-        LOCALDATETIME  CREATED_AT        "NOT NULL"
-        LOCALDATETIME  UPDATED_AT        "NOT NULL"
+        TIMESTAMPTZ  CREATED_AT        "NOT NULL"
+        TIMESTAMPTZ  UPDATED_AT        "NOT NULL"
         VARCHAR(255)   USER_AT           "NOT NULL"
     }
 
@@ -59,12 +59,12 @@ erDiagram
         VARCHAR(100)   NAME_TREATMENT      "NOT NULL"
         VARCHAR(11)    TAX_IDENTIFIER  UK  "NOT NULL --CPF"
         VARCHAR(255)   EMAIL           UK  "NOT NULL"
-        LOCALDATE      BIRTH_DATE          "NOT NULL"
-        LOCALDATE      DATE_OF_HIRING      "NOT NULL"
+        DATE      BIRTH_DATE          "NOT NULL"
+        DATE      DATE_OF_HIRING      "NOT NULL"
         TEXT           OBSERVATION
         VARCHAR(20)    STATUS              "NOT NULL --ACTIVE/INACTIVE/DISABLED"
-        LOCALDATETIME  CREATED_AT          "NOT NULL"
-        LOCALDATETIME  UPDATED_AT          "NOT NULL"
+        TIMESTAMPTZ  CREATED_AT          "NOT NULL"
+        TIMESTAMPTZ  UPDATED_AT          "NOT NULL"
         VARCHAR(255)   USER_AT             "NOT NULL"
     }
 
@@ -73,8 +73,8 @@ erDiagram
         BIGINT         EMPLOYEE_ID         FK  "NOT NULL"
         VARCHAR(50)    PHONE               UK  "NOT NULL"
         VARCHAR(50)    TYPE                UK  "NOT NULL"
-        LOCALDATETIME  CREATED_AT              "NOT NULL"
-        LOCALDATETIME  UPDATED_AT              "NOT NULL"
+        TIMESTAMPTZ  CREATED_AT              "NOT NULL"
+        TIMESTAMPTZ  UPDATED_AT              "NOT NULL"
         VARCHAR(255)   USER_AT                 "NOT NULL"
     }
 
@@ -84,9 +84,9 @@ erDiagram
         VARCHAR(50)     TYPE                UK    "NOT NULL"
         INT             NUMBER                    "NOT NULL"
         VARCHAR(250)    COMPLEMENT
-        GEOMETRY(POINT) GEOLOCATION               "NOT NULL"
-        LOCALDATETIME   CREATED_AT                "NOT NULL"
-        LOCALDATETIME   UPDATED_AT                "NOT NULL"
+        POINT GEOLOCATION               "NOT NULL"
+        TIMESTAMPTZ   CREATED_AT                "NOT NULL"
+        TIMESTAMPTZ   UPDATED_AT                "NOT NULL"
         VARCHAR(255)    USER_AT                   "NOT NULL"
     }
 
@@ -96,12 +96,12 @@ erDiagram
         VARCHAR(250)   NAME                   "NOT NULL"
         VARCHAR(100)   NAME_TREATMENT         "NOT NULL"
         VARCHAR(14)    TAX_IDENTIFIER     UK  "NOT NULL --CNPJ"
-        LOCALDATE      FOUNDATION_DATE        "NOT NULL"
+        DATE      FOUNDATION_DATE        "NOT NULL"
         VARCHAR(100)   SECTOR_OF_ACTIVITY     "NOT NULL"
         TEXT           OBSERVATION
         VARCHAR(20)    STATUS                 "NOT NULL --ACTIVE/INACTIVE/DISABLED"
-        LOCALDATETIME  CREATED_AT             "NOT NULL"
-        LOCALDATETIME  UPDATED_AT             "NOT NULL"
+        TIMESTAMPTZ  CREATED_AT             "NOT NULL"
+        TIMESTAMPTZ  UPDATED_AT             "NOT NULL"
         VARCHAR(255)   USER_AT                "NOT NULL"
     }
 
@@ -111,9 +111,9 @@ erDiagram
         VARCHAR(50)     TYPE               UK    "NOT NULL"
         INT             NUMBER                   "NOT NULL"
         VARCHAR(250)    COMPLEMENT               "NULL"
-        GEOMETRY(POINT) GEOLOCATION              "NOT NULL"
-        LOCALDATETIME   CREATED_AT               "NOT NULL"
-        LOCALDATETIME   UPDATED_AT               "NOT NULL"
+        POINT GEOLOCATION              "NOT NULL"
+        TIMESTAMPTZ   CREATED_AT               "NOT NULL"
+        TIMESTAMPTZ   UPDATED_AT               "NOT NULL"
         VARCHAR(255)    USER_AT                  "NOT NULL"
     }
 
@@ -124,18 +124,18 @@ erDiagram
         VARCHAR(255)   EMAIL               UK  "NOT NULL"
         VARCHAR(50)    TYPE                UK  "NOT NULL"
         VARCHAR(255)   RESPONSIBLE_PERSON      "NOT NULL"
-        LOCALDATETIME  CREATED_AT              "NOT NULL"
-        LOCALDATETIME  UPDATED_AT              "NOT NULL"
+        TIMESTAMPTZ  CREATED_AT              "NOT NULL"
+        TIMESTAMPTZ  UPDATED_AT              "NOT NULL"
         VARCHAR(255)   USER_AT                 "NOT NULL"
     }
 
     SCOS_PROFILE {
         BIGINT         PROFILE_ID  PK
         VARCHAR(30)    CODE        UK  "NOT NULL"
-        VARCHAR(30)    DESCRIPTION     "NOT NULL"
+        VARCHAR(255)   DESCRIPTION     "NOT NULL"
         BOOLEAN        ACTIVE          "NOT NULL DEFAULT TRUE"
-        LOCALDATETIME  CREATED_AT      "NOT NULL"
-        LOCALDATETIME  UPDATED_AT      "NOT NULL"
+        TIMESTAMPTZ  CREATED_AT      "NOT NULL"
+        TIMESTAMPTZ  UPDATED_AT      "NOT NULL"
         VARCHAR(255)   USER_AT         "NOT NULL"
     }
 
@@ -147,8 +147,8 @@ erDiagram
         VARCHAR(255)   LOGIN            "NOT NULL"
         VARCHAR(50)    STATUS           "NOT NULL --ACTIVE/INACTIVE/BLOCKED"
         VARCHAR(50)    TYPE             "NOT NULL --EMPLOYEE/EXTERNAL/SERVICE"
-        LOCALDATETIME  CREATED_AT       "NOT NULL"
-        LOCALDATETIME  UPDATED_AT       "NOT NULL"
+        TIMESTAMPTZ  CREATED_AT       "NOT NULL"
+        TIMESTAMPTZ  UPDATED_AT       "NOT NULL"
         VARCHAR(255)   USER_AT          "NOT NULL"
     }
 
@@ -156,19 +156,21 @@ erDiagram
         VARCHAR(50)    CONFIGURATION_ID PK
         TEXT           VALUE               "NOT NULL"
         VARCHAR(50)    TYPE                "NOT NULL"
-        LOCALDATETIME  CREATED_AT          "NOT NULL"
-        LOCALDATETIME  UPDATED_AT          "NOT NULL"
+        TIMESTAMPTZ  CREATED_AT          "NOT NULL"
+        TIMESTAMPTZ  UPDATED_AT          "NOT NULL"
         VARCHAR(255)   USER_AT             "NOT NULL"
     }
 
     SCOS_SYSTEM {
         UUID           SYSTEM_ID    PK
+        VARCHAR(250)   NAME             "NOT NULL"
         VARCHAR(25)    CODE         UK  "NOT NULL"
         VARCHAR(200)   DESCRIPTION      "NOT NULL"
         TEXT           SECRET_KEY       "NOT NULL"
         VARCHAR(50)    STATUS           "NOT NULL --ACTIVE/INACTIVE"
-        LOCALDATETIME  CREATED_AT       "NOT NULL"
-        LOCALDATETIME  UPDATED_AT       "NOT NULL"
+        VARCHAR(50)    VERSION          "NOT NULL"
+        TIMESTAMPTZ    CREATED_AT       "NOT NULL"
+        TIMESTAMPTZ    UPDATED_AT       "NOT NULL"
         VARCHAR(255)   USER_AT          "NOT NULL"
     }
 
@@ -176,17 +178,18 @@ erDiagram
         UUID           RESOURCE_ID  PK
         UUID           SYSTEM_ID    FK  "NOT NULL"
         VARCHAR(50)    CODE         UK  "NOT NULL"
-        VARCHAR(255)   DESCRIPTION      "NOT NULL"
+        VARCHAR(255)   DESCRIPTION_PT   "NOT NULL"
+        VARCHAR(255)   DESCRIPTION_EN   "NOT NULL"
         BOOLEAN        ACTIVE           "NOT NULL DEFAULT TRUE"
-        LOCALDATETIME  CREATED_AT       "NOT NULL"
-        LOCALDATETIME  UPDATED_AT       "NOT NULL"
+        TIMESTAMPTZ    CREATED_AT       "NOT NULL"
+        TIMESTAMPTZ    UPDATED_AT       "NOT NULL"
         VARCHAR(255)   USER_AT          "NOT NULL"
     }
 
     SCOS_PROFILE_RESOURCE {
         BIGINT         PROFILE_ID   PK,FK  "NOT NULL"
         UUID           RESOURCE_ID  PK,FK  "NOT NULL"
-        LOCALDATETIME  CREATED_AT          "NOT NULL"
+        TIMESTAMPTZ  CREATED_AT          "NOT NULL"
         VARCHAR(255)   USER_AT             "NOT NULL"
     }
 
@@ -243,8 +246,8 @@ erDiagram
 | CODE | VARCHAR(30) | UK, NOT NULL | Código único do departamento — ex: `RH`, `TI`, `FIN` |
 | DESCRIPTION | VARCHAR(30) | NOT NULL | Descrição completa do departamento |
 | ACTIVE | BOOLEAN | NOT NULL, DEFAULT TRUE | Indica se o departamento está ativo. Departamentos inativos mantêm o histórico mas não aparecem para seleção |
-| CREATED_AT | LOCALDATETIME | NOT NULL | Data e hora em que o registro foi criado |
-| UPDATED_AT | LOCALDATETIME | NOT NULL | Data e hora da última atualização do registro |
+| CREATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora em que o registro foi criado |
+| UPDATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora da última atualização do registro |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou a última alteração |
 
 ---
@@ -260,8 +263,8 @@ erDiagram
 | CODE | VARCHAR(30) | UK, NOT NULL | Código único do cargo — ex: `ANALISTA_SR`, `GERENTE_TI` |
 | DESCRIPTION | VARCHAR(30) | NOT NULL | Descrição completa do cargo |
 | ACTIVE | BOOLEAN | NOT NULL, DEFAULT TRUE | Indica se o cargo está ativo. Cargos inativos não podem ser atribuídos a novos funcionários |
-| CREATED_AT | LOCALDATETIME | NOT NULL | Data e hora em que o registro foi criado |
-| UPDATED_AT | LOCALDATETIME | NOT NULL | Data e hora da última atualização do registro |
+| CREATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora em que o registro foi criado |
+| UPDATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora da última atualização do registro |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou a última alteração |
 
 ---
@@ -280,12 +283,12 @@ erDiagram
 | NAME_TREATMENT | VARCHAR(100) | NOT NULL | Nome de tratamento — nome preferido ou apelido usado no dia a dia |
 | TAX_IDENTIFIER | VARCHAR(11) | UK, NOT NULL | CPF do funcionário — identificador fiscal único |
 | EMAIL | VARCHAR(255) | UK, NOT NULL | E-mail corporativo do funcionário |
-| BIRTH_DATE | LOCALDATE | NOT NULL | Data de nascimento |
-| DATE_OF_HIRING | LOCALDATE | NOT NULL | Data de contratação — início do vínculo empregatício |
+| BIRTH_DATE | DATE | NOT NULL | Data de nascimento |
+| DATE_OF_HIRING | DATE | NOT NULL | Data de contratação — início do vínculo empregatício |
 | OBSERVATION | TEXT | NULL | Observações gerais sobre o funcionário. Campo livre |
 | STATUS | VARCHAR(20) | NOT NULL | Situação atual: `ACTIVE`, `INACTIVE` ou `DISABLED` |
-| CREATED_AT | LOCALDATETIME | NOT NULL | Data e hora em que o registro foi criado |
-| UPDATED_AT | LOCALDATETIME | NOT NULL | Data e hora da última atualização do registro |
+| CREATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora em que o registro foi criado |
+| UPDATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora da última atualização do registro |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou a última alteração |
 
 ---
@@ -300,8 +303,8 @@ erDiagram
 | EMPLOYEE_ID | BIGINT | FK, NOT NULL | Referência ao funcionário dono do contato |
 | PHONE | VARCHAR(50) | UK, NOT NULL | Número de telefone com DDD |
 | TYPE | VARCHAR(50) | UK, NOT NULL | Tipo do contato — ex: `MOBILE`, `WORK`, `HOME` |
-| CREATED_AT | LOCALDATETIME | NOT NULL | Data e hora em que o registro foi criado |
-| UPDATED_AT | LOCALDATETIME | NOT NULL | Data e hora da última atualização do registro |
+| CREATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora em que o registro foi criado |
+| UPDATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora da última atualização do registro |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou a última alteração |
 
 ---
@@ -317,9 +320,9 @@ erDiagram
 | TYPE | VARCHAR(50) | UK, NOT NULL | Tipo do endereço — ex: `HOME`, `WORK` |
 | NUMBER | INT | NOT NULL | Número do endereço |
 | COMPLEMENT | VARCHAR(250) | NULL | Complemento — apartamento, bloco, sala etc |
-| GEOLOCATION | GEOMETRY(POINT) | NOT NULL | Coordenadas geográficas — latitude e longitude |
-| CREATED_AT | LOCALDATETIME | NOT NULL | Data e hora em que o registro foi criado |
-| UPDATED_AT | LOCALDATETIME | NOT NULL | Data e hora da última atualização do registro |
+| GEOLOCATION | POINT | NOT NULL | Coordenadas geográficas — latitude e longitude |
+| CREATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora em que o registro foi criado |
+| UPDATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora da última atualização do registro |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou a última alteração |
 
 ---
@@ -335,12 +338,12 @@ erDiagram
 | NAME | VARCHAR(250) | NOT NULL | Razão social da empresa |
 | NAME_TREATMENT | VARCHAR(100) | NOT NULL | Nome fantasia ou nome de tratamento |
 | TAX_IDENTIFIER | VARCHAR(14) | UK, NOT NULL | CNPJ da empresa — identificador fiscal único |
-| FOUNDATION_DATE | LOCALDATE | NOT NULL | Data de fundação |
+| FOUNDATION_DATE | DATE | NOT NULL | Data de fundação |
 | SECTOR_OF_ACTIVITY | VARCHAR(100) | NOT NULL | Setor de atividade — ex: Tecnologia, Varejo, Saúde |
 | OBSERVATION | TEXT | NULL | Observações gerais. Campo livre |
 | STATUS | VARCHAR(20) | NOT NULL | Situação: `ACTIVE`, `INACTIVE` ou `DISABLED` |
-| CREATED_AT | LOCALDATETIME | NOT NULL | Data e hora em que o registro foi criado |
-| UPDATED_AT | LOCALDATETIME | NOT NULL | Data e hora da última atualização do registro |
+| CREATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora em que o registro foi criado |
+| UPDATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora da última atualização do registro |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou a última alteração |
 
 ---
@@ -356,9 +359,9 @@ erDiagram
 | TYPE | VARCHAR(50) | UK, NOT NULL | Tipo do endereço — ex: `BILLING`, `COMMERCIAL`, `BRANCH` |
 | NUMBER | INT | NOT NULL | Número do endereço |
 | COMPLEMENT | VARCHAR(250) | NULL | Complemento — sala, andar, bloco etc |
-| GEOLOCATION | GEOMETRY(POINT) | NOT NULL | Coordenadas geográficas — latitude e longitude |
-| CREATED_AT | LOCALDATETIME | NOT NULL | Data e hora em que o registro foi criado |
-| UPDATED_AT | LOCALDATETIME | NOT NULL | Data e hora da última atualização do registro |
+| GEOLOCATION | POINT | NOT NULL | Coordenadas geográficas — latitude e longitude |
+| CREATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora em que o registro foi criado |
+| UPDATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora da última atualização do registro |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou a última alteração |
 
 ---
@@ -375,8 +378,8 @@ erDiagram
 | EMAIL | VARCHAR(255) | UK, NOT NULL | E-mail de contato da empresa |
 | TYPE | VARCHAR(50) | UK, NOT NULL | Tipo do contato — ex: `COMMERCIAL`, `FINANCIAL`, `SUPPORT` |
 | RESPONSIBLE_PERSON | VARCHAR(255) | NOT NULL | Nome da pessoa responsável pelo contato na empresa |
-| CREATED_AT | LOCALDATETIME | NOT NULL | Data e hora em que o registro foi criado |
-| UPDATED_AT | LOCALDATETIME | NOT NULL | Data e hora da última atualização do registro |
+| CREATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora em que o registro foi criado |
+| UPDATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora da última atualização do registro |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou a última alteração |
 
 ---
@@ -389,10 +392,10 @@ erDiagram
 |---|---|---|---|
 | PROFILE_ID | BIGINT | PK | Identificador único do perfil, gerado automaticamente |
 | CODE | VARCHAR(30) | UK, NOT NULL | Código único do perfil — ex: `ADMIN`, `OPERATOR`, `VIEWER` |
-| DESCRIPTION | VARCHAR(30) | NOT NULL | Descrição do perfil e seu propósito |
+| DESCRIPTION | VARCHAR(255) | NOT NULL | Descrição do perfil e seu propósito |
 | ACTIVE | BOOLEAN | NOT NULL, DEFAULT TRUE | Indica se o perfil está ativo. Perfis inativos não podem ser atribuídos a novos usuários |
-| CREATED_AT | LOCALDATETIME | NOT NULL | Data e hora em que o registro foi criado |
-| UPDATED_AT | LOCALDATETIME | NOT NULL | Data e hora da última atualização do registro |
+| CREATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora em que o registro foi criado |
+| UPDATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora da última atualização do registro |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou a última alteração |
 
 ---
@@ -410,8 +413,8 @@ erDiagram
 | LOGIN | VARCHAR(255) | NOT NULL | E-mail ou username utilizado para acesso |
 | STATUS | VARCHAR(50) | NOT NULL | Situação: `ACTIVE`, `INACTIVE` ou `BLOCKED` |
 | TYPE | VARCHAR(50) | NOT NULL | Tipo do usuário: `EMPLOYEE`, `EXTERNAL` ou `SERVICE` |
-| CREATED_AT | LOCALDATETIME | NOT NULL | Data e hora em que o registro foi criado |
-| UPDATED_AT | LOCALDATETIME | NOT NULL | Data e hora da última atualização do registro |
+| CREATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora em que o registro foi criado |
+| UPDATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora da última atualização do registro |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou a última alteração |
 
 ---
@@ -425,8 +428,8 @@ erDiagram
 | CONFIGURATION_ID | VARCHAR(50) | PK | Chave identificadora da configuração — ex: `TOKEN_EXPIRY_MINUTES`, `MAX_LOGIN_ATTEMPTS` |
 | VALUE | TEXT | NOT NULL | Valor da configuração |
 | TYPE | VARCHAR(50) | NOT NULL | Tipo do valor para interpretação: `STRING`, `INTEGER`, `BOOLEAN`, `JSON` |
-| CREATED_AT | LOCALDATETIME | NOT NULL | Data e hora em que o registro foi criado |
-| UPDATED_AT | LOCALDATETIME | NOT NULL | Data e hora da última atualização do registro |
+| CREATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora em que o registro foi criado |
+| UPDATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora da última atualização do registro |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou a última alteração |
 
 ---
@@ -438,12 +441,14 @@ erDiagram
 | Campo | Tipo | Restrição | Descrição |
 |---|---|---|---|
 | SYSTEM_ID | UUID | PK | Identificador único do sistema, gerado automaticamente como UUID |
+| NAME | VARCHAR(250) | NOT NULL | Nome completo do sistema |
 | CODE | VARCHAR(25) | UK, NOT NULL | Código único do sistema — ex: `STOCK_SYSTEM`, `STREAMING_APP` |
 | DESCRIPTION | VARCHAR(200) | NOT NULL | Descrição do sistema e sua finalidade |
 | SECRET_KEY | TEXT | NOT NULL | Chave secreta para autenticação do sistema nas chamadas à API de permissões |
 | STATUS | VARCHAR(50) | NOT NULL | Situação: `ACTIVE` ou `INACTIVE`. Sistemas inativos têm acesso bloqueado |
-| CREATED_AT | LOCALDATETIME | NOT NULL | Data e hora em que o registro foi criado |
-| UPDATED_AT | LOCALDATETIME | NOT NULL | Data e hora da última atualização do registro |
+| VERSION | VARCHAR(50) | NOT NULL | Versão atual do sistema — ex: `1.0.0`, `2.3.1` |
+| CREATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora em que o registro foi criado |
+| UPDATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora da última atualização do registro |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou o cadastro |
 
 ---
@@ -457,10 +462,11 @@ erDiagram
 | RESOURCE_ID | UUID | PK | Identificador único da permissão, gerado automaticamente como UUID |
 | SYSTEM_ID | UUID | FK, NOT NULL | Referência ao sistema ao qual essa permissão pertence |
 | CODE | VARCHAR(50) | UK, NOT NULL | Código da permissão com ação embutida — ex: `PRODUCT_READ`, `ORDER_APPROVE`, `VIDEO_WATCH` |
-| DESCRIPTION | VARCHAR(255) | NOT NULL | Descrição do que essa permissão permite ao usuário fazer |
+| DESCRIPTION_PT | VARCHAR(255) | NOT NULL | Descrição da permissão em português |
+| DESCRIPTION_EN | VARCHAR(255) | NOT NULL | Descrição da permissão em inglês |
 | ACTIVE | BOOLEAN | NOT NULL, DEFAULT TRUE | Indica se a permissão está disponível para ser atribuída a perfis |
-| CREATED_AT | LOCALDATETIME | NOT NULL | Data e hora em que o registro foi criado |
-| UPDATED_AT | LOCALDATETIME | NOT NULL | Data e hora da última atualização do registro |
+| CREATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora em que o registro foi criado |
+| UPDATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora da última atualização do registro |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou o cadastro |
 
 ---
@@ -473,7 +479,7 @@ erDiagram
 |---|---|---|---|
 | PROFILE_ID | BIGINT | PK, FK | Referência ao perfil. Parte da chave composta |
 | RESOURCE_ID | UUID | PK, FK | Referência à permissão. Parte da chave composta |
-| CREATED_AT | LOCALDATETIME | NOT NULL | Data e hora em que a permissão foi atribuída ao perfil |
+| CREATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora em que a permissão foi atribuída ao perfil |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou a atribuição |
 
 ---

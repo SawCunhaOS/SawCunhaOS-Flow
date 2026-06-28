@@ -17,6 +17,11 @@ databaseChangeLog:
                     primaryKeyName: PK_SCOS_SYSTEM
                     nullable: false
               - column:
+                  name: NAME
+                  type: varchar(250)
+                  constraints:
+                    nullable: false
+              - column:
                   name: CODE
                   type: varchar(25)
                   constraints:
@@ -33,6 +38,11 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: STATUS
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: VERSION
                   type: varchar(50)
                   constraints:
                     nullable: false

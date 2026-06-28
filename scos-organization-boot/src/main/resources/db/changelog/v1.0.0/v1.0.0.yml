@@ -12,8 +12,5 @@ databaseChangeLog:
       file: tables/tables.yml
       relativeToChangelogFile: true
   - include:
-      file: insert/insert.yml
-      relativeToChangelogFile: true
-  - include:
       file: indexes/indexes.yml
       relativeToChangelogFile: true

@@ -29,7 +29,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: DESCRIPTION
+                  name: DESCRIPTION_PT
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION_EN
                   type: varchar(255)
                   constraints:
                     nullable: false

@@ -31,7 +31,7 @@ public class ScosAuthorityService {
         AuthorityRequest authorityRequest = AuthorityRequest.newBuilder().setLogin(login).build();
 
         log.info("Validating Authority: {}", authorityRequest.getLogin());
-        return validateAuthorityServiceStub.validate(authorityRequest);
+        return validateAuthorityServiceStub.validateAuthority(authorityRequest);
     }
 
 }

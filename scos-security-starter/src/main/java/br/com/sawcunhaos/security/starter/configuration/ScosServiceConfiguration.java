@@ -10,11 +10,16 @@ import br.com.sawcunhaos.security.starter.service.grpc.ScosAuthorityService;
 import br.com.sawcunhaos.security.starter.service.grpc.ScosRegistryService;
 import br.com.sawcunhaos.security.starter.specification.ScosSecurity;
 import br.com.sawcunhaos.security.starter.specification.ScosSystemRegistration;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
+@RequiredArgsConstructor
 public class ScosServiceConfiguration {
+
+    private final BuildProperties buildProperties;
 
     @Bean
     public ScosAuthorityService scosAuthorityService(
@@ -37,8 +42,9 @@ public class ScosServiceConfiguration {
     @Bean
     public ScosSystemRegistration scosSystemRegistrationService(
             ScosRegistryService scosRegistryService,
-            ScosRegistryProperties scosRegistryProperties) {
-        return new ScosSystemRegistrationService(scosRegistryService, scosRegistryProperties);
+            ScosRegistryProperties scosRegistryProperties
+    ) {
+        return new ScosSystemRegistrationService(scosRegistryService, scosRegistryProperties, buildProperties);
     }
 
     @Bean

@@ -147,3 +147,6 @@ logs/**/*
 server/**/logs/**/*
 
 *.lst
+
+# Infra secrets
+etc/infra/.env
