@@ -24,7 +24,7 @@ public record AuthorityResponseOutput(
         String login,
         String type,
         String status,
-        UUID keycloakId,
+        UUID externalId,
         Long profileId,
         String profileCode,
         String name,

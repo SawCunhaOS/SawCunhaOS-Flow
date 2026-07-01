@@ -21,17 +21,17 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Optional;
 
-import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_012;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_011;
 
-@ScosRule(1)
+@ScosRule(2)
 @RequiredArgsConstructor
 @Slf4j
-class LoginDeletedRule implements BusinessRule<LoginStatus> {
+class LoginBlockedRule implements BusinessRule<LoginStatus> {
 
     @Override
     public Optional<String> validate(LoginStatus context) {
-        if (context.equals(LoginStatus.DELETED))
-            return Optional.of(SCOS_LOGIN_012.getCode());
+        if (context.equals(LoginStatus.BLOCKED))
+            return Optional.of(SCOS_LOGIN_011.getCode());
         return Optional.empty();
     }
 }

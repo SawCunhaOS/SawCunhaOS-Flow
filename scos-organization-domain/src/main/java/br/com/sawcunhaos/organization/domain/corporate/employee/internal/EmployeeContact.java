@@ -15,6 +15,7 @@ package br.com.sawcunhaos.organization.domain.corporate.employee.internal;
 
 import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
+import br.com.sawcunhaos.organization.domain.corporate.catalog.internal.ContactType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -44,8 +45,9 @@ public class EmployeeContact extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "EMPLOYEE_ID_CONTACT")
     private Long id;
-    @Column(name = "TYPE")
-    private String type;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CONTACT_TYPE_ID")
+    private ContactType contactType;
     @Column(name = "PHONE")
     private String phone;
 

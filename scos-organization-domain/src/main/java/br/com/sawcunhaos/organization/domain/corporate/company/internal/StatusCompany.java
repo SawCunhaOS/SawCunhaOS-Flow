@@ -19,8 +19,7 @@ import lombok.Getter;
 public enum StatusCompany {
     ACTIVE("Ativa"),
     INACTIVE("Inativa"),
-    DISABLED("Desabilitada"),
-    DELETED("Deletada");
+    DISABLED("Desabilitada");
 
     private final String displayName;
 

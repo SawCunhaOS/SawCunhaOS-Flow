@@ -81,7 +81,8 @@ public enum ExceptionCodeError implements ExceptionCode {
     SCOS_LOGIN_003("SCOS_LOGIN_003"),
     SCOS_LOGIN_010("SCOS_LOGIN_010"),
     SCOS_LOGIN_011("SCOS_LOGIN_011"),
-    SCOS_LOGIN_012("SCOS_LOGIN_012"),
+    /** Transição de status inválida solicitada para o Login informado. HTTP 422. */
+    SCOS_LOGIN_013("SCOS_LOGIN_013"),
 
 
     ;

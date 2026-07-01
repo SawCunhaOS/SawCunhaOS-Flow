@@ -16,6 +16,7 @@ package br.com.sawcunhaos.organization.domain.corporate.company.internal;
 
 import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
+import br.com.sawcunhaos.organization.domain.corporate.catalog.internal.AddressType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -43,8 +44,9 @@ public class CompanyAddress extends BaseEntity {
     @EmbeddedId
     private CompanyAddressPk id;
 
-    @Column(name = "TYPE")
-    private String type;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ADDRESS_TYPE_ID")
+    private AddressType addressType;
     @Column(name = "NUMBER")
     private int number;
     @Column(name = "COMPLEMENT")

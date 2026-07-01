@@ -18,6 +18,11 @@ import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.foundation.utils.valueobjects.Cnpj;
+import br.com.sawcunhaos.organization.domain.access.status.internal.CompanyStatusHistory;
+import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonActivate;
+import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonDisable;
+import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonEnable;
+import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonInactivate;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -77,6 +82,18 @@ public class Company extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private StatusCompany status;
 
+    @Column(name = "STATE_REGISTRATION")
+    private String stateRegistration;
+    @Column(name = "MUNICIPAL_REGISTRATION")
+    private String municipalRegistration;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "LEGAL_NATURE_ID")
+    private LegalNature legalNature;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CNAE_PRINCIPAL_ID")
+    private Cnae cnaePrincipal;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_COMPANY_ID")
     private Company parentCompany;
@@ -95,25 +112,63 @@ public class Company extends BaseEntity {
         return StatusCompany.ACTIVE == this.status;
     }
 
-    public void inactivate() {
-        if (this.status == StatusCompany.DISABLED || this.status == StatusCompany.DELETED) {
+    /**
+     * Reativa a empresa a partir de INACTIVE. Não persiste — o chamador salva o histórico retornado.
+     * @throws ScosException SCOS_COMPANY_007 se o status atual não for INACTIVE.
+     */
+    public CompanyStatusHistory activate(Long reasonActivateId) {
+        if (this.status != StatusCompany.INACTIVE) {
             throw new ScosException(SCOS_COMPANY_007);
         }
-        this.status = StatusCompany.INACTIVE;
+        return CompanyStatusHistory.builder()
+                .company(this)
+                .status(StatusCompany.ACTIVE)
+                .reasonActivate(ReasonActivate.builder().id(reasonActivateId).build())
+                .build();
     }
 
-    public void activate() {
-        if (this.status == StatusCompany.DISABLED || this.status == StatusCompany.DELETED) {
+    /**
+     * Encerra definitivamente a empresa a partir de ACTIVE ou DISABLED. Não persiste.
+     * @throws ScosException SCOS_COMPANY_007 se já estiver INACTIVE.
+     */
+    public CompanyStatusHistory inactivate(Long reasonInactivateId) {
+        if (this.status == StatusCompany.INACTIVE) {
             throw new ScosException(SCOS_COMPANY_007);
         }
-        this.status = StatusCompany.ACTIVE;
+        return CompanyStatusHistory.builder()
+                .company(this)
+                .status(StatusCompany.INACTIVE)
+                .reasonInactivate(ReasonInactivate.builder().id(reasonInactivateId).build())
+                .build();
     }
 
-    public void disable() {
-        this.status = StatusCompany.DISABLED;
+    /**
+     * Bloqueia temporariamente a empresa a partir de ACTIVE. Não persiste.
+     * @throws ScosException SCOS_COMPANY_007 se o status atual não for ACTIVE.
+     */
+    public CompanyStatusHistory disable(Long reasonDisableId) {
+        if (this.status != StatusCompany.ACTIVE) {
+            throw new ScosException(SCOS_COMPANY_007);
+        }
+        return CompanyStatusHistory.builder()
+                .company(this)
+                .status(StatusCompany.DISABLED)
+                .reasonDisable(ReasonDisable.builder().id(reasonDisableId).build())
+                .build();
     }
 
-    public void delete() {
-        this.status = StatusCompany.DELETED;
+    /**
+     * Desbloqueia a empresa a partir de DISABLED, retornando a ACTIVE. Não persiste.
+     * @throws ScosException SCOS_COMPANY_007 se o status atual não for DISABLED.
+     */
+    public CompanyStatusHistory enable(Long reasonEnableId) {
+        if (this.status != StatusCompany.DISABLED) {
+            throw new ScosException(SCOS_COMPANY_007);
+        }
+        return CompanyStatusHistory.builder()
+                .company(this)
+                .status(StatusCompany.ACTIVE)
+                .reasonEnable(ReasonEnable.builder().id(reasonEnableId).build())
+                .build();
     }
 }

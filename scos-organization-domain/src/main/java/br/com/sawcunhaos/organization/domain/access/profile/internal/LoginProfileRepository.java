@@ -11,15 +11,13 @@
  *
  */
 
-package br.com.sawcunhaos.organization.domain.access.integration.internal;
+package br.com.sawcunhaos.organization.domain.access.profile.internal;
 
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface IntegrationMessageInvalidRepository extends BaseJpaRepository<IntegrationMessageInvalid, UUID>, JpaSpecificationExecutor<IntegrationMessageInvalid>, QuerydslPredicateExecutor<IntegrationMessageInvalid> {
+public interface LoginProfileRepository extends BaseJpaRepository<LoginProfile, LoginProfilePk>, JpaSpecificationExecutor<LoginProfile>, QuerydslPredicateExecutor<LoginProfile> {
 }

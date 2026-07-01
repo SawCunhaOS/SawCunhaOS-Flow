@@ -23,7 +23,7 @@ import java.util.Optional;
 
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_010;
 
-@ScosRule(2)
+@ScosRule(1)
 @RequiredArgsConstructor
 @Slf4j
 class LoginInactiveRule implements BusinessRule<LoginStatus> {

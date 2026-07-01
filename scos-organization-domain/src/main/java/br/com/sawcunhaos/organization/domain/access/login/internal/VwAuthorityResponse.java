@@ -49,8 +49,8 @@ public class VwAuthorityResponse {
     @Enumerated(EnumType.STRING)
     private LoginStatus status;
 
-    @Column(name = "keycloak_id")
-    private UUID keycloakId;
+    @Column(name = "external_id")
+    private UUID externalId;
 
     @Column(name = "employee_id")
     private Long employeeId;

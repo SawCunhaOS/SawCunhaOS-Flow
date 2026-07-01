@@ -15,6 +15,7 @@ package br.com.sawcunhaos.organization.domain.corporate.employee.internal;
 
 import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
+import br.com.sawcunhaos.organization.domain.corporate.catalog.internal.AddressType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -42,10 +43,11 @@ public class EmployeeAddress extends BaseEntity {
     @EmbeddedId
     private EmployeeAddressPk id;
 
-    @Column(name = "TYPE")
-    private String type;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ADDRESS_TYPE_ID")
+    private AddressType addressType;
     @Column(name = "NUMBER")
-    private long number;
+    private int number;
     @Column(name = "COMPLEMENT")
     private String complement;
     @Column(name = "GEOLOCATION")

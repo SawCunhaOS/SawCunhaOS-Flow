@@ -16,6 +16,7 @@ package br.com.sawcunhaos.organization.domain.corporate.company.internal;
 import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
 import br.com.sawcunhaos.foundation.utils.valueobjects.Email;
+import br.com.sawcunhaos.organization.domain.corporate.catalog.internal.ContactType;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
@@ -47,8 +48,9 @@ public class CompanyContact extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "COMPANY_ID_CONTACT")
     private Long id;
-    @Column(name = "TYPE")
-    private String type;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "CONTACT_TYPE_ID")
+    private ContactType contactType;
     @Embedded
     @AttributeOverride(name = "email", column = @Column(name = "EMAIL"))
     private Email email;

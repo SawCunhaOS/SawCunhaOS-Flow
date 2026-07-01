@@ -31,16 +31,18 @@ import javax.sql.DataSource;
         entityManagerFactoryRef = "ScosEntityManagerFactory",
         transactionManagerRef = "ScosTransactionManager",
         basePackages = {
-                "br.com.sawcunhaos.organization.domain.access.integration.internal",
                 "br.com.sawcunhaos.organization.domain.access.login.internal",
                 "br.com.sawcunhaos.organization.domain.access.profile.internal",
                 "br.com.sawcunhaos.organization.domain.access.resource.internal",
+                "br.com.sawcunhaos.organization.domain.access.status.internal",
                 "br.com.sawcunhaos.organization.domain.access.system.internal",
                 "br.com.sawcunhaos.organization.domain.configuration.internal",
+                "br.com.sawcunhaos.organization.domain.corporate.catalog.internal",
                 "br.com.sawcunhaos.organization.domain.corporate.company.internal",
                 "br.com.sawcunhaos.organization.domain.corporate.department.internal",
                 "br.com.sawcunhaos.organization.domain.corporate.employee.internal",
                 "br.com.sawcunhaos.organization.domain.corporate.position.internal",
+                "br.com.sawcunhaos.organization.domain.outbox.internal",
         })
 @EnableConfigurationProperties({ScosHikariConfigProperties.class})
 @EnableJpaAuditing
@@ -105,16 +107,18 @@ final class ScosDataSourceConfiguration {
     ) {
         return builder.dataSource(dataSource)
                 .packages(
-                        "br.com.sawcunhaos.organization.domain.access.integration.internal",
                         "br.com.sawcunhaos.organization.domain.access.login.internal",
                         "br.com.sawcunhaos.organization.domain.access.profile.internal",
                         "br.com.sawcunhaos.organization.domain.access.resource.internal",
+                        "br.com.sawcunhaos.organization.domain.access.status.internal",
                         "br.com.sawcunhaos.organization.domain.access.system.internal",
                         "br.com.sawcunhaos.organization.domain.configuration.internal",
+                        "br.com.sawcunhaos.organization.domain.corporate.catalog.internal",
                         "br.com.sawcunhaos.organization.domain.corporate.company.internal",
                         "br.com.sawcunhaos.organization.domain.corporate.department.internal",
                         "br.com.sawcunhaos.organization.domain.corporate.employee.internal",
-                        "br.com.sawcunhaos.organization.domain.corporate.position.internal"
+                        "br.com.sawcunhaos.organization.domain.corporate.position.internal",
+                        "br.com.sawcunhaos.organization.domain.outbox.internal"
                 )
                 .persistenceUnit("ScosPersistenceUnit")
 

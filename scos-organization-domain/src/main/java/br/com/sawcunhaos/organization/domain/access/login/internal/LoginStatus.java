@@ -16,6 +16,5 @@ package br.com.sawcunhaos.organization.domain.access.login.internal;
 public enum LoginStatus {
     ACTIVE,
     INACTIVE,
-    LOCKED,
-    DELETED;
+    BLOCKED;
 }

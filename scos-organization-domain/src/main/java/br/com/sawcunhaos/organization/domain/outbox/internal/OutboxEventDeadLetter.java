@@ -11,14 +11,17 @@
  *
  */
 
-package br.com.sawcunhaos.organization.domain.access.integration.internal;
+package br.com.sawcunhaos.organization.domain.outbox.internal;
 
 import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +31,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Setter
 @Getter
@@ -36,22 +38,33 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "SCOS_INTEGRATION_MESSAGE_INVALID")
+@Table(name = "SCOS_OUTBOX_EVENT_DEAD_LETTER")
 @Auditable
-public class IntegrationMessageInvalid {
+public class OutboxEventDeadLetter {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "INTEGRATION_MESSAGE_INVALID_ID")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "OUTBOX_EVENT_DEAD_LETTER_ID")
+    private Long id;
 
-    @Column(name = "MESSAGE_INVALID")
-    private String messageInvalid;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "OUTBOX_EVENT_ID")
+    private OutboxEvent outboxEvent;
+
+    @Column(name = "TOPIC")
+    private String topic;
+    @Column(name = "SOURCE")
+    private String source;
+    @Column(name = "PAYLOAD")
+    private String payload;
+    @Column(name = "ERROR_TYPE")
+    private String errorType;
+    @Column(name = "RETRY_COUNT")
+    private int retryCount;
 
     @CreationTimestamp
     @Column(name = "CREATED_AT")
     private LocalDateTime createdAt;
-
     @Column(name = "USER_AT")
     private String userAt;
 }

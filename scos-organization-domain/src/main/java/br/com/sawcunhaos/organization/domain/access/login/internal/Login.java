@@ -15,8 +15,15 @@ package br.com.sawcunhaos.organization.domain.access.login.internal;
 
 import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.organization.domain.access.status.internal.LoginStatusHistory;
+import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonActivate;
+import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonDisable;
+import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonEnable;
+import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonInactivate;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.Employee;
 import br.com.sawcunhaos.organization.domain.access.profile.internal.Profile;
+import br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -51,8 +58,8 @@ public class Login extends BaseEntity {
     @Column(name = "LOGIN_ID")
     private Long id;
 
-    @Column(name = "KEYCLOAK_ID")
-    private UUID keycloakId;
+    @Column(name = "EXTERNAL_ID")
+    private UUID externalId;
     @Column(name = "LOGIN")
     private String login;
     @Column(name = "STATUS")
@@ -69,4 +76,64 @@ public class Login extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "EMPLOYEE_ID")
     private Employee employee;
+
+    /**
+     * Reativa o login a partir de INACTIVE. Não persiste — o chamador salva o histórico retornado.
+     * @throws ScosException SCOS_LOGIN_013 se o status atual não for INACTIVE.
+     */
+    public LoginStatusHistory activate(Long reasonActivateId) {
+        if (this.status != LoginStatus.INACTIVE) {
+            throw new ScosException(ExceptionCodeError.SCOS_LOGIN_013);
+        }
+        return LoginStatusHistory.builder()
+                .login(this)
+                .status(LoginStatus.ACTIVE)
+                .reasonActivate(ReasonActivate.builder().id(reasonActivateId).build())
+                .build();
+    }
+
+    /**
+     * Encerra definitivamente o login a partir de ACTIVE ou BLOCKED. Não persiste.
+     * @throws ScosException se já estiver INACTIVE.
+     */
+    public LoginStatusHistory inactivate(Long reasonInactivateId) {
+        if (this.status == LoginStatus.INACTIVE) {
+            throw new ScosException(ExceptionCodeError.SCOS_LOGIN_013);
+        }
+        return LoginStatusHistory.builder()
+                .login(this)
+                .status(LoginStatus.INACTIVE)
+                .reasonInactivate(ReasonInactivate.builder().id(reasonInactivateId).build())
+                .build();
+    }
+
+    /**
+     * Bloqueia temporariamente o login a partir de ACTIVE. Não persiste.
+     * @throws ScosException se o status atual não for ACTIVE.
+     */
+    public LoginStatusHistory disable(Long reasonDisableId) {
+        if (this.status != LoginStatus.ACTIVE) {
+            throw new ScosException(ExceptionCodeError.SCOS_LOGIN_013);
+        }
+        return LoginStatusHistory.builder()
+                .login(this)
+                .status(LoginStatus.BLOCKED)
+                .reasonDisable(ReasonDisable.builder().id(reasonDisableId).build())
+                .build();
+    }
+
+    /**
+     * Desbloqueia o login a partir de BLOCKED, retornando a ACTIVE. Não persiste.
+     * @throws ScosException SCOS_LOGIN_013 se o status atual não for BLOCKED.
+     */
+    public LoginStatusHistory enable(Long reasonEnableId) {
+        if (this.status != LoginStatus.BLOCKED) {
+            throw new ScosException(ExceptionCodeError.SCOS_LOGIN_013);
+        }
+        return LoginStatusHistory.builder()
+                .login(this)
+                .status(LoginStatus.ACTIVE)
+                .reasonEnable(ReasonEnable.builder().id(reasonEnableId).build())
+                .build();
+    }
 }

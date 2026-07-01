@@ -11,7 +11,7 @@
  *
  */
 
-package br.com.sawcunhaos.organization.domain.access.integration.internal;
+package br.com.sawcunhaos.organization.domain.outbox.internal;
 
 import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import jakarta.persistence.Column;
@@ -31,7 +31,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Setter
 @Getter
@@ -39,19 +38,21 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "SCOS_INTEGRATION_KEYCLOAK_LOG")
+@Table(name = "SCOS_OUTBOX_EVENT_LOG")
 @Auditable
-public class IntegrationKeycloakLog {
+public class OutboxEventLog {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "INTEGRATION_KEYCLOAK_LOG_ID")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "OUTBOX_EVENT_LOG_ID")
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "INTEGRATION_KEYCLOAK_ID")
-    private IntegrationKeycloak integrationKeycloak;
+    @JoinColumn(name = "OUTBOX_EVENT_ID")
+    private OutboxEvent outboxEvent;
 
+    @Column(name = "CONSUMER")
+    private String consumer;
     @Column(name = "SUCCESS")
     private boolean success;
     @Column(name = "RESPONSE")
@@ -60,7 +61,6 @@ public class IntegrationKeycloakLog {
     @CreationTimestamp
     @Column(name = "CREATED_AT")
     private LocalDateTime createdAt;
-
     @Column(name = "USER_AT")
     private String userAt;
 }

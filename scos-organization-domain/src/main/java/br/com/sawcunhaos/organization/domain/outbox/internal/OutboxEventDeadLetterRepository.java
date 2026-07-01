@@ -11,15 +11,13 @@
  *
  */
 
-package br.com.sawcunhaos.organization.domain.access.integration.internal;
+package br.com.sawcunhaos.organization.domain.outbox.internal;
 
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
-public interface IntegrationKeycloakLogRepository extends BaseJpaRepository<IntegrationKeycloakLog, UUID>, JpaSpecificationExecutor<IntegrationKeycloakLog>, QuerydslPredicateExecutor<IntegrationKeycloakLog> {
+public interface OutboxEventDeadLetterRepository extends BaseJpaRepository<OutboxEventDeadLetter, Long>, JpaSpecificationExecutor<OutboxEventDeadLetter>, QuerydslPredicateExecutor<OutboxEventDeadLetter> {
 }

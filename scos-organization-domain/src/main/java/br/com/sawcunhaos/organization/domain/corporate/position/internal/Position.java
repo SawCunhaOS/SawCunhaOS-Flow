@@ -56,6 +56,9 @@ public class Position extends BaseEntity {
     @Builder.Default
     @Column(name = "ACTIVE", nullable = false)
     private boolean active = true;
+    @Builder.Default
+    @Column(name = "IS_TRUST_POSITION", nullable = false)
+    private boolean isTrustPosition = false;
 
     @ManyToOne
     @JoinColumn(name = "DEPARTMENT_ID")

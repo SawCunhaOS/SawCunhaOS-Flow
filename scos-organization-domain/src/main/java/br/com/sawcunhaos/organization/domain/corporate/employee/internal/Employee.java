@@ -19,6 +19,11 @@ import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.foundation.utils.valueobjects.Cpf;
 import br.com.sawcunhaos.foundation.utils.valueobjects.Email;
+import br.com.sawcunhaos.organization.domain.access.status.internal.EmployeeStatusHistory;
+import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonActivate;
+import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonDisable;
+import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonEnable;
+import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonInactivate;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.Company;
 import br.com.sawcunhaos.organization.domain.corporate.position.internal.Position;
 import br.com.sawcunhaos.organization.domain.access.login.internal.Login;
@@ -77,6 +82,11 @@ public class Employee extends BaseEntity {
     private String observation;
     @Column(name = "DATE_OF_HIRING")
     private LocalDate dateOfHiring;
+    @Column(name = "CONTRACT_TYPE")
+    @Enumerated(EnumType.STRING)
+    private EmployeeContractType contractType;
+    @Column(name = "PROBATION_END_DATE")
+    private LocalDate probationEndDate;
     @Column(name = "STATUS")
     @Enumerated(EnumType.STRING)
     private StatusEmployee status;
@@ -96,25 +106,63 @@ public class Employee extends BaseEntity {
     @OneToMany(mappedBy = "employee", fetch = FetchType.LAZY)
     private Set<Login> login;
 
-    public void activate() {
-        if (this.status == StatusEmployee.DISABLED || this.status == StatusEmployee.DELETED) {
+    /**
+     * Reativa o funcionário a partir de INACTIVE. Não persiste — o chamador salva o histórico retornado.
+     * @throws ScosException SCOS_EMPLOYEE_001 se o status atual não for INACTIVE.
+     */
+    public EmployeeStatusHistory activate(Long reasonActivateId) {
+        if (this.status != StatusEmployee.INACTIVE) {
             throw new ScosException(ExceptionCodeError.SCOS_EMPLOYEE_001);
         }
-        this.status = StatusEmployee.ACTIVE;
+        return EmployeeStatusHistory.builder()
+                .employee(this)
+                .status(StatusEmployee.ACTIVE)
+                .reasonActivate(ReasonActivate.builder().id(reasonActivateId).build())
+                .build();
     }
 
-    public void inactivate() {
-        if (this.status == StatusEmployee.DISABLED || this.status == StatusEmployee.DELETED) {
+    /**
+     * Encerra definitivamente o funcionário a partir de ACTIVE ou DISABLED. Não persiste.
+     * @throws ScosException SCOS_EMPLOYEE_001 se já estiver INACTIVE.
+     */
+    public EmployeeStatusHistory inactivate(Long reasonInactivateId) {
+        if (this.status == StatusEmployee.INACTIVE) {
             throw new ScosException(ExceptionCodeError.SCOS_EMPLOYEE_001);
         }
-        this.status = StatusEmployee.INACTIVE;
+        return EmployeeStatusHistory.builder()
+                .employee(this)
+                .status(StatusEmployee.INACTIVE)
+                .reasonInactivate(ReasonInactivate.builder().id(reasonInactivateId).build())
+                .build();
     }
 
-    public void disable() {
-        this.status = StatusEmployee.DISABLED;
+    /**
+     * Bloqueia temporariamente o funcionário a partir de ACTIVE. Não persiste.
+     * @throws ScosException SCOS_EMPLOYEE_001 se o status atual não for ACTIVE.
+     */
+    public EmployeeStatusHistory disable(Long reasonDisableId) {
+        if (this.status != StatusEmployee.ACTIVE) {
+            throw new ScosException(ExceptionCodeError.SCOS_EMPLOYEE_001);
+        }
+        return EmployeeStatusHistory.builder()
+                .employee(this)
+                .status(StatusEmployee.DISABLED)
+                .reasonDisable(ReasonDisable.builder().id(reasonDisableId).build())
+                .build();
     }
 
-    public void delete() {
-        this.status = StatusEmployee.DELETED;
+    /**
+     * Desbloqueia o funcionário a partir de DISABLED, retornando a ACTIVE. Não persiste.
+     * @throws ScosException SCOS_EMPLOYEE_001 se o status atual não for DISABLED.
+     */
+    public EmployeeStatusHistory enable(Long reasonEnableId) {
+        if (this.status != StatusEmployee.DISABLED) {
+            throw new ScosException(ExceptionCodeError.SCOS_EMPLOYEE_001);
+        }
+        return EmployeeStatusHistory.builder()
+                .employee(this)
+                .status(StatusEmployee.ACTIVE)
+                .reasonEnable(ReasonEnable.builder().id(reasonEnableId).build())
+                .build();
     }
 }

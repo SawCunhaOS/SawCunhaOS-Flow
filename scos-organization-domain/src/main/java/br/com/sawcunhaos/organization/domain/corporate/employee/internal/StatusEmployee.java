@@ -19,8 +19,7 @@ import lombok.Getter;
 public enum StatusEmployee {
     ACTIVE("Ativo"),
     INACTIVE("Inativo"),
-    DISABLED("Desabilitado"),
-    DELETED("Deletado");
+    DISABLED("Desabilitado");
 
     private final String displayName;
 
