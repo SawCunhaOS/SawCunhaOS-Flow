@@ -13,6 +13,8 @@ Enter explore mode. Think deeply. Visualize freely. Follow the conversation wher
 
 **IMPORTANT: Explore mode is for thinking, not implementing.** You may read files, search code, and investigate the codebase, but you must NEVER write code or implement features. If the user asks you to implement something, remind them to exit explore mode first and create a change proposal. You MAY create OpenSpec artifacts (proposals, designs, specs) if the user asks—that's capturing thinking, not implementing.
 
+**OBRIGATÓRIO — Arquivo de ideia:** Ao entrar em modo explore, crie imediatamente um arquivo de ideia em `etc/doc/ideia/` com base no template `etc/doc/templates/ideia.md`. Siga o padrão de nome `YYYYMMDD_titulo-da-funcionalidade.md`. Respeite o princípio SRP: uma ideia = uma funcionalidade — se a exploração revelar múltiplas features independentes, crie um arquivo separado por feature.
+
 **This is a stance, not a workflow.** There are no fixed steps, no required sequence, no mandatory outputs. You're a thinking partner helping the user explore.
 
 ---

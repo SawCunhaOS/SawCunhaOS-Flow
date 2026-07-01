@@ -40,24 +40,28 @@ spring:
 
 ## 4. Uso
 
-Lance exceções da família `ScosException` (código + mensagem i18n); o handler mapeia para `ProblemDetail`:
+Lance exceções da família `ScosException` (código + mensagem i18n); o handler serializa
+para o formato `ExceptionResponse` definido em `ScosComponents.yml`:
 
 ```java
 throw new ScosException(ScosExceptionCode.NOT_FOUND, "empresa.nao.encontrada");
 ```
 
-Resposta (RFC 9457):
+Resposta (shape do contrato OpenAPI — `ScosComponents.yml#/components/schemas/ExceptionResponse`):
 
 ```json
 {
-  "type": "about:blank",
-  "title": "Not Found",
-  "status": 404,
-  "detail": "Empresa não encontrada",
-  "instance": "/api/empresas/42",
-  "requestId": "e908494b-fee2-4cf1-b169-57d4b65f43e2"
+  "data": {
+    "message": "Empresa não encontrada",
+    "codeError": "SCOS_COMPANY_001",
+    "validationErrors": []
+  }
 }
 ```
+
+> **Nota:** O `ExceptionsHandler` da foundation usa internamente `ResponseEntityExceptionHandler`
+> (Spring / RFC 9457), mas o envelope de resposta exposto pela API segue o shape `ExceptionResponse`
+> acima — que é o que o cliente vê e o OpenAPI documenta.
 
 ## Pegadinhas
 

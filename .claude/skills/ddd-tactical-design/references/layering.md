@@ -77,3 +77,53 @@ Don't split into Maven/Gradle modules or microservices prematurely. Start with
 package boundaries inside one module; promote to separate modules or services
 only when team ownership, deployment, or scaling actually demands it. Splitting
 too early ossifies boundaries you don't understand yet.
+
+---
+
+## SCOS Organization — real project structure
+
+This project uses Maven modules (one per layer) with bounded-context grouping
+inside `scos-organization-domain`. The generic layout above maps to:
+
+```
+scos-organization-domain      ← domain layer
+  br.com.sawcunhaos.organization.domain
+  ├── corporate/
+  │   ├── company/
+  │   │   ├── internal/        ← entity (@Entity), enums, repository interface
+  │   │   │   ├── Company.java
+  │   │   │   └── CompanyRepository.java
+  │   │   ├── dto/             ← input/output DTOs for this aggregate
+  │   │   ├── service/         ← domain service implementation (CompanyServiceBean)
+  │   │   └── specification/   ← domain service interface (CompanyService)
+  │   ├── department/  (same structure)
+  │   ├── employee/    (same structure)
+  │   └── position/    (same structure)
+  ├── access/
+  │   ├── login/       (same structure)
+  │   ├── profile/     (same structure)
+  │   └── ...
+  └── configuration/   (same structure)
+
+scos-organization-usecase     ← application layer
+  br.com.sawcunhaos.organization.application.usecase
+  └── corporate/
+      └── department/
+          ├── FindDepartmentUseCase.java      (public interface)
+          └── FindDepartmentUseCaseBean.java  (package-private @Service)
+
+scos-organization-api         ← interfaces/api layer
+  br.com.sawcunhaos.organization.api
+  └── delegate/
+      └── department/
+          └── DepartmentDelegate.java         (@Component implements DepartmentApiDelegate)
+
+scos-organization-infrastructure  ← infrastructure layer (JPA config, async, message, etc.)
+scos-organization-boot            ← app entry point + Liquibase changelogs
+```
+
+Key differences from the generic template:
+- **Repositories live in `internal/`** alongside entities (not in a top-level `domain/repository/`).
+- **Domain service interface in `specification/`**, implementation in `service/` (Bean suffix).
+- **Use cases** follow interface + package-private Bean pattern in `scos-organization-usecase`.
+- **Controllers** are delegates (`XxxDelegate implements XxxApiDelegate`) — no `@RestController`.

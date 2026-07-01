@@ -82,12 +82,25 @@ cors-security:
 
 ## 7. Uso
 
+No projeto `scos-organization`, a autorização é declarada no OpenAPI via `x-authorize`
+e aplicada pelo filtro `AuthorizationRequiredFilter`. Nos delegates, use `@PreAuthorize`
+quando precisar de checagem programática adicional:
+
 ```java
-@ScosRequestGET(uri = "/companies")
-@PreAuthorize("hasAuthority('COMPANY_READ')")
-public ScosResponseDTO<List<CompanyDTO>> list() {
-    ScosUserAuthentication user = AuthenticationUtils.currentUser();   // usuário corrente
-    // ...
+@Component
+@RequiredArgsConstructor
+public class CompanyDelegate implements CompanyApiDelegate {
+
+    private final FindCompanyUseCase findCompanyUseCase;
+
+    @Override
+    @PreAuthorize("hasAuthority('GET_COMPANY')")
+    public GetCompanyResponse getCompanyById(Long id, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        ScosUserAuthentication user = AuthenticationUtils.currentUser();
+        return GetCompanyResponse.builder()
+                .data(findCompanyUseCase.execute(id))
+                .build();
+    }
 }
 ```
 

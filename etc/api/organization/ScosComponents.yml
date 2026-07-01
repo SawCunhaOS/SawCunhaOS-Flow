@@ -181,6 +181,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/CreateResponse'
+    '204_NO_CONTENT':
+      description: No_Content
     '200_OK_BINARY':
       description: OK
       content:

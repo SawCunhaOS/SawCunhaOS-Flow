@@ -4,7 +4,7 @@
 Documentar as **regras, convenções e checklist** para criar/alterar uma API desde o módulo `scos-organization-api` até `scos-organization-domain`, garantindo consistência entre contrato (OpenAPI), código (permissões, features), persistência (Liquibase) e testes.
 
 ## Escopo
-- Módulos: `scos-organization-api`, `scos-organization-application`, `scos-organization-domain`, `scos-organization-infrastructure`, `scos-organization-boot`.
+- Módulos: `scos-organization-api`, `scos-organization-usecase`, `scos-organization-domain`, `scos-organization-infrastructure`, `scos-organization-boot`.
 - Artefatos: OpenAPI (`etc/api/organization/*.yml`), enums de permission/feature, Use Cases, Entities, Repositories, changelogs Liquibase, seeds (`configure_system.sql`), testes e CI.
 
 ---
@@ -37,8 +37,14 @@ Documentar as **regras, convenções e checklist** para criar/alterar uma API de
 ---
 
 ## Estrutura de Entidades
-- **Entities:** Representam o modelo de domínio, com regras de negócio e validações. Localizadas em `scos-organization-domain/src/main/java/com/sawcunha/scos/organization/domain/model/`.
-- **Exemplo:** `Organization`, `Department`, `Employee`.
+- **Entities:** Representam o modelo de domínio, com regras de negócio e validações. Organizadas por **bounded context** em `scos-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/<bounded-context>/<agregado>/internal/`.
+- **Bounded contexts ativos:** `corporate/` (company, department, employee, position), `access/` (login, profile, resource, system, integration), `configuration/`.
+- **Estrutura por agregado:**
+  - `internal/` — entidades JPA, enums, repositórios (acesso direto ao banco)
+  - `dto/` — objetos de entrada/saída do domínio
+  - `service/` — implementação do serviço de domínio (`...Bean`)
+  - `specification/` — interface do serviço de domínio (contrato)
+- **Exemplo:** `Company`, `Department`, `Employee`.
 - **Regras de Negócio:** As regras de alteração de estado como ativação/desativação, hierarquia organizacional, etc., devem ser implementadas nas entidades ou em serviços de domínio, nunca na controller.
 - **Exemplo de Código:**
 ```java
@@ -75,7 +81,7 @@ public class Company extends BaseEntity {
 ```
 
 ## Estrutura de Repositórios
-- **Repositories:** Interfaces que definem as operações de persistência, localizadas em `scos-organization-domain/src/main/java/com/sawcunha/scos/organization/domain/repository/`.
+- **Repositories:** Interfaces que definem as operações de persistência, localizadas em `scos-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/<bounded-context>/<agregado>/internal/`.
 - **Exemplo:** `CompanyRepository`, `DepartmentRepository`.
 - **Regras de Negócio:** 
    - Repositórios devem ser usados apenas para operações de acesso a dados (CRUD).
@@ -104,8 +110,8 @@ public interface DepartmentRepository extends BaseJpaRepository<Department, Long
 }```
 
 ## Estrutura de Dominio
-- **Domain Services:** Contêm lógica de negócio que não pertence a uma única entidade, como validações complexas ou operações que envolvem múltiplas entidades. Localizados em `scos-organization-domain/src/main/java/com/sawcunha/scos/organization/domain/service/`.
-- **Exemplo:** `DepartmentDomainService` com métodos de validação como `validateDepartmentCodeExistsValidation`
+- **Domain Services:** Contêm lógica de negócio que não pertence a uma única entidade, como validações complexas ou operações que envolvem múltiplas entidades. Localizados em `scos-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/<bounded-context>/<agregado>/service/` (implementação Bean) e `specification/` (interface).
+- **Exemplo:** `DepartmentServiceBean implements DepartmentService` com métodos de validação como `validateDepartmentCodeExistsValidation`
 - **Regras de Negócio:** Validações como "código de departamento deve ser único" ou "empresa deve existir para criar departamento" devem residir em serviços de domínio, garantindo que as entidades permaneçam focadas em seu estado e comportamento.
 - **Exemplo de Código:**
 ```java
@@ -127,69 +133,54 @@ public class DepartmentDomainService {
 ```
 
 ## Estrutura de Use Cases
-- **Use Cases:** Contêm a lógica de aplicação, orquestrando entidades e serviços para atender a um caso de uso específico. Localizados em `scos-organization-application/src/main/java/com/sawcunha/scos/organization/application/usecase/`.
-- **Exemplo:** `CreateCompanyUseCase`, `ActivateCompanyUseCase`.
+- **Use Cases:** Contêm a lógica de aplicação, orquestrando entidades e serviços para atender a um caso de uso específico. Localizados em `scos-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/<bounded-context>/<agregado>/`.
+- **Padrão:** Interface pública (`FindDepartmentUseCase`) + implementação Bean package-private (`FindDepartmentUseCaseBean`), ambas no mesmo pacote.
+- **Exemplo:** `FindDepartmentUseCase`, `FindDepartmentUseCaseBean`.
 - **Regras de Negócio:** Use Cases devem ser transacionais e conter a lógica de orquestração, mas não regras de negócio complexas, que devem residir nas entidades ou serviços de domínio.
 - **Exemplo de Código:**
 ```java
-@Component
+// Interface pública — exposta para o delegate
+public interface FindDepartmentUseCase {
+    DepartmentOutput execute(@NonNull Long departmentId);
+}
+
+// Implementação package-private — não vaza para fora do pacote
+@Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional(rollbackFor = ScosException.class, noRollbackFor = ScosNoRollbackException.class)
-public class DeleteDepartmentUseCase {
+class FindDepartmentUseCaseBean implements FindDepartmentUseCase {
 
-    private final DepartmentRepository departmentRepository;
-    private final DepartmentDomainService departmentDomainService;
+    private final DepartmentService departmentService;
 
-    public Void execute(@NonNull Long departmentId) {
-        log.info("Deleting department: {}", departmentId);
-        departmentDomainService.validateDepartmentExistsValidation(departmentId);
-        departmentDomainService.validateDepartmentLinkedToPositionValidation(departmentId);
-
-        departmentRepository.deleteById(departmentId);
-        log.info("Department deleted: {}", departmentId);
-        return null;
+    @Override
+    public DepartmentOutput execute(@NonNull Long departmentId) {
+        log.info("Finding department: {}", departmentId);
+        return departmentService.findById(departmentId);
     }
 }
 ```
 
 ## Estrutura de Controllers
-- **Controllers:** Exponham os endpoints REST, mapeando as requisições para os Use Cases. Localizados em `scos-organization-api/src/main/java/com/sawcunha/scos/organization/api/controller/`.
-- **Exemplo:** `DepartmentApiDelegateImp`
+- **Controllers (Delegates):** Implementam as interfaces geradas pelo OpenAPI generator, mapeando as requisições para os Use Cases. Localizados em `scos-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/<agregado>/`.
+- **Nomenclatura:** `<Agregado>Delegate implements <Agregado>ApiDelegate`.
 - **Regras de Negócio:** 
-   - Controllers devem ser finas, apenas convertendo DTOs e chamando Use Cases. Toda a lógica de negócio deve residir nas camadas inferiores (Use Cases, Domain Services, Entities).
-   - O contrato da API deve ser definido primeiro no OpenAPI (`etc/api/organization/*.yml`), e o controller deve implementar a interface gerada a partir desse contrato, garantindo que o código esteja sempre alinhado com a documentação.
-   - Os controller e DTO gerados a partir do OpenAPI devem ser mantidos em sincronia com o contrato, e qualquer alteração no contrato deve ser refletida imediatamente no código para evitar divergências.
-   - Os controller e DTO estão localizados no módulo `scos-organization-api` na pasta `target/generated-sources/openapi/src/main/java/br/com/sawcunhaos/organization/api/`, enquanto a lógica de negócio e entidades estão no módulo `scos-organization-domain`, promovendo uma clara separação de responsabilidades e facilitando a manutenção e evolução do código.
+   - Delegates devem ser finos: apenas delegam para Use Cases e constroem o objeto de resposta com os DTOs gerados.
+   - O contrato da API deve ser definido primeiro no OpenAPI (`etc/api/organization/*.yml`), e o delegate deve implementar a interface gerada a partir desse contrato.
+   - DTOs gerados ficam em `target/generated-sources/openapi/src/main/java/br/com/sawcunhaos/organization/api/` e **não** devem ser editados manualmente.
+   - A interface `XxxApiDelegate` é gerada; a implementação manual fica em `scos-organization-api/src/main/java/.../delegate/`.
 - **Exemplo de Código:**
 ```java
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class DepartmentApiDelegateImp implements DepartmentApiDelegate {
+public class DepartmentDelegate implements DepartmentApiDelegate {
 
-    private final ListDepartmentsUseCase listDepartmentsUseCase;
+    private final FindDepartmentUseCase findDepartmentUseCase;
 
     @Override
-    public GetAllDepartmentsResponse getAllDepartments(PaginationFilter paginationFilter, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
-        log.info("Getting all departments with pagination: {}", paginationFilter);
-        Page<DepartmentDTO> departmentDTOPage = listDepartmentsUseCase.execute(
-                createPageable(paginationFilter, PositionOrder.ID)
-        );
-
-        return GetAllDepartmentsResponse.builder()
-                .data(
-                        departmentDTOPage.getContent().stream().map(
-                                departmentDTO -> Department.builder()
-                                        .id(departmentDTO.getId())
-                                        .code(departmentDTO.getCode())
-                                        .description(departmentDTO.getDescription())
-                                        .build()
-                        ).toList()
-                )
-                .paginatedDTO(
-                        createScosPaginated(departmentDTOPage)
-                )
+    public GetDepartmentResponse getDepartmentById(Long id, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        return GetDepartmentResponse.builder()
+                .data(findDepartmentUseCase.execute(id))
                 .build();
     }
 }
@@ -201,30 +192,35 @@ public class DepartmentApiDelegateImp implements DepartmentApiDelegate {
   - Todos os arquivos devem ser feitos com yml para manter consistência.
   - A Criação de views, functions, procedures e triggers deve ser criada em `sql` e feita via Liquibase, garantindo que a estrutura do banco de dados esteja sempre versionada e alinhada com o código.
   - O padrão de versionamento deve seguir o formato `vX.Y.Z` para a pasta, dentro da pasta deve ter o arquivo principal `vX.Y.Z.yml` que inclui os changelogs específicos de cada pasta tables, e insert, a cada pasta tem o arquivo com o nome da pasta para organizar os changelogs internos.
-  - Devera ter a pasta function, view, procedure, triggers para organizar as alterações de banco de dados por tipo, promovendo uma estrutura clara e fácil de navegar para os desenvolvedores.
-  - Todo changelog deve conter um rollback definido para garantir que as alterações possam ser revertidas em caso de problemas, promovendo segurança e estabilidade nas migrações de banco de dados.
-  - Todo changelog deve ser referenciado no arquivo `vX.Y.Z.yml` correspondente para garantir que seja incluído na execução das migrações, mantendo a organização e rastreabilidade das alterações no banco de dados.
-  - Todo changelog deve ter um `changeSet` com um `id` único e um `author` para garantir rastreabilidade e evitar conflitos entre diferentes alterações, promovendo uma gestão eficiente das migrações de banco de dados.
-  - Todo changelog deve ter tagDatabase com a versão correspondente (ex: `v1.0.0`) para facilitar o controle de versões e a identificação das alterações aplicadas, promovendo uma gestão eficiente das migrações de banco de dados.
-  - Todo changelog deve seguir melhores práticas de design de banco de dados, como normalização, uso adequado de índices e chaves estrangeiras, para garantir desempenho e integridade dos dados, promovendo uma estrutura de banco de dados eficiente e escalável.
-  - Todo changelog deve seguir as melhores práticas de escrita e padrão do liquibase, como evitar mudanças destrutivas sem backup, usar descrições claras para cada changeSet e manter um histórico limpo e organizado das alterações, promovendo uma gestão eficiente das migrações de banco de dados.
+  - Pastas `function/`, `view/`, `procedure/` e `triggers/` ficam na **raiz** do changelog (não dentro de pastas de versão), pois evoluem independente de versão de schema. Scripts SQL individuais ficam dentro de cada pasta; o arquivo `<tipo>.yml` orquestra os `runOnChange: true` changesets.
+  - Pastas de versão (`vX.Y.Z/`) contêm apenas `tables/` e `indexes/`.
+  - Todo changelog deve conter um rollback definido para garantir que as alterações possam ser revertidas em caso de problemas.
+  - Todo changelog deve ser referenciado no arquivo `vX.Y.Z.yml` correspondente (para tables/indexes) ou no `db.changelog-master.yml` (para function/view/triggers).
+  - Todo changelog deve ter um `changeSet` com um `id` único e um `author` para garantir rastreabilidade.
+  - Todo changelog deve ter tagDatabase com a versão correspondente (ex: `v1.0.0`).
+  - Todo changelog deve seguir melhores práticas de design de banco de dados (normalização, índices, chaves estrangeiras).
+  - Todo changelog deve seguir as melhores práticas do Liquibase: evitar mudanças destrutivas sem backup, descrições claras por changeSet.
 - Exemplo de estrutura:
 ```text
 src/main/resources/db/changelog/
-└── v1.0.0/
-    ├── v1.0.0.yml
-    ├── tables/
-    │   └── tables.yml
-    ├── insert/
-    │   └── insert.yml
-├── function/
-|   └── function.yml
+├── db.changelog-master.yml       ← orquestra tudo
+├── v1.0.0/
+│   ├── v1.0.0.yml
+│   ├── tables/
+│   │   └── tables.yml
+│   └── indexes/
+│       └── indexes.yml
+├── function/                     ← raiz, não versionado
+│   ├── function.yml
+│   └── minha_function.sql
 ├── view/
-|   └── view.yml
-├── procedure/
-|   └── procedure.yml
+│   ├── view.yml
+│   └── vw_minha_view.sql
 ├── triggers/
-|   └── triggers.yml
+│   ├── triggers.yml
+│   └── trg_minha_trigger.sql
+└── procedure/
+    └── procedure.yml
 ```
 - Exemplo do arquivo `v1.0.0.yml`:
 ```yaml

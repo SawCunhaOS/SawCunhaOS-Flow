@@ -87,7 +87,7 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          description: No_Content
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':

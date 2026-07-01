@@ -93,7 +93,7 @@ Spring Boot 4).
 
 ## Review
 
-Assess against `references/review-checklist.md`. The two findings that come up
+Assess using the criteria below. The two findings that come up
 most: (a) starting containers far more often than necessary, wrecking suite
 time, and (b) tests that share state and pass or fail depending on order. Lead
 with whichever bites hardest.

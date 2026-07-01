@@ -7,6 +7,34 @@
 - SEMPRE pergunte para ter todos os detalhes.
 - Sempre responda em PT-BR.
 
+## Convenções rápidas do projeto
+
+**Módulos Maven:** `scos-organization-api` (delegates) | `scos-organization-usecase` (use cases) | `scos-organization-domain` (entidades/repos/domain services) | `scos-organization-infrastructure` | `scos-organization-boot` (Liquibase/config).
+
+**Pacote base:** `br.com.sawcunhaos.organization`
+
+**Novo endpoint — ordem obrigatória:**
+1. Atualizar o YAML em `etc/api/organization/*.yml` primeiro (contrato antes do código)
+2. Implementar `XxxDelegate implements XxxApiDelegate` em `scos-organization-api/.../delegate/<agregado>/`
+3. Criar Use Case (interface pública + `@Service` Bean package-private) em `scos-organization-usecase/.../usecase/<bounded-context>/<agregado>/`
+4. Adicionar permissão ao `ScosOrganizationPermission` se novo `x-authorize`
+
+**Padrão de resposta OpenAPI:**
+- `200` → schema próprio com `data:` wrapper
+- `201` → `$ref: './ScosComponents.yml#/components/responses/201_CREATED'`
+- `204` → `$ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'`
+- `4XX`/`5XX` → `$ref` para ScosComponents
+
+**Skills disponíveis:**
+- `scos-conventions` — delegate pattern, exceções, resposta OpenAPI
+- `ddd-tactical-design` — entidades, bounded contexts, domain services
+- `spring-boot-service` — setup de módulo, pom, configuração
+- `openspec-explore` / `openspec-propose` / `openspec-apply-change` / `openspec-archive-change` — fluxo de especificação (explore → propose → apply → archive)
+- `tdd-workflow` / `testcontainers-integration` — testes
+- `spring-security-scos` — Spring Security, OAuth2/JWT, @PreAuthorize
+- `observability-otel` — Micrometer, OpenTelemetry, traces/metrics/logs
+- `scos-audit-config` / `scos-exception-config` / `scos-jdempotent-config` / `scos-privacy-config` / `scos-security-config` / `scos-utils-config` — foundation
+
 <!-- rtk-instructions v2 -->
 # RTK (Rust Token Killer) - Token-Optimized Commands
 

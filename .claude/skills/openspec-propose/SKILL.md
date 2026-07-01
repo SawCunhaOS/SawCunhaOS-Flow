@@ -20,6 +20,10 @@ When ready to implement, run /opsx:apply
 
 ---
 
+**PRÉ-REQUISITO — Arquivo de ideia:** Antes de criar qualquer mudança, verifique se existe um arquivo de ideia em `etc/doc/ideia/` correspondente ao que será proposto. Se não existir, crie-o com base no template `etc/doc/templates/ideia.md` seguindo o padrão `YYYYMMDD_titulo-da-funcionalidade.md`. O propose nunca deve prosseguir sem um arquivo de ideia criado.
+
+---
+
 **Input**: The user's request should include a change name (kebab-case) OR a description of what they want to build.
 
 **Steps**

@@ -44,18 +44,48 @@ scos:
         persistReqRes: true     # guarda payload de request/response
 ```
 
-## 3. Uso (anotações em `utils.annotation.jdempotent`)
+## 3. Uso
 
+No projeto `scos-organization`, a idempotência de um endpoint é declarada no OpenAPI via
+extensões `x-jdempotentresource` + `x-jdempotentrequestpayload`, que o `openapi-generator`
+traduz para as anotações correspondentes no código gerado. Para adicionar idempotência a
+um endpoint novo:
+
+**No YAML (`etc/api/organization/*.yml`):**
+```yaml
+post:
+  operationId: createCompany
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: '#/components/schemas/CreateCompanyRequest'
+    x-jdempotentrequestpayload: true
+  x-jdempotentresource:
+    cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+    ttl: 1
+  responses:
+    '201':
+      $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+```
+
+**No delegate (código gerado recebe as anotações; não adicionar manualmente):**
 ```java
-@ScosRequestPOST(uri = "/companies", httpCode = 201)
-@JdempotentResource(cachePrefix = "create-company", ttl = 24, ttlTimeUnit = TimeUnit.HOURS)
-public ScosResponseDTO<CompanyDTO> create(
-        @JdempotentRequestPayload @RequestBody CreateCompanyRequest request,
-        @JdempotentId @RequestHeader("Idempotency-Key") String key) {
-    // ...
+@Component
+@RequiredArgsConstructor
+public class CompanyDelegate implements CompanyApiDelegate {
+
+    private final CreateCompanyUseCase createCompanyUseCase;
+
+    @Override
+    public ResponseEntity<CreateResponse> createCompany(CreateCompanyRequest request,
+            Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        return createCompanyUseCase.execute(request);
+    }
 }
 ```
 
+**Anotações disponíveis** (para uso fora do fluxo OpenAPI-gerado):
 - `@JdempotentResource` — marca o método idempotente.
 - `@JdempotentId` — fonte da chave de idempotência (header/param).
 - `@JdempotentRequestPayload` — payload considerado na chave.

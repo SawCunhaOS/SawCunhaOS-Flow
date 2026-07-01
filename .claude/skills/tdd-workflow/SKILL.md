@@ -17,16 +17,15 @@ description: >
 # TDD Workflow (JUnit 5 / Java 25 / Spring Boot 4.0.x)
 
 This skill drives development through tests. Spring Boot 4 removed JUnit 4, so
-everything here is the JUnit Jupiter programming model — note the SCOS BOM brings
-**JUnit 6** (Jupiter), whose API matches the JUnit 5 examples shown here — with
-AssertJ for assertions and Mockito for test doubles. The point of TDD is not
+everything here is the JUnit Jupiter programming model — the SCOS BOM brings
+**JUnit 5** (Jupiter) — with AssertJ for assertions and Mockito for test doubles. The point of TDD is not
 coverage for its own sake — it's using the test as the first consumer of your
 code, which forces small, well-shaped units and gives you a safety net for
 refactoring.
 
 ## Project foundation — the SCOS BOM (required)
 
-Test dependencies come from the user's BOM, which pins JUnit Jupiter (6),
+Test dependencies come from the user's BOM, which pins JUnit Jupiter (5),
 Mockito, AssertJ, Testcontainers, plus REST Assured and WireMock for API/contract
 tests. Import it in `dependencyManagement` and declare test dependencies WITHOUT
 versions; don't pin versions the BOM controls.
@@ -84,7 +83,7 @@ mocked repositories.
 
 ## Review
 
-Assess tests against `references/review-checklist.md`. The trap to watch for is
+Assess tests using the criteria below. The trap to watch for is
 tests that pass but don't protect anything: asserting on mock interactions
 instead of real outcomes, or so tightly coupled to implementation that any
 refactor breaks them. Coverage numbers are a weak signal — a test that calls a

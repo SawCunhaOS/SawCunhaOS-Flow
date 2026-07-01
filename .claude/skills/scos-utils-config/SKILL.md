@@ -83,8 +83,8 @@ Liga no método via `@ScosRequestGET(nameCache = "empresas", keyGenerator = ...)
 
 - Validação Jakarta em DTOs/VOs: `@CPF`, `@CNPJ`, `@TaxIdentifier`, `@ZipCode` — preferir sobre regex.
 - `@NormalizeStrings` + `StringProcessingAspect` (trim/upper/lower por campo).
-- DTOs de resposta: `ScosResponseDTO`, `ScosPaginatedDTO`, `ScosPaginationFilterDTO`.
-- Web: `@ScosController`, `@ScosRequestGET/POST/PUT/DELETE`.
+- DTOs de resposta: `ScosResponseDTO`, `ScosPaginatedDTO`, `ScosPaginationFilterDTO` — disponíveis na foundation mas **não usados diretamente** no `scos-organization` (que usa DTOs gerados pelo OpenAPI generator).
+- Web: `@ScosController`, `@ScosRequestGET/POST/PUT/DELETE` — disponíveis na foundation mas **não usados** no `scos-organization` (que usa o padrão `XxxDelegate implements XxxApiDelegate`).
 - `GsonUtils`, adapters de data, `LocaleService` (i18n).
 - Anotações de `audit` (`@Auditable`) e `jdempotent` (`@JdempotentResource`, …) vivem aqui.
 
