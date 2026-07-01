@@ -34,10 +34,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: TYPE
-                  type: varchar(50)
+                  name: CONTACT_TYPE_ID
+                  type: BIGINT
                   constraints:
                     nullable: false
+                    foreignKeyName: FK_CONTACT_TYPE_ID_SCOS_COMPANY_CONTACT
+                    references: scos.SCOS_CONTACT_TYPE(CONTACT_TYPE_ID)
               - column:
                   name: RESPONSIBLE_PERSON
                   type: varchar(255)
@@ -62,20 +64,20 @@ databaseChangeLog:
         - addUniqueConstraint:
             tableName: SCOS_COMPANY_CONTACT
             schemaName: scos
-            columnNames: PHONE
-            constraintName: UK_PHONE_SCOS_COMPANY_CONTACT
+            columnNames: PHONE, COMPANY_ID
+            constraintName: UK_PHONE_COMPANY_ID_SCOS_COMPANY_CONTACT
             validate: true
         - addUniqueConstraint:
             tableName: SCOS_COMPANY_CONTACT
             schemaName: scos
-            columnNames: EMAIL
-            constraintName: UK_EMAIL_SCOS_COMPANY_CONTACT
+            columnNames: EMAIL, COMPANY_ID
+            constraintName: UK_EMAIL_COMPANY_ID_SCOS_COMPANY_CONTACT
             validate: true
         - addUniqueConstraint:
             tableName: SCOS_COMPANY_CONTACT
             schemaName: scos
-            columnNames: TYPE
-            constraintName: UK_TYPE_SCOS_COMPANY_CONTACT
+            columnNames: CONTACT_TYPE_ID, COMPANY_ID
+            constraintName: UK_CONTACT_TYPE_ID_COMPANY_ID_SCOS_COMPANY_CONTACT
             validate: true
         - createIndex:
             tableName: SCOS_COMPANY_CONTACT
@@ -84,6 +86,13 @@ databaseChangeLog:
             columns:
               - column:
                   name: COMPANY_ID
+        - createIndex:
+            tableName: SCOS_COMPANY_CONTACT
+            schemaName: scos
+            indexName: IDX_CONTACT_TYPE_ID_SCOS_COMPANY_CONTACT
+            columns:
+              - column:
+                  name: CONTACT_TYPE_ID
       rollback:
         - dropTable:
             tableName: SCOS_COMPANY_CONTACT

@@ -1,0 +1,66 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260701-Samuel.Cunha-001
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_ADDRESS_TYPE"
+      changes:
+        - createTable:
+            tableName: SCOS_ADDRESS_TYPE
+            schemaName: scos
+            columns:
+              - column:
+                  name: ADDRESS_TYPE_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_ADDRESS_TYPE
+                    nullable: false
+              - column:
+                  name: CODE
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ENTITY_TYPE
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ACTIVE
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USER_AT
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: SCOS_ADDRESS_TYPE
+            schemaName: scos
+            columnNames: CODE, ENTITY_TYPE
+            constraintName: UK_CODE_ENTITY_TYPE_SCOS_ADDRESS_TYPE
+            validate: true
+      rollback:
+        - dropTable:
+            tableName: SCOS_ADDRESS_TYPE
+            schemaName: scos
+            cascadeConstraints: true

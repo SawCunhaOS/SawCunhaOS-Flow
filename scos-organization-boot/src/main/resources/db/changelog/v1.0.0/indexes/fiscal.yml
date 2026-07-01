@@ -1,0 +1,21 @@
+databaseChangeLog:
+  # ============================================================
+  # idx_company_cnae_secondary_reverse
+  # Suporta a consulta reversa: quais empresas têm este CNAE secundário.
+  # ============================================================
+  - changeSet:
+      id: 20260701-Index-012
+      author: Samuel.Cunha
+      changes:
+        - createIndex:
+            schemaName: scos
+            tableName: scos_company_cnae_secondary
+            indexName: idx_company_cnae_secondary_reverse
+            columns:
+              - column:
+                  name: cnae_id
+              - column:
+                  name: company_id
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_company_cnae_secondary_reverse;

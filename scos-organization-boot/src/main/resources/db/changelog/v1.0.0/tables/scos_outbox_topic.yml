@@ -1,0 +1,60 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260701-Samuel.Cunha-005
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_OUTBOX_TOPIC"
+      changes:
+        - createTable:
+            tableName: SCOS_OUTBOX_TOPIC
+            schemaName: scos
+            columns:
+              - column:
+                  name: TOPIC
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_OUTBOX_TOPIC
+                    nullable: false
+              - column:
+                  name: BACKEND
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: TARGET_SYSTEM
+                  type: varchar(50)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: DEFAULT_MAX_RETRIES
+                  type: INT
+                  defaultValueNumeric: 3
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ACTIVE
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USER_AT
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: SCOS_OUTBOX_TOPIC
+            schemaName: scos
+            cascadeConstraints: true

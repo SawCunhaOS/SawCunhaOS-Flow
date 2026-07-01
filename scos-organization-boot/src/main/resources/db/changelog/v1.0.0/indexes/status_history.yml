@@ -1,0 +1,111 @@
+databaseChangeLog:
+  # ============================================================
+  # idx_company_status_history_current
+  # Consulta de status atual e usada pela trigger de sincronização a cada INSERT.
+  # ============================================================
+  - changeSet:
+      id: 20260701-Index-001
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX IF NOT EXISTS idx_company_status_history_current
+              ON scos.scos_company_status_history (company_id, created_at DESC);
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_company_status_history_current;
+
+  # ============================================================
+  # idx_employee_status_history_current
+  # ============================================================
+  - changeSet:
+      id: 20260701-Index-002
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX IF NOT EXISTS idx_employee_status_history_current
+              ON scos.scos_employee_status_history (employee_id, created_at DESC);
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_employee_status_history_current;
+
+  # ============================================================
+  # idx_login_status_history_current
+  # ============================================================
+  - changeSet:
+      id: 20260701-Index-003
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX IF NOT EXISTS idx_login_status_history_current
+              ON scos.scos_login_status_history (login_id, created_at DESC);
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_login_status_history_current;
+
+  # ============================================================
+  # idx_reason_activate_entity_type (parcial — somente motivos ativos)
+  # Lista de seleção filtrada por entidade.
+  # ============================================================
+  - changeSet:
+      id: 20260701-Index-004
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX IF NOT EXISTS idx_reason_activate_entity_type
+              ON scos.scos_reason_activate (entity_type)
+              WHERE active = true;
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_reason_activate_entity_type;
+
+  # ============================================================
+  # idx_reason_inactivate_entity_type (parcial — somente motivos ativos)
+  # ============================================================
+  - changeSet:
+      id: 20260701-Index-005
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX IF NOT EXISTS idx_reason_inactivate_entity_type
+              ON scos.scos_reason_inactivate (entity_type)
+              WHERE active = true;
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_reason_inactivate_entity_type;
+
+  # ============================================================
+  # idx_reason_disable_entity_type (parcial — somente motivos ativos)
+  # ============================================================
+  - changeSet:
+      id: 20260701-Index-006
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX IF NOT EXISTS idx_reason_disable_entity_type
+              ON scos.scos_reason_disable (entity_type)
+              WHERE active = true;
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_reason_disable_entity_type;
+
+  # ============================================================
+  # idx_reason_enable_entity_type (parcial — somente motivos ativos)
+  # ============================================================
+  - changeSet:
+      id: 20260701-Index-007
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX IF NOT EXISTS idx_reason_enable_entity_type
+              ON scos.scos_reason_enable (entity_type)
+              WHERE active = true;
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_reason_enable_entity_type;

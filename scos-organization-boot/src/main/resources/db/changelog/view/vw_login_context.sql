@@ -31,7 +31,7 @@ SELECT
     l.login,
     l.type,
     l.status,
-    l.keycloak_id,
+    l.external_id,
 
     -- Funcionário (NULL para EXTERNAL e SERVICE)
     e.employee_id,

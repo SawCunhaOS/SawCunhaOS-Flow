@@ -31,7 +31,7 @@ databaseChangeLog:
                     foreignKeyName: FK_EMPLOYEE_ID_SCOS_LOGIN
                     references: scos.SCOS_EMPLOYEE(EMPLOYEE_ID)
               - column:
-                  name: KEYCLOAK_ID
+                  name: EXTERNAL_ID
                   type: UUID
                   constraints:
                     nullable: true
@@ -89,10 +89,10 @@ databaseChangeLog:
         - createIndex:
             tableName: SCOS_LOGIN
             schemaName: scos
-            indexName: IDX_KEYCLOAK_ID_SCOS_LOGIN
+            indexName: IDX_EXTERNAL_ID_SCOS_LOGIN
             columns:
               - column:
-                  name: KEYCLOAK_ID
+                  name: EXTERNAL_ID
       rollback:
         - dropTable:
             tableName: SCOS_LOGIN

@@ -1,0 +1,5 @@
+CREATE OR REPLACE TRIGGER trg_sync_employee_status
+AFTER INSERT
+ON scos.SCOS_EMPLOYEE_STATUS_HISTORY
+FOR EACH ROW
+EXECUTE FUNCTION scos.fn_sync_employee_status();

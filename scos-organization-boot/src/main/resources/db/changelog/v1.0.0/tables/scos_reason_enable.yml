@@ -1,0 +1,66 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260701-Samuel.Cunha-009
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_REASON_ENABLE"
+      changes:
+        - createTable:
+            tableName: SCOS_REASON_ENABLE
+            schemaName: scos
+            columns:
+              - column:
+                  name: REASON_ENABLE_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_REASON_ENABLE
+                    nullable: false
+              - column:
+                  name: CODE
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ENTITY_TYPE
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ACTIVE
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USER_AT
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: SCOS_REASON_ENABLE
+            schemaName: scos
+            columnNames: CODE, ENTITY_TYPE
+            constraintName: UK_CODE_ENTITY_TYPE_SCOS_REASON_ENABLE
+            validate: true
+      rollback:
+        - dropTable:
+            tableName: SCOS_REASON_ENABLE
+            schemaName: scos
+            cascadeConstraints: true

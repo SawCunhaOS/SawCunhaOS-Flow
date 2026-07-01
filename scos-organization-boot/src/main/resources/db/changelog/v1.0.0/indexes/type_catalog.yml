@@ -1,0 +1,33 @@
+databaseChangeLog:
+  # ============================================================
+  # idx_address_type_entity_type (parcial — somente tipos ativos)
+  # Lista de seleção filtrada por entidade (COMPANY/EMPLOYEE).
+  # ============================================================
+  - changeSet:
+      id: 20260701-Index-008
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX IF NOT EXISTS idx_address_type_entity_type
+              ON scos.scos_address_type (entity_type)
+              WHERE active = true;
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_address_type_entity_type;
+
+  # ============================================================
+  # idx_contact_type_entity_type (parcial — somente tipos ativos)
+  # ============================================================
+  - changeSet:
+      id: 20260701-Index-009
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX IF NOT EXISTS idx_contact_type_entity_type
+              ON scos.scos_contact_type (entity_type)
+              WHERE active = true;
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_contact_type_entity_type;

@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260701-Samuel.Cunha-003
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_LEGAL_NATURE (tabela de referência, sobe vazia)"
+      changes:
+        - createTable:
+            tableName: SCOS_LEGAL_NATURE
+            schemaName: scos
+            columns:
+              - column:
+                  name: LEGAL_NATURE_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_LEGAL_NATURE
+                    nullable: false
+              - column:
+                  name: CODE
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: SCOS_LEGAL_NATURE
+            schemaName: scos
+            columnNames: CODE
+            constraintName: UK_CODE_SCOS_LEGAL_NATURE
+            validate: true
+      rollback:
+        - dropTable:
+            tableName: SCOS_LEGAL_NATURE
+            schemaName: scos
+            cascadeConstraints: true

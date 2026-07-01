@@ -1,0 +1,5 @@
+CREATE OR REPLACE TRIGGER trg_close_previous_position
+BEFORE INSERT
+ON scos.SCOS_EMPLOYEE_POSITION_HISTORY
+FOR EACH ROW
+EXECUTE FUNCTION scos.fn_close_previous_position();

@@ -1,0 +1,19 @@
+databaseChangeLog:
+  # ============================================================
+  # idx_employee_position_history_open (único, parcial — somente cargo atual)
+  # Garante a nível de banco que um funcionário nunca tenha duas linhas
+  # "abertas" simultaneamente, mesmo que a trigger de fechamento seja
+  # bypassada por algum motivo.
+  # ============================================================
+  - changeSet:
+      id: 20260701-Index-013
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE UNIQUE INDEX IF NOT EXISTS idx_employee_position_history_open
+              ON scos.scos_employee_position_history (employee_id)
+              WHERE end_date IS NULL;
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_employee_position_history_open;

@@ -1,0 +1,77 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260701-Samuel.Cunha-012
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_EMPLOYEE_WORK_SCHEDULE"
+      changes:
+        - createTable:
+            tableName: SCOS_EMPLOYEE_WORK_SCHEDULE
+            schemaName: scos
+            columns:
+              - column:
+                  name: EMPLOYEE_WORK_SCHEDULE_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_EMPLOYEE_WORK_SCHEDULE
+                    nullable: false
+              - column:
+                  name: EMPLOYEE_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_EMPLOYEE_ID_SCOS_EMPLOYEE_WORK_SCHEDULE
+                    references: scos.SCOS_EMPLOYEE(EMPLOYEE_ID)
+              - column:
+                  name: DAY_OF_WEEK
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: START_TIME
+                  type: TIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: LUNCH_START
+                  type: TIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: LUNCH_END
+                  type: TIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: END_TIME
+                  type: TIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USER_AT
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: SCOS_EMPLOYEE_WORK_SCHEDULE
+            schemaName: scos
+            columnNames: EMPLOYEE_ID, DAY_OF_WEEK
+            constraintName: UK_EMPLOYEE_ID_DAY_OF_WEEK_SCOS_EMPLOYEE_WORK_SCHEDULE
+            validate: true
+      rollback:
+        - dropTable:
+            tableName: SCOS_EMPLOYEE_WORK_SCHEDULE
+            schemaName: scos
+            cascadeConstraints: true

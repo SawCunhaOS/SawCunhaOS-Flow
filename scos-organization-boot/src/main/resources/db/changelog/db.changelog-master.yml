@@ -6,6 +6,9 @@ databaseChangeLog:
       file: v1.0.0/v1.0.0.yml
       relativeToChangelogFile: true
   - include:
+      file: checks/checks.yml
+      relativeToChangelogFile: true
+  - include:
       file: function/function.yml
       relativeToChangelogFile: true
   - include:

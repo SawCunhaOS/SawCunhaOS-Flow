@@ -21,10 +21,12 @@ databaseChangeLog:
                     foreignKeyName: FK_COMPANY_ID_SCOS_COMPANY_ADDRESS
                     references: scos.SCOS_COMPANY(COMPANY_ID)
               - column:
-                  name: TYPE
-                  type: varchar(50)
+                  name: ADDRESS_TYPE_ID
+                  type: BIGINT
                   constraints:
                     nullable: false
+                    foreignKeyName: FK_ADDRESS_TYPE_ID_SCOS_COMPANY_ADDRESS
+                    references: scos.SCOS_ADDRESS_TYPE(ADDRESS_TYPE_ID)
               - column:
                   name: NUMBER
                   type: INT
@@ -64,8 +66,8 @@ databaseChangeLog:
         - addUniqueConstraint:
             tableName: SCOS_COMPANY_ADDRESS
             schemaName: scos
-            columnNames: TYPE
-            constraintName: UK_TYPE_SCOS_COMPANY_ADDRESS
+            columnNames: ADDRESS_TYPE_ID, COMPANY_ID
+            constraintName: UK_ADDRESS_TYPE_ID_COMPANY_ID_SCOS_COMPANY_ADDRESS
             validate: true
         - createIndex:
             tableName: SCOS_COMPANY_ADDRESS
@@ -74,6 +76,13 @@ databaseChangeLog:
             columns:
               - column:
                   name: COMPANY_ID
+        - createIndex:
+            tableName: SCOS_COMPANY_ADDRESS
+            schemaName: scos
+            indexName: IDX_ADDRESS_TYPE_ID_SCOS_COMPANY_ADDRESS
+            columns:
+              - column:
+                  name: ADDRESS_TYPE_ID
       rollback:
         - dropTable:
             tableName: SCOS_COMPANY_ADDRESS

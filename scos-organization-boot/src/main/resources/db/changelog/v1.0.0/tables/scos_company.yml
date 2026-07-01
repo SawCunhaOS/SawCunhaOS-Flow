@@ -39,6 +39,30 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: LEGAL_NATURE_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: FK_LEGAL_NATURE_ID_SCOS_COMPANY
+                    references: scos.SCOS_LEGAL_NATURE(LEGAL_NATURE_ID)
+              - column:
+                  name: CNAE_PRINCIPAL_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: FK_CNAE_PRINCIPAL_ID_SCOS_COMPANY
+                    references: scos.SCOS_CNAE(CNAE_ID)
+              - column:
+                  name: STATE_REGISTRATION
+                  type: varchar(20)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: MUNICIPAL_REGISTRATION
+                  type: varchar(20)
+                  constraints:
+                    nullable: true
+              - column:
                   name: FOUNDATION_DATE
                   type: DATE
                   constraints:
@@ -94,6 +118,20 @@ databaseChangeLog:
             columns:
               - column:
                   name: STATUS
+        - createIndex:
+            tableName: SCOS_COMPANY
+            schemaName: scos
+            indexName: IDX_LEGAL_NATURE_ID_SCOS_COMPANY
+            columns:
+              - column:
+                  name: LEGAL_NATURE_ID
+        - createIndex:
+            tableName: SCOS_COMPANY
+            schemaName: scos
+            indexName: IDX_CNAE_PRINCIPAL_ID_SCOS_COMPANY
+            columns:
+              - column:
+                  name: CNAE_PRINCIPAL_ID
       rollback:
         - dropTable:
             tableName: SCOS_COMPANY

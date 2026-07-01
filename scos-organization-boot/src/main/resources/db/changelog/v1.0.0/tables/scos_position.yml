@@ -30,7 +30,13 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: DESCRIPTION
-                  type: varchar(30)
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: IS_TRUST_POSITION
+                  type: BOOLEAN
+                  defaultValueBoolean: false
                   constraints:
                     nullable: false
               - column:
@@ -58,8 +64,8 @@ databaseChangeLog:
         - addUniqueConstraint:
             tableName: SCOS_POSITION
             schemaName: scos
-            columnNames: CODE
-            constraintName: UK_CODE_SCOS_POSITION
+            columnNames: CODE, DEPARTMENT_ID
+            constraintName: UK_CODE_DEPARTMENT_ID_SCOS_POSITION
             validate: true
         - createIndex:
             tableName: SCOS_POSITION

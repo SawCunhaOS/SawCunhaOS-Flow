@@ -16,8 +16,8 @@ databaseChangeLog:
                   name: login
 
   # ============================================================
-  # idx_scos_login_keycloak_id (parcial — somente registros não nulos)
-  # Reconciliação pós-Saga: busca do login pelo ID do Keycloak.
+  # idx_scos_login_external_id (parcial — somente registros não nulos)
+  # Reconciliação pós-Saga: busca do login pelo ID Externo de integracao.
   # ============================================================
   - changeSet:
       id: 20260612-Index-002
@@ -25,12 +25,12 @@ databaseChangeLog:
       changes:
         - sql:
             sql: >-
-              CREATE INDEX IF NOT EXISTS idx_scos_login_keycloak_id
-              ON scos.scos_login (keycloak_id)
-              WHERE keycloak_id IS NOT NULL;
+              CREATE INDEX IF NOT EXISTS idx_scos_login_external_id
+              ON scos.scos_login (external_id)
+              WHERE external_id IS NOT NULL;
       rollback:
         - sql:
-            sql: DROP INDEX IF EXISTS scos.idx_scos_login_keycloak_id;
+            sql: DROP INDEX IF EXISTS scos.idx_scos_login_external_id;
 
   # ============================================================
   # idx_scos_login_status

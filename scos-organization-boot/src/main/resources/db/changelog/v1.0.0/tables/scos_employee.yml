@@ -68,6 +68,16 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: CONTRACT_TYPE
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PROBATION_END_DATE
+                  type: DATE
+                  constraints:
+                    nullable: true
+              - column:
                   name: OBSERVATION
                   type: TEXT
                   constraints:

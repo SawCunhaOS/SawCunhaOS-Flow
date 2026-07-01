@@ -1,0 +1,5 @@
+CREATE OR REPLACE TRIGGER trg_block_delete_contact_type
+BEFORE DELETE
+ON scos.SCOS_CONTACT_TYPE
+FOR EACH ROW
+EXECUTE FUNCTION scos.fn_block_delete();
