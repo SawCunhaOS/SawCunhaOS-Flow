@@ -20,6 +20,8 @@ tags:
     description: APIs para registro dos contatos do Funcionário
   - name: Employee Address
     description: APIs para registro dos endereços do Funcionário
+  - name: Employee Work Schedule
+    description: APIs para gestão da jornada de trabalho efetiva do Funcionário
 
 paths:
   /v1/employees:
@@ -135,37 +137,25 @@ paths:
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE]
       security:
         - BearerAuth: []
-    delete:
-      tags: [Employee]
-      summary: Delete employee
-      description: UC-043 - Exclusão lógica. Registro permanece com status DISABLED
-      operationId: deleteEmployee
-      parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-      responses:
-        '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
-        '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
-        '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [DELETE_EMPLOYEE]
-      x-cache: [SCOS_ORGANIZATION_EMPLOYEE]
-      security:
-        - BearerAuth: []
-
   /v1/employees/{id}/enable:
     put:
       tags: [Employee]
       summary: Activate employee
-      description: UC-039 - Reativa funcionário com status INACTIVE
+      description: >-
+        UC-039 - Transição de domínio "activate": reativa funcionário com status INACTIVE para ACTIVE.
+        Nome da rota (`enable`) não corresponde 1:1 ao nome da transição de domínio (`activate`) - motivo vem do catálogo ReasonActivate
       operationId: activateEmployee
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeStatusTransitionRequest'
+        x-jdempotentrequestpayload: true
       responses:
         '204':
           $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
@@ -182,12 +172,21 @@ paths:
     put:
       tags: [Employee]
       summary: Inactivate employee
-      description: UC-040 - Inativa funcionário. Logins vinculados são inativados e desabilitados no Keycloak via Saga
+      description: >-
+        UC-040 - Transição de domínio "inactivate": inativa funcionário com status ACTIVE para INACTIVE. Logins vinculados são inativados e desabilitados no Keycloak via Saga.
+        Nome da rota (`disable`) não corresponde 1:1 ao nome da transição de domínio (`inactivate`) - motivo vem do catálogo ReasonInactivate
       operationId: inactivateEmployee
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeStatusTransitionRequest'
+        x-jdempotentrequestpayload: true
       responses:
         '204':
           $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
@@ -197,6 +196,96 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_EMPLOYEE]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE, SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+      security:
+        - BearerAuth: []
+
+  /v1/employees/{id}/block:
+    put:
+      tags: [Employee]
+      summary: Block employee
+      description: >-
+        UC-043 - Transição de domínio "disable": bloqueia funcionário, status muda para DISABLED. Logins vinculados são inativados e desabilitados no Keycloak via Saga.
+        Nome da rota (`block`) não corresponde 1:1 ao nome da transição de domínio (`disable`) - motivo vem do catálogo ReasonDisable.
+        Só é aceito quando o status atual é ACTIVE - a partir de INACTIVE retorna 4XX
+      operationId: blockEmployee
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeStatusTransitionRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [BLOCK_EMPLOYEE]
+      x-cache: [SCOS_ORGANIZATION_EMPLOYEE, SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+      security:
+        - BearerAuth: []
+
+  /v1/employees/{id}/unblock:
+    put:
+      tags: [Employee]
+      summary: Unblock employee
+      description: >-
+        UC-139 - Transição de domínio "enable": desbloqueia funcionário com status DISABLED para ACTIVE.
+        Nome da rota (`unblock`) não corresponde 1:1 ao nome da transição de domínio (`enable`) - motivo vem do catálogo ReasonEnable
+      operationId: unblockEmployee
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmployeeStatusTransitionRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UNBLOCK_EMPLOYEE]
+      x-cache: [SCOS_ORGANIZATION_EMPLOYEE]
+      security:
+        - BearerAuth: []
+
+  /v1/employees/{id}/status-history:
+    get:
+      tags: [Employee]
+      summary: Get employee status history
+      description: UC-140 - Histórico paginado e somente leitura das transições de status do funcionário, populado exclusivamente pelas rotas enable/disable/block/unblock
+      operationId: getEmployeeStatusHistory
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllEmployeeStatusHistoryResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_EMPLOYEE_STATUS_HISTORY]
+      x-cache: [SCOS_ORGANIZATION_EMPLOYEE_STATUS_HISTORY]
       security:
         - BearerAuth: []
 
@@ -280,6 +369,33 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE]
+      security:
+        - BearerAuth: []
+
+  /v1/employees/{id}/position-history:
+    get:
+      tags: [Employee]
+      summary: Get employee position history
+      description: UC-112 - Lista o histórico de cargos do funcionário, paginado, do mais recente para o mais antigo. A linha com endDate nulo é a atribuição vigente
+      operationId: getEmployeePositionHistory
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllEmployeePositionHistoryResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_EMPLOYEE_POSITION_HISTORY]
+      x-cache: [SCOS_ORGANIZATION_EMPLOYEE_POSITION_HISTORY]
       security:
         - BearerAuth: []
 
@@ -549,6 +665,116 @@ paths:
       security:
         - BearerAuth: []
 
+  /v1/employees/{employeeId}/work-schedule:
+    get:
+      tags: [Employee Work Schedule]
+      summary: Get employee work schedule
+      description: >-
+        UC-148 - Lista a jornada de trabalho efetiva do funcionário, um item por dia da semana cadastrado.
+        Retorna array direto, sem paginação - a UK composta (employeeId, dayOfWeek) garante teto real de 7 registros.
+        Dia sem registro não aparece na resposta - o sistema não infere o horário do template do cargo como fallback
+      operationId: getAllEmployeeWorkSchedule
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idEmployee'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllEmployeeWorkScheduleResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_EMPLOYEE_WORK_SCHEDULE]
+      x-cache: [SCOS_ORGANIZATION_EMPLOYEE_WORK_SCHEDULE]
+      security:
+        - BearerAuth: []
+    post:
+      tags: [Employee Work Schedule]
+      summary: Create employee work schedule
+      description: UC-149 - Cria o horário de um dia da semana da jornada efetiva do funcionário. Rejeitado se já existir registro para esse (employeeId, dayOfWeek)
+      operationId: createEmployeeWorkSchedule
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idEmployee'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEmployeeWorkScheduleRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_EMPLOYEE_WORK_SCHEDULE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_WORK_SCHEDULE
+        ttl: 1
+      x-cache: [SCOS_ORGANIZATION_EMPLOYEE_WORK_SCHEDULE]
+      security:
+        - BearerAuth: []
+
+  /v1/employees/{employeeId}/work-schedule/{dayOfWeek}:
+    put:
+      tags: [Employee Work Schedule]
+      summary: Update employee work schedule
+      description: UC-150 - Atualiza o horário de um dia da semana já cadastrado na jornada efetiva do funcionário
+      operationId: updateEmployeeWorkSchedule
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idEmployee'
+        - $ref: '#/components/parameters/dayOfWeekPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEmployeeWorkScheduleRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_EMPLOYEE_WORK_SCHEDULE]
+      x-cache: [SCOS_ORGANIZATION_EMPLOYEE_WORK_SCHEDULE]
+      security:
+        - BearerAuth: []
+    delete:
+      tags: [Employee Work Schedule]
+      summary: Delete employee work schedule
+      description: UC-151 - Remove o horário de um dia da semana da jornada efetiva do funcionário
+      operationId: deleteEmployeeWorkSchedule
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idEmployee'
+        - $ref: '#/components/parameters/dayOfWeekPath'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DELETE_EMPLOYEE_WORK_SCHEDULE]
+      x-cache: [SCOS_ORGANIZATION_EMPLOYEE_WORK_SCHEDULE]
+      security:
+        - BearerAuth: []
+
 components:
   securitySchemes:
     BearerAuth:
@@ -584,6 +810,13 @@ components:
       required: false
       schema:
         $ref: '#/components/schemas/EmployeeStatus'
+    dayOfWeekPath:
+      name: dayOfWeek
+      in: path
+      required: true
+      schema:
+        $ref: './ScosComponents.yml#/components/schemas/DayOfWeek'
+      x-jdempotentrequestpayload: true
   schemas:
     EmployeeStatus:
       type: string
@@ -591,6 +824,13 @@ components:
         - ACTIVE
         - INACTIVE
         - DISABLED
+    EmployeeContractType:
+      type: string
+      enum:
+        - CLT
+        - PJ
+        - ESTAGIO
+        - TEMPORARIO
     Employees:
       type: object
       properties:
@@ -635,6 +875,12 @@ components:
           $ref: '#/components/schemas/EmployeeCompany'
         position:
           $ref: './ScosOrganization_Department-Position.yml#/components/schemas/Position'
+        contractType:
+          $ref: '#/components/schemas/EmployeeContractType'
+        probationEndDate:
+          type: string
+          format: date
+          nullable: true
     Supervisor:
       type: object
       properties:
@@ -684,8 +930,39 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/EmployeeHierarchyNode'
+    EmployeePositionHistory:
+      type: object
+      properties:
+        positionId:
+          type: integer
+          format: int64
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+          nullable: true
+          description: Nulo indica a atribuição de cargo vigente
+        reasonPositionChangeId:
+          type: integer
+          format: int64
+        createdAt:
+          type: string
+          format: date-time
+        userAt:
+          type: string
+    GetAllEmployeePositionHistoryResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmployeePositionHistory'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateEmployeeRequest:
-      required: [name, nameTreatment, taxIdentifier, email, birthDate, dateOfHiring, companyId, positionId]
+      required: [name, nameTreatment, taxIdentifier, email, birthDate, dateOfHiring, companyId, positionId, contractType, reasonActivateId]
       type: object
       properties:
         name:
@@ -727,8 +1004,20 @@ components:
           type: integer
           format: int64
           x-required-message: SCOS-003
+        contractType:
+          allOf:
+            - $ref: '#/components/schemas/EmployeeContractType'
+          x-required-message: SCOS-003
+        probationEndDate:
+          type: string
+          format: date
+        reasonActivateId:
+          type: integer
+          format: int64
+          description: Motivo da criação (primeira linha de status ACTIVE em EmployeeStatusHistory). Referencia ReasonActivate com entityType=EMPLOYEE
+          x-required-message: SCOS-003
     UpdateEmployeeRequest:
-      required: [name, nameTreatment, email, birthDate, dateOfHiring]
+      required: [name, nameTreatment, email, birthDate, dateOfHiring, contractType]
       type: object
       properties:
         name:
@@ -753,9 +1042,17 @@ components:
           x-required-message: SCOS-003
         observation:
           type: string
+        contractType:
+          allOf:
+            - $ref: '#/components/schemas/EmployeeContractType'
+          x-required-message: SCOS-003
+        probationEndDate:
+          type: string
+          format: date
     TransferEmployeeRequest:
+      required: [reasonPositionChangeId]
       type: object
-      description: Todos os campos são opcionais - preencher apenas o que está sendo transferido
+      description: reasonPositionChangeId é sempre obrigatório - toda transferência gera uma nova linha em EmployeePositionHistory, mesmo quando positionId não muda. Demais campos são opcionais - preencher apenas o que está sendo transferido
       properties:
         companyId:
           type: integer
@@ -773,14 +1070,20 @@ components:
           type: string
           format: date
           description: Data efetiva da transferência
+        reasonPositionChangeId:
+          type: integer
+          format: int64
+          description: Motivo da transferência. Sempre obrigatório - gera nova linha em EmployeePositionHistory
+          x-required-message: SCOS-003
     EmployeeContact:
       type: object
       properties:
         id:
           type: integer
           format: int64
-        type:
-          type: string
+        contactTypeId:
+          type: integer
+          format: int64
         phone:
           type: string
     GetEmployeeContactResponse:
@@ -798,13 +1101,13 @@ components:
         paginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateEmployeeContactRequest:
-      required: [type, phone]
+      required: [contactTypeId, phone]
       type: object
       properties:
-        type:
-          type: string
+        contactTypeId:
+          type: integer
+          format: int64
           x-required-message: SCOS-003
-          x-empty-message: SCOS-001
           x-jdempotentrequestpayload: true
         phone:
           type: string
@@ -812,13 +1115,13 @@ components:
           x-empty-message: SCOS-001
           x-jdempotentrequestpayload: true
     UpdateEmployeeContactRequest:
-      required: [type, phone]
+      required: [contactTypeId, phone]
       type: object
       properties:
-        type:
-          type: string
+        contactTypeId:
+          type: integer
+          format: int64
           x-required-message: SCOS-003
-          x-empty-message: SCOS-001
         phone:
           type: string
           x-required-message: SCOS-003
@@ -829,10 +1132,12 @@ components:
         id:
           type: integer
           format: int64
-        type:
-          type: string
+        addressTypeId:
+          type: integer
+          format: int64
         number:
-          type: number
+          type: integer
+          format: int32
         complement:
           type: string
     EmployeeAddress:
@@ -844,10 +1149,12 @@ components:
         addressId:
           type: integer
           format: int64
-        type:
-          type: string
+        addressTypeId:
+          type: integer
+          format: int64
         number:
-          type: number
+          type: integer
+          format: int32
         complement:
           type: string
         latitude:
@@ -869,13 +1176,13 @@ components:
         paginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateEmployeeAddressRequest:
-      required: [type, number, latitude, longitude, addressId]
+      required: [addressTypeId, number, latitude, longitude, addressId]
       type: object
       properties:
-        type:
-          type: string
+        addressTypeId:
+          type: integer
+          format: int64
           x-required-message: SCOS-003
-          x-empty-message: SCOS-001
           x-jdempotentrequestpayload: true
         number:
           type: string
@@ -895,13 +1202,13 @@ components:
           x-required-message: SCOS-003
           x-jdempotentrequestpayload: true
     UpdateEmployeeAddressRequest:
-      required: [type, number, latitude, longitude]
+      required: [addressTypeId, number, latitude, longitude]
       type: object
       properties:
-        type:
-          type: string
+        addressTypeId:
+          type: integer
+          format: int64
           x-required-message: SCOS-003
-          x-empty-message: SCOS-001
         number:
           type: string
           x-required-message: SCOS-003
@@ -912,6 +1219,131 @@ components:
           x-required-message: SCOS-003
         longitude:
           type: string
+          x-required-message: SCOS-003
+    EmployeeStatusTransitionRequest:
+      required: [reasonId]
+      type: object
+      properties:
+        reasonId:
+          type: integer
+          format: int64
+          description: >-
+            Motivo da transição. Referencia o catálogo Reason* correspondente à transição de domínio
+            (enable→ReasonActivate, disable→ReasonInactivate, block→ReasonDisable, unblock→ReasonEnable)
+          x-required-message: SCOS-003
+          x-jdempotentrequestpayload: true
+        observation:
+          type: string
+    EmployeeStatusHistory:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/EmployeeStatus'
+        previousStatus:
+          $ref: '#/components/schemas/EmployeeStatus'
+        reasonActivateId:
+          type: integer
+          format: int64
+          nullable: true
+        reasonInactivateId:
+          type: integer
+          format: int64
+          nullable: true
+        reasonDisableId:
+          type: integer
+          format: int64
+          nullable: true
+        reasonEnableId:
+          type: integer
+          format: int64
+          nullable: true
+        observation:
+          type: string
+          nullable: true
+        userAt:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    GetAllEmployeeStatusHistoryResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/EmployeeStatusHistory'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    EmployeeWorkSchedule:
+      type: object
+      properties:
+        dayOfWeek:
+          $ref: './ScosComponents.yml#/components/schemas/DayOfWeek'
+        startTime:
+          type: string
+          format: time
+        lunchStart:
+          type: string
+          format: time
+        lunchEnd:
+          type: string
+          format: time
+        endTime:
+          type: string
+          format: time
+    GetAllEmployeeWorkScheduleResponse:
+      type: array
+      description: Array direto, sem paginação - teto real de 7 registros (um por dia da semana) garantido pela UK composta (employeeId, dayOfWeek)
+      items:
+        $ref: '#/components/schemas/EmployeeWorkSchedule'
+    CreateEmployeeWorkScheduleRequest:
+      required: [dayOfWeek, startTime, lunchStart, lunchEnd, endTime]
+      type: object
+      properties:
+        dayOfWeek:
+          allOf:
+            - $ref: './ScosComponents.yml#/components/schemas/DayOfWeek'
+          x-required-message: SCOS-003
+          x-jdempotentrequestpayload: true
+        startTime:
+          type: string
+          format: time
+          x-required-message: SCOS-003
+        lunchStart:
+          type: string
+          format: time
+          x-required-message: SCOS-003
+          description: Deve ser posterior a startTime e anterior a lunchEnd - validado no use case, sem CHECK no banco
+        lunchEnd:
+          type: string
+          format: time
+          x-required-message: SCOS-003
+          description: Deve ser posterior a lunchStart e anterior a endTime - validado no use case, sem CHECK no banco
+        endTime:
+          type: string
+          format: time
+          x-required-message: SCOS-003
+    UpdateEmployeeWorkScheduleRequest:
+      required: [startTime, lunchStart, lunchEnd, endTime]
+      type: object
+      properties:
+        startTime:
+          type: string
+          format: time
+          x-required-message: SCOS-003
+        lunchStart:
+          type: string
+          format: time
+          x-required-message: SCOS-003
+          description: Deve ser posterior a startTime e anterior a lunchEnd - validado no use case, sem CHECK no banco
+        lunchEnd:
+          type: string
+          format: time
+          x-required-message: SCOS-003
+          description: Deve ser posterior a lunchStart e anterior a endTime - validado no use case, sem CHECK no banco
+        endTime:
+          type: string
+          format: time
           x-required-message: SCOS-003
 
 security:

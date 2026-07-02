@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
-  title: SawCunhaOS Organization - Department and Position
-  description: APIs para gestão de departamentos e cargos.
+  title: SawCunhaOS Organization - Reason
+  description: APIs para gestão dos catálogos de motivo de transição de status (ativação/inativação/bloqueio/desbloqueio), compartilhados entre Company, Employee e Login.
   termsOfService: https://www.apache.org/licenses/LICENSE-2.0
   contact:
     name: Samuel Cunha
@@ -14,45 +14,47 @@ info:
 servers:
   - url: /organization/api
 tags:
-  - name: Department
-    description: APIs para registro e atualização dos departamentos
-  - name: Position
-    description: APIs para registro e atualização dos cargos nos departamentos
-  - name: Reason Position Change
-    description: APIs para gestão do catálogo de motivos de mudança de cargo
+  - name: ReasonActivate
+    description: APIs para gestão do catálogo de motivo de ativação
+  - name: ReasonInactivate
+    description: APIs para gestão do catálogo de motivo de inativação
+  - name: ReasonDisable
+    description: APIs para gestão do catálogo de motivo de bloqueio
+  - name: ReasonEnable
+    description: APIs para gestão do catálogo de motivo de desbloqueio
 
 paths:
-  /v1/departments:
+  /v1/reason-activate:
     get:
-      tags: [Department]
-      summary: Get all departments
-      description: UC-022 - Lista todos os departamentos com paginação
-      operationId: getAllDepartments
+      tags: [ReasonActivate]
+      summary: Get all ReasonActivate entries
+      description: UC-113 - Lista todos os motivos de ativação com paginação. Pode filtrar por entityType
+      operationId: getAllReasonActivate
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
-        - $ref: '#/components/parameters/activeFilter'
+        - $ref: '#/components/parameters/entityTypeFilter'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetAllDepartmentsResponse'
+                $ref: '#/components/schemas/GetAllReasonActivateResponse'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [GET_DEPARTMENT]
-      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
+      x-authorize: [GET_REASON_ACTIVATE]
+      x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
       security:
         - BearerAuth: []
     post:
-      tags: [Department]
-      summary: Create a department
-      description: UC-021 - Cria um novo departamento
-      operationId: createDepartment
+      tags: [ReasonActivate]
+      summary: Create a ReasonActivate entry
+      description: UC-114 - Cria um novo motivo de ativação
+      operationId: createReasonActivate
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -61,7 +63,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateDepartmentRequest'
+              $ref: '#/components/schemas/CreateReasonActivateRequest'
         x-jdempotentrequestpayload: true
       responses:
         '201':
@@ -70,20 +72,20 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [CREATE_DEPARTMENT]
+      x-authorize: [CREATE_REASON_ACTIVATE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
+        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ACTIVATE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
+      x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
       security:
         - BearerAuth: []
 
-  /v1/departments/{id}:
+  /v1/reason-activate/{id}:
     get:
-      tags: [Department]
-      summary: Get department by id
-      description: UC-023 - Retorna os dados de um departamento
-      operationId: getDepartmentById
+      tags: [ReasonActivate]
+      summary: Get activation reason by id
+      description: UC-115 - Retorna os dados de um motivo de ativação
+      operationId: getReasonActivateById
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -94,20 +96,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetDepartmentResponse'
+                $ref: '#/components/schemas/GetReasonActivateResponse'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [GET_DEPARTMENT]
-      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
+      x-authorize: [GET_REASON_ACTIVATE]
+      x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
       security:
         - BearerAuth: []
     put:
-      tags: [Department]
-      summary: Update department
-      description: UC-024 - Atualiza o código ou descrição de um departamento
-      operationId: updateDepartment
+      tags: [ReasonActivate]
+      summary: Update activation reason
+      description: UC-116 - Atualiza o código, descrição ou entityType de um motivo de ativação
+      operationId: updateReasonActivate
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -117,7 +119,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateDepartmentRequest'
+              $ref: '#/components/schemas/UpdateReasonActivateRequest'
         x-jdempotentrequestpayload: true
       responses:
         '204':
@@ -126,40 +128,20 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [UPDATE_DEPARTMENT]
+      x-authorize: [UPDATE_REASON_ACTIVATE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
+        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ACTIVATE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
-      security:
-        - BearerAuth: []
-    delete:
-      tags: [Department]
-      summary: Delete department
-      description: UC-027 - Exclusão lógica. Registro permanece com status DISABLED
-      operationId: deleteDepartment
-      parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-      responses:
-        '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
-        '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
-        '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [DELETE_DEPARTMENT]
-      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
+      x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
       security:
         - BearerAuth: []
 
-  /v1/departments/{id}/enable:
+  /v1/reason-activate/{id}/enable:
     put:
-      tags: [Department]
-      summary: Activate department
-      description: UC-025 - Reativa departamento com status INACTIVE
-      operationId: activateDepartment
+      tags: [ReasonActivate]
+      summary: Reactivate ReasonActivate entry
+      description: UC-117 - Reativa motivo de ativação com active=false
+      operationId: activateReasonActivate
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -171,17 +153,17 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ENABLE_DEPARTMENT]
-      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
+      x-authorize: [ENABLE_REASON_ACTIVATE]
+      x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
       security:
         - BearerAuth: []
 
-  /v1/departments/{id}/disable:
+  /v1/reason-activate/{id}/disable:
     put:
-      tags: [Department]
-      summary: Inactivate department
-      description: UC-026 - Inativa departamento com status ACTIVE
-      operationId: inactivateDepartment
+      tags: [ReasonActivate]
+      summary: Deactivate ReasonActivate entry
+      description: UC-118 - Inativa motivo de ativação com active=true
+      operationId: inactivateReasonActivate
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -193,43 +175,42 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [DISABLE_DEPARTMENT]
-      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
+      x-authorize: [DISABLE_REASON_ACTIVATE]
+      x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
       security:
         - BearerAuth: []
 
-  /v1/positions:
+  /v1/reason-inactivate:
     get:
-      tags: [Position]
-      summary: Get all positions
-      description: UC-029 - Lista todos os cargos com paginação. Pode filtrar por departamento
-      operationId: getAllPositions
+      tags: [ReasonInactivate]
+      summary: Get all ReasonInactivate entries
+      description: UC-119 - Lista todos os motivos de inativação com paginação. Pode filtrar por entityType
+      operationId: getAllReasonInactivate
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
-        - $ref: '#/components/parameters/departmentIdFilter'
-        - $ref: '#/components/parameters/activeFilter'
+        - $ref: '#/components/parameters/entityTypeFilter'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetAllPositionsResponse'
+                $ref: '#/components/schemas/GetAllReasonInactivateResponse'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [GET_POSITION]
-      x-cache: [SCOS_ORGANIZATION_POSITION]
+      x-authorize: [GET_REASON_INACTIVATE]
+      x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
       security:
         - BearerAuth: []
     post:
-      tags: [Position]
-      summary: Create a position
-      description: UC-028 - Cria um cargo vinculado a um departamento ativo
-      operationId: createPosition
+      tags: [ReasonInactivate]
+      summary: Create a ReasonInactivate entry
+      description: UC-120 - Cria um novo motivo de inativação
+      operationId: createReasonInactivate
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -238,7 +219,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreatePositionRequest'
+              $ref: '#/components/schemas/CreateReasonInactivateRequest'
         x-jdempotentrequestpayload: true
       responses:
         '201':
@@ -247,20 +228,20 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [CREATE_POSITION]
+      x-authorize: [CREATE_REASON_INACTIVATE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
+        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_INACTIVATE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_POSITION]
+      x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
       security:
         - BearerAuth: []
 
-  /v1/positions/{id}:
+  /v1/reason-inactivate/{id}:
     get:
-      tags: [Position]
-      summary: Get position by id
-      description: UC-030 - Retorna os dados de um cargo incluindo o departamento
-      operationId: getPositionById
+      tags: [ReasonInactivate]
+      summary: Get inactivation reason by id
+      description: UC-121 - Retorna os dados de um motivo de inativação
+      operationId: getReasonInactivateById
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -271,20 +252,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetPositionResponse'
+                $ref: '#/components/schemas/GetReasonInactivateResponse'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [GET_POSITION]
-      x-cache: [SCOS_ORGANIZATION_POSITION]
+      x-authorize: [GET_REASON_INACTIVATE]
+      x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
       security:
         - BearerAuth: []
     put:
-      tags: [Position]
-      summary: Update position
-      description: UC-031 - Atualiza o código, descrição ou departamento de um cargo
-      operationId: updatePosition
+      tags: [ReasonInactivate]
+      summary: Update inactivation reason
+      description: UC-122 - Atualiza o código, descrição ou entityType de um motivo de inativação
+      operationId: updateReasonInactivate
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -294,7 +275,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdatePositionRequest'
+              $ref: '#/components/schemas/UpdateReasonInactivateRequest'
         x-jdempotentrequestpayload: true
       responses:
         '204':
@@ -303,40 +284,20 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [UPDATE_POSITION]
+      x-authorize: [UPDATE_REASON_INACTIVATE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
+        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_INACTIVATE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_POSITION]
-      security:
-        - BearerAuth: []
-    delete:
-      tags: [Position]
-      summary: Delete position
-      description: UC-034 - Exclusão lógica. Registro permanece com status DISABLED
-      operationId: deletePosition
-      parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-      responses:
-        '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
-        '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
-        '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [DELETE_POSITION]
-      x-cache: [SCOS_ORGANIZATION_POSITION]
+      x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
       security:
         - BearerAuth: []
 
-  /v1/positions/{id}/enable:
+  /v1/reason-inactivate/{id}/enable:
     put:
-      tags: [Position]
-      summary: Activate position
-      description: UC-032 - Reativa cargo com status INACTIVE
-      operationId: activatePosition
+      tags: [ReasonInactivate]
+      summary: Reactivate ReasonInactivate entry
+      description: UC-123 - Reativa motivo de inativação com active=false
+      operationId: activateReasonInactivate
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -348,17 +309,17 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ENABLE_POSITION]
-      x-cache: [SCOS_ORGANIZATION_POSITION]
+      x-authorize: [ENABLE_REASON_INACTIVATE]
+      x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
       security:
         - BearerAuth: []
 
-  /v1/positions/{id}/disable:
+  /v1/reason-inactivate/{id}/disable:
     put:
-      tags: [Position]
-      summary: Inactivate position
-      description: UC-033 - Inativa cargo com status ACTIVE
-      operationId: inactivatePosition
+      tags: [ReasonInactivate]
+      summary: Deactivate ReasonInactivate entry
+      description: UC-124 - Inativa motivo de inativação com active=true
+      operationId: inactivateReasonInactivate
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -370,41 +331,42 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [DISABLE_POSITION]
-      x-cache: [SCOS_ORGANIZATION_POSITION]
+      x-authorize: [DISABLE_REASON_INACTIVATE]
+      x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
       security:
         - BearerAuth: []
 
-  /v1/reason-position-change:
+  /v1/reason-disable:
     get:
-      tags: [Reason Position Change]
-      summary: Get all reason position changes
-      description: UC-106 - Lista todos os motivos de mudança de cargo com paginação
-      operationId: getAllReasonPositionChange
+      tags: [ReasonDisable]
+      summary: Get all ReasonDisable entries
+      description: UC-125 - Lista todos os motivos de bloqueio com paginação. Pode filtrar por entityType
+      operationId: getAllReasonDisable
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/entityTypeFilter'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetAllReasonPositionChangeResponse'
+                $ref: '#/components/schemas/GetAllReasonDisableResponse'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [GET_REASON_POSITION_CHANGE]
-      x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
+      x-authorize: [GET_REASON_DISABLE]
+      x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
       security:
         - BearerAuth: []
     post:
-      tags: [Reason Position Change]
-      summary: Create a reason position change
-      description: UC-107 - Cria um novo motivo de mudança de cargo
-      operationId: createReasonPositionChange
+      tags: [ReasonDisable]
+      summary: Create a ReasonDisable entry
+      description: UC-126 - Cria um novo motivo de bloqueio
+      operationId: createReasonDisable
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -413,7 +375,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateReasonPositionChangeRequest'
+              $ref: '#/components/schemas/CreateReasonDisableRequest'
         x-jdempotentrequestpayload: true
       responses:
         '201':
@@ -422,20 +384,20 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [CREATE_REASON_POSITION_CHANGE]
+      x-authorize: [CREATE_REASON_DISABLE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_POSITION_CHANGE
+        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_DISABLE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
+      x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
       security:
         - BearerAuth: []
 
-  /v1/reason-position-change/{id}:
+  /v1/reason-disable/{id}:
     get:
-      tags: [Reason Position Change]
-      summary: Get reason position change by id
-      description: UC-108 - Retorna os dados de um motivo de mudança de cargo
-      operationId: getReasonPositionChangeById
+      tags: [ReasonDisable]
+      summary: Get disable reason by id
+      description: UC-127 - Retorna os dados de um motivo de bloqueio
+      operationId: getReasonDisableById
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -446,20 +408,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetReasonPositionChangeResponse'
+                $ref: '#/components/schemas/GetReasonDisableResponse'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [GET_REASON_POSITION_CHANGE]
-      x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
+      x-authorize: [GET_REASON_DISABLE]
+      x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
       security:
         - BearerAuth: []
     put:
-      tags: [Reason Position Change]
-      summary: Update reason position change
-      description: UC-109 - Atualiza o código ou descrição de um motivo de mudança de cargo
-      operationId: updateReasonPositionChange
+      tags: [ReasonDisable]
+      summary: Update disable reason
+      description: UC-128 - Atualiza o código, descrição ou entityType de um motivo de bloqueio
+      operationId: updateReasonDisable
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -469,7 +431,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateReasonPositionChangeRequest'
+              $ref: '#/components/schemas/UpdateReasonDisableRequest'
         x-jdempotentrequestpayload: true
       responses:
         '204':
@@ -478,20 +440,20 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [UPDATE_REASON_POSITION_CHANGE]
+      x-authorize: [UPDATE_REASON_DISABLE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_POSITION_CHANGE
+        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_DISABLE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
+      x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
       security:
         - BearerAuth: []
 
-  /v1/reason-position-change/{id}/enable:
+  /v1/reason-disable/{id}/enable:
     put:
-      tags: [Reason Position Change]
-      summary: Activate reason position change
-      description: UC-110 - Reativa motivo de mudança de cargo com active=false
-      operationId: activateReasonPositionChange
+      tags: [ReasonDisable]
+      summary: Reactivate ReasonDisable entry
+      description: UC-129 - Reativa motivo de bloqueio com active=false
+      operationId: activateReasonDisable
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -503,17 +465,17 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [ENABLE_REASON_POSITION_CHANGE]
-      x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
+      x-authorize: [ENABLE_REASON_DISABLE]
+      x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
       security:
         - BearerAuth: []
 
-  /v1/reason-position-change/{id}/disable:
+  /v1/reason-disable/{id}/disable:
     put:
-      tags: [Reason Position Change]
-      summary: Inactivate reason position change
-      description: UC-111 - Inativa motivo de mudança de cargo com active=true
-      operationId: inactivateReasonPositionChange
+      tags: [ReasonDisable]
+      summary: Deactivate ReasonDisable entry
+      description: UC-130 - Inativa motivo de bloqueio com active=true
+      operationId: inactivateReasonDisable
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
@@ -525,53 +487,51 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [DISABLE_REASON_POSITION_CHANGE]
-      x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
+      x-authorize: [DISABLE_REASON_DISABLE]
+      x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
       security:
         - BearerAuth: []
 
-  /v1/positions/{positionId}/work-schedule:
+  /v1/reason-enable:
     get:
-      tags: [Position]
-      summary: Get position work schedule
-      description: >-
-        UC-144 - Lista a jornada de trabalho template do cargo, um item por dia da semana cadastrado.
-        Retorna array direto, sem paginação - a UK composta (positionId, dayOfWeek) garante teto real de 7 registros
-      operationId: getAllPositionWorkSchedule
+      tags: [ReasonEnable]
+      summary: Get all ReasonEnable entries
+      description: UC-131 - Lista todos os motivos de desbloqueio com paginação. Pode filtrar por entityType
+      operationId: getAllReasonEnable
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: '#/components/parameters/idPosition'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/entityTypeFilter'
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetAllPositionWorkScheduleResponse'
+                $ref: '#/components/schemas/GetAllReasonEnableResponse'
         '4XX':
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [GET_POSITION_WORK_SCHEDULE]
-      x-cache: [SCOS_ORGANIZATION_POSITION_WORK_SCHEDULE]
+      x-authorize: [GET_REASON_ENABLE]
+      x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
       security:
         - BearerAuth: []
     post:
-      tags: [Position]
-      summary: Create position work schedule
-      description: UC-145 - Cria o horário de um dia da semana do template do cargo. Rejeitado se já existir registro para esse (positionId, dayOfWeek)
-      operationId: createPositionWorkSchedule
+      tags: [ReasonEnable]
+      summary: Create a ReasonEnable entry
+      description: UC-132 - Cria um novo motivo de desbloqueio
+      operationId: createReasonEnable
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: '#/components/parameters/idPosition'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreatePositionWorkScheduleRequest'
+              $ref: '#/components/schemas/CreateReasonEnableRequest'
         x-jdempotentrequestpayload: true
       responses:
         '201':
@@ -580,31 +540,54 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [CREATE_POSITION_WORK_SCHEDULE]
+      x-authorize: [CREATE_REASON_ENABLE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_POSITION_WORK_SCHEDULE
+        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ENABLE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_POSITION_WORK_SCHEDULE]
+      x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
       security:
         - BearerAuth: []
 
-  /v1/positions/{positionId}/work-schedule/{dayOfWeek}:
-    put:
-      tags: [Position]
-      summary: Update position work schedule
-      description: UC-146 - Atualiza o horário de um dia da semana já cadastrado no template do cargo
-      operationId: updatePositionWorkSchedule
+  /v1/reason-enable/{id}:
+    get:
+      tags: [ReasonEnable]
+      summary: Get enable reason by id
+      description: UC-133 - Retorna os dados de um motivo de desbloqueio
+      operationId: getReasonEnableById
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: '#/components/parameters/idPosition'
-        - $ref: '#/components/parameters/dayOfWeekPath'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetReasonEnableResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_REASON_ENABLE]
+      x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
+      security:
+        - BearerAuth: []
+    put:
+      tags: [ReasonEnable]
+      summary: Update enable reason
+      description: UC-134 - Atualiza o código, descrição ou entityType de um motivo de desbloqueio
+      operationId: updateReasonEnable
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdatePositionWorkScheduleRequest'
+              $ref: '#/components/schemas/UpdateReasonEnableRequest'
         x-jdempotentrequestpayload: true
       responses:
         '204':
@@ -613,20 +596,24 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [UPDATE_POSITION_WORK_SCHEDULE]
-      x-cache: [SCOS_ORGANIZATION_POSITION_WORK_SCHEDULE]
+      x-authorize: [UPDATE_REASON_ENABLE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ENABLE
+        ttl: 1
+      x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
       security:
         - BearerAuth: []
-    delete:
-      tags: [Position]
-      summary: Delete position work schedule
-      description: UC-147 - Remove o horário de um dia da semana do template do cargo
-      operationId: deletePositionWorkSchedule
+
+  /v1/reason-enable/{id}/enable:
+    put:
+      tags: [ReasonEnable]
+      summary: Reactivate ReasonEnable entry
+      description: UC-135 - Reativa motivo de desbloqueio com active=false
+      operationId: activateReasonEnable
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: '#/components/parameters/idPosition'
-        - $ref: '#/components/parameters/dayOfWeekPath'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
           $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
@@ -634,8 +621,30 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [DELETE_POSITION_WORK_SCHEDULE]
-      x-cache: [SCOS_ORGANIZATION_POSITION_WORK_SCHEDULE]
+      x-authorize: [ENABLE_REASON_ENABLE]
+      x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
+      security:
+        - BearerAuth: []
+
+  /v1/reason-enable/{id}/disable:
+    put:
+      tags: [ReasonEnable]
+      summary: Deactivate ReasonEnable entry
+      description: UC-136 - Inativa motivo de desbloqueio com active=true
+      operationId: inactivateReasonEnable
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DISABLE_REASON_ENABLE]
+      x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
       security:
         - BearerAuth: []
 
@@ -646,36 +655,20 @@ components:
       scheme: bearer
       bearerFormat: JWT
   parameters:
-    activeFilter:
-      name: active
+    entityTypeFilter:
+      name: entityType
       in: query
       required: false
       schema:
-        type: boolean
-    departmentIdFilter:
-      name: departmentId
-      in: query
-      required: false
-      schema:
-        type: integer
-        format: int64
-    idPosition:
-      name: positionId
-      in: path
-      required: true
-      schema:
-        type: integer
-        format: int64
-      x-jdempotentrequestpayload: true
-    dayOfWeekPath:
-      name: dayOfWeek
-      in: path
-      required: true
-      schema:
-        $ref: './ScosComponents.yml#/components/schemas/DayOfWeek'
-      x-jdempotentrequestpayload: true
+        $ref: '#/components/schemas/ReasonEntityType'
   schemas:
-    Department:
+    ReasonEntityType:
+      type: string
+      enum:
+        - COMPANY
+        - EMPLOYEE
+        - LOGIN
+    ReasonActivate:
       type: object
       properties:
         id:
@@ -685,24 +678,26 @@ components:
           type: string
         description:
           type: string
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
         active:
           type: boolean
-    GetDepartmentResponse:
+    GetReasonActivateResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/Department'
-    GetAllDepartmentsResponse:
+          $ref: '#/components/schemas/ReasonActivate'
+    GetAllReasonActivateResponse:
       type: object
       properties:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/Department'
+            $ref: '#/components/schemas/ReasonActivate'
         paginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
-    CreateDepartmentRequest:
-      required: [code, description]
+    CreateReasonActivateRequest:
+      required: [code, description, entityType]
       type: object
       properties:
         code:
@@ -714,8 +709,10 @@ components:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-    UpdateDepartmentRequest:
-      required: [code, description]
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+    UpdateReasonActivateRequest:
+      required: [code, description, entityType]
       type: object
       properties:
         code:
@@ -726,7 +723,9 @@ components:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-    Position:
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+    ReasonInactivate:
       type: object
       properties:
         id:
@@ -736,29 +735,26 @@ components:
           type: string
         description:
           type: string
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
         active:
           type: boolean
-        isTrustPosition:
-          type: boolean
-          default: false
-        department:
-          $ref: '#/components/schemas/Department'
-    GetPositionResponse:
+    GetReasonInactivateResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/Position'
-    GetAllPositionsResponse:
+          $ref: '#/components/schemas/ReasonInactivate'
+    GetAllReasonInactivateResponse:
       type: object
       properties:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/Position'
+            $ref: '#/components/schemas/ReasonInactivate'
         paginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
-    CreatePositionRequest:
-      required: [code, description, departmentId]
+    CreateReasonInactivateRequest:
+      required: [code, description, entityType]
       type: object
       properties:
         code:
@@ -770,15 +766,10 @@ components:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-        departmentId:
-          type: integer
-          format: int64
-          x-required-message: SCOS-003
-        isTrustPosition:
-          type: boolean
-          default: false
-    UpdatePositionRequest:
-      required: [code, description, departmentId]
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+    UpdateReasonInactivateRequest:
+      required: [code, description, entityType]
       type: object
       properties:
         code:
@@ -789,14 +780,9 @@ components:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-        departmentId:
-          type: integer
-          format: int64
-          x-required-message: SCOS-003
-        isTrustPosition:
-          type: boolean
-          default: false
-    ReasonPositionChange:
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+    ReasonDisable:
       type: object
       properties:
         id:
@@ -806,24 +792,26 @@ components:
           type: string
         description:
           type: string
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
         active:
           type: boolean
-    GetReasonPositionChangeResponse:
+    GetReasonDisableResponse:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/ReasonPositionChange'
-    GetAllReasonPositionChangeResponse:
+          $ref: '#/components/schemas/ReasonDisable'
+    GetAllReasonDisableResponse:
       type: object
       properties:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/ReasonPositionChange'
+            $ref: '#/components/schemas/ReasonDisable'
         paginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
-    CreateReasonPositionChangeRequest:
-      required: [code, description]
+    CreateReasonDisableRequest:
+      required: [code, description, entityType]
       type: object
       properties:
         code:
@@ -835,8 +823,10 @@ components:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-    UpdateReasonPositionChangeRequest:
-      required: [code, description]
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+    UpdateReasonDisableRequest:
+      required: [code, description, entityType]
       type: object
       properties:
         code:
@@ -847,77 +837,65 @@ components:
           type: string
           x-required-message: SCOS-003
           x-empty-message: SCOS-001
-    PositionWorkSchedule:
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+    ReasonEnable:
       type: object
       properties:
-        dayOfWeek:
-          $ref: './ScosComponents.yml#/components/schemas/DayOfWeek'
-        startTime:
+        id:
+          type: integer
+          format: int64
+        code:
           type: string
-          format: time
-        lunchStart:
+        description:
           type: string
-          format: time
-        lunchEnd:
-          type: string
-          format: time
-        endTime:
-          type: string
-          format: time
-    GetAllPositionWorkScheduleResponse:
-      type: array
-      description: Array direto, sem paginação - teto real de 7 registros (um por dia da semana) garantido pela UK composta (positionId, dayOfWeek)
-      items:
-        $ref: '#/components/schemas/PositionWorkSchedule'
-    CreatePositionWorkScheduleRequest:
-      required: [dayOfWeek, startTime, lunchStart, lunchEnd, endTime]
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+        active:
+          type: boolean
+    GetReasonEnableResponse:
       type: object
       properties:
-        dayOfWeek:
-          allOf:
-            - $ref: './ScosComponents.yml#/components/schemas/DayOfWeek'
+        data:
+          $ref: '#/components/schemas/ReasonEnable'
+    GetAllReasonEnableResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReasonEnable'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    CreateReasonEnableRequest:
+      required: [code, description, entityType]
+      type: object
+      properties:
+        code:
+          type: string
           x-required-message: SCOS-003
+          x-empty-message: SCOS-001
           x-jdempotentrequestpayload: true
-        startTime:
+        description:
           type: string
-          format: time
           x-required-message: SCOS-003
-        lunchStart:
-          type: string
-          format: time
-          x-required-message: SCOS-003
-          description: Deve ser posterior a startTime e anterior a lunchEnd - validado no use case, sem CHECK no banco
-        lunchEnd:
-          type: string
-          format: time
-          x-required-message: SCOS-003
-          description: Deve ser posterior a lunchStart e anterior a endTime - validado no use case, sem CHECK no banco
-        endTime:
-          type: string
-          format: time
-          x-required-message: SCOS-003
-    UpdatePositionWorkScheduleRequest:
-      required: [startTime, lunchStart, lunchEnd, endTime]
+          x-empty-message: SCOS-001
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+    UpdateReasonEnableRequest:
+      required: [code, description, entityType]
       type: object
       properties:
-        startTime:
+        code:
           type: string
-          format: time
           x-required-message: SCOS-003
-        lunchStart:
+          x-empty-message: SCOS-001
+        description:
           type: string
-          format: time
           x-required-message: SCOS-003
-          description: Deve ser posterior a startTime e anterior a lunchEnd - validado no use case, sem CHECK no banco
-        lunchEnd:
-          type: string
-          format: time
-          x-required-message: SCOS-003
-          description: Deve ser posterior a lunchStart e anterior a endTime - validado no use case, sem CHECK no banco
-        endTime:
-          type: string
-          format: time
-          x-required-message: SCOS-003
+          x-empty-message: SCOS-001
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
 
 security:
   - BearerAuth: []

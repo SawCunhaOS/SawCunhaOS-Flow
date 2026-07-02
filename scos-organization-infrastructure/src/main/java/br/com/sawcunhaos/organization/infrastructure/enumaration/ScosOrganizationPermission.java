@@ -163,16 +163,22 @@ public enum ScosOrganizationPermission implements ScosPermission {
             true
     ),
 
-    // Integration
-    GET_INTEGRATION(
-            "Consultar integração",
-            "Get integration",
+    // Outbox
+    GET_OUTBOX_EVENT(
+            "Consultar evento do outbox",
+            "Get outbox event",
             true
     ),
 
-    RETRY_INTEGRATION(
-            "Reprocessar integração",
-            "Retry integration",
+    RETRY_OUTBOX_EVENT(
+            "Reprocessar evento do outbox",
+            "Retry outbox event",
+            true
+    ),
+
+    GET_OUTBOX_EVENT_DEAD_LETTER(
+            "Consultar dead letter do outbox",
+            "Get outbox event dead letter",
             true
     ),
 

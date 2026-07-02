@@ -163,15 +163,25 @@ paths:
       x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
       security:
         - BearerAuth: []
-    delete:
+  /v1/logins/{id}/enable:
+    put:
       tags: [Login]
-      summary: Delete login
-      description: UC-066 - Exclusão definitiva. Dispara Saga Keycloak TYPE=DELETE. Falha após MAX_RETRIES pode ser reprocessada via Integration API
-      operationId: deleteLogin
+      summary: Activate login
+      description: >-
+        UC-141 - Transição de domínio "activate": reativa login com status INACTIVE para ACTIVE. Dispara Saga Keycloak TYPE=UPDATE reabilitando o usuário (enabled=true).
+        Motivo vem do catálogo ReasonActivate
+      operationId: activateLogin
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginStatusTransitionRequest'
+        x-jdempotentrequestpayload: true
       responses:
         '204':
           $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
@@ -179,7 +189,38 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [DELETE_LOGIN]
+      x-authorize: [ENABLE_LOGIN]
+      x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+      security:
+        - BearerAuth: []
+
+  /v1/logins/{id}/disable:
+    put:
+      tags: [Login]
+      summary: Inactivate login
+      description: >-
+        UC-142 - Transição de domínio "inactivate": inativa login com status ACTIVE para INACTIVE. Dispara Saga Keycloak TYPE=UPDATE desabilitando o usuário (enabled=false).
+        Motivo vem do catálogo ReasonInactivate
+      operationId: inactivateLogin
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginStatusTransitionRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DISABLE_LOGIN]
       x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
       security:
         - BearerAuth: []
@@ -188,12 +229,22 @@ paths:
     put:
       tags: [Login]
       summary: Block login
-      description: UC-063 - Bloqueia o acesso por segurança. Dispara Saga Keycloak TYPE=UPDATE desabilitando o usuário (enabled=false)
+      description: >-
+        UC-063 - Transição de domínio "disable": bloqueia o acesso por segurança, status muda para BLOCKED. Dispara Saga Keycloak TYPE=UPDATE desabilitando o usuário (enabled=false).
+        Nome da rota (`block`) não corresponde 1:1 ao nome da transição de domínio (`disable`) - motivo vem do catálogo ReasonDisable.
+        Só é aceito quando o status atual é ACTIVE - a partir de INACTIVE retorna 4XX
       operationId: blockLogin
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginStatusTransitionRequest'
+        x-jdempotentrequestpayload: true
       responses:
         '204':
           $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
@@ -210,12 +261,21 @@ paths:
     put:
       tags: [Login]
       summary: Unblock login
-      description: UC-064 - Restaura o acesso de um login BLOCKED. Dispara Saga Keycloak TYPE=UPDATE reabilitando o usuário (enabled=true)
+      description: >-
+        UC-064 - Transição de domínio "enable": restaura o acesso de um login BLOCKED, status muda para ACTIVE. Dispara Saga Keycloak TYPE=UPDATE reabilitando o usuário (enabled=true).
+        Nome da rota (`unblock`) não corresponde 1:1 ao nome da transição de domínio (`enable`) - motivo vem do catálogo ReasonEnable
       operationId: unblockLogin
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginStatusTransitionRequest'
+        x-jdempotentrequestpayload: true
       responses:
         '204':
           $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
@@ -225,6 +285,33 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_LOGIN_STATUS]
       x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+      security:
+        - BearerAuth: []
+
+  /v1/logins/{id}/status-history:
+    get:
+      tags: [Login]
+      summary: Get login status history
+      description: UC-143 - Histórico paginado e somente leitura das transições de status do login, populado exclusivamente pelas rotas enable/disable/block/unblock
+      operationId: getLoginStatusHistory
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllLoginStatusHistoryResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_LOGIN_STATUS_HISTORY]
+      x-cache: [SCOS_ORGANIZATION_LOGIN_STATUS_HISTORY]
       security:
         - BearerAuth: []
 
@@ -248,6 +335,83 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_LOGIN]
       x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+      security:
+        - BearerAuth: []
+
+  /v1/logins/{id}/profiles:
+    get:
+      tags: [Login]
+      summary: Get all additional login profiles
+      description: >-
+        UC-152 - Lista paginada dos perfis adicionais do login (SCOS_LOGIN_PROFILE, relação N:N).
+        Distinto do perfil principal (1:1, Login.profileId), gerenciado por PUT /logins/{id}/profile/{profileId}
+      operationId: getAllLoginProfiles
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllLoginProfilesResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_LOGIN_PROFILE]
+      x-cache: [SCOS_ORGANIZATION_LOGIN_PROFILE]
+      security:
+        - BearerAuth: []
+
+  /v1/logins/{id}/profiles/{profileId}:
+    post:
+      tags: [Login]
+      summary: Add an additional login profile
+      description: >-
+        UC-153 - Adiciona um perfil adicional ao login (SCOS_LOGIN_PROFILE). Sem request body - chave via path params.
+        profileId não pode ser igual ao perfil principal do login (Login.profileId) - rejeitado com 4XX antes da trigger TRG_VALIDATE_LOGIN_PROFILE_NOT_PRIMARY do banco
+      operationId: createLoginProfile
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '#/components/parameters/idProfile'
+      responses:
+        '201':
+          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_LOGIN_PROFILE]
+      x-cache: [SCOS_ORGANIZATION_LOGIN_PROFILE]
+      security:
+        - BearerAuth: []
+    delete:
+      tags: [Login]
+      summary: Remove an additional login profile
+      description: >-
+        UC-154 - Remove um perfil adicional do login (SCOS_LOGIN_PROFILE). Sem request body.
+        Idempotente: remover uma associação (loginId, profileId) que não existe retorna 204, não 404
+      operationId: deleteLoginProfile
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '#/components/parameters/idProfile'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DELETE_LOGIN_PROFILE]
+      x-cache: [SCOS_ORGANIZATION_LOGIN_PROFILE]
       security:
         - BearerAuth: []
 
@@ -803,7 +967,7 @@ components:
         data:
           $ref: '#/components/schemas/LoginMe'
     CreateLoginRequest:
-      required: [login, profileId, type]
+      required: [login, profileId, type, reasonActivateId]
       type: object
       description: Para usuários externos ou contas de serviço sem vínculo com funcionário
       properties:
@@ -823,8 +987,13 @@ components:
             - EXTERNAL
             - SERVICE
           x-required-message: SCOS-003
+        reasonActivateId:
+          type: integer
+          format: int64
+          description: Motivo da criação (primeira linha de status ACTIVE em LoginStatusHistory). Referencia ReasonActivate com entityType=LOGIN
+          x-required-message: SCOS-003
     CreateEmployeeLoginRequest:
-      required: [login, profileId]
+      required: [login, profileId, reasonActivateId]
       type: object
       description: Para funcionários - o tipo é automaticamente EMPLOYEE
       properties:
@@ -836,6 +1005,11 @@ components:
         profileId:
           type: integer
           format: int64
+          x-required-message: SCOS-003
+        reasonActivateId:
+          type: integer
+          format: int64
+          description: Motivo da criação (primeira linha de status ACTIVE em LoginStatusHistory). Referencia ReasonActivate com entityType=LOGIN
           x-required-message: SCOS-003
     UpdateLoginRequest:
       required: [login]
@@ -856,6 +1030,15 @@ components:
           type: string
         description:
           type: string
+    GetAllLoginProfilesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProfileSummary'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     Profile:
       type: object
       properties:
@@ -950,6 +1133,60 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ResourceSummary'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    LoginStatusTransitionRequest:
+      required: [reasonId]
+      type: object
+      properties:
+        reasonId:
+          type: integer
+          format: int64
+          description: >-
+            Motivo da transição. Referencia o catálogo Reason* correspondente à transição de domínio
+            (enable→ReasonActivate, disable→ReasonInactivate, block→ReasonDisable, unblock→ReasonEnable)
+          x-required-message: SCOS-003
+          x-jdempotentrequestpayload: true
+        observation:
+          type: string
+    LoginStatusHistory:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/LoginStatus'
+        previousStatus:
+          $ref: '#/components/schemas/LoginStatus'
+        reasonActivateId:
+          type: integer
+          format: int64
+          nullable: true
+        reasonInactivateId:
+          type: integer
+          format: int64
+          nullable: true
+        reasonDisableId:
+          type: integer
+          format: int64
+          nullable: true
+        reasonEnableId:
+          type: integer
+          format: int64
+          nullable: true
+        observation:
+          type: string
+          nullable: true
+        userAt:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    GetAllLoginStatusHistoryResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoginStatusHistory'
         paginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
 
