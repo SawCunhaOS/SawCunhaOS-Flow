@@ -44,8 +44,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_ADDRESS_TYPE]
       x-cache: [SCOS_ORGANIZATION_ADDRESS_TYPE]
-      security:
-        - BearerAuth: []
     post:
       tags: [AddressType]
       summary: Create an address type
@@ -73,8 +71,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_ADDRESS_TYPE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_ADDRESS_TYPE]
-      security:
-        - BearerAuth: []
 
   /v1/address-types/{id}:
     get:
@@ -99,8 +95,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_ADDRESS_TYPE]
       x-cache: [SCOS_ORGANIZATION_ADDRESS_TYPE]
-      security:
-        - BearerAuth: []
     put:
       tags: [AddressType]
       summary: Update address type
@@ -129,8 +123,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_ADDRESS_TYPE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_ADDRESS_TYPE]
-      security:
-        - BearerAuth: []
 
   /v1/address-types/{id}/enable:
     put:
@@ -151,8 +143,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_ADDRESS_TYPE]
       x-cache: [SCOS_ORGANIZATION_ADDRESS_TYPE]
-      security:
-        - BearerAuth: []
 
   /v1/address-types/{id}/disable:
     put:
@@ -173,8 +163,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_ADDRESS_TYPE]
       x-cache: [SCOS_ORGANIZATION_ADDRESS_TYPE]
-      security:
-        - BearerAuth: []
 
   /v1/contact-types:
     get:
@@ -200,8 +188,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_CONTACT_TYPE]
       x-cache: [SCOS_ORGANIZATION_CONTACT_TYPE]
-      security:
-        - BearerAuth: []
     post:
       tags: [ContactType]
       summary: Create a contact type
@@ -229,8 +215,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_CONTACT_TYPE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_CONTACT_TYPE]
-      security:
-        - BearerAuth: []
 
   /v1/contact-types/{id}:
     get:
@@ -255,8 +239,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_CONTACT_TYPE]
       x-cache: [SCOS_ORGANIZATION_CONTACT_TYPE]
-      security:
-        - BearerAuth: []
     put:
       tags: [ContactType]
       summary: Update contact type
@@ -285,8 +267,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_CONTACT_TYPE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_CONTACT_TYPE]
-      security:
-        - BearerAuth: []
 
   /v1/contact-types/{id}/enable:
     put:
@@ -307,8 +287,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_CONTACT_TYPE]
       x-cache: [SCOS_ORGANIZATION_CONTACT_TYPE]
-      security:
-        - BearerAuth: []
 
   /v1/contact-types/{id}/disable:
     put:
@@ -329,15 +307,11 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_CONTACT_TYPE]
       x-cache: [SCOS_ORGANIZATION_CONTACT_TYPE]
-      security:
-        - BearerAuth: []
 
 components:
   securitySchemes:
     BearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
   parameters:
     entityTypeFilter:
       name: entityType

@@ -23,6 +23,8 @@ tags:
     description: APIs para gerenciar perfis de acesso e seus recursos
   - name: Resource
     description: APIs para listar os recursos disponíveis por sistema
+  - name: System
+    description: APIs para listar os sistemas externos cadastrados na central de permissões
 
 paths:
   /v1/logins:
@@ -51,8 +53,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN]
       x-cache: [SCOS_ORGANIZATION_LOGIN]
-      security:
-        - BearerAuth: []
     post:
       tags: [Login]
       summary: Create a login
@@ -80,8 +80,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_LOGIN]
-      security:
-        - BearerAuth: []
 
   /v1/logins/me:
     get:
@@ -105,8 +103,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN_INFO]
       x-cache: [SCOS_ORGANIZATION_LOGIN_INFO]
-      security:
-        - BearerAuth: []
 
   /v1/logins/{id}:
     get:
@@ -131,8 +127,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN]
       x-cache: [SCOS_ORGANIZATION_LOGIN]
-      security:
-        - BearerAuth: []
     put:
       tags: [Login]
       summary: Update login
@@ -161,8 +155,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
-      security:
-        - BearerAuth: []
   /v1/logins/{id}/enable:
     put:
       tags: [Login]
@@ -191,8 +183,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_LOGIN]
       x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
-      security:
-        - BearerAuth: []
 
   /v1/logins/{id}/disable:
     put:
@@ -222,8 +212,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_LOGIN]
       x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
-      security:
-        - BearerAuth: []
 
   /v1/logins/{id}/block:
     put:
@@ -254,8 +242,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_LOGIN_STATUS]
       x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
-      security:
-        - BearerAuth: []
 
   /v1/logins/{id}/unblock:
     put:
@@ -285,8 +271,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_LOGIN_STATUS]
       x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
-      security:
-        - BearerAuth: []
 
   /v1/logins/{id}/status-history:
     get:
@@ -312,8 +296,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN_STATUS_HISTORY]
       x-cache: [SCOS_ORGANIZATION_LOGIN_STATUS_HISTORY]
-      security:
-        - BearerAuth: []
 
   /v1/logins/{id}/profile/{profileId}:
     put:
@@ -335,8 +317,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_LOGIN]
       x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
-      security:
-        - BearerAuth: []
 
   /v1/logins/{id}/profiles:
     get:
@@ -364,8 +344,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN_PROFILE]
       x-cache: [SCOS_ORGANIZATION_LOGIN_PROFILE]
-      security:
-        - BearerAuth: []
 
   /v1/logins/{id}/profiles/{profileId}:
     post:
@@ -389,8 +367,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_LOGIN_PROFILE]
       x-cache: [SCOS_ORGANIZATION_LOGIN_PROFILE]
-      security:
-        - BearerAuth: []
     delete:
       tags: [Login]
       summary: Remove an additional login profile
@@ -412,8 +388,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_LOGIN_PROFILE]
       x-cache: [SCOS_ORGANIZATION_LOGIN_PROFILE]
-      security:
-        - BearerAuth: []
 
   /v1/logins/keycloak/{keycloakId}:
     get:
@@ -438,8 +412,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN]
       x-cache: [SCOS_ORGANIZATION_LOGIN]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{employeeId}/logins:
     get:
@@ -465,8 +437,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN]
       x-cache: [SCOS_ORGANIZATION_LOGIN]
-      security:
-        - BearerAuth: []
     post:
       tags: [Login]
       summary: Create employee login
@@ -495,8 +465,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_LOGIN]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{employeeId}/logins/{id}:
     get:
@@ -522,8 +490,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN]
       x-cache: [SCOS_ORGANIZATION_LOGIN]
-      security:
-        - BearerAuth: []
 
   /v1/profiles:
     get:
@@ -549,8 +515,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_PROFILE]
       x-cache: [SCOS_ORGANIZATION_PROFILE]
-      security:
-        - BearerAuth: []
     post:
       tags: [Profile]
       summary: Create profile
@@ -578,8 +542,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_PROFILE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_PROFILE]
-      security:
-        - BearerAuth: []
 
   /v1/profiles/{id}:
     get:
@@ -604,8 +566,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_PROFILE]
       x-cache: [SCOS_ORGANIZATION_PROFILE]
-      security:
-        - BearerAuth: []
     put:
       tags: [Profile]
       summary: Update profile
@@ -634,8 +594,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_PROFILE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_PROFILE]
-      security:
-        - BearerAuth: []
     delete:
       tags: [Profile]
       summary: Delete profile
@@ -654,8 +612,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_PROFILE]
       x-cache: [SCOS_ORGANIZATION_PROFILE]
-      security:
-        - BearerAuth: []
 
   /v1/profiles/{id}/enable:
     put:
@@ -676,8 +632,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_PROFILE]
       x-cache: [SCOS_ORGANIZATION_PROFILE]
-      security:
-        - BearerAuth: []
 
   /v1/profiles/{id}/disable:
     put:
@@ -698,8 +652,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_PROFILE]
       x-cache: [SCOS_ORGANIZATION_PROFILE]
-      security:
-        - BearerAuth: []
 
   /v1/profiles/{id}/resources:
     get:
@@ -725,8 +677,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_PROFILE]
       x-cache: [SCOS_ORGANIZATION_PROFILE]
-      security:
-        - BearerAuth: []
     put:
       tags: [Profile]
       summary: Update resources in profile
@@ -752,8 +702,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_PROFILE]
       x-cache: [SCOS_ORGANIZATION_PROFILE, SCOS_ORGANIZATION_LOGIN_INFO]
-      security:
-        - BearerAuth: []
 
   /v1/resources:
     get:
@@ -780,15 +728,60 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_RESOURCE]
       x-cache: [SCOS_ORGANIZATION_RESOURCE]
-      security:
-        - BearerAuth: []
+
+  /v1/systems:
+    get:
+      tags: [System]
+      summary: Get all systems
+      description: UC-158 - Lista paginada dos sistemas externos autorizados a usar a central de permissões. Somente leitura - cadastro via scos-registry (gRPC). SECRET_KEY nunca é retornada
+      operationId: getAllSystems
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/systemStatusFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllSystemsResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_SYSTEM]
+      x-cache: [SCOS_ORGANIZATION_SYSTEM]
+
+  /v1/systems/{id}:
+    get:
+      tags: [System]
+      summary: Get system by id
+      description: UC-159 - Retorna o detalhe de um sistema externo cadastrado. SECRET_KEY nunca é retornada
+      operationId: getSystemById
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idSystem'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSystemResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_SYSTEM]
+      x-cache: [SCOS_ORGANIZATION_SYSTEM]
 
 components:
   securitySchemes:
     BearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
   parameters:
     idEmployee:
       name: employeeId
@@ -847,6 +840,21 @@ components:
       required: false
       schema:
         type: boolean
+    systemStatusFilter:
+      name: status
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/SystemStatus'
+    idSystem:
+      name: id
+      in: path
+      required: true
+      description: Identificador do sistema (UUID)
+      schema:
+        type: string
+        format: uuid
+      x-jdempotentrequestpayload: true
   schemas:
     LoginStatus:
       type: string
@@ -854,13 +862,54 @@ components:
         - ACTIVE
         - BLOCKED
         - INACTIVE
-        - PENDING
     LoginType:
       type: string
       enum:
         - EMPLOYEE
         - EXTERNAL
         - SERVICE
+    SystemStatus:
+      type: string
+      enum:
+        - ACTIVE
+        - INACTIVE
+    System:
+      type: object
+      description: SECRET_KEY nunca é exposta via REST - cadastro e rotação de chave são feitos via scos-registry (gRPC)
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        code:
+          type: string
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/SystemStatus'
+        version:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    GetSystemResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/System'
+    GetAllSystemsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/System'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
     LoginSummary:
       type: object
       properties:

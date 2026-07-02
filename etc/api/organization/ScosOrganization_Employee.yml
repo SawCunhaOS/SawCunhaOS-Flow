@@ -50,8 +50,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE]
-      security:
-        - BearerAuth: []
     post:
       tags: [Employee]
       summary: Create an employee
@@ -79,10 +77,43 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE]
-      security:
-        - BearerAuth: []
 
-  /v1/employees/{id}:
+  /v1/employees/rehire:
+    post:
+      tags: [Employee]
+      summary: Rehire employee
+      description: >-
+        UC-155 - Recontrata um funcionário localizado pelo CPF, cujo status atual é INACTIVE. Reativa a linha existente (INACTIVE→ACTIVE) - não cria um EMPLOYEE novo, preservando EMPLOYEE_ID, TAX_IDENTIFIER e EMAIL originais.
+        Empresa, cargo, supervisor e tipo de contrato podem mudar em relação ao vínculo anterior. reasonPositionChangeId é sempre obrigatório - gera nova linha em EmployeePositionHistory mesmo quando o cargo não muda, fechando a linha antiga via TRG_CLOSE_PREVIOUS_POSITION.
+        Retorna 4XX se não existir funcionário INACTIVE com este CPF (nunca existiu, ou o CPF pertence a um funcionário ACTIVE/DISABLED)
+      operationId: rehireEmployee
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RehireEmployeeRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEmployeeResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [REHIRE_EMPLOYEE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_REHIRE
+        ttl: 1
+      x-cache: [SCOS_ORGANIZATION_EMPLOYEE, SCOS_ORGANIZATION_EMPLOYEE_POSITION_HISTORY, SCOS_ORGANIZATION_LOGIN_INFO]
+
     get:
       tags: [Employee]
       summary: Get employee by id
@@ -105,8 +136,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE]
-      security:
-        - BearerAuth: []
     put:
       tags: [Employee]
       summary: Update employee
@@ -135,8 +164,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE]
-      security:
-        - BearerAuth: []
   /v1/employees/{id}/enable:
     put:
       tags: [Employee]
@@ -165,8 +192,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_EMPLOYEE]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{id}/disable:
     put:
@@ -196,8 +221,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_EMPLOYEE]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE, SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{id}/block:
     put:
@@ -228,8 +251,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [BLOCK_EMPLOYEE]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE, SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{id}/unblock:
     put:
@@ -259,8 +280,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UNBLOCK_EMPLOYEE]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{id}/status-history:
     get:
@@ -286,8 +305,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE_STATUS_HISTORY]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_STATUS_HISTORY]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{id}/transfer:
     patch:
@@ -315,8 +332,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [TRANSFER_EMPLOYEE]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE, SCOS_ORGANIZATION_LOGIN_INFO]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{id}/hierarchy:
     get:
@@ -341,8 +356,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{id}/subordinates:
     get:
@@ -369,8 +382,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{id}/position-history:
     get:
@@ -396,8 +407,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE_POSITION_HISTORY]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_POSITION_HISTORY]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{employeeId}/contacts:
     get:
@@ -423,8 +432,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE_CONTACT]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_CONTACT]
-      security:
-        - BearerAuth: []
     post:
       tags: [Employee Contact]
       summary: Create an employee contact
@@ -453,8 +460,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_CONTACT
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_CONTACT, SCOS_ORGANIZATION_EMPLOYEE]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{employeeId}/contacts/{id}:
     get:
@@ -480,8 +485,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE_CONTACT]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_CONTACT]
-      security:
-        - BearerAuth: []
     put:
       tags: [Employee Contact]
       summary: Update employee contact
@@ -508,8 +511,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_EMPLOYEE_CONTACT]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_CONTACT, SCOS_ORGANIZATION_EMPLOYEE]
-      security:
-        - BearerAuth: []
     delete:
       tags: [Employee Contact]
       summary: Delete employee contact
@@ -529,8 +530,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_EMPLOYEE_CONTACT]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_CONTACT, SCOS_ORGANIZATION_EMPLOYEE]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{employeeId}/addresses:
     get:
@@ -556,8 +555,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE_ADDRESS]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_ADDRESS]
-      security:
-        - BearerAuth: []
     post:
       tags: [Employee Address]
       summary: Create an employee address
@@ -586,8 +583,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_ADDRESS
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{employeeId}/addresses/{id}:
     get:
@@ -613,8 +608,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE_ADDRESS]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_ADDRESS]
-      security:
-        - BearerAuth: []
     put:
       tags: [Employee Address]
       summary: Update employee address
@@ -641,8 +634,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_EMPLOYEE_ADDRESS]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE]
-      security:
-        - BearerAuth: []
     delete:
       tags: [Employee Address]
       summary: Delete employee address
@@ -662,8 +653,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_EMPLOYEE_ADDRESS]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_ADDRESS, SCOS_ORGANIZATION_EMPLOYEE]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{employeeId}/work-schedule:
     get:
@@ -691,8 +680,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE_WORK_SCHEDULE]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_WORK_SCHEDULE]
-      security:
-        - BearerAuth: []
     post:
       tags: [Employee Work Schedule]
       summary: Create employee work schedule
@@ -721,8 +708,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_WORK_SCHEDULE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_WORK_SCHEDULE]
-      security:
-        - BearerAuth: []
 
   /v1/employees/{employeeId}/work-schedule/{dayOfWeek}:
     put:
@@ -751,8 +736,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_EMPLOYEE_WORK_SCHEDULE]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_WORK_SCHEDULE]
-      security:
-        - BearerAuth: []
     delete:
       tags: [Employee Work Schedule]
       summary: Delete employee work schedule
@@ -772,15 +755,11 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_EMPLOYEE_WORK_SCHEDULE]
       x-cache: [SCOS_ORGANIZATION_EMPLOYEE_WORK_SCHEDULE]
-      security:
-        - BearerAuth: []
 
 components:
   securitySchemes:
     BearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
   parameters:
     idEmployee:
       name: employeeId
@@ -1075,6 +1054,59 @@ components:
           format: int64
           description: Motivo da transferência. Sempre obrigatório - gera nova linha em EmployeePositionHistory
           x-required-message: SCOS-003
+    RehireEmployeeRequest:
+      required: [taxIdentifier, companyId, positionId, contractType, reasonActivateId, reasonPositionChangeId]
+      type: object
+      description: >-
+        Localiza o funcionário pelo CPF - deve existir exatamente um EMPLOYEE com este taxIdentifier em status INACTIVE.
+        companyId/positionId/contractType são obrigatórios mesmo se forem os mesmos de antes de sair - a recontratação não herda valores implicitamente
+      properties:
+        taxIdentifier:
+          type: string
+          description: CPF do funcionário a recontratar. Localiza o EMPLOYEE - não é possível recontratar por EMPLOYEE_ID direto
+          x-required-message: SCOS-003
+          x-empty-message: SCOS-001
+          x-jdempotentrequestpayload: true
+          x-is-cpf: true
+        companyId:
+          type: integer
+          format: int64
+          description: Empresa ou filial de retorno. Pode ser igual ou diferente da anterior
+          x-required-message: SCOS-003
+        positionId:
+          type: integer
+          format: int64
+          description: Cargo de retorno. Pode ser igual ou diferente do anterior
+          x-required-message: SCOS-003
+        supervisorId:
+          type: integer
+          format: int64
+          description: Novo supervisor direto. Opcional - se omitido, funcionário volta sem supervisor definido, não herda o supervisor antigo
+        contractType:
+          allOf:
+            - $ref: '#/components/schemas/EmployeeContractType'
+          x-required-message: SCOS-003
+        probationEndDate:
+          type: string
+          format: date
+          description: Novo fim de período de experiência, se aplicável ao contrato. Não herda o valor anterior
+        dateOfRehire:
+          type: string
+          format: date
+          description: Nova data de contratação (DATE_OF_HIRING). Se omitido, mantém a data original do primeiro vínculo
+        reasonActivateId:
+          type: integer
+          format: int64
+          description: Motivo da reativação (INACTIVE→ACTIVE em EmployeeStatusHistory). Referencia ReasonActivate com entityType=EMPLOYEE
+          x-required-message: SCOS-003
+        reasonPositionChangeId:
+          type: integer
+          format: int64
+          description: Motivo da mudança de cargo. Sempre obrigatório - gera nova linha em EmployeePositionHistory mesmo se companyId/positionId não mudarem
+          x-required-message: SCOS-003
+        observation:
+          type: string
+          description: Complemento textual livre sobre a recontratação, gravado em EmployeeStatusHistory.observation
     EmployeeContact:
       type: object
       properties:

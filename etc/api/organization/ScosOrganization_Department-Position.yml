@@ -46,8 +46,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_DEPARTMENT]
       x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
-      security:
-        - BearerAuth: []
     post:
       tags: [Department]
       summary: Create a department
@@ -75,8 +73,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
-      security:
-        - BearerAuth: []
 
   /v1/departments/{id}:
     get:
@@ -101,8 +97,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_DEPARTMENT]
       x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
-      security:
-        - BearerAuth: []
     put:
       tags: [Department]
       summary: Update department
@@ -131,12 +125,12 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
-      security:
-        - BearerAuth: []
     delete:
       tags: [Department]
       summary: Delete department
-      description: UC-027 - Exclusão lógica. Registro permanece com status DISABLED
+      description: >-
+        UC-027 - Exclusão lógica: seta ACTIVE=false. Equivalente a PUT /v1/departments/{id}/disable - mantido como DELETE por semântica REST convencional para quem espera esse verbo.
+        SCOS_DEPARTMENT não tem campo STATUS/DISABLED (isso é exclusivo de Company/Employee/Login) - aqui o mecanismo é só o booleano ACTIVE
       operationId: deleteDepartment
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -151,8 +145,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_DEPARTMENT]
       x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
-      security:
-        - BearerAuth: []
 
   /v1/departments/{id}/enable:
     put:
@@ -173,8 +165,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_DEPARTMENT]
       x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
-      security:
-        - BearerAuth: []
 
   /v1/departments/{id}/disable:
     put:
@@ -195,8 +185,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_DEPARTMENT]
       x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
-      security:
-        - BearerAuth: []
 
   /v1/positions:
     get:
@@ -223,8 +211,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_POSITION]
       x-cache: [SCOS_ORGANIZATION_POSITION]
-      security:
-        - BearerAuth: []
     post:
       tags: [Position]
       summary: Create a position
@@ -252,8 +238,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_POSITION]
-      security:
-        - BearerAuth: []
 
   /v1/positions/{id}:
     get:
@@ -278,8 +262,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_POSITION]
       x-cache: [SCOS_ORGANIZATION_POSITION]
-      security:
-        - BearerAuth: []
     put:
       tags: [Position]
       summary: Update position
@@ -308,12 +290,12 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_POSITION]
-      security:
-        - BearerAuth: []
     delete:
       tags: [Position]
       summary: Delete position
-      description: UC-034 - Exclusão lógica. Registro permanece com status DISABLED
+      description: >-
+        UC-034 - Exclusão lógica: seta ACTIVE=false. Equivalente a PUT /v1/positions/{id}/disable - mantido como DELETE por semântica REST convencional para quem espera esse verbo.
+        SCOS_POSITION não tem campo STATUS/DISABLED (isso é exclusivo de Company/Employee/Login) - aqui o mecanismo é só o booleano ACTIVE
       operationId: deletePosition
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -328,8 +310,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_POSITION]
       x-cache: [SCOS_ORGANIZATION_POSITION]
-      security:
-        - BearerAuth: []
 
   /v1/positions/{id}/enable:
     put:
@@ -350,8 +330,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_POSITION]
       x-cache: [SCOS_ORGANIZATION_POSITION]
-      security:
-        - BearerAuth: []
 
   /v1/positions/{id}/disable:
     put:
@@ -372,8 +350,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_POSITION]
       x-cache: [SCOS_ORGANIZATION_POSITION]
-      security:
-        - BearerAuth: []
 
   /v1/reason-position-change:
     get:
@@ -398,8 +374,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_POSITION_CHANGE]
       x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
-      security:
-        - BearerAuth: []
     post:
       tags: [Reason Position Change]
       summary: Create a reason position change
@@ -427,8 +401,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_POSITION_CHANGE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-position-change/{id}:
     get:
@@ -453,8 +425,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_POSITION_CHANGE]
       x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
-      security:
-        - BearerAuth: []
     put:
       tags: [Reason Position Change]
       summary: Update reason position change
@@ -483,8 +453,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_POSITION_CHANGE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-position-change/{id}/enable:
     put:
@@ -505,8 +473,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_REASON_POSITION_CHANGE]
       x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-position-change/{id}/disable:
     put:
@@ -527,8 +493,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_REASON_POSITION_CHANGE]
       x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
-      security:
-        - BearerAuth: []
 
   /v1/positions/{positionId}/work-schedule:
     get:
@@ -555,8 +519,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_POSITION_WORK_SCHEDULE]
       x-cache: [SCOS_ORGANIZATION_POSITION_WORK_SCHEDULE]
-      security:
-        - BearerAuth: []
     post:
       tags: [Position]
       summary: Create position work schedule
@@ -585,8 +547,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_POSITION_WORK_SCHEDULE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_POSITION_WORK_SCHEDULE]
-      security:
-        - BearerAuth: []
 
   /v1/positions/{positionId}/work-schedule/{dayOfWeek}:
     put:
@@ -615,8 +575,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_POSITION_WORK_SCHEDULE]
       x-cache: [SCOS_ORGANIZATION_POSITION_WORK_SCHEDULE]
-      security:
-        - BearerAuth: []
     delete:
       tags: [Position]
       summary: Delete position work schedule
@@ -636,15 +594,11 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_POSITION_WORK_SCHEDULE]
       x-cache: [SCOS_ORGANIZATION_POSITION_WORK_SCHEDULE]
-      security:
-        - BearerAuth: []
 
 components:
   securitySchemes:
     BearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
   parameters:
     activeFilter:
       name: active

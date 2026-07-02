@@ -48,8 +48,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_ACTIVATE]
       x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
-      security:
-        - BearerAuth: []
     post:
       tags: [ReasonActivate]
       summary: Create a ReasonActivate entry
@@ -77,8 +75,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ACTIVATE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-activate/{id}:
     get:
@@ -103,8 +99,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_ACTIVATE]
       x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
-      security:
-        - BearerAuth: []
     put:
       tags: [ReasonActivate]
       summary: Update activation reason
@@ -133,8 +127,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ACTIVATE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-activate/{id}/enable:
     put:
@@ -155,8 +147,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_REASON_ACTIVATE]
       x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-activate/{id}/disable:
     put:
@@ -177,8 +167,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_REASON_ACTIVATE]
       x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-inactivate:
     get:
@@ -204,8 +192,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_INACTIVATE]
       x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
-      security:
-        - BearerAuth: []
     post:
       tags: [ReasonInactivate]
       summary: Create a ReasonInactivate entry
@@ -233,8 +219,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_INACTIVATE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-inactivate/{id}:
     get:
@@ -259,8 +243,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_INACTIVATE]
       x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
-      security:
-        - BearerAuth: []
     put:
       tags: [ReasonInactivate]
       summary: Update inactivation reason
@@ -289,8 +271,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_INACTIVATE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-inactivate/{id}/enable:
     put:
@@ -311,8 +291,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_REASON_INACTIVATE]
       x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-inactivate/{id}/disable:
     put:
@@ -333,8 +311,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_REASON_INACTIVATE]
       x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-disable:
     get:
@@ -360,8 +336,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_DISABLE]
       x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
-      security:
-        - BearerAuth: []
     post:
       tags: [ReasonDisable]
       summary: Create a ReasonDisable entry
@@ -389,8 +363,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_DISABLE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-disable/{id}:
     get:
@@ -415,8 +387,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_DISABLE]
       x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
-      security:
-        - BearerAuth: []
     put:
       tags: [ReasonDisable]
       summary: Update disable reason
@@ -445,8 +415,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_DISABLE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-disable/{id}/enable:
     put:
@@ -467,8 +435,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_REASON_DISABLE]
       x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-disable/{id}/disable:
     put:
@@ -489,8 +455,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_REASON_DISABLE]
       x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-enable:
     get:
@@ -516,8 +480,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_ENABLE]
       x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
-      security:
-        - BearerAuth: []
     post:
       tags: [ReasonEnable]
       summary: Create a ReasonEnable entry
@@ -545,8 +507,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ENABLE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-enable/{id}:
     get:
@@ -571,8 +531,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_ENABLE]
       x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
-      security:
-        - BearerAuth: []
     put:
       tags: [ReasonEnable]
       summary: Update enable reason
@@ -601,8 +559,6 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ENABLE
         ttl: 1
       x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-enable/{id}/enable:
     put:
@@ -623,8 +579,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_REASON_ENABLE]
       x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
-      security:
-        - BearerAuth: []
 
   /v1/reason-enable/{id}/disable:
     put:
@@ -645,15 +599,11 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_REASON_ENABLE]
       x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
-      security:
-        - BearerAuth: []
 
 components:
   securitySchemes:
     BearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
   parameters:
     entityTypeFilter:
       name: entityType

@@ -41,8 +41,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_CONFIGURATION]
       x-cache: [SCOS_ORGANIZATION_CONFIGURATION]
-      security:
-        - BearerAuth: []
 
   /v1/configurations/{id}:
     get:
@@ -67,8 +65,6 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_CONFIGURATION]
       x-cache: [SCOS_ORGANIZATION_CONFIGURATION]
-      security:
-        - BearerAuth: []
     put:
       tags: [Configuration]
       summary: Update configuration
@@ -94,15 +90,11 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_CONFIGURATION]
       x-cache: [SCOS_ORGANIZATION_CONFIGURATION]
-      security:
-        - BearerAuth: []
 
 components:
   securitySchemes:
     BearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
+      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
   parameters:
     idConfiguration:
       name: id

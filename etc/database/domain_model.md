@@ -198,6 +198,7 @@ erDiagram
         VARCHAR(255)   LOGIN            "NOT NULL"
         VARCHAR(50)    STATUS           "NOT NULL --ACTIVE/INACTIVE/BLOCKED"
         VARCHAR(50)    TYPE             "NOT NULL --EMPLOYEE/EXTERNAL/SERVICE"
+        TIMESTAMPTZ  LAST_USED_AT     "NULL"
         TIMESTAMPTZ  CREATED_AT       "NOT NULL"
         TIMESTAMPTZ  UPDATED_AT       "NOT NULL"
         VARCHAR(255)   USER_AT          "NOT NULL"
@@ -569,6 +570,8 @@ erDiagram
 
 **Restrição de integridade:** quando preenchido, `PROBATION_END_DATE` deve ser posterior a `DATE_OF_HIRING`.
 
+**Recontratação (rehire):** `TAX_IDENTIFIER` e `EMAIL` continuam com `UK` de coluna inteira — nenhuma mudança de schema aqui. A recontratação **reativa a linha `INACTIVE` existente** (mesmo `EMPLOYEE_ID`, mesmo CPF/e-mail) em vez de inserir um funcionário novo, então a unicidade nunca é violada — quem resolve isso é a camada de aplicação (endpoint dedicado de rehire, ver `ScosOrganization_Employee.yml`), não o banco. `POSITION_ID`, `COMPANY_ID` e `CONTRACT_TYPE` podem ser atualizados nesse fluxo (a pessoa pode voltar em condições diferentes) — isso é um `UPDATE` simples na linha existente, mais uma nova linha em `EMPLOYEE_POSITION_HISTORY` (mecanismo já existente, `TRG_CLOSE_PREVIOUS_POSITION` fecha a linha anterior automaticamente) e uma nova linha em `EMPLOYEE_STATUS_HISTORY` (`INACTIVE → ACTIVE`, via `SCOS_REASON_ACTIVATE`).
+
 > **Check:** `CHK_EMPLOYEE_STATUS` trava `STATUS` e `CHK_EMPLOYEE_CONTRACT_TYPE` trava `CONTRACT_TYPE`, ambos ao vocabulário fechado (ver seção Checks de Domínio)
 
 ---
@@ -852,11 +855,13 @@ erDiagram
 | LOGIN | VARCHAR(255) | NOT NULL | E-mail ou username utilizado para acesso |
 | STATUS | VARCHAR(50) | NOT NULL | Situação atual. Cache mantido por trigger a partir de `SCOS_LOGIN_STATUS_HISTORY` — não atualizar diretamente, inserir no histórico |
 | TYPE | VARCHAR(50) | NOT NULL | Tipo do usuário: `EMPLOYEE`, `EXTERNAL` ou `SERVICE` |
+| LAST_USED_AT | TIMESTAMPTZ | NULL | Data e hora do último uso do login. `NULL` = nunca usado (ex: recém-criado). Base para a auto-inativação por desuso (`LOGIN_INACTIVITY_TIMEOUT_DAYS`) — **mecanismo de atualização (endpoint dedicado, evento de Outbox, etc.) ainda não definido**, coluna adicionada só para destravar o schema |
 | CREATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora em que o registro foi criado |
 | UPDATED_AT | TIMESTAMPTZ | NOT NULL | Data e hora da última atualização do registro |
 | USER_AT | VARCHAR(255) | NOT NULL | Login do usuário que realizou a última alteração |
 
 > **Check:** `CHK_LOGIN_STATUS` e `CHK_LOGIN_TYPE` travam `STATUS`/`TYPE` ao vocabulário fechado (ver seção Checks de Domínio)
+> **Índice:** `IDX_LOGIN_LAST_USED_AT` em `(LAST_USED_AT) WHERE STATUS = 'ACTIVE'` — suporta o job de auto-inativação varrendo só logins ativos com uso antigo (ver seção Índices de Performance)
 
 ---
 
@@ -1585,6 +1590,7 @@ Resumo de todos os índices adicionados nesta atualização. O índice antigo `I
 | SCOS_EMPLOYEE_POSITION_HISTORY | `(EMPLOYEE_ID) WHERE END_DATE IS NULL` | B-tree único, parcial | Cargo atual do funcionário — `UNIQUE` garante nunca haver 2 linhas abertas ao mesmo tempo |
 | SCOS_EMPLOYEE_POSITION_HISTORY | `(POSITION_ID)` | B-tree | Consulta reversa: quem já ocupou este cargo, histórico ou atual |
 | SCOS_LOGIN_PROFILE | `(PROFILE_ID)` | B-tree | Consulta reversa: quais logins têm este perfil como adicional |
+| SCOS_LOGIN | `(LAST_USED_AT) WHERE STATUS = 'ACTIVE'` | B-tree parcial | Suporte ao job de auto-inativação por desuso — varre só logins ativos, ignora quem já está `INACTIVE`/`BLOCKED` |
 
 **Deliberadamente não incluídos:** índice em `REASON_ACTIVATE_ID` / `REASON_INACTIVATE_ID` / `REASON_DISABLE_ID` / `REASON_ENABLE_ID` dentro das tabelas de histórico de status, e em `REASON_POSITION_CHANGE_ID` em `SCOS_EMPLOYEE_POSITION_HISTORY`. Fariam sentido **se** surgir necessidade de relatório por motivo (ex: "quantidade de desligamentos por motivo no trimestre") — nesse caso, usar índice parcial (`WHERE reason_x_id IS NOT NULL`) para manter o tamanho baixo. Não foram adicionados especulativamente por falta de visibilidade sobre esse padrão de consulta; recomenda-se monitorar via `pg_stat_user_tables`/`pg_stat_statements` antes de criar.
 
