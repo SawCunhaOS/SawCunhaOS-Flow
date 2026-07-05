@@ -11,7 +11,7 @@
  *
  */
 
-package br.com.sawcunhaos.organization.api.utils;
+package br.com.sawcunhaos.organization.application.usecase.utils;
 
 import br.com.sawcunhaos.foundation.utils.sort.PropertiesOrder;
 import br.com.sawcunhaos.foundation.utils.utils.PaginationUtils;
@@ -27,8 +27,6 @@ import java.util.Objects;
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public final class PaginatioUtils {
 
-
-
     public static Pageable createPageable(PaginationFilter paginationFilter, PropertiesOrder propertiesOrder) {
         int page = Objects.nonNull(paginationFilter.page()) ? paginationFilter.page() : 1;
         int sizePerPage = Objects.nonNull(paginationFilter.sizePerPage()) ? paginationFilter.sizePerPage() : 10;
@@ -40,6 +38,18 @@ public final class PaginatioUtils {
                 Sort.Direction.valueOf(direction),
                 paginationFilter.order(),
                 propertiesOrder
+        );
+    }
+
+    public static Pageable createPageable(PaginationFilter paginationFilter) {
+        int page = Objects.nonNull(paginationFilter.page()) ? paginationFilter.page() : 1;
+        int sizePerPage = Objects.nonNull(paginationFilter.sizePerPage()) ? paginationFilter.sizePerPage() : 10;
+        String direction = Objects.nonNull(paginationFilter.direction()) ? paginationFilter.direction().getValue() : "ASC";
+
+        return PaginationUtils.createPageable(
+                page,
+                sizePerPage,
+                direction
         );
     }
 

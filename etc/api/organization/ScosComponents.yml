@@ -252,8 +252,8 @@ components:
           format: int32
           maximum: 100
           minimum: 1
-          x-min-message: SCOS-002
-          x-max-message: SCOS-004
+          x-min-message: SCOS_VALIDATION_002
+          x-max-message: SCOS_VALIDATION_004
           default: 10
         direction:
           $ref: '#/components/schemas/Direction'

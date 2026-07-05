@@ -17,7 +17,8 @@ class MessageConfiguration {
 			"classpath:messages_exception",
 			"classpath:messages_security",
             "classpath:scos_message_organization",
-            "classpath:scos_utils_messages"
+            "classpath:scos_utils_messages",
+            "classpath:key_configuration_description"
 		);
 		messageSource.setDefaultEncoding("UTF-8");
 		messageSource.setCacheSeconds(10);

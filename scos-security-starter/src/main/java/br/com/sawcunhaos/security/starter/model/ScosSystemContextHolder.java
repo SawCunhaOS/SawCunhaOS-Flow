@@ -27,7 +27,7 @@ public final class ScosSystemContextHolder {
     public static ScosSystemContext get() {
         ScosSystemContext ctx = context;
         if (ctx == null) {
-            throw new ScosSecurityException(SecurityExceptionCode.AUTH_008);
+            throw new ScosSecurityException(SecurityExceptionCode.SCOS_AUTH_005);
         }
         return ctx;
     }

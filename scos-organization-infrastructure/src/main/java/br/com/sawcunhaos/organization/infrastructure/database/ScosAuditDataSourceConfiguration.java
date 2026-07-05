@@ -1,3 +1,16 @@
+
+/*
+ *
+ *  * Copyright 2026 SawCunha Open System - SawCunhaOS-Organization
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
 package br.com.sawcunhaos.organization.infrastructure.database;
 
 import br.com.sawcunhaos.foundation.audit.service.ScosHibernateAuditListener;
@@ -16,7 +29,7 @@ import org.springframework.context.annotation.DependsOn;
 
 @Configuration(proxyBeanMethods = false)
 @DependsOn("ScosEntityManagerFactory")
-@ConditionalOnProperty(prefix="SawCunhaOS.audit", name = "enable", havingValue = "true")
+@ConditionalOnProperty(prefix="scos.audit", name = "enabled", havingValue = "true")
 final class ScosAuditDataSourceConfiguration {
 
     @Autowired
@@ -37,5 +50,6 @@ final class ScosAuditDataSourceConfiguration {
         registry.getEventListenerGroup(EventType.POST_INSERT).appendListener(listener);
         registry.getEventListenerGroup(EventType.POST_UPDATE).appendListener(listener);
         registry.getEventListenerGroup(EventType.POST_DELETE).appendListener(listener);
+        registry.getEventListenerGroup(EventType.POST_LOAD).appendListener(listener);
     }
 }

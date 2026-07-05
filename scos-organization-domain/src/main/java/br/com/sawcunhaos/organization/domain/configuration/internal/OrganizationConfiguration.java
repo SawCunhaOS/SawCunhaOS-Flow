@@ -17,6 +17,8 @@ import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -32,14 +34,18 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "SCOS_CONFIGURATION")
-@Auditable
-public class PartnersConfiguration extends BaseEntity {
+@Auditable(auditRead = true)
+public class OrganizationConfiguration extends BaseEntity {
 
     @Id
     @Column(name = "CONFIGURATION_ID")
-    private String id;
+    @Enumerated(EnumType.STRING)
+    private ConfigurationKey id;
     @Column(name = "VALUE")
     private String value;
     @Column(name = "TYPE")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private ConfigurationType type;
+
+
 }

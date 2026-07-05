@@ -30,6 +30,10 @@ import lombok.Getter;
  */
 public enum ExceptionCodeError implements ExceptionCode {
 
+    //Configuration
+    SCOS_CONFIGURATION_001("SCOS_CONFIGURATION_001"),
+    SCOS_CONFIGURATION_002("SCOS_CONFIGURATION_002"),
+
     // Department
     SCOS_DEPARTMENT_001("SCOS_DEPARTMENT_001"),
     SCOS_DEPARTMENT_002("SCOS_DEPARTMENT_002"),
@@ -58,12 +62,6 @@ public enum ExceptionCodeError implements ExceptionCode {
     SCOS_COMPANY_005("SCOS_COMPANY_005"),
     SCOS_COMPANY_006("SCOS_COMPANY_006"),
     SCOS_COMPANY_007("SCOS_COMPANY_007"),
-
-    // Configuration
-    /** Configuração não encontrada pelo id informado. HTTP 400. */
-    SCOS_CONFIGURATION_001("SCOS_CONFIGURATION_001"),
-    /** Valor incompatível com o tipo declarado da configuração. HTTP 400. */
-    SCOS_CONFIGURATION_002("SCOS_CONFIGURATION_002"),
 
     // Employee
     SCOS_EMPLOYEE_001("SCOS_EMPLOYEE_001"),

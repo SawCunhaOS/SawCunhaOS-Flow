@@ -946,30 +946,30 @@ components:
       properties:
         name:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         nameTreatment:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         taxIdentifier:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
           x-is-cpf: true
         email:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         birthDate:
           type: string
           format: date
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         dateOfHiring:
           type: string
           format: date
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         observation:
           type: string
         supervisorId:
@@ -978,15 +978,15 @@ components:
         companyId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         positionId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         contractType:
           allOf:
             - $ref: '#/components/schemas/EmployeeContractType'
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         probationEndDate:
           type: string
           format: date
@@ -994,37 +994,37 @@ components:
           type: integer
           format: int64
           description: Motivo da criação (primeira linha de status ACTIVE em EmployeeStatusHistory). Referencia ReasonActivate com entityType=EMPLOYEE
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
     UpdateEmployeeRequest:
       required: [name, nameTreatment, email, birthDate, dateOfHiring, contractType]
       type: object
       properties:
         name:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         nameTreatment:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         email:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         birthDate:
           type: string
           format: date
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         dateOfHiring:
           type: string
           format: date
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         observation:
           type: string
         contractType:
           allOf:
             - $ref: '#/components/schemas/EmployeeContractType'
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         probationEndDate:
           type: string
           format: date
@@ -1053,7 +1053,7 @@ components:
           type: integer
           format: int64
           description: Motivo da transferência. Sempre obrigatório - gera nova linha em EmployeePositionHistory
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
     RehireEmployeeRequest:
       required: [taxIdentifier, companyId, positionId, contractType, reasonActivateId, reasonPositionChangeId]
       type: object
@@ -1064,20 +1064,20 @@ components:
         taxIdentifier:
           type: string
           description: CPF do funcionário a recontratar. Localiza o EMPLOYEE - não é possível recontratar por EMPLOYEE_ID direto
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
           x-is-cpf: true
         companyId:
           type: integer
           format: int64
           description: Empresa ou filial de retorno. Pode ser igual ou diferente da anterior
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         positionId:
           type: integer
           format: int64
           description: Cargo de retorno. Pode ser igual ou diferente do anterior
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         supervisorId:
           type: integer
           format: int64
@@ -1085,7 +1085,7 @@ components:
         contractType:
           allOf:
             - $ref: '#/components/schemas/EmployeeContractType'
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         probationEndDate:
           type: string
           format: date
@@ -1098,12 +1098,12 @@ components:
           type: integer
           format: int64
           description: Motivo da reativação (INACTIVE→ACTIVE em EmployeeStatusHistory). Referencia ReasonActivate com entityType=EMPLOYEE
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         reasonPositionChangeId:
           type: integer
           format: int64
           description: Motivo da mudança de cargo. Sempre obrigatório - gera nova linha em EmployeePositionHistory mesmo se companyId/positionId não mudarem
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         observation:
           type: string
           description: Complemento textual livre sobre a recontratação, gravado em EmployeeStatusHistory.observation
@@ -1139,12 +1139,12 @@ components:
         contactTypeId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
         phone:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
     UpdateEmployeeContactRequest:
       required: [contactTypeId, phone]
@@ -1153,11 +1153,11 @@ components:
         contactTypeId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         phone:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
     EmployeeAddresses:
       type: object
       properties:
@@ -1214,24 +1214,24 @@ components:
         addressTypeId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
         number:
           type: string
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
         complement:
           type: string
         latitude:
           type: string
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         longitude:
           type: string
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         addressId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
     UpdateEmployeeAddressRequest:
       required: [addressTypeId, number, latitude, longitude]
@@ -1240,18 +1240,18 @@ components:
         addressTypeId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         number:
           type: string
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         complement:
           type: string
         latitude:
           type: string
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         longitude:
           type: string
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
     EmployeeStatusTransitionRequest:
       required: [reasonId]
       type: object
@@ -1262,7 +1262,7 @@ components:
           description: >-
             Motivo da transição. Referencia o catálogo Reason* correspondente à transição de domínio
             (enable→ReasonActivate, disable→ReasonInactivate, block→ReasonDisable, unblock→ReasonEnable)
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
         observation:
           type: string
@@ -1335,26 +1335,26 @@ components:
         dayOfWeek:
           allOf:
             - $ref: './ScosComponents.yml#/components/schemas/DayOfWeek'
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
         startTime:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         lunchStart:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           description: Deve ser posterior a startTime e anterior a lunchEnd - validado no use case, sem CHECK no banco
         lunchEnd:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           description: Deve ser posterior a lunchStart e anterior a endTime - validado no use case, sem CHECK no banco
         endTime:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
     UpdateEmployeeWorkScheduleRequest:
       required: [startTime, lunchStart, lunchEnd, endTime]
       type: object
@@ -1362,21 +1362,21 @@ components:
         startTime:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         lunchStart:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           description: Deve ser posterior a startTime e anterior a lunchEnd - validado no use case, sem CHECK no banco
         lunchEnd:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           description: Deve ser posterior a lunchStart e anterior a endTime - validado no use case, sem CHECK no banco
         endTime:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
 
 security:
   - BearerAuth: []

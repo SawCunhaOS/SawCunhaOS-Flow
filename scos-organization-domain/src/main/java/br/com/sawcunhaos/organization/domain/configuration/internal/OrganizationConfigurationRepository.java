@@ -14,16 +14,15 @@
 package br.com.sawcunhaos.organization.domain.configuration.internal;
 
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface PartnersConfigurationRepository extends BaseJpaRepository<PartnersConfiguration, String> {
+public interface OrganizationConfigurationRepository extends BaseJpaRepository<OrganizationConfiguration, String> {
 
-    Page<PartnersConfiguration> findAll(Pageable pageable);
+    List<OrganizationConfiguration> findAll();
 
-    Optional<PartnersConfiguration> findById(String id);
+    Optional<OrganizationConfiguration> findById(ConfigurationKey id);
 }

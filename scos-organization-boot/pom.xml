@@ -81,7 +81,7 @@
                         <configuration>
                             <additionalProperties>
                                 <!-- propriedades extras opcionais -->
-                                <java.version>${java.version}</java.version>
+                                <java.version>${java.version} - ${java.runtime.name}</java.version>
                             </additionalProperties>
                         </configuration>
                     </execution>

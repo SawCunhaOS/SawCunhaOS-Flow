@@ -652,13 +652,13 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         entityType:
           $ref: '#/components/schemas/ReasonEntityType'
     UpdateReasonActivateRequest:
@@ -667,12 +667,12 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         entityType:
           $ref: '#/components/schemas/ReasonEntityType'
     ReasonInactivate:
@@ -709,13 +709,13 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         entityType:
           $ref: '#/components/schemas/ReasonEntityType'
     UpdateReasonInactivateRequest:
@@ -724,12 +724,12 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         entityType:
           $ref: '#/components/schemas/ReasonEntityType'
     ReasonDisable:
@@ -766,13 +766,13 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         entityType:
           $ref: '#/components/schemas/ReasonEntityType'
     UpdateReasonDisableRequest:
@@ -781,12 +781,12 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         entityType:
           $ref: '#/components/schemas/ReasonEntityType'
     ReasonEnable:
@@ -823,13 +823,13 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         entityType:
           $ref: '#/components/schemas/ReasonEntityType'
     UpdateReasonEnableRequest:
@@ -838,12 +838,12 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         entityType:
           $ref: '#/components/schemas/ReasonEntityType'
 

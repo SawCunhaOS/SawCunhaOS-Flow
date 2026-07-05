@@ -51,6 +51,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: LAST_USED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
                   name: CREATED_AT
                   type: TIMESTAMPTZ
                   defaultValueComputed: NOW()

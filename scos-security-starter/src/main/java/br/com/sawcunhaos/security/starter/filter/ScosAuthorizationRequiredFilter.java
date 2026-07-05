@@ -51,8 +51,8 @@ public class ScosAuthorizationRequiredFilter implements Filter {
             ProblemDetail problem = ScosProblemDetails.enrich(
                     ScosProblemDetails.of(
                             HttpStatus.UNAUTHORIZED,
-                            SecurityExceptionCode.AUTH_005,
-                            localeService.getMessage(SecurityExceptionCode.AUTH_005.getCode()),
+                            SecurityExceptionCode.SCOS_AUTH_003,
+                            localeService.getMessage(SecurityExceptionCode.SCOS_AUTH_003.getCode()),
                             request.getRequestURI()
                     )
             );

@@ -41,6 +41,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Setter
@@ -68,6 +69,8 @@ public class Login extends BaseEntity {
     @Column(name = "TYPE")
     @Enumerated(EnumType.STRING)
     private LoginType type;
+    @Column(name = "LAST_USED_AT")
+    private LocalDateTime lastUsedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PROFILE_ID")

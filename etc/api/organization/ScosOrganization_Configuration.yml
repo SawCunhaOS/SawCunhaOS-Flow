@@ -18,6 +18,27 @@ tags:
     description: APIs para gestão das configurações gerais do sistema
 
 paths:
+  /v1/configurations/keys:
+    get:
+      tags: [ Configuration ]
+      summary: Get all Keys configurations
+      description: UC-160 - Lista todas as chaves de configurações disponivel no sistema.
+      operationId: getAllKeysConfigurations
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllKeysConfigurationsResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ GET_CONFIGURATION ]
   /v1/configurations:
     get:
       tags: [Configuration]
@@ -27,7 +48,6 @@ paths:
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
       responses:
         '200':
           description: OK
@@ -40,7 +60,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_CONFIGURATION]
-      x-cache: [SCOS_ORGANIZATION_CONFIGURATION]
 
   /v1/configurations/{id}:
     get:
@@ -64,7 +83,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_CONFIGURATION]
-      x-cache: [SCOS_ORGANIZATION_CONFIGURATION]
     put:
       tags: [Configuration]
       summary: Update configuration
@@ -89,7 +107,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_CONFIGURATION]
-      x-cache: [SCOS_ORGANIZATION_CONFIGURATION]
+      x-jdempotentresource:
+        cachePrefix: SCOS_CONFIGURATION_UPDATE_IDP
+        ttl: 1
 
 components:
   securitySchemes:
@@ -110,16 +130,31 @@ components:
       enum:
         - STRING
         - INTEGER
+        - NUMBER
         - BOOLEAN
         - JSON
+        - PASSWORD
     Configuration:
       type: object
       properties:
         id:
           type: string
           description: Chave identificadora - ex. TOKEN_EXPIRY_MINUTES
+        description:
+          type: string
         value:
           type: string
+        type:
+          $ref: '#/components/schemas/ConfigurationType'
+    KeyConfiguration:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Chave identificadora - ex. TOKEN_EXPIRY_MINUTES
+        description:
+          type: string
+          description: Descrição da chave
         type:
           $ref: '#/components/schemas/ConfigurationType'
     GetConfigurationResponse:
@@ -134,8 +169,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Configuration'
-        paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    GetAllKeysConfigurationsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyConfiguration'
     UpdateConfigurationRequest:
       required: [value]
       type: object
@@ -143,8 +183,8 @@ components:
         value:
           type: string
           description: Novo valor. Deve ser compatível com o tipo declarado da configuração
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
 
 security:

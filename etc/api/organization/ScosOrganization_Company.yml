@@ -1023,16 +1023,16 @@ components:
       properties:
         name:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         nameTreatment:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         taxIdentifier:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
           x-is-cnpj: true
           minLength: 14
@@ -1044,11 +1044,11 @@ components:
         foundationDate:
           type: string
           format: date
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         sectorOfActivity:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         observation:
           type: string
         parentCompanyId:
@@ -1059,7 +1059,7 @@ components:
           type: integer
           format: int64
           description: Motivo da criação (primeira linha de status ACTIVE em CompanyStatusHistory). Referencia ReasonActivate com entityType=COMPANY
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         legalNatureId:
           type: integer
           format: int64
@@ -1081,16 +1081,16 @@ components:
       properties:
         name:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         nameTreatment:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         taxIdentifier:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-is-cnpj: true
           minLength: 14
           maxLength: 14
@@ -1101,11 +1101,11 @@ components:
         foundationDate:
           type: string
           format: date
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         sectorOfActivity:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         observation:
           type: string
         legalNatureId:
@@ -1159,22 +1159,22 @@ components:
         contactTypeId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
         phone:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         email:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         responsiblePerson:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
     UpdateCompanyContactRequest:
       required: [contactTypeId, phone, email, responsiblePerson]
       type: object
@@ -1182,19 +1182,19 @@ components:
         contactTypeId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         phone:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         email:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         responsiblePerson:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
     CompanyAddresses:
       type: object
       properties:
@@ -1249,24 +1249,24 @@ components:
         addressTypeId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
         number:
           type: string
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
         complement:
           type: string
         latitude:
           type: number
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         longitude:
           type: number
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         addressId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
     UpdateCompanyAddressRequest:
       required: [addressTypeId, number, latitude, longitude]
@@ -1275,18 +1275,18 @@ components:
         addressTypeId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         number:
           type: string
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         complement:
           type: string
         latitude:
           type: number
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         longitude:
           type: number
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
     LegalNature:
       type: object
       properties:
@@ -1317,25 +1317,25 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
     UpdateLegalNatureRequest:
       required: [code, description]
       type: object
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
     Cnae:
       type: object
       properties:
@@ -1366,25 +1366,25 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
     UpdateCnaeRequest:
       required: [code, description]
       type: object
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
     CompanyCnaeSecondary:
       type: object
       properties:
@@ -1420,7 +1420,7 @@ components:
           description: >-
             Motivo da transição. Referencia o catálogo Reason* correspondente à transição de domínio
             (enable→ReasonActivate, disable→ReasonInactivate, block→ReasonDisable, unblock→ReasonEnable)
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
         observation:
           type: string

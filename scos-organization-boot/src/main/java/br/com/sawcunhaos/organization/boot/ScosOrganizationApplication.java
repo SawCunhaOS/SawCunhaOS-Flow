@@ -44,6 +44,7 @@ public class ScosOrganizationApplication {
         log.info("[SCOS] Aplicação : {}", buildProperties.getName());
         log.info("[SCOS] Versão    : {}", buildProperties.getVersion());
         log.info("[SCOS] Build     : {}", buildProperties.getTime());
+        log.info("[SCOS] Java      : {}", buildProperties.get("java.version"));
         log.info("[SCOS] ==========================================");
     }
 }

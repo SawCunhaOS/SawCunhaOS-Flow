@@ -389,30 +389,6 @@ paths:
       x-authorize: [DELETE_LOGIN_PROFILE]
       x-cache: [SCOS_ORGANIZATION_LOGIN_PROFILE]
 
-  /v1/logins/keycloak/{keycloakId}:
-    get:
-      tags: [Login]
-      summary: Get login by Keycloak ID
-      description: UC-061 - Busca o login pelo identificador do Keycloak. Logins com KEYCLOAK_ID nulo não são retornados
-      operationId: getLoginByKeycloakId
-      parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: '#/components/parameters/keycloakId'
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GetLoginResponse'
-        '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
-        '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [GET_LOGIN]
-      x-cache: [SCOS_ORGANIZATION_LOGIN]
-
   /v1/employees/{employeeId}/logins:
     get:
       tags: [Login]
@@ -1022,25 +998,25 @@ components:
       properties:
         login:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         profileId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         type:
           type: string
           description: Tipo EMPLOYEE deve ser criado via POST /v1/employees/{employeeId}/logins
           enum:
             - EXTERNAL
             - SERVICE
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         reasonActivateId:
           type: integer
           format: int64
           description: Motivo da criação (primeira linha de status ACTIVE em LoginStatusHistory). Referencia ReasonActivate com entityType=LOGIN
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
     CreateEmployeeLoginRequest:
       required: [login, profileId, reasonActivateId]
       type: object
@@ -1048,26 +1024,26 @@ components:
       properties:
         login:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         profileId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         reasonActivateId:
           type: integer
           format: int64
           description: Motivo da criação (primeira linha de status ACTIVE em LoginStatusHistory). Referencia ReasonActivate com entityType=LOGIN
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
     UpdateLoginRequest:
       required: [login]
       type: object
       properties:
         login:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
     ProfileSummary:
       type: object
@@ -1124,25 +1100,25 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
     UpdateProfileRequest:
       required: [code, description]
       type: object
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
     GetProfileResourcesResponse:
       type: object
       properties:
@@ -1162,7 +1138,7 @@ components:
           items:
             type: string
             format: uuid
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
     ResourceSummary:
       type: object
       properties:
@@ -1194,7 +1170,7 @@ components:
           description: >-
             Motivo da transição. Referencia o catálogo Reason* correspondente à transição de domínio
             (enable→ReasonActivate, disable→ReasonInactivate, block→ReasonDisable, unblock→ReasonEnable)
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
         observation:
           type: string

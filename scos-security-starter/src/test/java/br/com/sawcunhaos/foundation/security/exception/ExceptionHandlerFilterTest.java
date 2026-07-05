@@ -48,7 +48,7 @@ class ExceptionHandlerFilterTest {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/secure");
         MockHttpServletResponse response = new MockHttpServletResponse();
         FilterChain chain = (req, res) -> {
-            throw new ScosSecurityException(SecurityExceptionCode.AUTH_005);
+            throw new ScosSecurityException(SecurityExceptionCode.SCOS_AUTH_003);
         };
 
         filter.doFilter(request, response, chain);
@@ -61,7 +61,7 @@ class ExceptionHandlerFilterTest {
         ProblemDetail problem = captor.getValue();
         assertEquals(401, problem.getStatus());
         assertEquals("Unauthorized", problem.getTitle());
-        assertEquals("AUTH-005", problem.getProperties().get("code"));
+        assertEquals("SCOS_AUTH_002", problem.getProperties().get("code"));
         assertEquals("/api/secure", problem.getInstance().toString());
     }
 }

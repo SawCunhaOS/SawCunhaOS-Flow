@@ -1,10 +1,12 @@
 package br.com.sawcunhaos.security.starter.service;
 
 
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.grpc.proto.AuthorityResponse;
 import br.com.sawcunhaos.security.starter.model.ScosSecurityContext;
 import br.com.sawcunhaos.security.starter.service.grpc.ScosAuthorityService;
 import br.com.sawcunhaos.security.starter.specification.ScosSecurity;
+import br.com.sawcunhaos.security.starter.utils.SecurityExceptionCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
@@ -43,7 +45,7 @@ public class ScosSecurityService implements ScosSecurity {
                     .build();
         } catch (Exception e) {
             log.error("Error getting all granted authority for login: {}", login, e);
-            throw new RuntimeException(e);
+            throw new ScosException(SecurityExceptionCode.SCOS_AUTH_002);
         }
     }
 

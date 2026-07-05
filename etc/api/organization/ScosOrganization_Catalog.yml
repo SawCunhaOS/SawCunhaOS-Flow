@@ -359,13 +359,13 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         entityType:
           $ref: '#/components/schemas/CatalogEntityType'
     UpdateAddressTypeRequest:
@@ -374,12 +374,12 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         entityType:
           $ref: '#/components/schemas/CatalogEntityType'
     ContactType:
@@ -416,13 +416,13 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         entityType:
           $ref: '#/components/schemas/CatalogEntityType'
     UpdateContactTypeRequest:
@@ -431,12 +431,12 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         entityType:
           $ref: '#/components/schemas/CatalogEntityType'
 

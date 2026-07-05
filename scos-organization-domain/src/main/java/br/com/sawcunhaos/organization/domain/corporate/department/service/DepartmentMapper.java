@@ -13,7 +13,6 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.department.service;
 
-import br.com.sawcunhaos.organization.domain.corporate.department.dto.DepartmentInput;
 import br.com.sawcunhaos.organization.domain.corporate.department.dto.DepartmentOutput;
 import br.com.sawcunhaos.organization.domain.corporate.department.internal.Department;
 import org.mapstruct.Mapper;
@@ -22,6 +21,5 @@ import org.mapstruct.Mapper;
 public interface DepartmentMapper {
 
     DepartmentOutput toDepartmentOutput(Department department);
-    Department toDepartment(DepartmentInput departmentInput);
 
 }

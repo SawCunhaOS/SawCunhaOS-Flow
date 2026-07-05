@@ -45,7 +45,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_DEPARTMENT]
-      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
     post:
       tags: [Department]
       summary: Create a department
@@ -72,7 +71,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
 
   /v1/departments/{id}:
     get:
@@ -96,7 +94,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_DEPARTMENT]
-      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
     put:
       tags: [Department]
       summary: Update department
@@ -124,27 +121,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
-    delete:
-      tags: [Department]
-      summary: Delete department
-      description: >-
-        UC-027 - Exclusão lógica: seta ACTIVE=false. Equivalente a PUT /v1/departments/{id}/disable - mantido como DELETE por semântica REST convencional para quem espera esse verbo.
-        SCOS_DEPARTMENT não tem campo STATUS/DISABLED (isso é exclusivo de Company/Employee/Login) - aqui o mecanismo é só o booleano ACTIVE
-      operationId: deleteDepartment
-      parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-      responses:
-        '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
-        '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
-        '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [DELETE_DEPARTMENT]
-      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
 
   /v1/departments/{id}/enable:
     put:
@@ -164,7 +140,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_DEPARTMENT]
-      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
 
   /v1/departments/{id}/disable:
     put:
@@ -184,7 +159,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_DEPARTMENT]
-      x-cache: [SCOS_ORGANIZATION_DEPARTMENT]
 
   /v1/positions:
     get:
@@ -210,7 +184,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_POSITION]
-      x-cache: [SCOS_ORGANIZATION_POSITION]
     post:
       tags: [Position]
       summary: Create a position
@@ -237,7 +210,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_POSITION]
 
   /v1/positions/{id}:
     get:
@@ -261,7 +233,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_POSITION]
-      x-cache: [SCOS_ORGANIZATION_POSITION]
     put:
       tags: [Position]
       summary: Update position
@@ -289,7 +260,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_POSITION]
     delete:
       tags: [Position]
       summary: Delete position
@@ -309,7 +279,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_POSITION]
-      x-cache: [SCOS_ORGANIZATION_POSITION]
 
   /v1/positions/{id}/enable:
     put:
@@ -329,7 +298,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_POSITION]
-      x-cache: [SCOS_ORGANIZATION_POSITION]
 
   /v1/positions/{id}/disable:
     put:
@@ -349,7 +317,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_POSITION]
-      x-cache: [SCOS_ORGANIZATION_POSITION]
 
   /v1/reason-position-change:
     get:
@@ -373,7 +340,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_POSITION_CHANGE]
-      x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
     post:
       tags: [Reason Position Change]
       summary: Create a reason position change
@@ -400,7 +366,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_POSITION_CHANGE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
 
   /v1/reason-position-change/{id}:
     get:
@@ -424,7 +389,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_POSITION_CHANGE]
-      x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
     put:
       tags: [Reason Position Change]
       summary: Update reason position change
@@ -452,7 +416,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_POSITION_CHANGE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
 
   /v1/reason-position-change/{id}/enable:
     put:
@@ -472,7 +435,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_REASON_POSITION_CHANGE]
-      x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
 
   /v1/reason-position-change/{id}/disable:
     put:
@@ -492,7 +454,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_REASON_POSITION_CHANGE]
-      x-cache: [SCOS_ORGANIZATION_REASON_POSITION_CHANGE]
 
   /v1/positions/{positionId}/work-schedule:
     get:
@@ -518,7 +479,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_POSITION_WORK_SCHEDULE]
-      x-cache: [SCOS_ORGANIZATION_POSITION_WORK_SCHEDULE]
     post:
       tags: [Position]
       summary: Create position work schedule
@@ -546,7 +506,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_POSITION_WORK_SCHEDULE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_POSITION_WORK_SCHEDULE]
 
   /v1/positions/{positionId}/work-schedule/{dayOfWeek}:
     put:
@@ -574,7 +533,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_POSITION_WORK_SCHEDULE]
-      x-cache: [SCOS_ORGANIZATION_POSITION_WORK_SCHEDULE]
     delete:
       tags: [Position]
       summary: Delete position work schedule
@@ -593,7 +551,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_POSITION_WORK_SCHEDULE]
-      x-cache: [SCOS_ORGANIZATION_POSITION_WORK_SCHEDULE]
 
 components:
   securitySchemes:
@@ -661,25 +618,25 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
     UpdateDepartmentRequest:
       required: [code, description]
       type: object
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
     Position:
       type: object
       properties:
@@ -717,17 +674,17 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         departmentId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         isTrustPosition:
           type: boolean
           default: false
@@ -737,16 +694,16 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         departmentId:
           type: integer
           format: int64
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         isTrustPosition:
           type: boolean
           default: false
@@ -782,25 +739,25 @@ components:
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
     UpdateReasonPositionChangeRequest:
       required: [code, description]
       type: object
       properties:
         code:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
         description:
           type: string
-          x-required-message: SCOS-003
-          x-empty-message: SCOS-001
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
     PositionWorkSchedule:
       type: object
       properties:
@@ -830,26 +787,26 @@ components:
         dayOfWeek:
           allOf:
             - $ref: './ScosComponents.yml#/components/schemas/DayOfWeek'
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
         startTime:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         lunchStart:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           description: Deve ser posterior a startTime e anterior a lunchEnd - validado no use case, sem CHECK no banco
         lunchEnd:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           description: Deve ser posterior a lunchStart e anterior a endTime - validado no use case, sem CHECK no banco
         endTime:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
     UpdatePositionWorkScheduleRequest:
       required: [startTime, lunchStart, lunchEnd, endTime]
       type: object
@@ -857,21 +814,21 @@ components:
         startTime:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
         lunchStart:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           description: Deve ser posterior a startTime e anterior a lunchEnd - validado no use case, sem CHECK no banco
         lunchEnd:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
           description: Deve ser posterior a lunchStart e anterior a endTime - validado no use case, sem CHECK no banco
         endTime:
           type: string
           format: time
-          x-required-message: SCOS-003
+          x-required-message: SCOS_VALIDATION_003
 
 security:
   - BearerAuth: []

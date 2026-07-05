@@ -22,7 +22,7 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
         String login = getPrincipalClaimName(jwt);
 
         if (login == null) {
-            throw new ScosSecurityException(SecurityExceptionCode.AUTH_001);
+            throw new ScosSecurityException(SecurityExceptionCode.SCOS_AUTH_001);
         }
 
         ScosSecurityContext context = scosSecurityService.getSecurityContext(login);
