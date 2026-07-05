@@ -4,6 +4,10 @@ import br.com.sawcunhaos.security.starter.specification.ScosPermission;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Permissões do módulo organization, referenciadas pelo {@code x-authorize} do contrato OpenAPI.
+ * Cada constante carrega a descrição pt-br/en exibida na central de permissões.
+ */
 @Getter
 @RequiredArgsConstructor
 public enum ScosOrganizationPermission implements ScosPermission {
@@ -372,6 +376,68 @@ public enum ScosOrganizationPermission implements ScosPermission {
     UPDATE_CONFIGURATION(
             "Atualizar configuração",
             "Update configuration",
+            true
+    ),
+
+    // Address Type
+    GET_ADDRESS_TYPE(
+            "Consultar tipo de endereço",
+            "Get address type",
+            true
+    ),
+
+    CREATE_ADDRESS_TYPE(
+            "Criar tipo de endereço",
+            "Create address type",
+            true
+    ),
+
+    UPDATE_ADDRESS_TYPE(
+            "Atualizar tipo de endereço",
+            "Update address type",
+            true
+    ),
+
+    ENABLE_ADDRESS_TYPE(
+            "Habilitar tipo de endereço",
+            "Enable address type",
+            true
+    ),
+
+    DISABLE_ADDRESS_TYPE(
+            "Desabilitar tipo de endereço",
+            "Disable address type",
+            true
+    ),
+
+    // Contact Type
+    GET_CONTACT_TYPE(
+            "Consultar tipo de contato",
+            "Get contact type",
+            true
+    ),
+
+    CREATE_CONTACT_TYPE(
+            "Criar tipo de contato",
+            "Create contact type",
+            true
+    ),
+
+    UPDATE_CONTACT_TYPE(
+            "Atualizar tipo de contato",
+            "Update contact type",
+            true
+    ),
+
+    ENABLE_CONTACT_TYPE(
+            "Habilitar tipo de contato",
+            "Enable contact type",
+            true
+    ),
+
+    DISABLE_CONTACT_TYPE(
+            "Desabilitar tipo de contato",
+            "Disable contact type",
             true
     ),
 

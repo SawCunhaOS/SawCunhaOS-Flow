@@ -15,6 +15,7 @@ package br.com.sawcunhaos.organization.domain.corporate.catalog.internal;
 
 import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.status.internal.EntityType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -30,6 +31,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_ADDRESS_TYPE_003;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_ADDRESS_TYPE_004;
+
+/**
+ * Catálogo de referência de tipos de endereço ({@code SCOS_ADDRESS_TYPE}), compartilhado entre
+ * {@code CompanyAddress} e {@code EmployeeAddress}. Sem exclusão física — só ativação/inativação lógica.
+ */
 @Setter
 @Getter
 @NoArgsConstructor
@@ -54,4 +62,26 @@ public class AddressType extends BaseEntity {
     @Builder.Default
     @Column(name = "ACTIVE")
     private boolean active = true;
+
+    /**
+     * Ativa o tipo de endereço.
+     * @throws ScosException SCOS_ADDRESS_TYPE_003 se já estiver ativo.
+     */
+    public void activate() {
+        if (this.active) {
+            throw new ScosException(SCOS_ADDRESS_TYPE_003);
+        }
+        this.active = true;
+    }
+
+    /**
+     * Inativa o tipo de endereço.
+     * @throws ScosException SCOS_ADDRESS_TYPE_004 se já estiver inativo.
+     */
+    public void deactivate() {
+        if (!this.active) {
+            throw new ScosException(SCOS_ADDRESS_TYPE_004);
+        }
+        this.active = false;
+    }
 }

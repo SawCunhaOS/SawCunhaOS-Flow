@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "4e5291ec-1322-4d8b-859e-578c104be584",
+		"_postman_id": "5be10ad6-2348-4ae5-9831-2d1d170088b9",
 		"name": "Scos",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "39295595"
@@ -13,7 +13,7 @@
 					"name": "Department",
 					"item": [
 						{
-							"name": "Get All",
+							"name": "Get all departments",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -47,14 +47,50 @@
 											"key": "order",
 											"value": "",
 											"disabled": true
+										},
+										{
+											"key": "active",
+											"value": "True",
+											"disabled": true
 										}
 									]
-								}
+								},
+								"description": "UC-022 - Lista todos os departamentos com paginação"
 							},
 							"response": []
 						},
 						{
-							"name": "Get By Id",
+							"name": "Create a department",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/departments",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"departments"
+									]
+								},
+								"description": "UC-021 - Cria um novo departamento"
+							},
+							"response": []
+						},
+						{
+							"name": "Get department by id",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -76,47 +112,19 @@
 											"value": "1"
 										}
 									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Create",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"code\": \"RH\",\r\n  \"description\": \"Recursos Humanos\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
 								},
-								"url": {
-									"raw": "{{url}}:{{port}}/{{base_url}}/v1/departments",
-									"host": [
-										"{{url}}"
-									],
-									"port": "{{port}}",
-									"path": [
-										"{{base_url}}",
-										"v1",
-										"departments"
-									]
-								}
+								"description": "UC-023 - Retorna os dados de um departamento"
 							},
 							"response": []
 						},
 						{
-							"name": "Update",
+							"name": "Update department",
 							"request": {
 								"method": "PUT",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"code\": \"ADMIN\",\r\n  \"description\": \"Tecnologia e Desenvolvimento\"\r\n}",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -138,58 +146,19 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "2"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Disable",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{url}}:{{port}}/{{base_url}}/v1/departments/:id/disable",
-									"host": [
-										"{{url}}"
-									],
-									"port": "{{port}}",
-									"path": [
-										"{{base_url}}",
-										"v1",
-										"departments",
-										":id",
-										"disable"
-									],
-									"variable": [
-										{
-											"key": "id",
 											"value": "1"
 										}
 									]
-								}
+								},
+								"description": "UC-024 - Atualiza o código ou descrição de um departamento"
 							},
 							"response": []
 						},
 						{
-							"name": "Enable",
+							"name": "Activate department",
 							"request": {
 								"method": "PUT",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{url}}:{{port}}/{{base_url}}/v1/departments/:id/enable",
 									"host": [
@@ -209,593 +178,18 @@
 											"value": "1"
 										}
 									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
-					"name": "Company",
-					"item": [
-						{
-							"name": "Address",
-							"item": [
-								{
-									"name": "Get All",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"method": "GET",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n  \"name\": \"Empresa Valida New\",\r\n  \"nameTreatment\": \"Empresa Valida S.A.\",\r\n  \"taxIdentifier\": \"9IVZM46I4LSF27\",\r\n  \"foundationDate\": \"2026-01-17\",\r\n  \"sectorOfActivity\": \"TI\",\r\n  \"observation\": \"Essa e uma empresa falsa\"\r\n}"
-										},
-										"url": {
-											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/address",
-											"host": [
-												"{{url}}"
-											],
-											"port": "{{port}}",
-											"path": [
-												"{{base_url}}",
-												"v1",
-												"company",
-												":id",
-												"address"
-											],
-											"variable": [
-												{
-													"key": "id",
-													"value": "1"
-												}
-											]
-										}
-									},
-									"response": []
 								},
-								{
-									"name": "Get By Id",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/address/:idAddress",
-											"host": [
-												"{{url}}"
-											],
-											"port": "{{port}}",
-											"path": [
-												"{{base_url}}",
-												"v1",
-												"company",
-												":id",
-												"address",
-												":idAddress"
-											],
-											"query": [
-												{
-													"key": "page",
-													"value": "",
-													"disabled": true
-												},
-												{
-													"key": "sizePerPage",
-													"value": "1",
-													"disabled": true
-												},
-												{
-													"key": "direction",
-													"value": "",
-													"disabled": true
-												},
-												{
-													"key": "order",
-													"value": "",
-													"disabled": true
-												}
-											],
-											"variable": [
-												{
-													"key": "id",
-													"value": "1"
-												},
-												{
-													"key": "idAddress",
-													"value": "1"
-												}
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Delete",
-									"request": {
-										"method": "DELETE",
-										"header": [],
-										"url": {
-											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/address/:idAddress",
-											"host": [
-												"{{url}}"
-											],
-											"port": "{{port}}",
-											"path": [
-												"{{base_url}}",
-												"v1",
-												"company",
-												":id",
-												"address",
-												":idAddress"
-											],
-											"query": [
-												{
-													"key": "page",
-													"value": "",
-													"disabled": true
-												},
-												{
-													"key": "sizePerPage",
-													"value": "1",
-													"disabled": true
-												},
-												{
-													"key": "direction",
-													"value": "",
-													"disabled": true
-												},
-												{
-													"key": "order",
-													"value": "",
-													"disabled": true
-												}
-											],
-											"variable": [
-												{
-													"key": "id",
-													"value": "1"
-												},
-												{
-													"key": "idAddress",
-													"value": "1"
-												}
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Create",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n  \"type\": \"LOJA\",\r\n  \"number\": \"49\",\r\n  \"complement\": \"E uma loja Azul\",\r\n  \"latitude\": \"-3.761085\",\r\n  \"longitude\": \"-38.580236\",\r\n  \"addressId\": 1\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/address",
-											"host": [
-												"{{url}}"
-											],
-											"port": "{{port}}",
-											"path": [
-												"{{base_url}}",
-												"v1",
-												"company",
-												":id",
-												"address"
-											],
-											"variable": [
-												{
-													"key": "id",
-													"value": "1"
-												}
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Update",
-									"request": {
-										"method": "PUT",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n  \"type\": \"CASA\",\r\n  \"number\": \"49\",\r\n  \"complement\": \"A casa de um gato\",\r\n  \"latitude\": \"-3.761085\",\r\n  \"longitude\": \"-38.580236\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/address/:idAddress",
-											"host": [
-												"{{url}}"
-											],
-											"port": "{{port}}",
-											"path": [
-												"{{base_url}}",
-												"v1",
-												"company",
-												":id",
-												"address",
-												":idAddress"
-											],
-											"variable": [
-												{
-													"key": "id",
-													"value": "1"
-												},
-												{
-													"key": "idAddress",
-													"value": "1"
-												}
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
-						{
-							"name": "Contact",
-							"item": [
-								{
-									"name": "Get All",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"method": "GET",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n  \"name\": \"Empresa Valida New\",\r\n  \"nameTreatment\": \"Empresa Valida S.A.\",\r\n  \"taxIdentifier\": \"9IVZM46I4LSF27\",\r\n  \"foundationDate\": \"2026-01-17\",\r\n  \"sectorOfActivity\": \"TI\",\r\n  \"observation\": \"Essa e uma empresa falsa\"\r\n}"
-										},
-										"url": {
-											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/contact",
-											"host": [
-												"{{url}}"
-											],
-											"port": "{{port}}",
-											"path": [
-												"{{base_url}}",
-												"v1",
-												"company",
-												":id",
-												"contact"
-											],
-											"variable": [
-												{
-													"key": "id",
-													"value": "1"
-												}
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Get By Id",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/contact/:idcontact",
-											"host": [
-												"{{url}}"
-											],
-											"port": "{{port}}",
-											"path": [
-												"{{base_url}}",
-												"v1",
-												"company",
-												":id",
-												"contact",
-												":idcontact"
-											],
-											"query": [
-												{
-													"key": "page",
-													"value": "",
-													"disabled": true
-												},
-												{
-													"key": "sizePerPage",
-													"value": "1",
-													"disabled": true
-												},
-												{
-													"key": "direction",
-													"value": "",
-													"disabled": true
-												},
-												{
-													"key": "order",
-													"value": "",
-													"disabled": true
-												}
-											],
-											"variable": [
-												{
-													"key": "id",
-													"value": "1"
-												},
-												{
-													"key": "idcontact",
-													"value": "1"
-												}
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Delete",
-									"request": {
-										"method": "DELETE",
-										"header": [],
-										"url": {
-											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/contact/:idcontact",
-											"host": [
-												"{{url}}"
-											],
-											"port": "{{port}}",
-											"path": [
-												"{{base_url}}",
-												"v1",
-												"company",
-												":id",
-												"contact",
-												":idcontact"
-											],
-											"query": [
-												{
-													"key": "page",
-													"value": "",
-													"disabled": true
-												},
-												{
-													"key": "sizePerPage",
-													"value": "1",
-													"disabled": true
-												},
-												{
-													"key": "direction",
-													"value": "",
-													"disabled": true
-												},
-												{
-													"key": "order",
-													"value": "",
-													"disabled": true
-												}
-											],
-											"variable": [
-												{
-													"key": "id",
-													"value": "1"
-												},
-												{
-													"key": "idcontact",
-													"value": "1"
-												}
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Create",
-									"request": {
-										"method": "POST",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n  \"type\": \"LOJA\",\r\n  \"phone\": \"49\",\r\n  \"email\": \"test@test.com\",\r\n  \"responsiblePerson\": \"-3.761085\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/contact",
-											"host": [
-												"{{url}}"
-											],
-											"port": "{{port}}",
-											"path": [
-												"{{base_url}}",
-												"v1",
-												"company",
-												":id",
-												"contact"
-											],
-											"variable": [
-												{
-													"key": "id",
-													"value": "1"
-												}
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Update",
-									"request": {
-										"method": "PUT",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n  \"type\": \"CASA\",\r\n  \"number\": \"49\",\r\n  \"complement\": \"A casa de um gato\",\r\n  \"latitude\": \"-3.761085\",\r\n  \"longitude\": \"-38.580236\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/contact/:idcontact",
-											"host": [
-												"{{url}}"
-											],
-											"port": "{{port}}",
-											"path": [
-												"{{base_url}}",
-												"v1",
-												"company",
-												":id",
-												"contact",
-												":idcontact"
-											],
-											"variable": [
-												{
-													"key": "id",
-													"value": "1"
-												},
-												{
-													"key": "idcontact",
-													"value": "1"
-												}
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
-						{
-							"name": "Get All",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "X-Request-ID",
-										"value": "099f88f7-c16c-4fb0-9963-ae01ff3f6f6f",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{url}}:{{port}}/{{base_url}}/v1/company",
-									"host": [
-										"{{url}}"
-									],
-									"port": "{{port}}",
-									"path": [
-										"{{base_url}}",
-										"v1",
-										"company"
-									],
-									"query": [
-										{
-											"key": "page",
-											"value": "",
-											"disabled": true
-										},
-										{
-											"key": "sizePerPage",
-											"value": "1",
-											"disabled": true
-										},
-										{
-											"key": "direction",
-											"value": "",
-											"disabled": true
-										},
-										{
-											"key": "order",
-											"value": "",
-											"disabled": true
-										}
-									]
-								}
+								"description": "UC-025 - Reativa departamento com status INACTIVE"
 							},
 							"response": []
 						},
 						{
-							"name": "Get By Id",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id",
-									"host": [
-										"{{url}}"
-									],
-									"port": "{{port}}",
-									"path": [
-										"{{base_url}}",
-										"v1",
-										"company",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "51"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Create",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"name\": \"Empresa Valida\",\r\n  \"nameTreatment\": \"Empresa Valida SA\",\r\n  \"taxIdentifier\": \"RTHSGCAN000163\",\r\n  \"foundationDate\": \"2026-01-17\",\r\n  \"sectorOfActivity\": \"TI\",\r\n  \"observation\": \"Essa e uma empresa falsa\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{url}}:{{port}}/{{base_url}}/v1/company",
-									"host": [
-										"{{url}}"
-									],
-									"port": "{{port}}",
-									"path": [
-										"{{base_url}}",
-										"v1",
-										"company"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Update",
+							"name": "Inactivate department",
 							"request": {
 								"method": "PUT",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"name\": \"Empresa Valida New\",\r\n  \"nameTreatment\": \"Empresa Valida S.A.\",\r\n  \"taxIdentifier\": \"9IVZM46I4LSF27\",\r\n  \"foundationDate\": \"2026-01-17\",\r\n  \"sectorOfActivity\": \"TI\",\r\n  \"observation\": \"Essa e uma empresa falsa\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id",
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/departments/:id/disable",
 									"host": [
 										"{{url}}"
 									],
@@ -803,132 +197,33 @@
 									"path": [
 										"{{base_url}}",
 										"v1",
-										"company",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Activate",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"name\": \"Empresa Valida New\",\r\n  \"nameTreatment\": \"Empresa Valida S.A.\",\r\n  \"taxIdentifier\": \"9IVZM46I4LSF27\",\r\n  \"foundationDate\": \"2026-01-17\",\r\n  \"sectorOfActivity\": \"TI\",\r\n  \"observation\": \"Essa e uma empresa falsa\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/enable",
-									"host": [
-										"{{url}}"
-									],
-									"port": "{{port}}",
-									"path": [
-										"{{base_url}}",
-										"v1",
-										"company",
-										":id",
-										"enable"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "1"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Inactivate",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"name\": \"Empresa Valida New\",\r\n  \"nameTreatment\": \"Empresa Valida S.A.\",\r\n  \"taxIdentifier\": \"9IVZM46I4LSF27\",\r\n  \"foundationDate\": \"2026-01-17\",\r\n  \"sectorOfActivity\": \"TI\",\r\n  \"observation\": \"Essa e uma empresa falsa\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/disable",
-									"host": [
-										"{{url}}"
-									],
-									"port": "{{port}}",
-									"path": [
-										"{{base_url}}",
-										"v1",
-										"company",
+										"departments",
 										":id",
 										"disable"
 									],
 									"variable": [
 										{
 											"key": "id",
-											"value": "2"
+											"value": "1"
 										}
 									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Delete",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id",
-									"host": [
-										"{{url}}"
-									],
-									"port": "{{port}}",
-									"path": [
-										"{{base_url}}",
-										"v1",
-										"company",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "2"
-										}
-									]
-								}
+								},
+								"description": "UC-026 - Inativa departamento com status ACTIVE"
 							},
 							"response": []
 						}
 					]
 				},
 				{
-					"name": "Positions",
+					"name": "Position",
 					"item": [
 						{
-							"name": "Get All",
+							"name": "Get all positions",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions?direction=DESC&order=CODE",
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions?sizePerPage=100",
 									"host": [
 										"{{url}}"
 									],
@@ -946,57 +241,42 @@
 										},
 										{
 											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "departmentId",
 											"value": "1",
 											"disabled": true
 										},
 										{
-											"key": "direction",
-											"value": "DESC"
-										},
-										{
-											"key": "order",
-											"value": "CODE"
+											"key": "active",
+											"value": "True",
+											"disabled": true
 										}
 									]
-								}
+								},
+								"description": "UC-029 - Lista todos os cargos com paginação. Pode filtrar por departamento"
 							},
 							"response": []
 						},
 						{
-							"name": "Get By Id",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions/:id",
-									"host": [
-										"{{url}}"
-									],
-									"port": "{{port}}",
-									"path": [
-										"{{base_url}}",
-										"v1",
-										"positions",
-										":id"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "51"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Create",
+							"name": "Create a position",
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"code\": \"CTO\",\r\n  \"description\": \"Chief Executive Officer\",\r\n  \"departmentId\": 1\r\n}",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\",\n  \"departmentId\": 1,\n  \"isTrustPosition\": true\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1014,18 +294,47 @@
 										"v1",
 										"positions"
 									]
-								}
+								},
+								"description": "UC-028 - Cria um cargo vinculado a um departamento ativo"
 							},
 							"response": []
 						},
 						{
-							"name": "Update",
+							"name": "Get position by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"positions",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-030 - Retorna os dados de um cargo incluindo o departamento"
+							},
+							"response": []
+						},
+						{
+							"name": "Update position",
 							"request": {
 								"method": "PUT",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"code\": \"CTO\",\r\n  \"description\": \"Tecnologia e Desenvolvimento\",\r\n  \"departmentId\": 1\r\n}",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\",\n  \"departmentId\": 1,\n  \"isTrustPosition\": true\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1047,58 +356,19 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "3"
+											"value": "1"
 										}
 									]
-								}
+								},
+								"description": "UC-031 - Atualiza o código, descrição ou departamento de um cargo"
 							},
 							"response": []
 						},
 						{
-							"name": "Disable",
+							"name": "Activate position",
 							"request": {
 								"method": "PUT",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
-								"url": {
-									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions/:id/disable",
-									"host": [
-										"{{url}}"
-									],
-									"port": "{{port}}",
-									"path": [
-										"{{base_url}}",
-										"v1",
-										"positions",
-										":id",
-										"disable"
-									],
-									"variable": [
-										{
-											"key": "id",
-											"value": "2"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Enable",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json",
-										"type": "text"
-									}
-								],
+								"header": [],
 								"url": {
 									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions/:id/enable",
 									"host": [
@@ -1115,10 +385,5143 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "2"
+											"value": "1"
 										}
 									]
+								},
+								"description": "UC-032 - Reativa cargo com status INACTIVE"
+							},
+							"response": []
+						},
+						{
+							"name": "Inactivate position",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions/:id/disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"positions",
+										":id",
+										"disable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-033 - Inativa cargo com status ACTIVE"
+							},
+							"response": []
+						},
+						{
+							"name": "Get position work schedule",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions/:positionId/work-schedule",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"positions",
+										":positionId",
+										"work-schedule"
+									],
+									"variable": [
+										{
+											"key": "positionId",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-144 - Lista a jornada de trabalho template do cargo, um item por dia da semana cadastrado. Retorna array direto, sem paginação - a UK composta (positionId, dayOfWeek) garante teto real de 7 registros"
+							},
+							"response": []
+						},
+						{
+							"name": "Create position work schedule",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"dayOfWeek\": \"MONDAY\",\n  \"startTime\": \"08:00:00\",\n  \"lunchStart\": \"08:00:00\",\n  \"lunchEnd\": \"08:00:00\",\n  \"endTime\": \"08:00:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions/:positionId/work-schedule",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"positions",
+										":positionId",
+										"work-schedule"
+									],
+									"variable": [
+										{
+											"key": "positionId",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-145 - Cria o horário de um dia da semana do template do cargo. Rejeitado se já existir registro para esse (positionId, dayOfWeek)"
+							},
+							"response": []
+						},
+						{
+							"name": "Update position work schedule",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"startTime\": \"08:00:00\",\n  \"lunchStart\": \"08:00:00\",\n  \"lunchEnd\": \"08:00:00\",\n  \"endTime\": \"08:00:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions/:positionId/work-schedule/:dayOfWeek",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"positions",
+										":positionId",
+										"work-schedule",
+										":dayOfWeek"
+									],
+									"variable": [
+										{
+											"key": "positionId",
+											"value": "1"
+										},
+										{
+											"key": "dayOfWeek",
+											"value": "MONDAY"
+										}
+									]
+								},
+								"description": "UC-146 - Atualiza o horário de um dia da semana já cadastrado no template do cargo"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete position work schedule",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions/:positionId/work-schedule/:dayOfWeek",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"positions",
+										":positionId",
+										"work-schedule",
+										":dayOfWeek"
+									],
+									"variable": [
+										{
+											"key": "positionId",
+											"value": "1"
+										},
+										{
+											"key": "dayOfWeek",
+											"value": "MONDAY"
+										}
+									]
+								},
+								"description": "UC-147 - Remove o horário de um dia da semana do template do cargo"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Reason Position Change",
+					"item": [
+						{
+							"name": "Get all reason position changes",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-position-change?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-position-change"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-106 - Lista todos os motivos de mudança de cargo com paginação"
+							},
+							"response": []
+						},
+						{
+							"name": "Create a reason position change",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-position-change",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-position-change"
+									]
+								},
+								"description": "UC-107 - Cria um novo motivo de mudança de cargo"
+							},
+							"response": []
+						},
+						{
+							"name": "Get reason position change by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-position-change/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-position-change",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-108 - Retorna os dados de um motivo de mudança de cargo"
+							},
+							"response": []
+						},
+						{
+							"name": "Update reason position change",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-position-change/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-position-change",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-109 - Atualiza o código ou descrição de um motivo de mudança de cargo"
+							},
+							"response": []
+						},
+						{
+							"name": "Activate reason position change",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-position-change/:id/enable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-position-change",
+										":id",
+										"enable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-110 - Reativa motivo de mudança de cargo com active=false"
+							},
+							"response": []
+						},
+						{
+							"name": "Inactivate reason position change",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-position-change/:id/disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-position-change",
+										":id",
+										"disable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-111 - Inativa motivo de mudança de cargo com active=true"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Company",
+					"item": [
+						{
+							"name": "Company Contact",
+							"item": [
+								{
+									"name": "Get all company contacts",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:companyId/contacts?sizePerPage=100",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"companies",
+												":companyId",
+												"contacts"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "sizePerPage",
+													"value": "100"
+												},
+												{
+													"key": "direction",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "order",
+													"value": "",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "companyId",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-011 - Lista todos os contatos de uma empresa"
+									},
+									"response": []
+								},
+								{
+									"name": "Create a company contact",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"contactTypeId\": 1,\n  \"phone\": \"11999999999\",\n  \"email\": \"test@test.com\",\n  \"responsiblePerson\": \"responsiblePerson\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:companyId/contacts",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"companies",
+												":companyId",
+												"contacts"
+											],
+											"variable": [
+												{
+													"key": "companyId",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-012 - Adiciona um contato à empresa"
+									},
+									"response": []
+								},
+								{
+									"name": "Get company contact by id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:companyId/contacts/:id",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"companies",
+												":companyId",
+												"contacts",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "companyId",
+													"value": "1"
+												},
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-013 - Retorna um contato específico da empresa"
+									},
+									"response": []
+								},
+								{
+									"name": "Update company contact",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"contactTypeId\": 1,\n  \"phone\": \"11999999999\",\n  \"email\": \"test@test.com\",\n  \"responsiblePerson\": \"responsiblePerson\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:companyId/contacts/:id",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"companies",
+												":companyId",
+												"contacts",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "companyId",
+													"value": "1"
+												},
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-014 - Atualiza os dados de um contato da empresa"
+									},
+									"response": []
+								},
+								{
+									"name": "Delete company contact",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:companyId/contacts/:id",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"companies",
+												":companyId",
+												"contacts",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "companyId",
+													"value": "1"
+												},
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-015 - Remove um contato da empresa"
+									},
+									"response": []
 								}
+							]
+						},
+						{
+							"name": "Company Address",
+							"item": [
+								{
+									"name": "Get all company addresses",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:companyId/addresses?sizePerPage=100",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"companies",
+												":companyId",
+												"addresses"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "sizePerPage",
+													"value": "100"
+												},
+												{
+													"key": "direction",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "order",
+													"value": "",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "companyId",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-016 - Lista todos os endereços vinculados a uma empresa"
+									},
+									"response": []
+								},
+								{
+									"name": "Create a company address",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"addressTypeId\": 1,\n  \"number\": \"number\",\n  \"complement\": \"complement\",\n  \"latitude\": 1.0,\n  \"longitude\": 1.0,\n  \"addressId\": 1\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:companyId/addresses",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"companies",
+												":companyId",
+												"addresses"
+											],
+											"variable": [
+												{
+													"key": "companyId",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-017 - Vincula um endereço externo à empresa. Integridade do addressId garantida pela aplicação"
+									},
+									"response": []
+								},
+								{
+									"name": "Get company address by id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:companyId/addresses/:id",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"companies",
+												":companyId",
+												"addresses",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "companyId",
+													"value": "1"
+												},
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-018 - Retorna o vínculo de endereço da empresa"
+									},
+									"response": []
+								},
+								{
+									"name": "Update company address",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"addressTypeId\": 1,\n  \"number\": \"number\",\n  \"complement\": \"complement\",\n  \"latitude\": 1.0,\n  \"longitude\": 1.0\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:companyId/addresses/:id",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"companies",
+												":companyId",
+												"addresses",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "companyId",
+													"value": "1"
+												},
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-019 - Atualiza os dados do vínculo. Não altera o addressId externo"
+									},
+									"response": []
+								},
+								{
+									"name": "Delete company address",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:companyId/addresses/:id",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"companies",
+												":companyId",
+												"addresses",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "companyId",
+													"value": "1"
+												},
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-020 - Remove o vínculo de endereço. O registro externo não é afetado"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Get all companies",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"companies"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "ACTIVE",
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "name",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-004 - Lista todas as empresas e filiais com paginação"
+							},
+							"response": []
+						},
+						{
+							"name": "Create a company",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"name\",\n  \"nameTreatment\": \"nameTreatment\",\n  \"taxIdentifier\": \"12345678000190\",\n  \"foundationDate\": \"2026-01-17\",\n  \"sectorOfActivity\": \"sectorOfActivity\",\n  \"observation\": \"Observação de exemplo\",\n  \"parentCompanyId\": 1,\n  \"reasonActivateId\": 1,\n  \"legalNatureId\": 1,\n  \"cnaePrincipalId\": 1,\n  \"stateRegistration\": \"stateRegistration\",\n  \"municipalRegistration\": \"municipalRegistration\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"companies"
+									]
+								},
+								"description": "UC-001/UC-002 - Cadastra empresa matriz (parentCompanyId nulo) ou filial"
+							},
+							"response": []
+						},
+						{
+							"name": "Get company by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"companies",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-003 - Retorna os dados completos de uma empresa pelo ID"
+							},
+							"response": []
+						},
+						{
+							"name": "Update company",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"name\",\n  \"nameTreatment\": \"nameTreatment\",\n  \"taxIdentifier\": \"12345678000190\",\n  \"foundationDate\": \"2026-01-17\",\n  \"sectorOfActivity\": \"sectorOfActivity\",\n  \"observation\": \"Observação de exemplo\",\n  \"legalNatureId\": 1,\n  \"cnaePrincipalId\": 1,\n  \"stateRegistration\": \"stateRegistration\",\n  \"municipalRegistration\": \"municipalRegistration\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"companies",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-005 - Atualiza os dados cadastrais. Não altera o vínculo com a empresa mãe"
+							},
+							"response": []
+						},
+						{
+							"name": "Activate company",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reasonId\": 1,\n  \"observation\": \"Observação de exemplo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:id/enable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"companies",
+										":id",
+										"enable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-006 - Transição de domínio \"activate\": reativa empresa com status INACTIVE para ACTIVE. Nome da rota (`enable`) não corresponde 1:1 ao nome da transição de domínio (`activate`) - motivo vem do catálogo ReasonActivate"
+							},
+							"response": []
+						},
+						{
+							"name": "Inactivate company",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reasonId\": 1,\n  \"observation\": \"Observação de exemplo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:id/disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"companies",
+										":id",
+										"disable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-007 - Transição de domínio \"inactivate\": inativa empresa com status ACTIVE para INACTIVE. Nome da rota (`disable`) não corresponde 1:1 ao nome da transição de domínio (`inactivate`) - motivo vem do catálogo ReasonInactivate"
+							},
+							"response": []
+						},
+						{
+							"name": "Block company",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reasonId\": 1,\n  \"observation\": \"Observação de exemplo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:id/block",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"companies",
+										":id",
+										"block"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-008 - Transição de domínio \"disable\": bloqueia empresa, status muda para DISABLED. Nome da rota (`block`) não corresponde 1:1 ao nome da transição de domínio (`disable`) - motivo vem do catálogo ReasonDisable. Só é aceito quando o status atual é ACTIVE - a partir de INACTIVE retorna 4XX"
+							},
+							"response": []
+						},
+						{
+							"name": "Unblock company",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reasonId\": 1,\n  \"observation\": \"Observação de exemplo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:id/unblock",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"companies",
+										":id",
+										"unblock"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-137 - Transição de domínio \"enable\": desbloqueia empresa com status DISABLED para ACTIVE. Nome da rota (`unblock`) não corresponde 1:1 ao nome da transição de domínio (`enable`) - motivo vem do catálogo ReasonEnable"
+							},
+							"response": []
+						},
+						{
+							"name": "Get company status history",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:id/status-history?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"companies",
+										":id",
+										"status-history"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-138 - Histórico paginado e somente leitura das transições de status da empresa, populado exclusivamente pelas rotas enable/disable/block/unblock"
+							},
+							"response": []
+						},
+						{
+							"name": "Get company hierarchy",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:id/hierarchy",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"companies",
+										":id",
+										"hierarchy"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-009 - Retorna a hierarquia completa em árvore recursiva - matriz e filiais em todos os níveis"
+							},
+							"response": []
+						},
+						{
+							"name": "Get company branches",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:id/branches?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"companies",
+										":id",
+										"branches"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "ACTIVE",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-010 - Lista as filiais diretamente vinculadas - primeiro nível, sem recursividade"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Legal Nature",
+					"item": [
+						{
+							"name": "Get all legal natures",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/legal-natures?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"legal-natures"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-093 - Lista todas as naturezas jurídicas com paginação"
+							},
+							"response": []
+						},
+						{
+							"name": "Create a legal nature",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/legal-natures",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"legal-natures"
+									]
+								},
+								"description": "UC-094 - Cria uma nova natureza jurídica"
+							},
+							"response": []
+						},
+						{
+							"name": "Get legal nature by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/legal-natures/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"legal-natures",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-095 - Retorna os dados de uma natureza jurídica"
+							},
+							"response": []
+						},
+						{
+							"name": "Update legal nature",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/legal-natures/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"legal-natures",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-096 - Atualiza o código ou descrição de uma natureza jurídica"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete legal nature",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/legal-natures/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"legal-natures",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-097 - Exclusão física. Rejeitada se houver Company referenciando o registro"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cnae",
+					"item": [
+						{
+							"name": "Get all CNAEs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/cnaes?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"cnaes"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-098 - Lista todos os CNAEs com paginação"
+							},
+							"response": []
+						},
+						{
+							"name": "Create a CNAE",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/cnaes",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"cnaes"
+									]
+								},
+								"description": "UC-099 - Cria um novo CNAE"
+							},
+							"response": []
+						},
+						{
+							"name": "Get CNAE by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/cnaes/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"cnaes",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-100 - Retorna os dados de um CNAE"
+							},
+							"response": []
+						},
+						{
+							"name": "Update CNAE",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/cnaes/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"cnaes",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-101 - Atualiza o código ou descrição de um CNAE"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete CNAE",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/cnaes/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"cnaes",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-102 - Exclusão física. Rejeitada se houver Company.cnaePrincipalId ou CompanyCnaeSecondary referenciando o registro"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Company Cnae Secondary",
+					"item": [
+						{
+							"name": "Get all secondary CNAEs of a company",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:companyId/cnaes-secondary?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"companies",
+										":companyId",
+										"cnaes-secondary"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "companyId",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-103 - Lista os CNAEs secundários associados à empresa, com paginação"
+							},
+							"response": []
+						},
+						{
+							"name": "Add a secondary CNAE to a company",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:companyId/cnaes-secondary/:cnaeId",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"companies",
+										":companyId",
+										"cnaes-secondary",
+										":cnaeId"
+									],
+									"variable": [
+										{
+											"key": "companyId",
+											"value": "1"
+										},
+										{
+											"key": "cnaeId",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-104 - Associa um CNAE existente como secundário da empresa. Rejeita duplicidade e referências inexistentes"
+							},
+							"response": []
+						},
+						{
+							"name": "Remove a secondary CNAE from a company",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/companies/:companyId/cnaes-secondary/:cnaeId",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"companies",
+										":companyId",
+										"cnaes-secondary",
+										":cnaeId"
+									],
+									"variable": [
+										{
+											"key": "companyId",
+											"value": "1"
+										},
+										{
+											"key": "cnaeId",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-105 - Remove a associação do CNAE secundário com a empresa"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Employee",
+					"item": [
+						{
+							"name": "Employee Contact",
+							"item": [
+								{
+									"name": "Get all employee contacts",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/contacts?sizePerPage=100",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"employees",
+												":employeeId",
+												"contacts"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "sizePerPage",
+													"value": "100"
+												},
+												{
+													"key": "direction",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "order",
+													"value": "",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-044 - Lista todos os contatos de um funcionário"
+									},
+									"response": []
+								},
+								{
+									"name": "Create an employee contact",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"contactTypeId\": 1,\n  \"phone\": \"11999999999\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/contacts",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"employees",
+												":employeeId",
+												"contacts"
+											],
+											"variable": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-045 - Adiciona um contato telefônico ao funcionário"
+									},
+									"response": []
+								},
+								{
+									"name": "Get employee contact by id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/contacts/:id",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"employees",
+												":employeeId",
+												"contacts",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												},
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-046 - Retorna um contato específico do funcionário"
+									},
+									"response": []
+								},
+								{
+									"name": "Update employee contact",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"contactTypeId\": 1,\n  \"phone\": \"11999999999\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/contacts/:id",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"employees",
+												":employeeId",
+												"contacts",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												},
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-047 - Atualiza o tipo ou telefone de um contato"
+									},
+									"response": []
+								},
+								{
+									"name": "Delete employee contact",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/contacts/:id",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"employees",
+												":employeeId",
+												"contacts",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												},
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-048 - Remove um contato do funcionário"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Employee Address",
+							"item": [
+								{
+									"name": "Get all employee addresses",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/addresses?sizePerPage=100",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"employees",
+												":employeeId",
+												"addresses"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "sizePerPage",
+													"value": "100"
+												},
+												{
+													"key": "direction",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "order",
+													"value": "",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-049 - Lista todos os endereços vinculados a um funcionário"
+									},
+									"response": []
+								},
+								{
+									"name": "Create an employee address",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"addressTypeId\": 1,\n  \"number\": \"number\",\n  \"complement\": \"complement\",\n  \"latitude\": \"-3.761085\",\n  \"longitude\": \"-38.580236\",\n  \"addressId\": 1\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/addresses",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"employees",
+												":employeeId",
+												"addresses"
+											],
+											"variable": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-050 - Vincula um endereço externo ao funcionário. Integridade do addressId garantida pela aplicação"
+									},
+									"response": []
+								},
+								{
+									"name": "Get employee address by id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/addresses/:id",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"employees",
+												":employeeId",
+												"addresses",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												},
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-051 - Retorna o vínculo de endereço do funcionário"
+									},
+									"response": []
+								},
+								{
+									"name": "Update employee address",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"addressTypeId\": 1,\n  \"number\": \"number\",\n  \"complement\": \"complement\",\n  \"latitude\": \"-3.761085\",\n  \"longitude\": \"-38.580236\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/addresses/:id",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"employees",
+												":employeeId",
+												"addresses",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												},
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-052 - Atualiza os dados do vínculo. Não altera o addressId externo"
+									},
+									"response": []
+								},
+								{
+									"name": "Delete employee address",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/addresses/:id",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"employees",
+												":employeeId",
+												"addresses",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												},
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-053 - Remove o vínculo de endereço. O registro externo não é afetado"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Employee Work Schedule",
+							"item": [
+								{
+									"name": "Get employee work schedule",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/work-schedule",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"employees",
+												":employeeId",
+												"work-schedule"
+											],
+											"variable": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-148 - Lista a jornada de trabalho efetiva do funcionário, um item por dia da semana cadastrado. Retorna array direto, sem paginação - a UK composta (employeeId, dayOfWeek) garante teto real de 7 registros. Dia sem registro não aparece na resposta - o sistema não infere o horário do template do cargo como fallback"
+									},
+									"response": []
+								},
+								{
+									"name": "Create employee work schedule",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"dayOfWeek\": \"MONDAY\",\n  \"startTime\": \"08:00:00\",\n  \"lunchStart\": \"08:00:00\",\n  \"lunchEnd\": \"08:00:00\",\n  \"endTime\": \"08:00:00\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/work-schedule",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"employees",
+												":employeeId",
+												"work-schedule"
+											],
+											"variable": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												}
+											]
+										},
+										"description": "UC-149 - Cria o horário de um dia da semana da jornada efetiva do funcionário. Rejeitado se já existir registro para esse (employeeId, dayOfWeek)"
+									},
+									"response": []
+								},
+								{
+									"name": "Update employee work schedule",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"startTime\": \"08:00:00\",\n  \"lunchStart\": \"08:00:00\",\n  \"lunchEnd\": \"08:00:00\",\n  \"endTime\": \"08:00:00\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/work-schedule/:dayOfWeek",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"employees",
+												":employeeId",
+												"work-schedule",
+												":dayOfWeek"
+											],
+											"variable": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												},
+												{
+													"key": "dayOfWeek",
+													"value": "MONDAY"
+												}
+											]
+										},
+										"description": "UC-150 - Atualiza o horário de um dia da semana já cadastrado na jornada efetiva do funcionário"
+									},
+									"response": []
+								},
+								{
+									"name": "Delete employee work schedule",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/work-schedule/:dayOfWeek",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"employees",
+												":employeeId",
+												"work-schedule",
+												":dayOfWeek"
+											],
+											"variable": [
+												{
+													"key": "employeeId",
+													"value": "1"
+												},
+												{
+													"key": "dayOfWeek",
+													"value": "MONDAY"
+												}
+											]
+										},
+										"description": "UC-151 - Remove o horário de um dia da semana da jornada efetiva do funcionário"
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Get all employees",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "companyId",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "positionId",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "ACTIVE",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-036 - Lista todos os funcionários com paginação e filtros"
+							},
+							"response": []
+						},
+						{
+							"name": "Create an employee",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"name\",\n  \"nameTreatment\": \"nameTreatment\",\n  \"taxIdentifier\": \"12345678000190\",\n  \"email\": \"test@test.com\",\n  \"birthDate\": \"2026-01-17\",\n  \"dateOfHiring\": \"2026-01-17\",\n  \"observation\": \"Observação de exemplo\",\n  \"supervisorId\": 1,\n  \"companyId\": 1,\n  \"positionId\": 1,\n  \"contractType\": \"CLT\",\n  \"probationEndDate\": \"2026-01-17\",\n  \"reasonActivateId\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees"
+									]
+								},
+								"description": "UC-035 - Registra funcionário vinculado a cargo e empresa ativos"
+							},
+							"response": []
+						},
+						{
+							"name": "Get employee by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/rehire",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees",
+										"rehire"
+									]
+								},
+								"description": "UC-037 - Retorna dados completos incluindo cargo, empresa e supervisor"
+							},
+							"response": []
+						},
+						{
+							"name": "Rehire employee",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"taxIdentifier\": \"12345678000190\",\n  \"companyId\": 1,\n  \"positionId\": 1,\n  \"supervisorId\": 1,\n  \"contractType\": \"CLT\",\n  \"probationEndDate\": \"2026-01-17\",\n  \"dateOfRehire\": \"2026-01-17\",\n  \"reasonActivateId\": 1,\n  \"reasonPositionChangeId\": 1,\n  \"observation\": \"Observação de exemplo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/rehire",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees",
+										"rehire"
+									]
+								},
+								"description": "UC-155 - Recontrata um funcionário localizado pelo CPF, cujo status atual é INACTIVE. Reativa a linha existente (INACTIVE→ACTIVE) - não cria um EMPLOYEE novo, preservando EMPLOYEE_ID, TAX_IDENTIFIER e EMAIL originais. Empresa, cargo, supervisor e tipo de contrato podem mudar em relação ao vínculo anterior. reasonPositionChangeId é sempre obrigatório - gera nova linha em EmployeePositionHistory mesmo quando o cargo não muda, fechando a linha antiga via TRG_CLOSE_PREVIOUS_POSITION. Retorna 4XX se não existir funcionário INACTIVE com este CPF (nunca existiu, ou o CPF pertence a um funcionário ACTIVE/DISABLED)"
+							},
+							"response": []
+						},
+						{
+							"name": "Update employee",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"name\",\n  \"nameTreatment\": \"nameTreatment\",\n  \"email\": \"test@test.com\",\n  \"birthDate\": \"2026-01-17\",\n  \"dateOfHiring\": \"2026-01-17\",\n  \"observation\": \"Observação de exemplo\",\n  \"contractType\": \"CLT\",\n  \"probationEndDate\": \"2026-01-17\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/rehire",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees",
+										"rehire"
+									]
+								},
+								"description": "UC-038 - Atualiza dados pessoais. Para empresa, cargo ou supervisor use transfer"
+							},
+							"response": []
+						},
+						{
+							"name": "Activate employee",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reasonId\": 1,\n  \"observation\": \"Observação de exemplo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:id/enable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees",
+										":id",
+										"enable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-039 - Transição de domínio \"activate\": reativa funcionário com status INACTIVE para ACTIVE. Nome da rota (`enable`) não corresponde 1:1 ao nome da transição de domínio (`activate`) - motivo vem do catálogo ReasonActivate"
+							},
+							"response": []
+						},
+						{
+							"name": "Inactivate employee",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reasonId\": 1,\n  \"observation\": \"Observação de exemplo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:id/disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees",
+										":id",
+										"disable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-040 - Transição de domínio \"inactivate\": inativa funcionário com status ACTIVE para INACTIVE. Logins vinculados são inativados e desabilitados no Keycloak via Saga. Nome da rota (`disable`) não corresponde 1:1 ao nome da transição de domínio (`inactivate`) - motivo vem do catálogo ReasonInactivate"
+							},
+							"response": []
+						},
+						{
+							"name": "Block employee",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reasonId\": 1,\n  \"observation\": \"Observação de exemplo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:id/block",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees",
+										":id",
+										"block"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-043 - Transição de domínio \"disable\": bloqueia funcionário, status muda para DISABLED. Logins vinculados são inativados e desabilitados no Keycloak via Saga. Nome da rota (`block`) não corresponde 1:1 ao nome da transição de domínio (`disable`) - motivo vem do catálogo ReasonDisable. Só é aceito quando o status atual é ACTIVE - a partir de INACTIVE retorna 4XX"
+							},
+							"response": []
+						},
+						{
+							"name": "Unblock employee",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reasonId\": 1,\n  \"observation\": \"Observação de exemplo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:id/unblock",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees",
+										":id",
+										"unblock"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-139 - Transição de domínio \"enable\": desbloqueia funcionário com status DISABLED para ACTIVE. Nome da rota (`unblock`) não corresponde 1:1 ao nome da transição de domínio (`enable`) - motivo vem do catálogo ReasonEnable"
+							},
+							"response": []
+						},
+						{
+							"name": "Get employee status history",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:id/status-history?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees",
+										":id",
+										"status-history"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-140 - Histórico paginado e somente leitura das transições de status do funcionário, populado exclusivamente pelas rotas enable/disable/block/unblock"
+							},
+							"response": []
+						},
+						{
+							"name": "Transfer employee",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"companyId\": 1,\n  \"positionId\": 1,\n  \"supervisorId\": 1,\n  \"dateOfTransfer\": \"2026-01-17\",\n  \"reasonPositionChangeId\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:id/transfer",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees",
+										":id",
+										"transfer"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-041 - Transfere para outra empresa, filial, cargo ou supervisor. Mudança de empresa dispara Saga Keycloak TYPE=UPDATE"
+							},
+							"response": []
+						},
+						{
+							"name": "Get employee hierarchy",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:id/hierarchy",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees",
+										":id",
+										"hierarchy"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-042 - Retorna a cadeia de supervisores em árvore ascendente"
+							},
+							"response": []
+						},
+						{
+							"name": "Get employee subordinates",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:id/subordinates?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees",
+										":id",
+										"subordinates"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "ACTIVE",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-080 - Lista os funcionários que reportam diretamente ao funcionário informado"
+							},
+							"response": []
+						},
+						{
+							"name": "Get employee position history",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:id/position-history?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees",
+										":id",
+										"position-history"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-112 - Lista o histórico de cargos do funcionário, paginado, do mais recente para o mais antigo. A linha com endDate nulo é a atribuição vigente"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"item": [
+						{
+							"name": "Get all logins",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/logins?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"logins"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "type",
+											"value": "EMPLOYEE",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "ACTIVE",
+											"disabled": true
+										},
+										{
+											"key": "employeeId",
+											"value": "1",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-058 - Lista todos os logins do sistema - funcionários, externos e serviços"
+							},
+							"response": []
+						},
+						{
+							"name": "Create a login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"login\",\n  \"profileId\": 1,\n  \"type\": \"EXTERNAL\",\n  \"reasonActivateId\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/logins",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"logins"
+									]
+								},
+								"description": "UC-057 - Cria login sem vínculo com funcionário para EXTERNAL ou SERVICE. Inicia a Saga Keycloak"
+							},
+							"response": []
+						},
+						{
+							"name": "Get current login information",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/logins/me",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"logins",
+										"me"
+									]
+								},
+								"description": "UC-059 - Retorna o contexto completo do usuário autenticado - dados pessoais, empresa, filial, perfil e permissões"
+							},
+							"response": []
+						},
+						{
+							"name": "Get login by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/logins/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"logins",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-060 - Retorna os dados de um login pelo identificador interno"
+							},
+							"response": []
+						},
+						{
+							"name": "Update login",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"login\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/logins/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"logins",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-062 - Atualiza o e-mail de login. Dispara Saga Keycloak TYPE=UPDATE"
+							},
+							"response": []
+						},
+						{
+							"name": "Activate login",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reasonId\": 1,\n  \"observation\": \"Observação de exemplo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/logins/:id/enable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"logins",
+										":id",
+										"enable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-141 - Transição de domínio \"activate\": reativa login com status INACTIVE para ACTIVE. Dispara Saga Keycloak TYPE=UPDATE reabilitando o usuário (enabled=true). Motivo vem do catálogo ReasonActivate"
+							},
+							"response": []
+						},
+						{
+							"name": "Inactivate login",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reasonId\": 1,\n  \"observation\": \"Observação de exemplo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/logins/:id/disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"logins",
+										":id",
+										"disable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-142 - Transição de domínio \"inactivate\": inativa login com status ACTIVE para INACTIVE. Dispara Saga Keycloak TYPE=UPDATE desabilitando o usuário (enabled=false). Motivo vem do catálogo ReasonInactivate"
+							},
+							"response": []
+						},
+						{
+							"name": "Block login",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reasonId\": 1,\n  \"observation\": \"Observação de exemplo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/logins/:id/block",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"logins",
+										":id",
+										"block"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-063 - Transição de domínio \"disable\": bloqueia o acesso por segurança, status muda para BLOCKED. Dispara Saga Keycloak TYPE=UPDATE desabilitando o usuário (enabled=false). Nome da rota (`block`) não corresponde 1:1 ao nome da transição de domínio (`disable`) - motivo vem do catálogo ReasonDisable. Só é aceito quando o status atual é ACTIVE - a partir de INACTIVE retorna 4XX"
+							},
+							"response": []
+						},
+						{
+							"name": "Unblock login",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"reasonId\": 1,\n  \"observation\": \"Observação de exemplo\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/logins/:id/unblock",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"logins",
+										":id",
+										"unblock"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-064 - Transição de domínio \"enable\": restaura o acesso de um login BLOCKED, status muda para ACTIVE. Dispara Saga Keycloak TYPE=UPDATE reabilitando o usuário (enabled=true). Nome da rota (`unblock`) não corresponde 1:1 ao nome da transição de domínio (`enable`) - motivo vem do catálogo ReasonEnable"
+							},
+							"response": []
+						},
+						{
+							"name": "Get login status history",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/logins/:id/status-history?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"logins",
+										":id",
+										"status-history"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-143 - Histórico paginado e somente leitura das transições de status do login, populado exclusivamente pelas rotas enable/disable/block/unblock"
+							},
+							"response": []
+						},
+						{
+							"name": "Update login profile",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/logins/:id/profile/:profileId",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"logins",
+										":id",
+										"profile",
+										":profileId"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										},
+										{
+											"key": "profileId",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-065 - Substitui o perfil do login. Novas permissões valem na próxima validação"
+							},
+							"response": []
+						},
+						{
+							"name": "Get all additional login profiles",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/logins/:id/profiles?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"logins",
+										":id",
+										"profiles"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-152 - Lista paginada dos perfis adicionais do login (SCOS_LOGIN_PROFILE, relação N:N). Distinto do perfil principal (1:1, Login.profileId), gerenciado por PUT /logins/{id}/profile/{profileId}"
+							},
+							"response": []
+						},
+						{
+							"name": "Add an additional login profile",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/logins/:id/profiles/:profileId",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"logins",
+										":id",
+										"profiles",
+										":profileId"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										},
+										{
+											"key": "profileId",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-153 - Adiciona um perfil adicional ao login (SCOS_LOGIN_PROFILE). Sem request body - chave via path params. profileId não pode ser igual ao perfil principal do login (Login.profileId) - rejeitado com 4XX antes da trigger TRG_VALIDATE_LOGIN_PROFILE_NOT_PRIMARY do banco"
+							},
+							"response": []
+						},
+						{
+							"name": "Remove an additional login profile",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/logins/:id/profiles/:profileId",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"logins",
+										":id",
+										"profiles",
+										":profileId"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										},
+										{
+											"key": "profileId",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-154 - Remove um perfil adicional do login (SCOS_LOGIN_PROFILE). Sem request body. Idempotente: remover uma associação (loginId, profileId) que não existe retorna 204, não 404"
+							},
+							"response": []
+						},
+						{
+							"name": "Get all employee logins",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/logins?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees",
+										":employeeId",
+										"logins"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "employeeId",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-055 - Lista os logins de um funcionário incluindo todos os status para histórico"
+							},
+							"response": []
+						},
+						{
+							"name": "Create employee login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"login\": \"login\",\n  \"profileId\": 1,\n  \"reasonActivateId\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/logins",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees",
+										":employeeId",
+										"logins"
+									],
+									"variable": [
+										{
+											"key": "employeeId",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-054 - Cria login tipo EMPLOYEE vinculado ao funcionário. Inicia a Saga Keycloak com atributos de empresa e filial"
+							},
+							"response": []
+						},
+						{
+							"name": "Get employee login by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/employees/:employeeId/logins/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"employees",
+										":employeeId",
+										"logins",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "employeeId",
+											"value": "1"
+										},
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-056 - Retorna um login específico do funcionário incluindo perfil e status da integração"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Profile",
+					"item": [
+						{
+							"name": "Get all profiles",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/profiles?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"profiles"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "active",
+											"value": "True",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-068 - Lista todos os perfis com paginação"
+							},
+							"response": []
+						},
+						{
+							"name": "Create profile",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/profiles",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"profiles"
+									]
+								},
+								"description": "UC-067 - Cria um perfil de acesso. Sem recursos atribuídos não concede nenhum acesso"
+							},
+							"response": []
+						},
+						{
+							"name": "Get profile by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/profiles/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"profiles",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-069 - Retorna os dados do perfil incluindo recursos atribuídos"
+							},
+							"response": []
+						},
+						{
+							"name": "Update profile",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/profiles/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"profiles",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-070 - Atualiza o código ou descrição. Para os recursos use o endpoint de resources"
+							},
+							"response": []
+						},
+						{
+							"name": "Delete profile",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/profiles/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"profiles",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-073 - Exclusão lógica. Registro permanece com status DISABLED"
+							},
+							"response": []
+						},
+						{
+							"name": "Activate profile",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/profiles/:id/enable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"profiles",
+										":id",
+										"enable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-071 - Reativa perfil com status INACTIVE"
+							},
+							"response": []
+						},
+						{
+							"name": "Inactivate profile",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/profiles/:id/disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"profiles",
+										":id",
+										"disable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-072 - Inativa perfil. Logins existentes não são afetados - impede apenas novas atribuições"
+							},
+							"response": []
+						},
+						{
+							"name": "Get profile resources",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/profiles/:id/resources?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"profiles",
+										":id",
+										"resources"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-074 - Lista os recursos atribuídos ao perfil"
+							},
+							"response": []
+						},
+						{
+							"name": "Update resources in profile",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"resourceIds\": [\n    \"144356bb-2392-4544-b09d-2290532c97ba\"\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/profiles/:id/resources",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"profiles",
+										":id",
+										"resources"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-075 - Substitui a lista completa de recursos do perfil. Logins refletem na próxima validação"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Resource",
+					"item": [
+						{
+							"name": "Get all resources",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/resources?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"resources"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "systemId",
+											"value": "d4fd300a-1b4a-4fe4-9fef-cf92b23f9374",
+											"disabled": true
+										},
+										{
+											"key": "active",
+											"value": "True",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-076 - Lista os recursos cadastrados pelos sistemas externos. Somente leitura - cadastro via scos-registry (gRPC)"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "System",
+					"item": [
+						{
+							"name": "Get all systems",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/systems?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"systems"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "ACTIVE",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-158 - Lista paginada dos sistemas externos autorizados a usar a central de permissões. Somente leitura - cadastro via scos-registry (gRPC). SECRET_KEY nunca é retornada"
+							},
+							"response": []
+						},
+						{
+							"name": "Get system by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/systems/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"systems",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "118f35e7-f88c-4426-8da6-f1e675181c8a"
+										}
+									]
+								},
+								"description": "UC-159 - Retorna o detalhe de um sistema externo cadastrado. SECRET_KEY nunca é retornada"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "AddressType",
+					"item": [
+						{
+							"name": "Get all address types",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/address-types?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"address-types"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "entityType",
+											"value": "COMPANY",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-081 - Lista todos os tipos de endereço com paginação. Pode filtrar por entityType"
+							},
+							"response": []
+						},
+						{
+							"name": "Create an address type",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\",\n  \"entityType\": \"COMPANY\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/address-types",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"address-types"
+									]
+								},
+								"description": "UC-082 - Cria um novo tipo de endereço"
+							},
+							"response": []
+						},
+						{
+							"name": "Get address type by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/address-types/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"address-types",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-083 - Retorna os dados de um tipo de endereço"
+							},
+							"response": []
+						},
+						{
+							"name": "Update address type",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\",\n  \"entityType\": \"COMPANY\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/address-types/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"address-types",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-084 - Atualiza o código, descrição ou entityType de um tipo de endereço"
+							},
+							"response": []
+						},
+						{
+							"name": "Activate address type",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/address-types/:id/enable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"address-types",
+										":id",
+										"enable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-085 - Reativa tipo de endereço com active=false"
+							},
+							"response": []
+						},
+						{
+							"name": "Inactivate address type",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/address-types/:id/disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"address-types",
+										":id",
+										"disable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-086 - Inativa tipo de endereço com active=true"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ContactType",
+					"item": [
+						{
+							"name": "Get all contact types",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/contact-types?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"contact-types"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "entityType",
+											"value": "COMPANY",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-087 - Lista todos os tipos de contato com paginação. Pode filtrar por entityType"
+							},
+							"response": []
+						},
+						{
+							"name": "Create a contact type",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\",\n  \"entityType\": \"COMPANY\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/contact-types",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"contact-types"
+									]
+								},
+								"description": "UC-088 - Cria um novo tipo de contato"
+							},
+							"response": []
+						},
+						{
+							"name": "Get contact type by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/contact-types/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"contact-types",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-089 - Retorna os dados de um tipo de contato"
+							},
+							"response": []
+						},
+						{
+							"name": "Update contact type",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\",\n  \"entityType\": \"COMPANY\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/contact-types/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"contact-types",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-090 - Atualiza o código, descrição ou entityType de um tipo de contato"
+							},
+							"response": []
+						},
+						{
+							"name": "Activate contact type",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/contact-types/:id/enable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"contact-types",
+										":id",
+										"enable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-091 - Reativa tipo de contato com active=false"
+							},
+							"response": []
+						},
+						{
+							"name": "Inactivate contact type",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/contact-types/:id/disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"contact-types",
+										":id",
+										"disable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-092 - Inativa tipo de contato com active=true"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ReasonActivate",
+					"item": [
+						{
+							"name": "Get all ReasonActivate entries",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-activate?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-activate"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "entityType",
+											"value": "COMPANY",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-113 - Lista todos os motivos de ativação com paginação. Pode filtrar por entityType"
+							},
+							"response": []
+						},
+						{
+							"name": "Create a ReasonActivate entry",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\",\n  \"entityType\": \"COMPANY\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-activate",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-activate"
+									]
+								},
+								"description": "UC-114 - Cria um novo motivo de ativação"
+							},
+							"response": []
+						},
+						{
+							"name": "Get activation reason by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-activate/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-activate",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-115 - Retorna os dados de um motivo de ativação"
+							},
+							"response": []
+						},
+						{
+							"name": "Update activation reason",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\",\n  \"entityType\": \"COMPANY\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-activate/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-activate",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-116 - Atualiza o código, descrição ou entityType de um motivo de ativação"
+							},
+							"response": []
+						},
+						{
+							"name": "Reactivate ReasonActivate entry",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-activate/:id/enable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-activate",
+										":id",
+										"enable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-117 - Reativa motivo de ativação com active=false"
+							},
+							"response": []
+						},
+						{
+							"name": "Deactivate ReasonActivate entry",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-activate/:id/disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-activate",
+										":id",
+										"disable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-118 - Inativa motivo de ativação com active=true"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ReasonInactivate",
+					"item": [
+						{
+							"name": "Get all ReasonInactivate entries",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-inactivate?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-inactivate"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "entityType",
+											"value": "COMPANY",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-119 - Lista todos os motivos de inativação com paginação. Pode filtrar por entityType"
+							},
+							"response": []
+						},
+						{
+							"name": "Create a ReasonInactivate entry",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\",\n  \"entityType\": \"COMPANY\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-inactivate",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-inactivate"
+									]
+								},
+								"description": "UC-120 - Cria um novo motivo de inativação"
+							},
+							"response": []
+						},
+						{
+							"name": "Get inactivation reason by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-inactivate/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-inactivate",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-121 - Retorna os dados de um motivo de inativação"
+							},
+							"response": []
+						},
+						{
+							"name": "Update inactivation reason",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\",\n  \"entityType\": \"COMPANY\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-inactivate/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-inactivate",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-122 - Atualiza o código, descrição ou entityType de um motivo de inativação"
+							},
+							"response": []
+						},
+						{
+							"name": "Reactivate ReasonInactivate entry",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-inactivate/:id/enable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-inactivate",
+										":id",
+										"enable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-123 - Reativa motivo de inativação com active=false"
+							},
+							"response": []
+						},
+						{
+							"name": "Deactivate ReasonInactivate entry",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-inactivate/:id/disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-inactivate",
+										":id",
+										"disable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-124 - Inativa motivo de inativação com active=true"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ReasonDisable",
+					"item": [
+						{
+							"name": "Get all ReasonDisable entries",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-disable?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-disable"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "entityType",
+											"value": "COMPANY",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-125 - Lista todos os motivos de bloqueio com paginação. Pode filtrar por entityType"
+							},
+							"response": []
+						},
+						{
+							"name": "Create a ReasonDisable entry",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\",\n  \"entityType\": \"COMPANY\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-disable"
+									]
+								},
+								"description": "UC-126 - Cria um novo motivo de bloqueio"
+							},
+							"response": []
+						},
+						{
+							"name": "Get disable reason by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-disable/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-disable",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-127 - Retorna os dados de um motivo de bloqueio"
+							},
+							"response": []
+						},
+						{
+							"name": "Update disable reason",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\",\n  \"entityType\": \"COMPANY\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-disable/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-disable",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-128 - Atualiza o código, descrição ou entityType de um motivo de bloqueio"
+							},
+							"response": []
+						},
+						{
+							"name": "Reactivate ReasonDisable entry",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-disable/:id/enable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-disable",
+										":id",
+										"enable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-129 - Reativa motivo de bloqueio com active=false"
+							},
+							"response": []
+						},
+						{
+							"name": "Deactivate ReasonDisable entry",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-disable/:id/disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-disable",
+										":id",
+										"disable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-130 - Inativa motivo de bloqueio com active=true"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "ReasonEnable",
+					"item": [
+						{
+							"name": "Get all ReasonEnable entries",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-enable?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-enable"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "entityType",
+											"value": "COMPANY",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-131 - Lista todos os motivos de desbloqueio com paginação. Pode filtrar por entityType"
+							},
+							"response": []
+						},
+						{
+							"name": "Create a ReasonEnable entry",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\",\n  \"entityType\": \"COMPANY\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-enable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-enable"
+									]
+								},
+								"description": "UC-132 - Cria um novo motivo de desbloqueio"
+							},
+							"response": []
+						},
+						{
+							"name": "Get enable reason by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-enable/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-enable",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-133 - Retorna os dados de um motivo de desbloqueio"
+							},
+							"response": []
+						},
+						{
+							"name": "Update enable reason",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"code\": \"COD1\",\n  \"description\": \"description\",\n  \"entityType\": \"COMPANY\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-enable/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-enable",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-134 - Atualiza o código, descrição ou entityType de um motivo de desbloqueio"
+							},
+							"response": []
+						},
+						{
+							"name": "Reactivate ReasonEnable entry",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-enable/:id/enable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-enable",
+										":id",
+										"enable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-135 - Reativa motivo de desbloqueio com active=false"
+							},
+							"response": []
+						},
+						{
+							"name": "Deactivate ReasonEnable entry",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/reason-enable/:id/disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"reason-enable",
+										":id",
+										"disable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "UC-136 - Inativa motivo de desbloqueio com active=true"
 							},
 							"response": []
 						}
@@ -1128,7 +5531,29 @@
 					"name": "Configuration",
 					"item": [
 						{
-							"name": "Get All",
+							"name": "Get all Keys configurations",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/configurations/keys",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"configurations",
+										"keys"
+									]
+								},
+								"description": "UC-160 - Lista todas as chaves de configurações disponivel no sistema."
+							},
+							"response": []
+						},
+						{
+							"name": "Get all configurations",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -1143,12 +5568,13 @@
 										"v1",
 										"configurations"
 									]
-								}
+								},
+								"description": "UC-077 - Lista todas as configurações do sistema. Valores sensíveis são mascarados"
 							},
 							"response": []
 						},
 						{
-							"name": "Get By Id",
+							"name": "Get configuration by id",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -1167,21 +5593,22 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "EMPLOYEE_MIN_AGE"
+											"value": "id"
 										}
 									]
-								}
+								},
+								"description": "UC-078 - Retorna uma configuração pelo identificador textual. Valores sensíveis são mascarados"
 							},
 							"response": []
 						},
 						{
-							"name": "Update",
+							"name": "Update configuration",
 							"request": {
 								"method": "PUT",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"value\": 12\n}",
+									"raw": "{\n  \"value\": \"12\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1203,20 +5630,26 @@
 									"variable": [
 										{
 											"key": "id",
-											"value": "EMPLOYEE_MIN_AGE"
+											"value": "id"
 										}
 									]
-								}
+								},
+								"description": "UC-079 - Atualiza o valor de uma configuração existente em tempo real. O valor deve ser compatível com o tipo declarado"
 							},
 							"response": []
-						},
+						}
+					]
+				},
+				{
+					"name": "Outbox",
+					"item": [
 						{
-							"name": "Get All Keys",
+							"name": "Get all outbox events",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{url}}:{{port}}/{{base_url}}/v1/configurations/keys",
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/outbox-events?sizePerPage=100",
 									"host": [
 										"{{url}}"
 									],
@@ -1224,10 +5657,286 @@
 									"path": [
 										"{{base_url}}",
 										"v1",
-										"configurations",
-										"keys"
+										"outbox-events"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "topic",
+											"value": "topic",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "PENDING",
+											"disabled": true
+										},
+										{
+											"key": "aggregateId",
+											"value": "aggregateId",
+											"disabled": true
+										}
 									]
-								}
+								},
+								"description": "Lista paginada de eventos do outbox, filtrável por tópico, status e id do agregado de origem"
+							},
+							"response": []
+						},
+						{
+							"name": "Get outbox event by id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/outbox-events/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"outbox-events",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "Retorna o detalhe de um evento do outbox, incluindo payload, dados de resposta (quando o backend do tópico é DIRECT_API), contagem de tentativas e mensagem de erro"
+							},
+							"response": []
+						},
+						{
+							"name": "Get outbox event logs",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/outbox-events/:id/logs?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"outbox-events",
+										":id",
+										"logs"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "Lista paginada das tentativas de entrega de um evento do outbox, uma linha por consumidor/tentativa"
+							},
+							"response": []
+						},
+						{
+							"name": "Retry outbox event",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/outbox-events/:id/retry",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"outbox-events",
+										":id",
+										"retry"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "Reprocessa um evento do outbox — só válido quando o status atual é FAILED, volta o status para PENDING. Rejeita com 4XX quando o status atual não é FAILED"
+							},
+							"response": []
+						},
+						{
+							"name": "Get all outbox event dead letters",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/outbox-events/dead-letters?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"outbox-events",
+										"dead-letters"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "topic",
+											"value": "topic",
+											"disabled": true
+										},
+										{
+											"key": "errorType",
+											"value": "errorType",
+											"disabled": true
+										}
+									]
+								},
+								"description": "Lista paginada de eventos do outbox que excederam o número de tentativas ou chegaram corrompidos, filtrável por tópico e tipo de erro"
+							},
+							"response": []
+						},
+						{
+							"name": "Get all outbox topics",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/outbox-topics?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"outbox-topics"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "backend",
+											"value": "PGMQ",
+											"disabled": true
+										},
+										{
+											"key": "active",
+											"value": "True",
+											"disabled": true
+										}
+									]
+								},
+								"description": "UC-156 - Lista paginada dos tópicos cadastrados (SCOS_OUTBOX_TOPIC) e seu roteamento. Somente leitura - cadastro é uma linha de configuração/migração, não um endpoint de escrita"
+							},
+							"response": []
+						},
+						{
+							"name": "Get outbox topic by name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/outbox-topics/:topic",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"outbox-topics",
+										":topic"
+									],
+									"variable": [
+										{
+											"key": "topic",
+											"value": "topic"
+										}
+									]
+								},
+								"description": "UC-157 - Retorna o detalhe de roteamento de um tópico pelo nome (chave natural, sem id substituto)"
 							},
 							"response": []
 						}
@@ -1269,19 +5978,24 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"// Verifica se a requisição foi bem-sucedida\r",
+							"// Verifica se o status code é 200 (Sucesso)\r",
 							"if (pm.response.code === 200) {\r",
-							"    var jsonResponse = pm.response.json();\r",
-							"    // Acessa o valor do 'access_token' na resposta\r",
-							"    var accessToken = jsonResponse.access_token;\r",
+							"    try {\r",
+							"        const jsonResponse = pm.response.json();\r",
+							"        const accessToken = jsonResponse.access_token;\r",
 							"\r",
-							"    // Armazena o token na variável de ambiente (pode ser global também)\r",
-							"    pm.collectionVariables.set(\"access_token\", accessToken);\r",
-							"\r",
-							"    // (Opcional) Exibe o token no console para verificação\r",
-							"    console.log(\"Token obtido:\", accessToken);\r",
+							"        if (accessToken) {\r",
+							"            // Armazena na coleção\r",
+							"            pm.collectionVariables.set(\"access_token\", accessToken);\r",
+							"            console.log(\"Token obtido com sucesso.\");\r",
+							"        } else {\r",
+							"            console.warn(\"Aviso: 'access_token' não encontrado no JSON de resposta.\");\r",
+							"        }\r",
+							"    } catch (e) {\r",
+							"        console.error(\"Erro ao tentar ler o JSON da resposta:\", e);\r",
+							"    }\r",
 							"} else {\r",
-							"    console.log(\"Falha na requisição, não foi possível obter o token\");\r",
+							"    console.error(`Falha na requisição. Status: ${pm.response.code} - ${pm.response.status}`);\r",
 							"}\r",
 							""
 						],

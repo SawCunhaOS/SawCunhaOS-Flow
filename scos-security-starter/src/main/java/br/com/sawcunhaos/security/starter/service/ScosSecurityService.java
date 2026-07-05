@@ -1,7 +1,7 @@
 package br.com.sawcunhaos.security.starter.service;
 
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.exception.error.ScosSecurityException;
 import br.com.sawcunhaos.organization.grpc.proto.AuthorityResponse;
 import br.com.sawcunhaos.security.starter.model.ScosSecurityContext;
 import br.com.sawcunhaos.security.starter.service.grpc.ScosAuthorityService;
@@ -45,7 +45,7 @@ public class ScosSecurityService implements ScosSecurity {
                     .build();
         } catch (Exception e) {
             log.error("Error getting all granted authority for login: {}", login, e);
-            throw new ScosException(SecurityExceptionCode.SCOS_AUTH_002);
+            throw new ScosSecurityException(SecurityExceptionCode.SCOS_AUTH_002);
         }
     }
 
