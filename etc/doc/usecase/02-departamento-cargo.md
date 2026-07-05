@@ -78,14 +78,6 @@ Mesmos campos que o `POST`. `code` único excluindo `{id}`. Se `departmentId` mu
 **Use Cases de Sucesso:** UC-S1: `204`
 **Use Cases de Erro:** UC-E1: `{id}` não encontrado → `404` | UC-E2: `code` duplicado → `409` | UC-E3: novo `departmentId` inativo → `422`
 
-### DELETE /v1/positions/{id}
-**UC-034** | `DELETE_POSITION` — exclusão lógica (`ACTIVE=false`).
-
-**Regra:** não pode existir Funcionário com `positionId = {id}` e status `ACTIVE`.
-
-**Use Cases de Sucesso:** UC-S1: → `204`
-**Use Cases de Erro:** UC-E1: `{id}` não encontrado → `404` | UC-E2: funcionários ativos vinculados → `422` `SCOS_POSITION_003`
-
 ### PUT /v1/positions/{id}/enable
 **UC-032** | `ENABLE_POSITION` — `ACTIVE=false → true`.
 

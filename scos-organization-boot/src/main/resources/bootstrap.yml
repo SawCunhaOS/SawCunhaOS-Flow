@@ -207,7 +207,7 @@ scos:
       change-log: classpath:db/changelog/db_audit.changelog-master.yaml
       default-schema: scos
   jdempotent:
-    enabled: ${scos.jdempotent.enable:false}
+    enabled: ${scos.jdempotent.enabled:false}
     cache:
       redis:
         expirationTimeHour: ${scos.jdempotent.expiration-time-hour}

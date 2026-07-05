@@ -41,4 +41,13 @@ public interface EmployeeQueryRepository extends BaseJpaRepository<Employee, Lon
         return exists(booleanBuilder.getValue());
     }
 
+    default boolean existsByPositionIdAndStatus(Long positionId, StatusEmployee status) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        booleanBuilder.and(qEmployee.position.id.eq(positionId))
+                .and(qEmployee.status.eq(status));
+
+        return exists(booleanBuilder.getValue());
+    }
+
 }

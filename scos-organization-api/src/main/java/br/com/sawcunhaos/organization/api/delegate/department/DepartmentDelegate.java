@@ -55,7 +55,7 @@ public class DepartmentDelegate implements DepartmentApiDelegate {
 
     @Override
     public GetAllDepartmentsResponse getAllDepartments(PaginationFilter paginationFilter, Optional<UUID> xRequestID, Optional<String> acceptLanguage, Optional<Boolean> active) {
-        return findAllDepartmentUseCase.execute(paginationFilter);
+        return findAllDepartmentUseCase.execute(paginationFilter, active.orElse(null));
     }
 
     @Override

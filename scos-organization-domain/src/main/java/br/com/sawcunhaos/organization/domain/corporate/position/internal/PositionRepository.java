@@ -56,4 +56,20 @@ public interface PositionRepository extends BaseJpaRepository<Position, Long>, J
 
         return exists(booleanBuilder.getValue());
     }
+
+    default Page<Position> findAllFiltered(Long departmentId, Boolean active, Pageable pageable) {
+        if (departmentId == null && active == null) {
+            return findAll(pageable);
+        }
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        if (departmentId != null) {
+            booleanBuilder.and(qPosition.department.id.eq(departmentId));
+        }
+        if (active != null) {
+            booleanBuilder.and(qPosition.active.eq(active));
+        }
+
+        return findAll(booleanBuilder.getValue(), pageable);
+    }
 }

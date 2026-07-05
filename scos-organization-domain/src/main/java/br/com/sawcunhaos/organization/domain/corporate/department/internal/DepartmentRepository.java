@@ -13,13 +13,11 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.department.internal;
 
-import br.com.sawcunhaos.organization.domain.corporate.department.dto.DepartmentOutput;
 import com.querydsl.core.BooleanBuilder;
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
@@ -30,16 +28,7 @@ import java.util.Optional;
 public interface DepartmentRepository extends BaseJpaRepository<Department, Long>, JpaSpecificationExecutor<Department>, QuerydslPredicateExecutor<Department> {
     QDepartment qDepartment = QDepartment.department;
 
-    @Query("""
-        SELECT new br.com.sawcunhaos.organization.domain.corporate.department.dto.DepartmentOutput(
-                d.id,
-                d.code,
-                d.description,
-                d.active
-        )
-        FROM Department d
-        """)
-    Page<DepartmentOutput> findAll(Pageable pageable);
+    Page<Department> findAll(Pageable pageable);
 
     Optional<Department> findById(Long id);
 
@@ -65,6 +54,17 @@ public interface DepartmentRepository extends BaseJpaRepository<Department, Long
                         qDepartment.positions.any().active.isTrue()
                 )
         );
+    }
+
+    default Page<Department> findAllFiltered(Boolean active, Pageable pageable) {
+        if (active == null) {
+            return findAll(pageable);
+        }
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(qDepartment.active.eq(active));
+
+        return findAll(booleanBuilder.getValue(), pageable);
     }
 
 }

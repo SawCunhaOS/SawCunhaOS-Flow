@@ -28,7 +28,7 @@ scos:
       issuer-uri: http://localhost:7080/realms/Scos
       resourceId: "Scos"
   jdempotent:
-    enable: false
+    enabled: true
     expiration-time-hour: 2
     dial-timeout-second: 3
     read-timeout-second: 3
@@ -36,12 +36,12 @@ scos:
     max-retry-count: 3
     expire-timeout-hour: 3
   cache:
-    enable: false
+    enable: true
     key-prefix: 'api::'
     time-to-live: 12000000
     port: 26379
     database: 0
-    master: inside_flow_master
+    master: scos_master
     password: scos#2026
     sentinels: localhost:26379
   liquibase:

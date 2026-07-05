@@ -25,7 +25,7 @@ public interface DepartmentService {
     DepartmentOutput create(@NonNull DepartmentInput departmentInput);
     void update(@NonNull DepartmentInput departmentInput);
     DepartmentOutput findById(@NonNull Long departmentId);
-    Page<DepartmentOutput> findAll(@NonNull Pageable pageable);
+    Page<DepartmentOutput> findAll(@NonNull Boolean active, @NonNull Pageable pageable);
     void enable(@NonNull Long departmentId);
     void disable(@NonNull Long departmentId);
 

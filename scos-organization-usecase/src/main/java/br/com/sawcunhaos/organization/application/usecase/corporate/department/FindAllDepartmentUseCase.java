@@ -18,5 +18,5 @@ import br.com.sawcunhaos.organization.api.dto.PaginationFilter;
 import org.jspecify.annotations.NonNull;
 
 public interface FindAllDepartmentUseCase {
-    GetAllDepartmentsResponse execute(@NonNull PaginationFilter paginationFilter);
+    GetAllDepartmentsResponse execute(@NonNull PaginationFilter paginationFilter, @NonNull Boolean active);
 }

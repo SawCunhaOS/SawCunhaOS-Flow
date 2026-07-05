@@ -1,0 +1,1428 @@
+{
+	"info": {
+		"_postman_id": "4e5291ec-1322-4d8b-859e-578c104be584",
+		"name": "Scos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39295595"
+	},
+	"item": [
+		{
+			"name": "Organization",
+			"item": [
+				{
+					"name": "Department",
+					"item": [
+						{
+							"name": "Get All",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/departments?sizePerPage=100",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"departments"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "100"
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get By Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/departments/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"departments",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"code\": \"RH\",\r\n  \"description\": \"Recursos Humanos\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/departments",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"departments"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"code\": \"ADMIN\",\r\n  \"description\": \"Tecnologia e Desenvolvimento\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/departments/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"departments",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Disable",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/departments/:id/disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"departments",
+										":id",
+										"disable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Enable",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/departments/:id/enable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"departments",
+										":id",
+										"enable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Company",
+					"item": [
+						{
+							"name": "Address",
+							"item": [
+								{
+									"name": "Get All",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"Empresa Valida New\",\r\n  \"nameTreatment\": \"Empresa Valida S.A.\",\r\n  \"taxIdentifier\": \"9IVZM46I4LSF27\",\r\n  \"foundationDate\": \"2026-01-17\",\r\n  \"sectorOfActivity\": \"TI\",\r\n  \"observation\": \"Essa e uma empresa falsa\"\r\n}"
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/address",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"company",
+												":id",
+												"address"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get By Id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/address/:idAddress",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"company",
+												":id",
+												"address",
+												":idAddress"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "sizePerPage",
+													"value": "1",
+													"disabled": true
+												},
+												{
+													"key": "direction",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "order",
+													"value": "",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												},
+												{
+													"key": "idAddress",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/address/:idAddress",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"company",
+												":id",
+												"address",
+												":idAddress"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "sizePerPage",
+													"value": "1",
+													"disabled": true
+												},
+												{
+													"key": "direction",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "order",
+													"value": "",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												},
+												{
+													"key": "idAddress",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"type\": \"LOJA\",\r\n  \"number\": \"49\",\r\n  \"complement\": \"E uma loja Azul\",\r\n  \"latitude\": \"-3.761085\",\r\n  \"longitude\": \"-38.580236\",\r\n  \"addressId\": 1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/address",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"company",
+												":id",
+												"address"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"type\": \"CASA\",\r\n  \"number\": \"49\",\r\n  \"complement\": \"A casa de um gato\",\r\n  \"latitude\": \"-3.761085\",\r\n  \"longitude\": \"-38.580236\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/address/:idAddress",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"company",
+												":id",
+												"address",
+												":idAddress"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												},
+												{
+													"key": "idAddress",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Contact",
+							"item": [
+								{
+									"name": "Get All",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"name\": \"Empresa Valida New\",\r\n  \"nameTreatment\": \"Empresa Valida S.A.\",\r\n  \"taxIdentifier\": \"9IVZM46I4LSF27\",\r\n  \"foundationDate\": \"2026-01-17\",\r\n  \"sectorOfActivity\": \"TI\",\r\n  \"observation\": \"Essa e uma empresa falsa\"\r\n}"
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/contact",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"company",
+												":id",
+												"contact"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get By Id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/contact/:idcontact",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"company",
+												":id",
+												"contact",
+												":idcontact"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "sizePerPage",
+													"value": "1",
+													"disabled": true
+												},
+												{
+													"key": "direction",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "order",
+													"value": "",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												},
+												{
+													"key": "idcontact",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/contact/:idcontact",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"company",
+												":id",
+												"contact",
+												":idcontact"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "sizePerPage",
+													"value": "1",
+													"disabled": true
+												},
+												{
+													"key": "direction",
+													"value": "",
+													"disabled": true
+												},
+												{
+													"key": "order",
+													"value": "",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												},
+												{
+													"key": "idcontact",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"type\": \"LOJA\",\r\n  \"phone\": \"49\",\r\n  \"email\": \"test@test.com\",\r\n  \"responsiblePerson\": \"-3.761085\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/contact",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"company",
+												":id",
+												"contact"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"type\": \"CASA\",\r\n  \"number\": \"49\",\r\n  \"complement\": \"A casa de um gato\",\r\n  \"latitude\": \"-3.761085\",\r\n  \"longitude\": \"-38.580236\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/contact/:idcontact",
+											"host": [
+												"{{url}}"
+											],
+											"port": "{{port}}",
+											"path": [
+												"{{base_url}}",
+												"v1",
+												"company",
+												":id",
+												"contact",
+												":idcontact"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "1"
+												},
+												{
+													"key": "idcontact",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Get All",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "X-Request-ID",
+										"value": "099f88f7-c16c-4fb0-9963-ae01ff3f6f6f",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/company",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"company"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "direction",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": "",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get By Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"company",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "51"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Empresa Valida\",\r\n  \"nameTreatment\": \"Empresa Valida SA\",\r\n  \"taxIdentifier\": \"RTHSGCAN000163\",\r\n  \"foundationDate\": \"2026-01-17\",\r\n  \"sectorOfActivity\": \"TI\",\r\n  \"observation\": \"Essa e uma empresa falsa\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/company",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"company"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Empresa Valida New\",\r\n  \"nameTreatment\": \"Empresa Valida S.A.\",\r\n  \"taxIdentifier\": \"9IVZM46I4LSF27\",\r\n  \"foundationDate\": \"2026-01-17\",\r\n  \"sectorOfActivity\": \"TI\",\r\n  \"observation\": \"Essa e uma empresa falsa\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"company",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Activate",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Empresa Valida New\",\r\n  \"nameTreatment\": \"Empresa Valida S.A.\",\r\n  \"taxIdentifier\": \"9IVZM46I4LSF27\",\r\n  \"foundationDate\": \"2026-01-17\",\r\n  \"sectorOfActivity\": \"TI\",\r\n  \"observation\": \"Essa e uma empresa falsa\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/enable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"company",
+										":id",
+										"enable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Inactivate",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Empresa Valida New\",\r\n  \"nameTreatment\": \"Empresa Valida S.A.\",\r\n  \"taxIdentifier\": \"9IVZM46I4LSF27\",\r\n  \"foundationDate\": \"2026-01-17\",\r\n  \"sectorOfActivity\": \"TI\",\r\n  \"observation\": \"Essa e uma empresa falsa\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id/disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"company",
+										":id",
+										"disable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/company/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"company",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Positions",
+					"item": [
+						{
+							"name": "Get All",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions?direction=DESC&order=CODE",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"positions"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "",
+											"disabled": true
+										},
+										{
+											"key": "sizePerPage",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "direction",
+											"value": "DESC"
+										},
+										{
+											"key": "order",
+											"value": "CODE"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get By Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"positions",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "51"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"code\": \"CTO\",\r\n  \"description\": \"Chief Executive Officer\",\r\n  \"departmentId\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"positions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"code\": \"CTO\",\r\n  \"description\": \"Tecnologia e Desenvolvimento\",\r\n  \"departmentId\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"positions",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Disable",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions/:id/disable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"positions",
+										":id",
+										"disable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Enable",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/positions/:id/enable",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"positions",
+										":id",
+										"enable"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Configuration",
+					"item": [
+						{
+							"name": "Get All",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/configurations",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"configurations"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get By Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/configurations/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"configurations",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "EMPLOYEE_MIN_AGE"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"value\": 12\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/configurations/:id",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"configurations",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "EMPLOYEE_MIN_AGE"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Keys",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}:{{port}}/{{base_url}}/v1/configurations/keys",
+									"host": [
+										"{{url}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"{{base_url}}",
+										"v1",
+										"configurations",
+										"keys"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "actuator",
+			"item": [
+				{
+					"name": "Actuator",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}:{{port}}/organization/actuator",
+							"host": [
+								"{{url}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"organization",
+								"actuator"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login Keycloak",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verifica se a requisição foi bem-sucedida\r",
+							"if (pm.response.code === 200) {\r",
+							"    var jsonResponse = pm.response.json();\r",
+							"    // Acessa o valor do 'access_token' na resposta\r",
+							"    var accessToken = jsonResponse.access_token;\r",
+							"\r",
+							"    // Armazena o token na variável de ambiente (pode ser global também)\r",
+							"    pm.collectionVariables.set(\"access_token\", accessToken);\r",
+							"\r",
+							"    // (Opcional) Exibe o token no console para verificação\r",
+							"    console.log(\"Token obtido:\", accessToken);\r",
+							"} else {\r",
+							"    console.log(\"Falha na requisição, não foi possível obter o token\");\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "Scos",
+							"type": "text"
+						},
+						{
+							"key": "username",
+							"value": "scos-admin",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "Api@1234!",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "openid",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url_keycloak}}/realms/{{realm}}/protocol/openid-connect/token",
+					"host": [
+						"{{url_keycloak}}"
+					],
+					"path": [
+						"realms",
+						"{{realm}}",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					"// 1. Busca o valor atual da variável de coleção",
+					"let requestId = pm.collectionVariables.get('X-Request-ID');",
+					"",
+					"// 2. Se estiver nulo ou vazio, gera o UUID e ATUALIZA a variável 'requestId'",
+					"if (requestId == null || requestId === \"null\" || requestId === \"\") {",
+					"    requestId = pm.variables.replaceIn('{{$randomUUID}}'); // Atualiza a variável local",
+					"    pm.collectionVariables.set(\"X-Request-ID\", requestId); // Salva na coleção",
+					"    console.log(\"X-Request-ID configurado do zero: \" + requestId);",
+					"} else {",
+					"    console.log(\"Já existe o X-Request-ID configurado: \" + requestId);",
+					"}",
+					"",
+					"// 3. SE O HEADER NÃO EXISTIR, ADICIONA. SE EXISTIR, ATUALIZA (UPSERT)",
+					"// Usamos pm.variables.replaceIn para garantir que ele leia a coleção atualizada se necessário",
+					"pm.request.headers.upsert({",
+					"    key: 'X-Request-ID',",
+					"    value: requestId",
+					"});",
+					"",
+					"console.log(\"Header X-Request-ID injetado na requisição com o valor: \" + requestId);",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost"
+		},
+		{
+			"key": "port",
+			"value": "8080"
+		},
+		{
+			"key": "base_url",
+			"value": "address_flow/api"
+		},
+		{
+			"key": "access_token",
+			"value": ""
+		},
+		{
+			"key": "url_keycloak",
+			"value": ""
+		},
+		{
+			"key": "realm",
+			"value": ""
+		},
+		{
+			"key": "X-Request-ID",
+			"value": ""
+		}
+	]
+}

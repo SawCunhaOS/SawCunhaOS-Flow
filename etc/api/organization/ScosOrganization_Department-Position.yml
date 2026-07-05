@@ -260,25 +260,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
         ttl: 1
-    delete:
-      tags: [Position]
-      summary: Delete position
-      description: >-
-        UC-034 - Exclusão lógica: seta ACTIVE=false. Equivalente a PUT /v1/positions/{id}/disable - mantido como DELETE por semântica REST convencional para quem espera esse verbo.
-        SCOS_POSITION não tem campo STATUS/DISABLED (isso é exclusivo de Company/Employee/Login) - aqui o mecanismo é só o booleano ACTIVE
-      operationId: deletePosition
-      parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-      responses:
-        '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
-        '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
-        '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [DELETE_POSITION]
 
   /v1/positions/{id}/enable:
     put:

@@ -29,24 +29,24 @@
 
 ### 2.1. Departamento
 
-| Código | Português                                                                       | English | Nota |
-| --- |---------------------------------------------------------------------------------| --- | --- |
-| `SCOS_DEPARTMENT_001` | O departamento informado não existe.                                            | The informed department does not exist. | — |
-| `SCOS_DEPARTMENT_002` | Já existe um departamento cadastrado com esse código.                           | There is already a department registered with this code. | — |
-| `SCOS_DEPARTMENT_003` | Não foi possível inativar o departamento, pois ele possui vínculos com posição. | It was not possible to delete the department because it has links with positions. | — |
-| `SCOS_DEPARTMENT_004` | O departamento informado já está ativo.                                         | The informed department is already active. | Criado — não existia em nenhum idioma |
-| `SCOS_DEPARTMENT_005` | O departamento informado já está inativo.                                       | The informed department is already inactive. | Criado |
-| `SCOS_DEPARTMENT_006` | Não é possível associar o cargo a um departamento inativo.                      | It is not possible to associate the position with an inactive department. | Criado |
+| Código | Português                                                                              | English | Nota |
+| --- |----------------------------------------------------------------------------------------| --- | --- |
+| `SCOS_DEPARTMENT_001` | O departamento informado não existe.                                                   | The informed department does not exist. | — |
+| `SCOS_DEPARTMENT_002` | Já existe um departamento cadastrado com esse código.                                  | There is already a department registered with this code. | — |
+| `SCOS_DEPARTMENT_003` | Não foi possível inativar o departamento, pois ele possui vínculos com posições ativas. | It was not possible to disable the department because it has active positions linked to it. | PT corrigido — concordância número ("posição ativas" → "posições ativas"), já correto na fonte real. EN corrigido — "delete" não reflete a operação real (`inativar`/`disable`, sem exclusão física, ver Documento 00 Seção 1); qualificador "ativas" incluído para não perder a condição da regra |
+| `SCOS_DEPARTMENT_004` | O departamento informado já está ativo.                                                | The informed department is already active. | Criado — não existia em nenhum idioma |
+| `SCOS_DEPARTMENT_005` | O departamento informado já está inativo.                                              | The informed department is already inactive. | Criado |
+| `SCOS_DEPARTMENT_006` | Não é possível associar o cargo a um departamento inativo.                             | It is not possible to associate the position with an inactive department. | Criado |
 
 ### 2.2. Cargo
 
-| Código | Português | English | Nota |
-| --- | --- | --- | --- |
-| `SCOS_POSITION_001` | O cargo informado não existe. | The informed position does not exist. | — |
-| `SCOS_POSITION_002` | Já existe um cargo cadastrado com esse código. | There is already a position registered with this code. | — |
-| `SCOS_POSITION_003` | Não foi possível excluir o cargo, pois ele possui vínculos com empregados. | It was not possible to delete the position because it has links with employees. | — |
-| `SCOS_POSITION_004` | O cargo informado já está ativo. | The informed position is already active. | Criado |
-| `SCOS_POSITION_005` | O cargo informado já está inativo. | The informed position is already inactive. | Criado |
+| Código | Português                                                                          | English | Nota |
+| --- |------------------------------------------------------------------------------------| --- | --- |
+| `SCOS_POSITION_001` | O cargo informado não existe.                                                      | The informed position does not exist. | — |
+| `SCOS_POSITION_002` | Já existe um cargo cadastrado com esse código.                                     | There is already a position registered with this code. | — |
+| `SCOS_POSITION_003` | Não foi possível inativar o cargo, pois ele possui vínculos com empregados ativos. | It was not possible to disable the position because it has active employees linked to it. | EN corrigido — mesma razão do `SCOS_DEPARTMENT_003`: "delete" não reflete a operação real (`inativar`/`disable`); qualificador "ativos" incluído |
+| `SCOS_POSITION_004` | O cargo informado já está ativo.                                                   | The informed position is already active. | Criado |
+| `SCOS_POSITION_005` | O cargo informado já está inativo.                                                 | The informed position is already inactive. | Criado |
 
 ### 2.3. Empresa
 
@@ -64,8 +64,8 @@
 
 | Código | Português | English | Nota |
 | --- | --- | --- | --- |
-| `SCOS_CONFIGURATION_001` | Nenhuma configuração foi encontrada para o identificador informado. | No configuration was found for the informed identifier. | Criado — HTTP 400 (não 404, ver Documento 00 Seção 2.2) |
-| `SCOS_CONFIGURATION_002` | O valor informado é incompatível com o tipo de dado declarado para esta configuração. | The informed value is incompatible with the data type declared for this configuration. | Criado — HTTP 400 (não 422) |
+| `SCOS_CONFIGURATION_001` | A Key informada não existe no sistema. | The informed key does not exist in the system. | PT mantido igual ao código-fonte (`ConfigurationKey.valueOfKey`) — a versão anterior deste documento ("Nenhuma configuração foi encontrada...") foi descartada por descrever um texto diferente do que o código realmente lança; EN criado. HTTP 400 (não 404, ver Documento 00 Seção 2.2) |
+| `SCOS_CONFIGURATION_002` | A Configuração informada não está cadastrada no sistema. | The informed configuration is not registered in the system. | PT mantido igual ao código-fonte (`ConfigurationServiceBean.getOrganizationConfiguration`, lança quando não há registro no banco para a key) — a versão anterior deste documento ("valor incompatível com o tipo de dado declarado") descrevia uma validação de tipo que **não existe hoje**; se essa regra for implementada no futuro, precisa de código novo, não só ajuste de texto. EN criado. HTTP 400 (não 422) |
 
 ### 2.5. Funcionário
 
@@ -102,5 +102,3 @@
 | --- | --- |
 | Adicionar entrada nova (PT + EN) | `SCOS_DEPARTMENT_004/005/006`, `SCOS_POSITION_004/005`, `SCOS_CONFIGURATION_001/002`, `SCOS_LOGIN_013` |
 | Adicionar só EN (PT já existe) | `SCOS_VALIDATION_010/011/012`, `SCOS_AUTHORITY_001`, `SCOS_LOGIN_010/011` |
-| Corrigir texto existente (PT e/ou EN) | `SCOS_VALIDATION_002`, `SCOS_VALIDATION_004`, `SCOS_VALIDATION_006` (mais confirmação de binding), `SCOS_VALIDATION_009`, `SCOS_COMPANY_003/006`, `SCOS_USER_001-004` |
-| Sem informação suficiente para propor | `SCOS_LOGIN_001/002/003` — investigar com o time antes |

@@ -34,12 +34,12 @@ class FindAllDepartmentUseCaseBean implements FindAllDepartmentUseCase {
     private final DepartmentService departmentService;
 
     @Override
-    public GetAllDepartmentsResponse execute(@NonNull PaginationFilter paginationFilter) {
-        log.info("Find All Department, Page: {}, Size: {}, Direction: {}", paginationFilter.page(), paginationFilter.sizePerPage(), paginationFilter.direction());
+    public GetAllDepartmentsResponse execute(@NonNull PaginationFilter paginationFilter, @NonNull Boolean active) {
+        log.info("Find All Department, Page: {}, Size: {}, Direction: {}, Active: {}", paginationFilter.page(), paginationFilter.sizePerPage(), paginationFilter.direction(), active);
 
         Pageable pageable = PaginatioUtils.createPageable(paginationFilter);
 
-        Page<DepartmentOutput> departmentOutput = departmentService.findAll(pageable);
+        Page<DepartmentOutput> departmentOutput = departmentService.findAll(active, pageable);
 
         return GetAllDepartmentsResponse.builder()
                 .data(

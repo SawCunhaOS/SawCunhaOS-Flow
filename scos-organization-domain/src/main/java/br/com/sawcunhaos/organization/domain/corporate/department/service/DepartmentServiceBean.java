@@ -88,9 +88,10 @@ public class DepartmentServiceBean implements DepartmentService {
     }
 
     @Override
-    public Page<DepartmentOutput> findAll(@NonNull Pageable pageable) {
-        log.info("Find All Departments");
-        return departmentRepository.findAll(pageable);
+    public Page<DepartmentOutput> findAll(@NonNull Boolean active, @NonNull Pageable pageable) {
+        log.info("Find All Departments, Active: {}", active);
+        return departmentRepository.findAllFiltered(active, pageable)
+                .map(departmentMapper::toDepartmentOutput);
     }
 
     @Override
