@@ -1,0 +1,47 @@
+
+/*
+ *
+ *  * Copyright 2026 SawCunha Open System - SawCunhaOS-Organization
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+package br.com.sawcunhaos.organization.application.usecase.access.status.reasondisable;
+
+import br.com.sawcunhaos.organization.api.dto.CreateReasonDisableRequest;
+import br.com.sawcunhaos.organization.api.dto.ReasonDisable;
+import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonDisableInput;
+import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonDisableOutput;
+import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonDisableService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
+import org.springframework.stereotype.Service;
+
+/** Implementação de {@link CreateReasonDisableUseCase}. */
+@Service
+@RequiredArgsConstructor
+@Slf4j
+class CreateReasonDisableUseCaseBean implements CreateReasonDisableUseCase {
+
+    private final ReasonDisableService reasonDisableService;
+
+    @Override
+    public ReasonDisable execute(@NonNull CreateReasonDisableRequest createReasonDisableRequest) {
+        log.info("Create reason disable: {}", createReasonDisableRequest.code());
+
+        ReasonDisableInput reasonDisableInput = ReasonDisableInput.builder()
+                .code(createReasonDisableRequest.code())
+                .description(createReasonDisableRequest.description())
+                .entityType(ReasonDisableApiMapper.toDomainEntityType(createReasonDisableRequest.entityType()))
+                .build();
+
+        ReasonDisableOutput reasonDisableOutput = reasonDisableService.create(reasonDisableInput);
+        return ReasonDisableApiMapper.toApiReasonDisable(reasonDisableOutput);
+    }
+}

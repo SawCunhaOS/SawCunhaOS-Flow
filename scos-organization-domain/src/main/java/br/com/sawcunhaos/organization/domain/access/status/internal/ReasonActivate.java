@@ -15,6 +15,7 @@ package br.com.sawcunhaos.organization.domain.access.status.internal;
 
 import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,6 +29,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_REASON_ACTIVATE_003;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_REASON_ACTIVATE_004;
 
 @Setter
 @Getter
@@ -53,4 +57,26 @@ public class ReasonActivate extends BaseEntity {
     @Builder.Default
     @Column(name = "ACTIVE")
     private boolean active = true;
+
+    /**
+     * Ativa o motivo de ativação.
+     * @throws ScosException SCOS_REASON_ACTIVATE_003 se já estiver ativo.
+     */
+    public void activate() {
+        if (this.active) {
+            throw new ScosException(SCOS_REASON_ACTIVATE_003);
+        }
+        this.active = true;
+    }
+
+    /**
+     * Inativa o motivo de ativação.
+     * @throws ScosException SCOS_REASON_ACTIVATE_004 se já estiver inativo.
+     */
+    public void deactivate() {
+        if (!this.active) {
+            throw new ScosException(SCOS_REASON_ACTIVATE_004);
+        }
+        this.active = false;
+    }
 }

@@ -100,6 +100,38 @@ public enum ExceptionCodeError implements ExceptionCode {
     /** Tipo de contato já está inativo — impossível inativar novamente. HTTP 422. */
     SCOS_CONTACT_TYPE_004("SCOS_CONTACT_TYPE_004", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
 
+    // Reason Activate
+    SCOS_REASON_ACTIVATE_001("SCOS_REASON_ACTIVATE_001", 404, "SCOS_TITLE_NOT_FOUND"),
+    SCOS_REASON_ACTIVATE_002("SCOS_REASON_ACTIVATE_002", 409, "SCOS_TITLE_CONFLICT"),
+    /** Motivo de ativação já está ativo — impossível ativar novamente. HTTP 422. */
+    SCOS_REASON_ACTIVATE_003("SCOS_REASON_ACTIVATE_003", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de ativação já está inativo — impossível inativar novamente. HTTP 422. */
+    SCOS_REASON_ACTIVATE_004("SCOS_REASON_ACTIVATE_004", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+
+    // Reason Inactivate
+    SCOS_REASON_INACTIVATE_001("SCOS_REASON_INACTIVATE_001", 404, "SCOS_TITLE_NOT_FOUND"),
+    SCOS_REASON_INACTIVATE_002("SCOS_REASON_INACTIVATE_002", 409, "SCOS_TITLE_CONFLICT"),
+    /** Motivo de inativação já está ativo — impossível ativar novamente. HTTP 422. */
+    SCOS_REASON_INACTIVATE_003("SCOS_REASON_INACTIVATE_003", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de inativação já está inativo — impossível inativar novamente. HTTP 422. */
+    SCOS_REASON_INACTIVATE_004("SCOS_REASON_INACTIVATE_004", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+
+    // Reason Disable
+    SCOS_REASON_DISABLE_001("SCOS_REASON_DISABLE_001", 404, "SCOS_TITLE_NOT_FOUND"),
+    SCOS_REASON_DISABLE_002("SCOS_REASON_DISABLE_002", 409, "SCOS_TITLE_CONFLICT"),
+    /** Motivo de bloqueio já está ativo — impossível ativar novamente. HTTP 422. */
+    SCOS_REASON_DISABLE_003("SCOS_REASON_DISABLE_003", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de bloqueio já está inativo — impossível inativar novamente. HTTP 422. */
+    SCOS_REASON_DISABLE_004("SCOS_REASON_DISABLE_004", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+
+    // Reason Enable
+    SCOS_REASON_ENABLE_001("SCOS_REASON_ENABLE_001", 404, "SCOS_TITLE_NOT_FOUND"),
+    SCOS_REASON_ENABLE_002("SCOS_REASON_ENABLE_002", 409, "SCOS_TITLE_CONFLICT"),
+    /** Motivo de desbloqueio já está ativo — impossível ativar novamente. HTTP 422. */
+    SCOS_REASON_ENABLE_003("SCOS_REASON_ENABLE_003", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de desbloqueio já está inativo — impossível inativar novamente. HTTP 422. */
+    SCOS_REASON_ENABLE_004("SCOS_REASON_ENABLE_004", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+
     /** Órfão — sem mensagem PT/EN, sem throw site. Mantido reservado com default. */
     SCOS_LOGIN_001("SCOS_LOGIN_001", 400, "SCOS_TITLE_GENERIC"),
     /** Órfão — sem mensagem PT/EN, sem throw site. Mantido reservado com default. */

@@ -441,6 +441,130 @@ public enum ScosOrganizationPermission implements ScosPermission {
             true
     ),
 
+    // Reason Activate
+    GET_REASON_ACTIVATE(
+            "Consultar motivo de ativação",
+            "Get activation reason",
+            true
+    ),
+
+    CREATE_REASON_ACTIVATE(
+            "Criar motivo de ativação",
+            "Create activation reason",
+            true
+    ),
+
+    UPDATE_REASON_ACTIVATE(
+            "Atualizar motivo de ativação",
+            "Update activation reason",
+            true
+    ),
+
+    ENABLE_REASON_ACTIVATE(
+            "Habilitar motivo de ativação",
+            "Enable activation reason",
+            true
+    ),
+
+    DISABLE_REASON_ACTIVATE(
+            "Desabilitar motivo de ativação",
+            "Disable activation reason",
+            true
+    ),
+
+    // Reason Inactivate
+    GET_REASON_INACTIVATE(
+            "Consultar motivo de inativação",
+            "Get inactivation reason",
+            true
+    ),
+
+    CREATE_REASON_INACTIVATE(
+            "Criar motivo de inativação",
+            "Create inactivation reason",
+            true
+    ),
+
+    UPDATE_REASON_INACTIVATE(
+            "Atualizar motivo de inativação",
+            "Update inactivation reason",
+            true
+    ),
+
+    ENABLE_REASON_INACTIVATE(
+            "Habilitar motivo de inativação",
+            "Enable inactivation reason",
+            true
+    ),
+
+    DISABLE_REASON_INACTIVATE(
+            "Desabilitar motivo de inativação",
+            "Disable inactivation reason",
+            true
+    ),
+
+    // Reason Disable
+    GET_REASON_DISABLE(
+            "Consultar motivo de bloqueio",
+            "Get block reason",
+            true
+    ),
+
+    CREATE_REASON_DISABLE(
+            "Criar motivo de bloqueio",
+            "Create block reason",
+            true
+    ),
+
+    UPDATE_REASON_DISABLE(
+            "Atualizar motivo de bloqueio",
+            "Update block reason",
+            true
+    ),
+
+    ENABLE_REASON_DISABLE(
+            "Habilitar motivo de bloqueio",
+            "Enable block reason",
+            true
+    ),
+
+    DISABLE_REASON_DISABLE(
+            "Desabilitar motivo de bloqueio",
+            "Disable block reason",
+            true
+    ),
+
+    // Reason Enable
+    GET_REASON_ENABLE(
+            "Consultar motivo de desbloqueio",
+            "Get unblock reason",
+            true
+    ),
+
+    CREATE_REASON_ENABLE(
+            "Criar motivo de desbloqueio",
+            "Create unblock reason",
+            true
+    ),
+
+    UPDATE_REASON_ENABLE(
+            "Atualizar motivo de desbloqueio",
+            "Update unblock reason",
+            true
+    ),
+
+    ENABLE_REASON_ENABLE(
+            "Habilitar motivo de desbloqueio",
+            "Enable unblock reason",
+            true
+    ),
+
+    DISABLE_REASON_ENABLE(
+            "Desabilitar motivo de desbloqueio",
+            "Disable unblock reason",
+            true
+    ),
+
     ;
 
     private final String descriptionPtBr;
