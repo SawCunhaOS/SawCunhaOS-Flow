@@ -22,6 +22,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Objects;
+
 /**
  * Repositório JPA/QueryDSL de {@link ContactType}.
  */
@@ -59,13 +61,19 @@ public interface ContactTypeRepository extends BaseJpaRepository<ContactType, Lo
     /**
      * Lista paginada, filtrando por {@code entityType} quando informado; sem filtro quando {@code null}.
      */
-    default Page<ContactType> findAllFiltered(EntityType entityType, Pageable pageable) {
-        if (entityType == null) {
+    default Page<ContactType> findAllFiltered(EntityType entityType, Boolean active, Pageable pageable) {
+        if (Objects.isNull(entityType) && Objects.isNull(active)) {
             return findAll(pageable);
         }
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();
-        booleanBuilder.and(qContactType.entityType.eq(entityType));
+
+        if (Objects.nonNull(active)) {
+            booleanBuilder.and(qContactType.active.eq(active));
+        }
+        if (Objects.nonNull(entityType)) {
+            booleanBuilder.and(qContactType.entityType.eq(entityType));
+        }
 
         return findAll(booleanBuilder.getValue(), pageable);
     }

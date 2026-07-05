@@ -108,9 +108,12 @@ public class AddressTypeServiceBean implements AddressTypeService {
      * Lista paginada, filtrando por {@code entityType} quando informado.
      */
     @Override
-    public Page<AddressTypeOutput> findAll(EntityType entityType, @NonNull Pageable pageable) {
+    public Page<AddressTypeOutput> findAll(EntityType entityType,
+                                           Boolean active,
+                                           @NonNull Pageable pageable
+    ) {
         log.info("Find All AddressTypes, EntityType: {}", entityType);
-        return addressTypeRepository.findAllFiltered(entityType, pageable)
+        return addressTypeRepository.findAllFiltered(entityType, active, pageable)
                 .map(addressTypeMapper::toAddressTypeOutput);
     }
 

@@ -35,7 +35,7 @@ public interface ContactTypeService {
     ContactTypeOutput findById(@NonNull Long contactTypeId);
 
     /** Lista paginada, filtrando por {@code entityType} quando informado. */
-    Page<ContactTypeOutput> findAll(EntityType entityType, @NonNull Pageable pageable);
+    Page<ContactTypeOutput> findAll(EntityType entityType, Boolean active, @NonNull Pageable pageable);
 
     /** Reativa um tipo de contato inativo. */
     void enable(@NonNull Long contactTypeId);

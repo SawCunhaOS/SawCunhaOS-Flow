@@ -52,7 +52,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN]
-      x-cache: [SCOS_ORGANIZATION_LOGIN]
     post:
       tags: [Login]
       summary: Create a login
@@ -79,7 +78,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_LOGIN]
 
   /v1/logins/me:
     get:
@@ -126,7 +124,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN]
-      x-cache: [SCOS_ORGANIZATION_LOGIN]
     put:
       tags: [Login]
       summary: Update login
@@ -154,7 +151,7 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+
   /v1/logins/{id}/enable:
     put:
       tags: [Login]
@@ -182,7 +179,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_LOGIN]
-      x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        ttl: 1
 
   /v1/logins/{id}/disable:
     put:
@@ -211,7 +210,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_LOGIN]
-      x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        ttl: 1
 
   /v1/logins/{id}/block:
     put:
@@ -241,7 +242,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_LOGIN_STATUS]
-      x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        ttl: 1
 
   /v1/logins/{id}/unblock:
     put:
@@ -270,7 +273,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_LOGIN_STATUS]
-      x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        ttl: 1
 
   /v1/logins/{id}/status-history:
     get:
@@ -295,7 +300,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN_STATUS_HISTORY]
-      x-cache: [SCOS_ORGANIZATION_LOGIN_STATUS_HISTORY]
 
   /v1/logins/{id}/profile/{profileId}:
     put:
@@ -316,7 +320,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_LOGIN]
-      x-cache: [SCOS_ORGANIZATION_LOGIN, SCOS_ORGANIZATION_LOGIN_INFO]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        ttl: 1
 
   /v1/logins/{id}/profiles:
     get:
@@ -343,7 +349,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN_PROFILE]
-      x-cache: [SCOS_ORGANIZATION_LOGIN_PROFILE]
 
   /v1/logins/{id}/profiles/{profileId}:
     post:
@@ -366,7 +371,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_LOGIN_PROFILE]
-      x-cache: [SCOS_ORGANIZATION_LOGIN_PROFILE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        ttl: 1
     delete:
       tags: [Login]
       summary: Remove an additional login profile
@@ -387,7 +394,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_LOGIN_PROFILE]
-      x-cache: [SCOS_ORGANIZATION_LOGIN_PROFILE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        ttl: 1
 
   /v1/employees/{employeeId}/logins:
     get:
@@ -412,7 +421,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN]
-      x-cache: [SCOS_ORGANIZATION_LOGIN]
     post:
       tags: [Login]
       summary: Create employee login
@@ -440,7 +448,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_LOGIN]
 
   /v1/employees/{employeeId}/logins/{id}:
     get:
@@ -465,7 +472,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN]
-      x-cache: [SCOS_ORGANIZATION_LOGIN]
 
   /v1/profiles:
     get:
@@ -490,7 +496,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_PROFILE]
-      x-cache: [SCOS_ORGANIZATION_PROFILE]
     post:
       tags: [Profile]
       summary: Create profile
@@ -517,7 +522,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_PROFILE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_PROFILE]
 
   /v1/profiles/{id}:
     get:
@@ -541,7 +545,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_PROFILE]
-      x-cache: [SCOS_ORGANIZATION_PROFILE]
     put:
       tags: [Profile]
       summary: Update profile
@@ -569,7 +572,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_PROFILE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_PROFILE]
     delete:
       tags: [Profile]
       summary: Delete profile
@@ -587,7 +589,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_PROFILE]
-      x-cache: [SCOS_ORGANIZATION_PROFILE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        ttl: 1
 
   /v1/profiles/{id}/enable:
     put:
@@ -607,7 +611,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_PROFILE]
-      x-cache: [SCOS_ORGANIZATION_PROFILE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        ttl: 1
 
   /v1/profiles/{id}/disable:
     put:
@@ -627,7 +633,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_PROFILE]
-      x-cache: [SCOS_ORGANIZATION_PROFILE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        ttl: 1
 
   /v1/profiles/{id}/resources:
     get:
@@ -652,7 +660,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_PROFILE]
-      x-cache: [SCOS_ORGANIZATION_PROFILE]
     put:
       tags: [Profile]
       summary: Update resources in profile
@@ -677,7 +684,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_PROFILE]
-      x-cache: [SCOS_ORGANIZATION_PROFILE, SCOS_ORGANIZATION_LOGIN_INFO]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        ttl: 1
 
   /v1/resources:
     get:
@@ -703,7 +712,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_RESOURCE]
-      x-cache: [SCOS_ORGANIZATION_RESOURCE]
 
   /v1/systems:
     get:
@@ -728,7 +736,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_SYSTEM]
-      x-cache: [SCOS_ORGANIZATION_SYSTEM]
 
   /v1/systems/{id}:
     get:
@@ -752,7 +759,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_SYSTEM]
-      x-cache: [SCOS_ORGANIZATION_SYSTEM]
 
 components:
   securitySchemes:

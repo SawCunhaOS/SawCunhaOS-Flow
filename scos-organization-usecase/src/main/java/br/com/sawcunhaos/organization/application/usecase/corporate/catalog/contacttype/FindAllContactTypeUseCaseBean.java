@@ -35,12 +35,25 @@ class FindAllContactTypeUseCaseBean implements FindAllContactTypeUseCase {
     private final ContactTypeService contactTypeService;
 
     @Override
-    public GetAllContactTypesResponse execute(@NonNull PaginationFilter paginationFilter, CatalogEntityType entityType) {
-        log.info("Find All ContactType, Page: {}, Size: {}, Direction: {}, EntityType: {}", paginationFilter.page(), paginationFilter.sizePerPage(), paginationFilter.direction(), entityType);
+    public GetAllContactTypesResponse execute(@NonNull PaginationFilter paginationFilter,
+                                              CatalogEntityType entityType,
+                                              Boolean active
+    ) {
+        log.info("Find All ContactType, Page: {}, Size: {}, Direction: {}, EntityType: {}, Active: {}",
+                paginationFilter.page(),
+                paginationFilter.sizePerPage(),
+                paginationFilter.direction(),
+                entityType,
+                active
+        );
 
         Pageable pageable = PaginatioUtils.createPageable(paginationFilter);
 
-        Page<ContactTypeOutput> contactTypeOutput = contactTypeService.findAll(ContactTypeApiMapper.toDomainEntityType(entityType), pageable);
+        Page<ContactTypeOutput> contactTypeOutput = contactTypeService.findAll(
+                ContactTypeApiMapper.toDomainEntityType(entityType),
+                active,
+                pageable
+        );
 
         return GetAllContactTypesResponse.builder()
                 .data(

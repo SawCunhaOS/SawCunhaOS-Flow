@@ -35,12 +35,25 @@ class FindAllAddressTypeUseCaseBean implements FindAllAddressTypeUseCase {
     private final AddressTypeService addressTypeService;
 
     @Override
-    public GetAllAddressTypesResponse execute(@NonNull PaginationFilter paginationFilter, CatalogEntityType entityType) {
-        log.info("Find All AddressType, Page: {}, Size: {}, Direction: {}, EntityType: {}", paginationFilter.page(), paginationFilter.sizePerPage(), paginationFilter.direction(), entityType);
+    public GetAllAddressTypesResponse execute(@NonNull PaginationFilter paginationFilter,
+                                              CatalogEntityType entityType,
+                                              Boolean active
+    ) {
+        log.info("Find All AddressType, Page: {}, Size: {}, Direction: {}, EntityType: {}, Active: {}",
+                paginationFilter.page(),
+                paginationFilter.sizePerPage(),
+                paginationFilter.direction(),
+                entityType,
+                active
+        );
 
         Pageable pageable = PaginatioUtils.createPageable(paginationFilter);
 
-        Page<AddressTypeOutput> addressTypeOutput = addressTypeService.findAll(AddressTypeApiMapper.toDomainEntityType(entityType), pageable);
+        Page<AddressTypeOutput> addressTypeOutput = addressTypeService.findAll(
+                AddressTypeApiMapper.toDomainEntityType(entityType),
+                active,
+                pageable
+        );
 
         return GetAllAddressTypesResponse.builder()
                 .data(

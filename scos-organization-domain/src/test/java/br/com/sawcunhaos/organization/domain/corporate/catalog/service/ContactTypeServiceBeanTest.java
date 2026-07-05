@@ -139,7 +139,8 @@ class ContactTypeServiceBeanTest {
         ContactTypeInput input = ContactTypeInput.builder().id(1L).code("TEL").description("Telefone atualizado").entityType(EntityType.EMPLOYEE).build();
 
         when(contactTypeRepository.findById(1L)).thenReturn(Optional.of(existing));
-        when(contactTypeRepository.existsByCodeAndEntityAndNotId( "EMAIL", EntityType.COMPANY, 1L)).thenReturn(false);
+        when(contactTypeRepository.existsByCodeAndEntityAndNotId( "TEL", EntityType.EMPLOYEE, 1L)).thenReturn(false);
+        when(contactTypeRepository.update(existing)).thenReturn(existing);
 
         contactTypeServiceBean.update(input);
 
@@ -180,13 +181,13 @@ class ContactTypeServiceBeanTest {
         ContactType existing = contactType(1L, "TEL", true);
         ContactTypeOutput output = ContactTypeOutput.builder().id(1L).code("TEL").build();
 
-        when(contactTypeRepository.findAllFiltered(null, pageable)).thenReturn(new PageImpl<>(List.of(existing)));
+        when(contactTypeRepository.findAllFiltered(null, null, pageable)).thenReturn(new PageImpl<>(List.of(existing)));
         when(contactTypeMapper.toContactTypeOutput(existing)).thenReturn(output);
 
-        Page<ContactTypeOutput> result = contactTypeServiceBean.findAll(null, pageable);
+        Page<ContactTypeOutput> result = contactTypeServiceBean.findAll(null, null, pageable);
 
         assertThat(result.getContent()).containsExactly(output);
-        verify(contactTypeRepository).findAllFiltered(eq(null), eq(pageable));
+        verify(contactTypeRepository).findAllFiltered(eq(null), eq(null), eq(pageable));
     }
 
     @Test
@@ -195,13 +196,13 @@ class ContactTypeServiceBeanTest {
         ContactType existing = contactType(1L, "TEL", true);
         ContactTypeOutput output = ContactTypeOutput.builder().id(1L).code("TEL").build();
 
-        when(contactTypeRepository.findAllFiltered(EntityType.COMPANY, pageable)).thenReturn(new PageImpl<>(List.of(existing)));
+        when(contactTypeRepository.findAllFiltered(EntityType.COMPANY, null, pageable)).thenReturn(new PageImpl<>(List.of(existing)));
         when(contactTypeMapper.toContactTypeOutput(existing)).thenReturn(output);
 
-        Page<ContactTypeOutput> result = contactTypeServiceBean.findAll(EntityType.COMPANY, pageable);
+        Page<ContactTypeOutput> result = contactTypeServiceBean.findAll(EntityType.COMPANY, null, pageable);
 
         assertThat(result.getContent()).containsExactly(output);
-        verify(contactTypeRepository).findAllFiltered(eq(EntityType.COMPANY), eq(pageable));
+        verify(contactTypeRepository).findAllFiltered(eq(EntityType.COMPANY), eq(null), eq(pageable));
     }
 
     // ---- enable ----

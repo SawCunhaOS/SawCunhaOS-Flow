@@ -52,7 +52,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_COMPANY]
-      x-cache: [SCOS_ORGANIZATION_COMPANY]
     post:
       tags: [Company]
       summary: Create a company
@@ -79,7 +78,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_COMPANY]
 
   /v1/companies/{id}:
     get:
@@ -103,7 +101,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_COMPANY]
-      x-cache: [SCOS_ORGANIZATION_COMPANY]
     put:
       tags: [Company]
       summary: Update company
@@ -131,7 +128,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_COMPANY]
   /v1/companies/{id}/enable:
     put:
       tags: [Company]
@@ -159,7 +155,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_COMPANY]
-      x-cache: [SCOS_ORGANIZATION_COMPANY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
   /v1/companies/{id}/disable:
     put:
@@ -188,7 +186,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_COMPANY]
-      x-cache: [SCOS_ORGANIZATION_COMPANY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
   /v1/companies/{id}/block:
     put:
@@ -218,7 +218,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [BLOCK_COMPANY]
-      x-cache: [SCOS_ORGANIZATION_COMPANY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
   /v1/companies/{id}/unblock:
     put:
@@ -247,7 +249,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UNBLOCK_COMPANY]
-      x-cache: [SCOS_ORGANIZATION_COMPANY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
   /v1/companies/{id}/status-history:
     get:
@@ -272,7 +276,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_COMPANY_STATUS_HISTORY]
-      x-cache: [SCOS_ORGANIZATION_COMPANY_STATUS_HISTORY]
 
   /v1/companies/{id}/hierarchy:
     get:
@@ -296,7 +299,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_COMPANY]
-      x-cache: [SCOS_ORGANIZATION_COMPANY]
 
   /v1/companies/{id}/branches:
     get:
@@ -322,7 +324,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_COMPANY]
-      x-cache: [SCOS_ORGANIZATION_COMPANY]
 
   /v1/companies/{companyId}/contacts:
     get:
@@ -347,7 +348,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_COMPANY_CONTACT]
-      x-cache: [SCOS_ORGANIZATION_COMPANY_CONTACT]
     post:
       tags: [Company Contact]
       summary: Create a company contact
@@ -375,7 +375,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_CONTACT
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY]
 
   /v1/companies/{companyId}/contacts/{id}:
     get:
@@ -400,7 +399,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_COMPANY_CONTACT]
-      x-cache: [SCOS_ORGANIZATION_COMPANY_CONTACT]
     put:
       tags: [Company Contact]
       summary: Update company contact
@@ -426,7 +424,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_COMPANY_CONTACT]
-      x-cache: [SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
     delete:
       tags: [Company Contact]
       summary: Delete company contact
@@ -445,7 +445,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_COMPANY_CONTACT]
-      x-cache: [SCOS_ORGANIZATION_COMPANY_CONTACT, SCOS_ORGANIZATION_COMPANY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
   /v1/companies/{companyId}/addresses:
     get:
@@ -470,7 +472,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_COMPANY_ADDRESS]
-      x-cache: [SCOS_ORGANIZATION_COMPANY_ADDRESS]
     post:
       tags: [Company Address]
       summary: Create a company address
@@ -498,7 +499,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_ADDRESS
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_COMPANY_ADDRESS, SCOS_ORGANIZATION_COMPANY]
 
   /v1/companies/{companyId}/addresses/{id}:
     get:
@@ -523,7 +523,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_COMPANY_ADDRESS]
-      x-cache: [SCOS_ORGANIZATION_COMPANY_ADDRESS]
     put:
       tags: [Company Address]
       summary: Update company address
@@ -549,7 +548,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_COMPANY_ADDRESS]
-      x-cache: [SCOS_ORGANIZATION_COMPANY_ADDRESS, SCOS_ORGANIZATION_COMPANY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
     delete:
       tags: [Company Address]
       summary: Delete company address
@@ -568,7 +569,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_COMPANY_ADDRESS]
-      x-cache: [SCOS_ORGANIZATION_COMPANY_ADDRESS, SCOS_ORGANIZATION_COMPANY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
   /v1/legal-natures:
     get:
@@ -592,7 +595,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LEGAL_NATURE]
-      x-cache: [SCOS_ORGANIZATION_LEGAL_NATURE]
     post:
       tags: [Legal Nature]
       summary: Create a legal nature
@@ -619,7 +621,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_LEGAL_NATURE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_LEGAL_NATURE]
 
   /v1/legal-natures/{id}:
     get:
@@ -643,7 +644,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LEGAL_NATURE]
-      x-cache: [SCOS_ORGANIZATION_LEGAL_NATURE]
     put:
       tags: [Legal Nature]
       summary: Update legal nature
@@ -671,7 +671,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_LEGAL_NATURE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_LEGAL_NATURE]
     delete:
       tags: [Legal Nature]
       summary: Delete legal nature
@@ -689,7 +688,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_LEGAL_NATURE]
-      x-cache: [SCOS_ORGANIZATION_LEGAL_NATURE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
   /v1/cnaes:
     get:
@@ -713,7 +714,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_CNAE]
-      x-cache: [SCOS_ORGANIZATION_CNAE]
     post:
       tags: [Cnae]
       summary: Create a CNAE
@@ -740,7 +740,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CNAE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_CNAE]
 
   /v1/cnaes/{id}:
     get:
@@ -764,7 +763,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_CNAE]
-      x-cache: [SCOS_ORGANIZATION_CNAE]
     put:
       tags: [Cnae]
       summary: Update CNAE
@@ -792,7 +790,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CNAE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_CNAE]
     delete:
       tags: [Cnae]
       summary: Delete CNAE
@@ -810,7 +807,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_CNAE]
-      x-cache: [SCOS_ORGANIZATION_CNAE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
   /v1/companies/{companyId}/cnaes-secondary:
     get:
@@ -835,7 +834,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_COMPANY_CNAE_SECONDARY]
-      x-cache: [SCOS_ORGANIZATION_COMPANY_CNAE_SECONDARY]
 
   /v1/companies/{companyId}/cnaes-secondary/{cnaeId}:
     post:
@@ -859,7 +857,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY_CNAE_SECONDARY
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_COMPANY_CNAE_SECONDARY]
     delete:
       tags: [Company Cnae Secondary]
       summary: Remove a secondary CNAE from a company
@@ -878,7 +875,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_COMPANY_CNAE_SECONDARY]
-      x-cache: [SCOS_ORGANIZATION_COMPANY_CNAE_SECONDARY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
 components:
   securitySchemes:

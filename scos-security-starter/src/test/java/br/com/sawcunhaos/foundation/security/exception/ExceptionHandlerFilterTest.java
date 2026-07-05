@@ -61,7 +61,7 @@ class ExceptionHandlerFilterTest {
         ProblemDetail problem = captor.getValue();
         assertEquals(401, problem.getStatus());
         assertEquals("Unauthorized", problem.getTitle());
-        assertEquals("SCOS_AUTH_002", problem.getProperties().get("code"));
+        assertEquals("SCOS_AUTH_003", problem.getProperties().get("code"));
         assertEquals("/api/secure", problem.getInstance().toString());
     }
 }

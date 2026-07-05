@@ -139,7 +139,7 @@ class AddressTypeServiceBeanTest {
         AddressTypeInput input = AddressTypeInput.builder().id(1L).code("RES").description("Residencial atualizado").entityType(EntityType.EMPLOYEE).build();
 
         when(addressTypeRepository.findById(1L)).thenReturn(Optional.of(existing));
-        when(addressTypeRepository.existsByCodeAndEntityTypeAndNotId("COM", EntityType.COMPANY, 1L)).thenReturn(false);
+        when(addressTypeRepository.existsByCodeAndEntityTypeAndNotId("RES", EntityType.EMPLOYEE, 1L)).thenReturn(false);
 
         addressTypeServiceBean.update(input);
 
@@ -180,13 +180,13 @@ class AddressTypeServiceBeanTest {
         AddressType existing = addressType(1L, "RES", true);
         AddressTypeOutput output = AddressTypeOutput.builder().id(1L).code("RES").build();
 
-        when(addressTypeRepository.findAllFiltered(null, pageable)).thenReturn(new PageImpl<>(List.of(existing)));
+        when(addressTypeRepository.findAllFiltered(null, null, pageable)).thenReturn(new PageImpl<>(List.of(existing)));
         when(addressTypeMapper.toAddressTypeOutput(existing)).thenReturn(output);
 
-        Page<AddressTypeOutput> result = addressTypeServiceBean.findAll(null, pageable);
+        Page<AddressTypeOutput> result = addressTypeServiceBean.findAll(null, null, pageable);
 
         assertThat(result.getContent()).containsExactly(output);
-        verify(addressTypeRepository).findAllFiltered(eq(null), eq(pageable));
+        verify(addressTypeRepository).findAllFiltered(eq(null), eq(null), eq(pageable));
     }
 
     @Test
@@ -195,13 +195,13 @@ class AddressTypeServiceBeanTest {
         AddressType existing = addressType(1L, "RES", true);
         AddressTypeOutput output = AddressTypeOutput.builder().id(1L).code("RES").build();
 
-        when(addressTypeRepository.findAllFiltered(EntityType.COMPANY, pageable)).thenReturn(new PageImpl<>(List.of(existing)));
+        when(addressTypeRepository.findAllFiltered(EntityType.COMPANY, null, pageable)).thenReturn(new PageImpl<>(List.of(existing)));
         when(addressTypeMapper.toAddressTypeOutput(existing)).thenReturn(output);
 
-        Page<AddressTypeOutput> result = addressTypeServiceBean.findAll(EntityType.COMPANY, pageable);
+        Page<AddressTypeOutput> result = addressTypeServiceBean.findAll(EntityType.COMPANY, null, pageable);
 
         assertThat(result.getContent()).containsExactly(output);
-        verify(addressTypeRepository).findAllFiltered(eq(EntityType.COMPANY), eq(pageable));
+        verify(addressTypeRepository).findAllFiltered(eq(EntityType.COMPANY), eq(null), eq(pageable));
     }
 
     // ---- enable ----

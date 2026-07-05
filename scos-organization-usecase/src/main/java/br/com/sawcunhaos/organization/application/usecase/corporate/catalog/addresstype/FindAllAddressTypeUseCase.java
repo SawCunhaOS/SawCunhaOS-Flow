@@ -20,5 +20,8 @@ import org.jspecify.annotations.NonNull;
 
 /** Lista paginada de tipos de endereço, com filtro opcional por {@code entityType} (UC-081). */
 public interface FindAllAddressTypeUseCase {
-    GetAllAddressTypesResponse execute(@NonNull PaginationFilter paginationFilter, CatalogEntityType entityType);
+    GetAllAddressTypesResponse execute(@NonNull PaginationFilter paginationFilter,
+                                       CatalogEntityType entityType,
+                                       Boolean active
+    );
 }

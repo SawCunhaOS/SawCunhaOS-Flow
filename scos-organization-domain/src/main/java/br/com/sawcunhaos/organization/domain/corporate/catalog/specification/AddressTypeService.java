@@ -35,7 +35,7 @@ public interface AddressTypeService {
     AddressTypeOutput findById(@NonNull Long addressTypeId);
 
     /** Lista paginada, filtrando por {@code entityType} quando informado. */
-    Page<AddressTypeOutput> findAll(EntityType entityType, @NonNull Pageable pageable);
+    Page<AddressTypeOutput> findAll(EntityType entityType, Boolean active, @NonNull Pageable pageable);
 
     /** Reativa um tipo de endereço inativo. */
     void enable(@NonNull Long addressTypeId);

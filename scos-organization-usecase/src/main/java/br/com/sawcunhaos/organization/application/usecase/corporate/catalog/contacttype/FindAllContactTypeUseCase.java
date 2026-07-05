@@ -20,5 +20,8 @@ import org.jspecify.annotations.NonNull;
 
 /** Lista paginada de tipos de contato, com filtro opcional por {@code entityType} (UC-087). */
 public interface FindAllContactTypeUseCase {
-    GetAllContactTypesResponse execute(@NonNull PaginationFilter paginationFilter, CatalogEntityType entityType);
+    GetAllContactTypesResponse execute(@NonNull PaginationFilter paginationFilter,
+                                       CatalogEntityType entityType,
+                                       Boolean active
+    );
 }

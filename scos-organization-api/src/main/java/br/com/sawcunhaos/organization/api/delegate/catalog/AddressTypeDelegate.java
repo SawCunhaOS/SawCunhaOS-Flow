@@ -59,8 +59,8 @@ public class AddressTypeDelegate implements AddressTypeApiDelegate {
     }
 
     @Override
-    public GetAllAddressTypesResponse getAllAddressTypes(PaginationFilter paginationFilter, Optional<UUID> xRequestID, Optional<String> acceptLanguage, Optional<CatalogEntityType> entityType) {
-        return findAllAddressTypeUseCase.execute(paginationFilter, entityType.orElse(null));
+    public GetAllAddressTypesResponse getAllAddressTypes(PaginationFilter paginationFilter, Optional<UUID> xRequestID, Optional<String> acceptLanguage, Optional<CatalogEntityType> entityType, Optional<Boolean> active) {
+        return findAllAddressTypeUseCase.execute(paginationFilter, entityType.orElse(null), active.orElse(null));
     }
 
     @Override

@@ -108,9 +108,12 @@ class ContactTypeServiceBean implements ContactTypeService {
      * Lista paginada, filtrando por {@code entityType} quando informado.
      */
     @Override
-    public Page<ContactTypeOutput> findAll(EntityType entityType, @NonNull Pageable pageable) {
+    public Page<ContactTypeOutput> findAll(EntityType entityType,
+                                           Boolean active,
+                                           @NonNull Pageable pageable
+    ) {
         log.info("Find All ContactTypes, EntityType: {}", entityType);
-        return contactTypeRepository.findAllFiltered(entityType, pageable)
+        return contactTypeRepository.findAllFiltered(entityType, active, pageable)
                 .map(contactTypeMapper::toContactTypeOutput);
     }
 

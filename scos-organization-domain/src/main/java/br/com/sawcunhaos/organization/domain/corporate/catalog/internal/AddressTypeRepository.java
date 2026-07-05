@@ -22,6 +22,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Objects;
+
 /**
  * Repositório JPA/QueryDSL de {@link AddressType}.
  */
@@ -59,13 +61,18 @@ public interface AddressTypeRepository extends BaseJpaRepository<AddressType, Lo
     /**
      * Lista paginada, filtrando por {@code entityType} quando informado; sem filtro quando {@code null}.
      */
-    default Page<AddressType> findAllFiltered(EntityType entityType, Pageable pageable) {
-        if (entityType == null) {
+    default Page<AddressType> findAllFiltered(EntityType entityType, Boolean active, Pageable pageable) {
+        if (Objects.isNull(entityType) && Objects.isNull(active)) {
             return findAll(pageable);
         }
 
         BooleanBuilder booleanBuilder = new BooleanBuilder();
-        booleanBuilder.and(qAddressType.entityType.eq(entityType));
+        if (Objects.nonNull(active)) {
+            booleanBuilder.and(qAddressType.active.eq(active));
+        }
+        if (Objects.nonNull(entityType)) {
+            booleanBuilder.and(qAddressType.entityType.eq(entityType));
+        }
 
         return findAll(booleanBuilder.getValue(), pageable);
     }

@@ -59,8 +59,8 @@ public class ContactTypeDelegate implements ContactTypeApiDelegate {
     }
 
     @Override
-    public GetAllContactTypesResponse getAllContactTypes(PaginationFilter paginationFilter, Optional<UUID> xRequestID, Optional<String> acceptLanguage, Optional<CatalogEntityType> entityType) {
-        return findAllContactTypeUseCase.execute(paginationFilter, entityType.orElse(null));
+    public GetAllContactTypesResponse getAllContactTypes(PaginationFilter paginationFilter, Optional<UUID> xRequestID, Optional<String> acceptLanguage, Optional<CatalogEntityType> entityType, Optional<Boolean> active) {
+        return findAllContactTypeUseCase.execute(paginationFilter, entityType.orElse(null), active.orElse(null));
     }
 
     @Override

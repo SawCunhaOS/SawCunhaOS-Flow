@@ -35,6 +35,7 @@ paths:
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/entityTypeFilter'
+        - $ref: '#/components/parameters/activeFilter'
       responses:
         '200':
           description: OK
@@ -47,7 +48,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_ACTIVATE]
-      x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
     post:
       tags: [ReasonActivate]
       summary: Create a ReasonActivate entry
@@ -74,7 +74,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ACTIVATE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
 
   /v1/reason-activate/{id}:
     get:
@@ -98,7 +97,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_ACTIVATE]
-      x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
     put:
       tags: [ReasonActivate]
       summary: Update activation reason
@@ -126,7 +124,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ACTIVATE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
 
   /v1/reason-activate/{id}/enable:
     put:
@@ -146,7 +143,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_REASON_ACTIVATE]
-      x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
   /v1/reason-activate/{id}/disable:
     put:
@@ -166,7 +165,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_REASON_ACTIVATE]
-      x-cache: [SCOS_ORGANIZATION_REASON_ACTIVATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
   /v1/reason-inactivate:
     get:
@@ -179,6 +180,7 @@ paths:
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/entityTypeFilter'
+        - $ref: '#/components/parameters/activeFilter'
       responses:
         '200':
           description: OK
@@ -191,7 +193,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_INACTIVATE]
-      x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
     post:
       tags: [ReasonInactivate]
       summary: Create a ReasonInactivate entry
@@ -218,7 +219,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_INACTIVATE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
 
   /v1/reason-inactivate/{id}:
     get:
@@ -242,7 +242,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_INACTIVATE]
-      x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
     put:
       tags: [ReasonInactivate]
       summary: Update inactivation reason
@@ -270,7 +269,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_INACTIVATE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
 
   /v1/reason-inactivate/{id}/enable:
     put:
@@ -290,7 +288,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_REASON_INACTIVATE]
-      x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
   /v1/reason-inactivate/{id}/disable:
     put:
@@ -310,7 +310,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_REASON_INACTIVATE]
-      x-cache: [SCOS_ORGANIZATION_REASON_INACTIVATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
   /v1/reason-disable:
     get:
@@ -323,6 +325,7 @@ paths:
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/entityTypeFilter'
+        - $ref: '#/components/parameters/activeFilter'
       responses:
         '200':
           description: OK
@@ -335,7 +338,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_DISABLE]
-      x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
     post:
       tags: [ReasonDisable]
       summary: Create a ReasonDisable entry
@@ -362,7 +364,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_DISABLE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
 
   /v1/reason-disable/{id}:
     get:
@@ -386,7 +387,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_DISABLE]
-      x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
     put:
       tags: [ReasonDisable]
       summary: Update disable reason
@@ -414,7 +414,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_DISABLE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
 
   /v1/reason-disable/{id}/enable:
     put:
@@ -434,7 +433,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_REASON_DISABLE]
-      x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
   /v1/reason-disable/{id}/disable:
     put:
@@ -454,7 +455,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_REASON_DISABLE]
-      x-cache: [SCOS_ORGANIZATION_REASON_DISABLE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
   /v1/reason-enable:
     get:
@@ -467,6 +470,7 @@ paths:
         - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/entityTypeFilter'
+        - $ref: '#/components/parameters/activeFilter'
       responses:
         '200':
           description: OK
@@ -479,7 +483,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_ENABLE]
-      x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
     post:
       tags: [ReasonEnable]
       summary: Create a ReasonEnable entry
@@ -506,7 +509,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ENABLE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
 
   /v1/reason-enable/{id}:
     get:
@@ -530,7 +532,6 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_ENABLE]
-      x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
     put:
       tags: [ReasonEnable]
       summary: Update enable reason
@@ -558,7 +559,6 @@ paths:
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ENABLE
         ttl: 1
-      x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
 
   /v1/reason-enable/{id}/enable:
     put:
@@ -578,7 +578,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_REASON_ENABLE]
-      x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
   /v1/reason-enable/{id}/disable:
     put:
@@ -598,7 +600,9 @@ paths:
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_REASON_ENABLE]
-      x-cache: [SCOS_ORGANIZATION_REASON_ENABLE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        ttl: 1
 
 components:
   securitySchemes:
@@ -611,6 +615,12 @@ components:
       required: false
       schema:
         $ref: '#/components/schemas/ReasonEntityType'
+    activeFilter:
+      name: active
+      in: query
+      required: false
+      schema:
+        type: boolean
   schemas:
     ReasonEntityType:
       type: string
