@@ -15,8 +15,9 @@
 
     <!-- Define o padrão dos logs -->
     <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %mask(%msg) - MDC: %mdc%n" />
-    <!-- Define o diretório onde os logs serão salvos -->
-    <property name="LOG_DIR" value="logs" />
+    <!-- Diretório onde os logs serão salvos. Externalizado: em container/on-premise aponte LOG_DIR
+         para um caminho persistente (ex: /var/log/scos); default 'logs' (relativo) preserva dev. -->
+    <property name="LOG_DIR" value="${LOG_DIR:-logs}" />
 
     <!-- Appender para o console, que inclui variáveis do MDC -->
     <appender name="ScosConsole" class="ch.qos.logback.core.ConsoleAppender">
@@ -27,8 +28,9 @@
         </encoder>
     </appender>
 
-    <!-- Appender para arquivo em formato JSON -->
-    <appender name="ScosJson" class="ch.qos.logback.core.FileAppender">
+    <!-- Appender para arquivo em formato JSON. RollingFileAppender p/ a rollingPolicy abaixo valer
+         (FileAppender ignorava a rollingPolicy → application.json crescia ilimitado). -->
+    <appender name="ScosJson" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_DIR}/application.json</file>
 
         <!-- Política de rotação com base no tempo -->
@@ -74,7 +76,7 @@
         </encoder>
     </appender>
 
-    <root level="INFO">
+    <root level="${LOG_LEVEL:-INFO}">
         <appender-ref ref="ScosConsole" />
         <appender-ref ref="ScosJson" />
         <appender-ref ref="ScosLog" />

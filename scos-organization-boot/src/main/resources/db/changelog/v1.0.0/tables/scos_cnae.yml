@@ -43,3 +43,19 @@ databaseChangeLog:
             tableName: SCOS_CNAE
             schemaName: scos
             cascadeConstraints: true
+  - changeSet:
+      id: 20260707-Samuel.Cunha-001
+      author: Samuel.Cunha
+      comment: "Alinha SCOS_CNAE.CODE a varchar(30) conforme UC-099 (era varchar(10)); UK_CODE_SCOS_CNAE preservada"
+      changes:
+        - modifyDataType:
+            tableName: SCOS_CNAE
+            schemaName: scos
+            columnName: CODE
+            newDataType: varchar(30)
+      rollback:
+        - modifyDataType:
+            tableName: SCOS_CNAE
+            schemaName: scos
+            columnName: CODE
+            newDataType: varchar(10)

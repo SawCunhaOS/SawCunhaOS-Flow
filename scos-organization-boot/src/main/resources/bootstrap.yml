@@ -9,9 +9,9 @@ server:
     min-response-size: 1024
     mime-types: text/html,text/xml,text/plain,application/json,application/xml
   tomcat:
-    connection-timeout: 120000
+    connection-timeout: ${SCOS_TOMCAT_CONNECTION_TIMEOUT:120000}
     keep-alive-timeout: 60000
-    max-connections: 5000
+    max-connections: ${SCOS_TOMCAT_MAX_CONNECTIONS:5000}
     max-http-header-size: 8192
     max-swallow-size: 20971520
     max-post-size: 20971520
@@ -53,7 +53,7 @@ spring:
         enabled: false
       port: ${scos.cache.port}
       password: ${scos.cache.password}
-      timeout: 5000ms
+      timeout: ${SCOS_REDIS_TIMEOUT:5000ms}
       sentinel:
         master: ${scos.cache.master}
         nodes: ${scos.cache.sentinels}
@@ -98,11 +98,11 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:
-        show_sql: true
-        format_sql: true
+        show_sql: ${SCOS_JPA_SHOW_SQL:true}
+        format_sql: ${SCOS_JPA_SHOW_SQL:true}
         enable_lazy_load_no_trans: false
         ddl-auto: validate
-        generate_statistics: true
+        generate_statistics: ${SCOS_JPA_GENERATE_STATISTICS:true}
         naming:
           implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
           physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
@@ -111,7 +111,7 @@ spring:
         session:
           events:
             log:
-              LOG_QUERIES_SLOWER_THAN_MS: 500
+              LOG_QUERIES_SLOWER_THAN_MS: ${SCOS_JPA_SLOW_QUERY_MS:500}
         jdbc:
           batch_size: 100
           order_updates: true
@@ -159,7 +159,7 @@ management:
       show-details: always
   tracing:
     sampling:
-      probability: 1.0
+      probability: ${SCOS_TRACING_SAMPLING:1.0}
   management:
     metrics:
       enable:
@@ -186,16 +186,16 @@ management:
 
 scos:
   liquibase:
-    enabled: true
+    enabled: ${SCOS_LIQUIBASE_ENABLED:true}
     contexts: prod
     database-change-log-lock-table: SCOS_DATABASECHANGELOGLOCK
     database-change-log-table: SCOS_DATABASECHANGELOG
     change-log: classpath:/db/changelog/db.changelog-master.yml
-    default-schema: scos
+    default-schema: ${SCOS_DB_SCHEMA:scos}
   filter:
-    show-request-body: false
-    show-request-headers: false
-    show-response-body: false
+    show-request-body: ${SCOS_LOG_SHOW_REQUEST_BODY:false}
+    show-request-headers: ${SCOS_LOG_SHOW_REQUEST_HEADERS:false}
+    show-response-body: ${SCOS_LOG_SHOW_RESPONSE_BODY:false}
   audit:
     system: SCOS_ORGANIZATION
     enabled: ${scos.audit.enabled}
@@ -205,7 +205,7 @@ scos:
       database-change-log-lock-table: IF_DATABASECHANGELOGLOCK
       database-change-log-table: IF_DATABASECHANGELOG
       change-log: classpath:db/changelog/db_audit.changelog-master.yaml
-      default-schema: scos
+      default-schema: ${SCOS_DB_SCHEMA:scos}
   jdempotent:
     enabled: ${scos.jdempotent.enabled:false}
     cache:
@@ -226,10 +226,10 @@ scos:
   security:
     enabled: true
   registry:
-    host: localhost           # host do scos-registry
-    port: 8090                # porta gRPC
-    key-access: ABLABLABLA
+    host: ${SCOS_REGISTRY_HOST:localhost}                 # host do scos-registry
+    port: ${SCOS_REGISTRY_PORT:8090}                      # porta gRPC
+    key-access: '${SCOS_REGISTRY_KEY_ACCESS:ABLABLABLA}'  # prod: setar via env; default versionado é só dev
     system-code: SCOS_ORGANIZATION
     system-name: Scos Organization
     system-description: Sistema de Gestão de Empresas e Funcionarios
-    tls-enabled: false        # true em produção
+    tls-enabled: ${SCOS_REGISTRY_TLS_ENABLED:false}       # true em produção

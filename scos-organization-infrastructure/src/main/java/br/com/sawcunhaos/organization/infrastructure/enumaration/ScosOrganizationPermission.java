@@ -441,6 +441,56 @@ public enum ScosOrganizationPermission implements ScosPermission {
             true
     ),
 
+    // Cnae
+    GET_CNAE(
+            "Consultar CNAE",
+            "Get CNAE",
+            true
+    ),
+
+    CREATE_CNAE(
+            "Criar CNAE",
+            "Create CNAE",
+            true
+    ),
+
+    UPDATE_CNAE(
+            "Atualizar CNAE",
+            "Update CNAE",
+            true
+    ),
+
+    DELETE_CNAE(
+            "Excluir CNAE",
+            "Delete CNAE",
+            true
+    ),
+
+    // Legal Nature
+    GET_LEGAL_NATURE(
+            "Consultar natureza jurídica",
+            "Get legal nature",
+            true
+    ),
+
+    CREATE_LEGAL_NATURE(
+            "Criar natureza jurídica",
+            "Create legal nature",
+            true
+    ),
+
+    UPDATE_LEGAL_NATURE(
+            "Atualizar natureza jurídica",
+            "Update legal nature",
+            true
+    ),
+
+    DELETE_LEGAL_NATURE(
+            "Excluir natureza jurídica",
+            "Delete legal nature",
+            true
+    ),
+
     // Reason Activate
     GET_REASON_ACTIVATE(
             "Consultar motivo de ativação",

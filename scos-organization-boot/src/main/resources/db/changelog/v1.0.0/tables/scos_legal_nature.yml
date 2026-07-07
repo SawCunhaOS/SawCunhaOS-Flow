@@ -43,3 +43,19 @@ databaseChangeLog:
             tableName: SCOS_LEGAL_NATURE
             schemaName: scos
             cascadeConstraints: true
+  - changeSet:
+      id: 20260707-Samuel.Cunha-002
+      author: Samuel.Cunha
+      comment: "Alinha SCOS_LEGAL_NATURE.CODE a varchar(30) conforme UC-094 (era varchar(10)); UK_CODE_SCOS_LEGAL_NATURE preservada"
+      changes:
+        - modifyDataType:
+            tableName: SCOS_LEGAL_NATURE
+            schemaName: scos
+            columnName: CODE
+            newDataType: varchar(30)
+      rollback:
+        - modifyDataType:
+            tableName: SCOS_LEGAL_NATURE
+            schemaName: scos
+            columnName: CODE
+            newDataType: varchar(10)

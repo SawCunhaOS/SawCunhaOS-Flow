@@ -100,6 +100,22 @@ public enum ExceptionCodeError implements ExceptionCode {
     /** Tipo de contato já está inativo — impossível inativar novamente. HTTP 422. */
     SCOS_CONTACT_TYPE_004("SCOS_CONTACT_TYPE_004", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
 
+    // Cnae
+    /** CNAE não encontrado. HTTP 404. */
+    SCOS_CNAE_001("SCOS_CNAE_001", 404, "SCOS_TITLE_NOT_FOUND"),
+    /** Já existe um CNAE com o mesmo code. HTTP 409. */
+    SCOS_CNAE_002("SCOS_CNAE_002", 409, "SCOS_TITLE_CONFLICT"),
+    /** CNAE ainda vinculado a empresa (principal ou secundário) — não pode ser excluído. HTTP 422. */
+    SCOS_CNAE_003("SCOS_CNAE_003", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+
+    // Legal Nature
+    /** Natureza jurídica não encontrada. HTTP 404. */
+    SCOS_LEGAL_NATURE_001("SCOS_LEGAL_NATURE_001", 404, "SCOS_TITLE_NOT_FOUND"),
+    /** Já existe uma natureza jurídica com o mesmo code. HTTP 409. */
+    SCOS_LEGAL_NATURE_002("SCOS_LEGAL_NATURE_002", 409, "SCOS_TITLE_CONFLICT"),
+    /** Natureza jurídica ainda vinculada a empresa — não pode ser excluída. HTTP 422. */
+    SCOS_LEGAL_NATURE_003("SCOS_LEGAL_NATURE_003", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+
     // Reason Activate
     SCOS_REASON_ACTIVATE_001("SCOS_REASON_ACTIVATE_001", 404, "SCOS_TITLE_NOT_FOUND"),
     SCOS_REASON_ACTIVATE_002("SCOS_REASON_ACTIVATE_002", 409, "SCOS_TITLE_CONFLICT"),

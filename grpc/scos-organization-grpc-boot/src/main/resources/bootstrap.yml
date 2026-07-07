@@ -66,11 +66,11 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:
-        show_sql: true
-        format_sql: true
+        show_sql: ${SCOS_JPA_SHOW_SQL:true}
+        format_sql: ${SCOS_JPA_SHOW_SQL:true}
         enable_lazy_load_no_trans: false
         ddl-auto: validate
-        generate_statistics: true
+        generate_statistics: ${SCOS_JPA_GENERATE_STATISTICS:true}
         naming:
           implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
           physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
@@ -79,7 +79,7 @@ spring:
         session:
           events:
             log:
-              LOG_QUERIES_SLOWER_THAN_MS: 500
+              LOG_QUERIES_SLOWER_THAN_MS: ${SCOS_JPA_SLOW_QUERY_MS:500}
         jdbc:
           batch_size: 100
           order_updates: true
@@ -110,7 +110,7 @@ management:
       show-details: always
   tracing:
     sampling:
-      probability: 1.0
+      probability: ${SCOS_TRACING_SAMPLING:1.0}
   management:
     metrics:
       enable:
@@ -137,11 +137,11 @@ management:
 
 scos:
   liquibase:
-    enabled: false
+    enabled: ${SCOS_LIQUIBASE_ENABLED:false}
   filter:
-    show-request-body: false
-    show-request-headers: false
-    show-response-body: false
+    show-request-body: ${SCOS_LOG_SHOW_REQUEST_BODY:false}
+    show-request-headers: ${SCOS_LOG_SHOW_REQUEST_HEADERS:false}
+    show-response-body: ${SCOS_LOG_SHOW_RESPONSE_BODY:false}
   audit:
     system: SCOS_ORGANIZATION
     enabled: ${scos.audit.enabled}

@@ -1319,10 +1319,12 @@ components:
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
+          maxLength: 30
         description:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+          maxLength: 255
     UpdateLegalNatureRequest:
       required: [code, description]
       type: object
@@ -1331,10 +1333,12 @@ components:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+          maxLength: 30
         description:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+          maxLength: 255
     Cnae:
       type: object
       properties:
@@ -1368,10 +1372,12 @@ components:
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
+          maxLength: 30
         description:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+          maxLength: 255
     UpdateCnaeRequest:
       required: [code, description]
       type: object
@@ -1380,10 +1386,12 @@ components:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+          maxLength: 30
         description:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+          maxLength: 255
     CompanyCnaeSecondary:
       type: object
       properties:

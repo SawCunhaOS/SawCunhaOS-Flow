@@ -2,7 +2,7 @@ package br.com.sawcunhaos.security.starter;
 
 import br.com.sawcunhaos.security.starter.configuration.GrantedAuthorityConfiguration;
 import br.com.sawcunhaos.security.starter.configuration.InsideHttpSecurityConfiguration;
-import br.com.sawcunhaos.security.starter.configuration.ScosGrpcClientConfiguration;
+import br.com.sawcunhaos.security.starter.configuration.grpc.ScosGrpcClientConfiguration;
 import br.com.sawcunhaos.security.starter.configuration.ScosServiceConfiguration;
 import br.com.sawcunhaos.security.starter.configuration.ScosWebConfiguration;
 import br.com.sawcunhaos.security.starter.keycloak.WebSecurityConfig;

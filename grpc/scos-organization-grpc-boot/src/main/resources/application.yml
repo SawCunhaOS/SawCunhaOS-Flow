@@ -1,48 +1,48 @@
 scos:
-  port: 8090
+  port: ${SCOS_PORT:8090}
   datasource:
-    url: jdbc:postgresql://localhost:5432/scos?currentSchema=scos
-    username: scos
-    password: scos#2026
-    connection-timeout: 600000
-    idle-timeout: 150000
-    max-lifetime: 1800000
-    minimum-idle: 25
-    maximum-pool-size: 100
+    url: '${SCOS_DB_URL:jdbc:postgresql://localhost:5432/scos?currentSchema=${SCOS_DB_SCHEMA:scos}}'
+    username: ${SCOS_DB_USERNAME:scos}
+    password: '${SCOS_DB_PASSWORD:scos#2026}'          # prod: setar via env; default versionado é só dev
+    connection-timeout: ${SCOS_DB_CONN_TIMEOUT:600000}
+    idle-timeout: ${SCOS_DB_IDLE_TIMEOUT:150000}
+    max-lifetime: ${SCOS_DB_MAX_LIFETIME:1800000}
+    minimum-idle: ${SCOS_DB_MIN_IDLE:25}               # manter <= SCOS_DB_MAX_POOL_SIZE
+    maximum-pool-size: ${SCOS_DB_MAX_POOL_SIZE:100}
   audit:
-    enabled: true
+    enabled: ${SCOS_AUDIT_ENABLED:true}
     datasource:
-      url: jdbc:postgresql://localhost:5432/scos?currentSchema=scos
-      username: scos
-      password: scos#2026
-      connection-timeout: 100000
-      idle-timeout: 150000
-      max-lifetime: 300000
-      minimum-idle: 10
-      maximum-pool-size: 30
+      url: '${SCOS_AUDIT_DB_URL:jdbc:postgresql://localhost:5432/scos?currentSchema=${SCOS_DB_SCHEMA:scos}}'
+      username: ${SCOS_AUDIT_DB_USERNAME:scos}
+      password: '${SCOS_AUDIT_DB_PASSWORD:scos#2026}'  # prod: setar via env; default versionado é só dev
+      connection-timeout: ${SCOS_AUDIT_DB_CONN_TIMEOUT:100000}
+      idle-timeout: ${SCOS_AUDIT_DB_IDLE_TIMEOUT:150000}
+      max-lifetime: ${SCOS_AUDIT_DB_MAX_LIFETIME:300000}
+      minimum-idle: ${SCOS_AUDIT_DB_MIN_IDLE:10}
+      maximum-pool-size: ${SCOS_AUDIT_DB_MAX_POOL_SIZE:30}
   security:
     keycloak:
       client-id: Scos
       authorization-grant-type: password
       scope: openid
-      issuer-uri: http://localhost:7080/realms/Scos
+      issuer-uri: '${SCOS_KEYCLOAK_ISSUER_URI:http://localhost:7080/realms/Scos}'
       resourceId: "Scos"
   cache:
-    enable: false
+    enable: ${SCOS_CACHE_ENABLE:false}
     key-prefix: 'grpc::'
-    time-to-live: 12000000
-    port: 26379
-    database: 0
-    master: inside_flow_master
-    password: scos#2026
-    sentinels: localhost:26379
+    time-to-live: ${SCOS_CACHE_TTL:12000000}
+    port: ${SCOS_REDIS_PORT:26379}
+    database: ${SCOS_CACHE_DATABASE:0}
+    master: scos_master
+    password: '${SCOS_REDIS_PASSWORD:scos#2026}'       # prod: setar via env; default versionado é só dev
+    sentinels: '${SCOS_REDIS_SENTINELS:localhost:26379}'
   privacy:
-    enabled: true                                 # loads on import
-    strict: false                                 # prod: error if hash/encrypt has no key
-    max-payload-kb: 64                            # truncate before masking, bounds worst case
+    enabled: ${SCOS_PRIVACY_ENABLED:true}             # loads on import
+    strict: ${SCOS_PRIVACY_STRICT:false}              # prod: error if hash/encrypt has no key (setar crypto.secret junto)
+    max-payload-kb: ${SCOS_PRIVACY_MAX_PAYLOAD_KB:64} # truncate before masking, bounds worst case
     masking:
       default-patterns: true
     log:
-      register-converter: true                    # %mask registered programmatically (see below)
+      register-converter: true                        # %mask registered programmatically (see below)
     crypto:
-      secret: 'ASDASDASDA'
+      secret: '${SCOS_PRIVACY_CRYPTO_SECRET:ASDASDASDA}'  # prod: setar via env; default versionado é só dev

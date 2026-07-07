@@ -72,4 +72,24 @@ public interface CompanyRepository extends BaseJpaRepository<Company, Long>, Jpa
         return exists(company.id.ne(companyId).and(company.status.eq(status)));
     }
 
+    /**
+     * Verifica se existe alguma empresa que usa o CNAE informado como CNAE principal.
+     *
+     * @param cnaeId ID do CNAE
+     * @return true se existe, false caso contrário
+     */
+    default boolean existsByCnaePrincipalId(Long cnaeId) {
+        return exists(company.cnaePrincipal.id.eq(cnaeId));
+    }
+
+    /**
+     * Verifica se existe alguma empresa que usa a natureza jurídica informada (qualquer status).
+     *
+     * @param legalNatureId ID da natureza jurídica
+     * @return true se existe, false caso contrário
+     */
+    default boolean existsByLegalNatureId(Long legalNatureId) {
+        return exists(company.legalNature.id.eq(legalNatureId));
+    }
+
 }

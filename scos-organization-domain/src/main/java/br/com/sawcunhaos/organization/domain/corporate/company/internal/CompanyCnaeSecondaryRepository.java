@@ -20,4 +20,15 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CompanyCnaeSecondaryRepository extends BaseJpaRepository<CompanyCnaeSecondary, CompanyCnaeSecondaryPk>, JpaSpecificationExecutor<CompanyCnaeSecondary>, QuerydslPredicateExecutor<CompanyCnaeSecondary> {
+    QCompanyCnaeSecondary qCompanyCnaeSecondary = QCompanyCnaeSecondary.companyCnaeSecondary;
+
+    /**
+     * Verifica se o CNAE informado está associado como CNAE secundário de alguma empresa.
+     *
+     * @param cnaeId ID do CNAE
+     * @return true se existe associação, false caso contrário
+     */
+    default boolean existsByCnaeId(Long cnaeId) {
+        return exists(qCompanyCnaeSecondary.id.cnaeId.eq(cnaeId));
+    }
 }

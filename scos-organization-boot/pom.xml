@@ -15,6 +15,11 @@
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Build de imagem (buildpacks). Sobrescrevíveis por -D sem editar o pom. -->
+        <bp.cds.enabled>true</bp.cds.enabled>              <!-- -Dbp.cds.enabled=false p/ fallback do bug paketo #581 -->
+        <bp.jvm.thread.count>20</bp.jvm.thread.count>      <!-- dimensionar junto do mem_limit do container -->
+        <!-- Pinar em tag/digest verificado; NUNCA latest (RF-02). Confirmar a tag vigente antes do build. -->
+        <paketo.builder>paketobuildpacks/builder-noble-java-tiny:0.0.153</paketo.builder>
     </properties>
 
     <dependencies>
@@ -92,6 +97,17 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <image>
+                        <name>scos-organization-boot:local</name>
+                        <builder>${paketo.builder}</builder>
+                        <pullPolicy>IF_NOT_PRESENT</pullPolicy>
+                        <env>
+                            <BP_JVM_VERSION>25</BP_JVM_VERSION>
+                            <BP_JVM_CDS_ENABLED>${bp.cds.enabled}</BP_JVM_CDS_ENABLED>
+                            <BPL_JVM_THREAD_COUNT>${bp.jvm.thread.count}</BPL_JVM_THREAD_COUNT>
+                            <BP_JVM_TYPE>JRE</BP_JVM_TYPE>
+                        </env>
+                    </image>
                     <layers>
                         <enabled>true</enabled>
                     </layers>
