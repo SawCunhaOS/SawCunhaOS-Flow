@@ -30,6 +30,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_DEPARTMENT_006;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_POSITION_001;
@@ -49,6 +50,7 @@ public class PositionServiceBean implements PositionService {
     private final ScosUserAuthentication scosUserAuthentication;
 
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public PositionOutput create(@NonNull PositionInput positionInput) {
         log.info("Create Position: {}", positionInput.code());
 
@@ -73,6 +75,7 @@ public class PositionServiceBean implements PositionService {
     }
 
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void update(@NonNull PositionInput positionInput) {
         log.info("Update Position: {}", positionInput.id());
         Position position = findPositionById(positionInput.id());
@@ -93,6 +96,7 @@ public class PositionServiceBean implements PositionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PositionOutput findById(@NonNull Long positionId) {
         log.info("Find Position by Id: {}", positionId);
         Position position = findPositionById(positionId);
@@ -100,6 +104,7 @@ public class PositionServiceBean implements PositionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<PositionOutput> findAll(@NonNull Long departmentId, @NonNull Boolean active, @NonNull Pageable pageable) {
         log.info("Find All Positions, DepartmentId: {}, Active: {}", departmentId, active);
         return positionRepository.findAllFiltered(departmentId, active, pageable)
@@ -107,6 +112,7 @@ public class PositionServiceBean implements PositionService {
     }
 
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void enable(@NonNull Long positionId) {
         log.info("Enable Position: {}", positionId);
         Position position = findPositionById(positionId);
@@ -117,6 +123,7 @@ public class PositionServiceBean implements PositionService {
     }
 
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void disable(@NonNull Long positionId) {
         log.info("Disable Position: {}", positionId);
 
@@ -133,6 +140,7 @@ public class PositionServiceBean implements PositionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Position findPositionById(@NonNull Long positionId) {
         log.info("Find Position by Id: {}", positionId);
         return positionRepository.findById(positionId).orElseThrow(

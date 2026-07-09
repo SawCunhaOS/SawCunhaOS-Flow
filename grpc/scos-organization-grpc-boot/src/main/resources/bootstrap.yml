@@ -3,6 +3,13 @@ server:
   http2:
     enabled: true
 
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+  instance:
+    preferIpAddress: true
+
 spring:
   grpc:
     server:

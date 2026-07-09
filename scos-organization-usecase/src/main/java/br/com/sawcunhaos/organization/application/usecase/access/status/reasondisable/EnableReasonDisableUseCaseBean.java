@@ -13,16 +13,19 @@
 
 package br.com.sawcunhaos.organization.application.usecase.access.status.reasondisable;
 
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonDisableService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Implementação de {@link EnableReasonDisableUseCase}. */
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(rollbackFor = ScosException.class)
 class EnableReasonDisableUseCaseBean implements EnableReasonDisableUseCase {
 
     private final ReasonDisableService reasonDisableService;

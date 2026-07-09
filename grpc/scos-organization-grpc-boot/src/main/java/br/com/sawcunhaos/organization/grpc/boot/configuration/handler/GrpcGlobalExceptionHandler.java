@@ -15,7 +15,10 @@ package br.com.sawcunhaos.organization.grpc.boot.configuration.handler;
 
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.foundation.utils.specification.LocaleService;
+import br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError;
+import io.grpc.Metadata;
 import io.grpc.Status;
+import io.grpc.StatusRuntimeException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.grpc.server.advice.GrpcAdvice;
@@ -33,6 +36,10 @@ import org.springframework.security.core.AuthenticationException;
 @GrpcAdvice
 @RequiredArgsConstructor
 public class GrpcGlobalExceptionHandler {
+
+    /** Trailer que carrega o código de erro de negócio (ScosException.code) para o client. */
+    public static final Metadata.Key<String> ERROR_CODE_KEY =
+            Metadata.Key.of("scos-error-code", Metadata.ASCII_STRING_MARSHALLER);
 
     private final LocaleService localeService;
 
@@ -80,17 +87,49 @@ public class GrpcGlobalExceptionHandler {
     }
 
     @GrpcExceptionHandler(ScosException.class)
-    public Status handleScosException(ScosException ex) {
-        log.error("gRPC INTERNAL unhandled exception", ex);
-        return Status.INTERNAL.withDescription(safeMessage(ex.getCode())).withCause(ex);
+    public StatusRuntimeException handleScosException(ScosException ex) {
+        Status status = toStatus(ex.getCode())
+                .withDescription(safeMessage(ex))
+                .withCause(ex);
+
+        log.warn("gRPC {}: code={} - {}", status.getCode(), ex.getCode(), status.getDescription());
+
+        Metadata trailers = new Metadata();
+        if (ex.getCode() != null) {
+            trailers.put(ERROR_CODE_KEY, ex.getCode());
+        }
+        return status.asRuntimeException(trailers);
     }
 
-    private String safeMessage(String code) {
+    /**
+     * Mapeia o {@code code} de negócio para um {@link Status} gRPC, resolvendo o HTTP status
+     * do {@link ExceptionCodeError}. Códigos desconhecidos caem em {@code INTERNAL}.
+     */
+    private Status toStatus(String code) {
+        int httpCode;
         try {
-            return localeService.getMessage(code);
+            httpCode = ExceptionCodeError.valueOf(code).getHttpCode();
         } catch (Exception ex) {
-            log.error("Falha ao resolver mensagem para code={}", code, ex);
-            return "Erro: " + code;
+            log.error("Código de erro desconhecido: {}", code, ex);
+            return Status.INTERNAL;
+        }
+        return switch (httpCode) {
+            case 400 -> Status.INVALID_ARGUMENT;
+            case 401 -> Status.UNAUTHENTICATED;
+            case 403 -> Status.PERMISSION_DENIED;
+            case 404 -> Status.NOT_FOUND;
+            case 409 -> Status.ALREADY_EXISTS;
+            case 422 -> Status.FAILED_PRECONDITION;
+            default -> Status.INTERNAL;
+        };
+    }
+
+    private String safeMessage(ScosException ex) {
+        try {
+            return localeService.getMessage(ex.getCode(), ex.getArgs());
+        } catch (Exception e) {
+            log.error("Falha ao resolver mensagem para code={}", ex.getCode(), e);
+            return "Erro: " + ex.getCode();
         }
     }
 }

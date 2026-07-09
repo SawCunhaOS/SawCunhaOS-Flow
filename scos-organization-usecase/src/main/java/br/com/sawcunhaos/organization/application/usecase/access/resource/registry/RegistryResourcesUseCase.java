@@ -13,6 +13,12 @@
 
 package br.com.sawcunhaos.organization.application.usecase.access.resource.registry;
 
-public interface RegistryResourceUseCase {
-    void execute(RegistryResourceInput request);
+import java.util.List;
+
+/**
+ * Registro em lote de resources — a implementação cobre a iteração inteira com uma única
+ * transação, de modo que a falha em qualquer resource faz rollback de todos (batch atômico).
+ */
+public interface RegistryResourcesUseCase {
+    void execute(List<RegistryResourceInput> requests);
 }

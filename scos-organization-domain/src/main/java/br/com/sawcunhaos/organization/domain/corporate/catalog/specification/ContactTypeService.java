@@ -16,6 +16,7 @@ package br.com.sawcunhaos.organization.domain.corporate.catalog.specification;
 import br.com.sawcunhaos.organization.domain.access.status.internal.EntityType;
 import br.com.sawcunhaos.organization.domain.corporate.catalog.dto.ContactTypeInput;
 import br.com.sawcunhaos.organization.domain.corporate.catalog.dto.ContactTypeOutput;
+import br.com.sawcunhaos.organization.domain.corporate.catalog.internal.ContactType;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,5 +43,7 @@ public interface ContactTypeService {
 
     /** Inativa um tipo de contato ativo — não remove vínculos existentes. */
     void disable(@NonNull Long contactTypeId);
+
+    ContactType findContactTypeById(@NonNull Long contactTypeId);
 
 }

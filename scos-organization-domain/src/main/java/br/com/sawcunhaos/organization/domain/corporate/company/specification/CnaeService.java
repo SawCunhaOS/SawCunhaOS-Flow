@@ -15,6 +15,7 @@ package br.com.sawcunhaos.organization.domain.corporate.company.specification;
 
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.CnaeInput;
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.CnaeOutput;
+import br.com.sawcunhaos.organization.domain.corporate.company.internal.Cnae;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,5 +39,7 @@ public interface CnaeService {
 
     /** Remove fisicamente um CNAE — rejeita se ainda vinculado a alguma empresa (principal ou secundário). */
     void delete(@NonNull Long cnaeId);
+
+    Cnae findCnaeById(@NonNull Long cnaeId);
 
 }

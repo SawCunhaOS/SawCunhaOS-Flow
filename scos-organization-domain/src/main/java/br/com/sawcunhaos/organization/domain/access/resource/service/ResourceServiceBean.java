@@ -13,57 +13,48 @@
 
 package br.com.sawcunhaos.organization.domain.access.resource.service;
 
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.resource.dto.RegisterResourceInput;
 import br.com.sawcunhaos.organization.domain.access.resource.specification.ResourceService;
-import br.com.sawcunhaos.organization.domain.access.resource.internal.Resource;
 import br.com.sawcunhaos.organization.domain.access.system.internal.ScosSystem;
 import br.com.sawcunhaos.organization.domain.access.resource.internal.ResourceRepository;
 import br.com.sawcunhaos.organization.domain.access.system.internal.ScosSystemRepository;
+import br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 class ResourceServiceBean implements ResourceService {
 
     private final ResourceRepository resourceRepository;
     private final ScosSystemRepository scosSystemRepository;
 
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void register(@NonNull RegisterResourceInput registerResourceInput) {
         log.info("Registry Resource : {} - System: {}", registerResourceInput.code(), registerResourceInput.systemCode());
-        ScosSystem scosSystem = scosSystemRepository.findByCode(registerResourceInput.systemCode()).get();
 
-        Optional<Resource> id = resourceRepository.findIdByCodeAndSystemCode(
+        ScosSystem scosSystem = scosSystemRepository.findByCode(registerResourceInput.systemCode())
+                .orElseThrow(() -> new ScosException(ExceptionCodeError.SCOS_SYSTEM_001, registerResourceInput.systemCode()));
+
+        resourceRepository.upsert(
+                scosSystem.getId(),
                 registerResourceInput.code(),
+                registerResourceInput.descriptionPt(),
+                registerResourceInput.descriptionEn(),
+                registerResourceInput.group(),
+                registerResourceInput.subGroup(),
+                registerResourceInput.version(),
+                registerResourceInput.updatedAt(),
+                registerResourceInput.active(),
                 registerResourceInput.systemCode()
         );
 
-        if (id.isEmpty()) {
-            Resource resource = Resource.builder()
-                    .code(registerResourceInput.code())
-                    .descriptionEn(registerResourceInput.descriptionEn())
-                    .descriptionPt(registerResourceInput.descriptionPt())
-                    .active(registerResourceInput.active())
-                    .system(scosSystem)
-                    .build();
-            resource.updateAuditInfo(registerResourceInput.systemCode());
-            resourceRepository.merge(resource);
-        } else {
-            Resource resource = id.get();
-            resource.setDescriptionEn(registerResourceInput.descriptionEn());
-            resource.setDescriptionPt(registerResourceInput.descriptionPt());
-            resource.setActive(registerResourceInput.active());
-            resource.updateAuditInfo(registerResourceInput.systemCode());
-            resourceRepository.update(resource);
-        }
         log.info("Registry Resource finished: {} - System: {}", registerResourceInput.code(), registerResourceInput.systemCode());
     }
 }

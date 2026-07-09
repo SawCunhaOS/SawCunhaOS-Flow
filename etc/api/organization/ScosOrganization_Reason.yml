@@ -72,7 +72,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_REASON_ACTIVATE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ACTIVATE
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_REASON_ACTIVATE
         ttl: 1
 
   /v1/reason-activate/{id}:
@@ -122,7 +122,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_REASON_ACTIVATE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ACTIVATE
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_REASON_ACTIVATE
         ttl: 1
 
   /v1/reason-activate/{id}/enable:
@@ -144,7 +144,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_REASON_ACTIVATE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_REASON_ACTIVATE
         ttl: 1
 
   /v1/reason-activate/{id}/disable:
@@ -166,7 +166,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_REASON_ACTIVATE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_REASON_ACTIVATE
         ttl: 1
 
   /v1/reason-inactivate:
@@ -217,7 +217,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_REASON_INACTIVATE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_INACTIVATE
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_REASON_INACTIVATE
         ttl: 1
 
   /v1/reason-inactivate/{id}:
@@ -267,7 +267,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_REASON_INACTIVATE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_INACTIVATE
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_REASON_INACTIVATE
         ttl: 1
 
   /v1/reason-inactivate/{id}/enable:
@@ -289,7 +289,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_REASON_INACTIVATE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_REASON_INACTIVATE
         ttl: 1
 
   /v1/reason-inactivate/{id}/disable:
@@ -311,7 +311,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_REASON_INACTIVATE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_REASON_INACTIVATE
         ttl: 1
 
   /v1/reason-disable:
@@ -362,7 +362,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_REASON_DISABLE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_DISABLE
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_REASON_DISABLE
         ttl: 1
 
   /v1/reason-disable/{id}:
@@ -412,7 +412,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_REASON_DISABLE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_DISABLE
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_REASON_DISABLE
         ttl: 1
 
   /v1/reason-disable/{id}/enable:
@@ -434,7 +434,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_REASON_DISABLE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_REASON_DISABLE
         ttl: 1
 
   /v1/reason-disable/{id}/disable:
@@ -456,7 +456,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_REASON_DISABLE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_REASON_DISABLE
         ttl: 1
 
   /v1/reason-enable:
@@ -507,7 +507,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_REASON_ENABLE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ENABLE
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_REASON_ENABLE
         ttl: 1
 
   /v1/reason-enable/{id}:
@@ -557,7 +557,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_REASON_ENABLE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_ENABLE
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_REASON_ENABLE
         ttl: 1
 
   /v1/reason-enable/{id}/enable:
@@ -579,7 +579,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_REASON_ENABLE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_REASON_ENABLE
         ttl: 1
 
   /v1/reason-enable/{id}/disable:
@@ -601,7 +601,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_REASON_ENABLE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_REASON_ENABLE
         ttl: 1
 
 components:

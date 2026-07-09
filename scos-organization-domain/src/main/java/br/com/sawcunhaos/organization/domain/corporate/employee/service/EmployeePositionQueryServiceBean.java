@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,7 @@ public class EmployeePositionQueryServiceBean implements EmployeePositionQuerySe
     private final EmployeeQueryRepository employeeQueryRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsActiveEmployeeInPosition(@NonNull Long positionId) {
         log.info("Check active employee in position: {}", positionId);
         return employeeQueryRepository.existsByPositionIdAndStatus(positionId, StatusEmployee.ACTIVE);

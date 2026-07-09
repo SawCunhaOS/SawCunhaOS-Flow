@@ -13,6 +13,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.corporate.catalog.addresstype;
 
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.api.dto.UpdateAddressTypeRequest;
 import br.com.sawcunhaos.organization.domain.corporate.catalog.dto.AddressTypeInput;
 import br.com.sawcunhaos.organization.domain.corporate.catalog.specification.AddressTypeService;
@@ -20,11 +21,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Implementação de {@link UpdateAddressTypeUseCase}. */
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(rollbackFor = ScosException.class)
 class UpdateAddressTypeUseCaseBean implements UpdateAddressTypeUseCase {
     private final AddressTypeService addressTypeService;
 

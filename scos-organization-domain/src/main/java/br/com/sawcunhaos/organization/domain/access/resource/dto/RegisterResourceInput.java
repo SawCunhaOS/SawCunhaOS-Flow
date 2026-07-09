@@ -16,11 +16,17 @@ package br.com.sawcunhaos.organization.domain.access.resource.dto;
 import lombok.Builder;
 import org.jspecify.annotations.NonNull;
 
+import java.time.LocalDate;
+
 @Builder
 public record RegisterResourceInput(
         @NonNull String code,
         @NonNull String descriptionPt,
         @NonNull String descriptionEn,
+        @NonNull String group,
+        @NonNull String subGroup,
+        @NonNull String version,
+        @NonNull LocalDate updatedAt,
         @NonNull Boolean active,
         @NonNull String systemCode
 ) {

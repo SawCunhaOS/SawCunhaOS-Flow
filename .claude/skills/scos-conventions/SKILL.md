@@ -98,6 +98,54 @@ public class OrderServiceBean implements OrderService {
 Field injection is not the house style — always constructor injection via
 `@RequiredArgsConstructor` over `final` fields.
 
+## Transactions — `@Transactional` placement
+
+The transaction boundary lives at the **UseCase Bean** (application boundary).
+Domain services **participate** in that transaction via the default propagation
+(`REQUIRED`). This is the house rule; follow it for all UseCase and domain
+service beans.
+
+- **UseCase Bean** — annotate the **class** (each UseCase Bean exposes a single
+  operation, so class-level equals method-level with less noise):
+  - Write UseCase (`Create`/`Update`/`Enable`/`Disable`): `@Transactional(rollbackFor = ScosException.class)`
+  - Read UseCase (`Find`/`FindAll`): `@Transactional(readOnly = true)`
+- **Domain Service Bean** — annotate **per public/interface method** (the bean is
+  multi-method with mixed read/write); with `REQUIRED` it joins the UseCase's
+  transaction rather than opening a new one:
+  - Write method: `@Transactional(rollbackFor = ScosException.class)`
+  - Read method: `@Transactional(readOnly = true)`
+- **Private helper method** — do NOT annotate. Self-invocation via `this.`
+  bypasses the Spring proxy, so `@Transactional` there is a no-op. A method
+  promoted to `public`/interface for service↔service use MAY keep the annotation
+  (it goes through the proxy when called by another bean).
+
+Notes:
+- `readOnly` does NOT downgrade an already-open transaction — a read UseCase must
+  itself be `readOnly = true` so the whole boundary is read-only.
+- `rollbackFor = ScosException.class` is redundant at runtime (`ScosException
+  extends RuntimeException` already rolls back) but is **kept as documentation**
+  of which exception triggers the rollback.
+- A rollback marking propagates: an inner service that throws `ScosException`
+  marks the transaction rollback-only; the UseCase cannot commit even if it
+  catches the exception.
+
+```java
+@Service
+@RequiredArgsConstructor
+@Slf4j
+@Transactional(rollbackFor = ScosException.class)          // actually on the class
+class CreateOrderUseCaseBean implements CreateOrderUseCase {   // class-level boundary
+
+    private final OrderService orderService;
+
+    @Override
+    public Order execute(CreateOrderRequest request) { ... }
+}
+```
+
+See the standardization change `padronizacao-transactional-camadas` and the idea
+`etc/doc/ideia/20260709_padronizacao-transactional-camadas.md`.
+
 ## Web layer — OpenAPI delegate pattern
 
 SCOS Organization uses the **OpenAPI-first delegate pattern** — the API contract

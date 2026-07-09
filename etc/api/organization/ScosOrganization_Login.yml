@@ -76,7 +76,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_LOGIN]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_LOGIN
         ttl: 1
 
   /v1/logins/me:
@@ -149,7 +149,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_LOGIN]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_LOGIN
         ttl: 1
 
   /v1/logins/{id}/enable:
@@ -180,7 +180,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_LOGIN]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_LOGIN
         ttl: 1
 
   /v1/logins/{id}/disable:
@@ -211,7 +211,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_LOGIN]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_LOGIN
         ttl: 1
 
   /v1/logins/{id}/block:
@@ -243,7 +243,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_LOGIN_STATUS]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_BLOCK_LOGIN
         ttl: 1
 
   /v1/logins/{id}/unblock:
@@ -274,7 +274,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_LOGIN_STATUS]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_UNBLOCK_LOGIN
         ttl: 1
 
   /v1/logins/{id}/status-history:
@@ -321,7 +321,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_LOGIN]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_LOGIN_PROFILE
         ttl: 1
 
   /v1/logins/{id}/profiles:
@@ -372,7 +372,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_LOGIN_PROFILE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_LOGIN_PROFILE
         ttl: 1
     delete:
       tags: [Login]
@@ -395,7 +395,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_LOGIN_PROFILE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_DELETE_LOGIN_PROFILE
         ttl: 1
 
   /v1/employees/{employeeId}/logins:
@@ -446,7 +446,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_LOGIN]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_EMPLOYEE_LOGIN
         ttl: 1
 
   /v1/employees/{employeeId}/logins/{id}:
@@ -520,7 +520,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_PROFILE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_PROFILE
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_PROFILE
         ttl: 1
 
   /v1/profiles/{id}:
@@ -570,7 +570,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_PROFILE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_PROFILE
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_PROFILE
         ttl: 1
     delete:
       tags: [Profile]
@@ -590,7 +590,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_PROFILE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_DELETE_PROFILE
         ttl: 1
 
   /v1/profiles/{id}/enable:
@@ -612,7 +612,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_PROFILE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_PROFILE
         ttl: 1
 
   /v1/profiles/{id}/disable:
@@ -634,7 +634,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_PROFILE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_PROFILE
         ttl: 1
 
   /v1/profiles/{id}/resources:
@@ -685,7 +685,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_PROFILE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_PROFILE_RESOURCES
         ttl: 1
 
   /v1/resources:

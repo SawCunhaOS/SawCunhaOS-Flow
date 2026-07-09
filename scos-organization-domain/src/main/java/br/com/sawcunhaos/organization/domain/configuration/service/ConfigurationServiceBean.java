@@ -24,6 +24,7 @@ import br.com.sawcunhaos.organization.domain.configuration.specification.Configu
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +40,7 @@ public class ConfigurationServiceBean implements ConfigurationService {
     private final LocaleService localeService;
 
     @Override
+    @Transactional(readOnly = true)
     public List<KeyConfigurationOutput> getAllKeys() {
         log.info("Getting all keys");
         return (List<KeyConfigurationOutput>) Arrays.stream(ConfigurationKey.values())
@@ -51,6 +53,7 @@ public class ConfigurationServiceBean implements ConfigurationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ConfigurationOutput> getAllConfigurations() {
         return organizationConfigurationRepository.findAll().stream()
                 .map(organizationConfiguration ->
@@ -65,6 +68,7 @@ public class ConfigurationServiceBean implements ConfigurationService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ConfigurationOutput getConfiguration(String key) {
         log.info("Getting configuration by key: {}", key);
 
@@ -79,6 +83,7 @@ public class ConfigurationServiceBean implements ConfigurationService {
     }
 
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void updateConfiguration(String key, String value) {
         log.info("Updating configuration by key: {}", key);
         OrganizationConfiguration organizationConfiguration = getOrganizationConfiguration(ConfigurationKey.valueOfKey(key));

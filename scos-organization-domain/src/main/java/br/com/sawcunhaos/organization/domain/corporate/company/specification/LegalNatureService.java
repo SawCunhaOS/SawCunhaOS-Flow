@@ -15,6 +15,7 @@ package br.com.sawcunhaos.organization.domain.corporate.company.specification;
 
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.LegalNatureInput;
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.LegalNatureOutput;
+import br.com.sawcunhaos.organization.domain.corporate.company.internal.LegalNature;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,5 +39,7 @@ public interface LegalNatureService {
 
     /** Remove fisicamente uma natureza jurídica — rejeita se ainda vinculada a alguma empresa. */
     void delete(@NonNull Long legalNatureId);
+
+    LegalNature findLegalNatureById(@NonNull Long legalNatureId);
 
 }

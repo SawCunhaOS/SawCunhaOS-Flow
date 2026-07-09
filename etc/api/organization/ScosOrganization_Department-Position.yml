@@ -69,7 +69,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_DEPARTMENT]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_DEPARTMENT
         ttl: 1
 
   /v1/departments/{id}:
@@ -119,7 +119,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_DEPARTMENT]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_DEPARTMENT
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_DEPARTMENT
         ttl: 1
 
   /v1/departments/{id}/enable:
@@ -208,7 +208,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_POSITION]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_POSITION
         ttl: 1
 
   /v1/positions/{id}:
@@ -258,7 +258,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_POSITION]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_POSITION
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_POSITION
         ttl: 1
 
   /v1/positions/{id}/enable:
@@ -345,7 +345,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_REASON_POSITION_CHANGE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_POSITION_CHANGE
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_REASON_POSITION_CHANGE
         ttl: 1
 
   /v1/reason-position-change/{id}:
@@ -395,7 +395,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_REASON_POSITION_CHANGE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_REASON_POSITION_CHANGE
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_REASON_POSITION_CHANGE
         ttl: 1
 
   /v1/reason-position-change/{id}/enable:
@@ -485,7 +485,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_POSITION_WORK_SCHEDULE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_POSITION_WORK_SCHEDULE
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_POSITION_WORK_SCHEDULE
         ttl: 1
 
   /v1/positions/{positionId}/work-schedule/{dayOfWeek}:

@@ -13,6 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.access.system.service;
 
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.system.dto.RegisterScosSystemInput;
 import br.com.sawcunhaos.organization.domain.access.system.dto.ScosSystemOutput;
 import br.com.sawcunhaos.organization.domain.access.system.specification.ScosSystemService;
@@ -30,12 +31,12 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 class ScosSystemServiceBean implements ScosSystemService {
 
     private final ScosSystemRepository scosSystemRepository;
 
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public ScosSystemOutput register(@NonNull RegisterScosSystemInput registerScosSystemInput) {
         log.info("Registry System : {} - Code: {}", registerScosSystemInput.name(), registerScosSystemInput.code());
         ScosSystem scosSystem = scosSystemRepository.findByCode(registerScosSystemInput.code()).orElse(null);
@@ -74,6 +75,7 @@ class ScosSystemServiceBean implements ScosSystemService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ScosSystemOutput findByCodeAndSecretKey(@NonNull String Code, @NonNull String secretKey) {
         ScosSystem scosSystem = scosSystemRepository.findByCodeAndSecretKey(Code, secretKey).orElseThrow();
         return ScosSystemOutput.builder()

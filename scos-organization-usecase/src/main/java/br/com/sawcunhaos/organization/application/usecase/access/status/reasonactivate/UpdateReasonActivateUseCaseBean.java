@@ -13,6 +13,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.access.status.reasonactivate;
 
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.api.dto.UpdateReasonActivateRequest;
 import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonActivateInput;
 import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonActivateService;
@@ -20,11 +21,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Implementação de {@link UpdateReasonActivateUseCase}. */
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(rollbackFor = ScosException.class)
 class UpdateReasonActivateUseCaseBean implements UpdateReasonActivateUseCase {
     private final ReasonActivateService reasonActivateService;
 

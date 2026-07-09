@@ -18,10 +18,11 @@ class MessageConfiguration {
 			"classpath:messages_security",
             "classpath:scos_message_organization",
             "classpath:scos_utils_messages",
-            "classpath:key_configuration_description"
+            "classpath:key_configuration_description",
+            "classpath:messages_permission"
 		);
 		messageSource.setDefaultEncoding("UTF-8");
-		messageSource.setCacheSeconds(10);
+		messageSource.setCacheSeconds(360);
 		messageSource.setFallbackToSystemLocale(false);
 		return messageSource;
 	}

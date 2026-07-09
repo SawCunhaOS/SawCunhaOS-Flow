@@ -27,6 +27,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_REASON_INACTIVATE_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_REASON_INACTIVATE_002;
@@ -48,6 +49,7 @@ public class ReasonInactivateServiceBean implements ReasonInactivateService {
      * @throws ScosException SCOS_REASON_INACTIVATE_002 se já existir um {@link ReasonInactivate} com o mesmo {@code code}/{@code entityType}.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public ReasonInactivateOutput create(@NonNull ReasonInactivateInput reasonInactivateInput) {
         log.info("Create ReasonInactivate: {}", reasonInactivateInput.code());
 
@@ -79,6 +81,7 @@ public class ReasonInactivateServiceBean implements ReasonInactivateService {
      * @throws ScosException SCOS_REASON_INACTIVATE_002 se o novo {@code code}/{@code entityType} colidir com outro registro.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void update(@NonNull ReasonInactivateInput reasonInactivateInput) {
         log.info("Update ReasonInactivate: {}", reasonInactivateInput.id());
         ReasonInactivate reasonInactivate = findReasonInactivateById(reasonInactivateInput.id());
@@ -98,6 +101,7 @@ public class ReasonInactivateServiceBean implements ReasonInactivateService {
      * @throws ScosException SCOS_REASON_INACTIVATE_001 se o {@code id} não existir.
      */
     @Override
+    @Transactional(readOnly = true)
     public ReasonInactivateOutput findById(@NonNull Long reasonInactivateId) {
         log.info("Find ReasonInactivate by Id: {}", reasonInactivateId);
         ReasonInactivate reasonInactivate = findReasonInactivateById(reasonInactivateId);
@@ -108,6 +112,7 @@ public class ReasonInactivateServiceBean implements ReasonInactivateService {
      * Lista paginada, filtrando por {@code entityType} quando informado.
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<ReasonInactivateOutput> findAll(EntityType entityType,
                                                 Boolean active,
                                                 @NonNull Pageable pageable
@@ -122,6 +127,7 @@ public class ReasonInactivateServiceBean implements ReasonInactivateService {
      * @throws ScosException SCOS_REASON_INACTIVATE_003 se já estiver ativo.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void enable(@NonNull Long reasonInactivateId) {
         log.info("Enable ReasonInactivate: {}", reasonInactivateId);
         ReasonInactivate reasonInactivate = findReasonInactivateById(reasonInactivateId);
@@ -136,6 +142,7 @@ public class ReasonInactivateServiceBean implements ReasonInactivateService {
      * @throws ScosException SCOS_REASON_INACTIVATE_004 se já estiver inativo.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void disable(@NonNull Long reasonInactivateId) {
         log.info("Disable ReasonInactivate: {}", reasonInactivateId);
         ReasonInactivate reasonInactivate = findReasonInactivateById(reasonInactivateId);

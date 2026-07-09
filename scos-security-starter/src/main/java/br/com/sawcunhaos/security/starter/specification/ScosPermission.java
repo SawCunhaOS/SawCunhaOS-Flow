@@ -13,9 +13,21 @@
 
 package br.com.sawcunhaos.security.starter.specification;
 
+import java.time.LocalDate;
+
+/**
+ * getPermission       -> Indica o codigo da permissao
+ * getCodeDescription  -> Indica a descricao da permissao
+ * getActive           -> Indica se a permissao esta ativa
+ * getVersion          -> Indica a versao da permissao
+ * getCreatedAt        -> Indica a data de criacao da permissao
+ */
 public interface ScosPermission {
     String getPermission();
-    String getDescriptionPtBr();
-    String getDescriptionEng();
+    String getCodeDescription();
+    String getGroup();
+    String getSubGroup();
     Boolean getActive();
+    String getVersion();
+    LocalDate getUpdatedAt();
 }

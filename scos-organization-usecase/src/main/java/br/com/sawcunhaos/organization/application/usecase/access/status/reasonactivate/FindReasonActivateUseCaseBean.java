@@ -20,11 +20,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Implementação de {@link FindReasonActivateUseCase}. */
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 class FindReasonActivateUseCaseBean implements FindReasonActivateUseCase {
 
     private final ReasonActivateService reasonActivateService;

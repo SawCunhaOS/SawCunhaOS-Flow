@@ -1,629 +1,180 @@
 package br.com.sawcunhaos.organization.infrastructure.enumaration;
 
 import br.com.sawcunhaos.security.starter.specification.ScosPermission;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
+
 /**
  * Permissões do módulo organization, referenciadas pelo {@code x-authorize} do contrato OpenAPI.
- * Cada constante carrega a descrição pt-br/en exibida na central de permissões.
+ * Cada constante carrega os metadados da definição (grupo, subgrupo, versão, data de atualização,
+ * chave i18n da descrição). As descrições pt-br/en vivem nos bundles {@code messages_permission*}.
+ *
+ * <p>Convenção: qualquer alteração da definição de uma permissão MUST bumpar {@code updatedAt}
+ * (o upsert condicional do resource só atualiza quando {@code active} ou {@code updatedAt} muda).
  */
 @Getter
 @RequiredArgsConstructor
 public enum ScosOrganizationPermission implements ScosPermission {
 
     // Department
-    GET_DEPARTMENT(
-            "Consultar departamento",
-            "Get department",
-            true
-    ),
-
-    CREATE_DEPARTMENT(
-            "Criar departamento",
-            "Create department",
-            true
-    ),
-
-    UPDATE_DEPARTMENT(
-            "Atualizar departamento",
-            "Update department",
-            true
-    ),
-
-    DELETE_DEPARTMENT(
-            "Excluir departamento",
-            "Delete department",
-            true
-    ),
-
-    ENABLE_DEPARTMENT(
-            "Habilitar departamento",
-            "Enable department",
-            true
-    ),
-
-    DISABLE_DEPARTMENT(
-            "Desabilitar departamento",
-            "Disable department",
-            true
-    ),
+    GET_DEPARTMENT("GET_DEPARTMENT", "Corporate", "Department", "1.0.0", "2026-07-09", true),
+    CREATE_DEPARTMENT("CREATE_DEPARTMENT", "Corporate", "Department", "1.0.0", "2026-07-09", true),
+    UPDATE_DEPARTMENT("UPDATE_DEPARTMENT", "Corporate", "Department", "1.0.0", "2026-07-09", true),
+    DELETE_DEPARTMENT("DELETE_DEPARTMENT", "Corporate", "Department", "1.0.0", "2026-07-09", true),
+    ENABLE_DEPARTMENT("ENABLE_DEPARTMENT", "Corporate", "Department", "1.0.0", "2026-07-09", true),
+    DISABLE_DEPARTMENT("DISABLE_DEPARTMENT", "Corporate", "Department", "1.0.0", "2026-07-09", true),
 
     // Position
-    GET_POSITION(
-            "Consultar cargo",
-            "Get position",
-            true
-    ),
-
-    CREATE_POSITION(
-            "Criar cargo",
-            "Create position",
-            true
-    ),
-
-    UPDATE_POSITION(
-            "Atualizar cargo",
-            "Update position",
-            true
-    ),
-
-    DELETE_POSITION(
-            "Excluir cargo",
-            "Delete position",
-            true
-    ),
-
-    ENABLE_POSITION(
-            "Habilitar cargo",
-            "Enable position",
-            true
-    ),
-
-    DISABLE_POSITION(
-            "Desabilitar cargo",
-            "Disable position",
-            true
-    ),
+    GET_POSITION("GET_POSITION", "Corporate", "Position", "1.0.0", "2026-07-09", true),
+    CREATE_POSITION("CREATE_POSITION", "Corporate", "Position", "1.0.0", "2026-07-09", true),
+    UPDATE_POSITION("UPDATE_POSITION", "Corporate", "Position", "1.0.0", "2026-07-09", true),
+    DELETE_POSITION("DELETE_POSITION", "Corporate", "Position", "1.0.0", "2026-07-09", true),
+    ENABLE_POSITION("ENABLE_POSITION", "Corporate", "Position", "1.0.0", "2026-07-09", true),
+    DISABLE_POSITION("DISABLE_POSITION", "Corporate", "Position", "1.0.0", "2026-07-09", true),
 
     // Login
-    GET_LOGIN(
-            "Consultar login",
-            "Get login",
-            true
-    ),
-
-    GET_LOGIN_INFO(
-            "Consultar informações de login",
-            "Get login info",
-            true
-    ),
-
-    CREATE_LOGIN(
-            "Criar login",
-            "Create login",
-            true
-    ),
-
-    UPDATE_LOGIN(
-            "Atualizar login",
-            "Update login",
-            true
-    ),
-
-    UPDATE_LOGIN_STATUS(
-            "Atualizar status do login",
-            "Update login status",
-            true
-    ),
-
-    DELETE_LOGIN(
-            "Excluir login",
-            "Delete login",
-            true
-    ),
+    GET_LOGIN("GET_LOGIN", "Access", "Login", "1.0.0", "2026-07-09", true),
+    GET_LOGIN_INFO("GET_LOGIN_INFO", "Access", "Login", "1.0.0", "2026-07-09", true),
+    CREATE_LOGIN("CREATE_LOGIN", "Access", "Login", "1.0.0", "2026-07-09", true),
+    UPDATE_LOGIN("UPDATE_LOGIN", "Access", "Login", "1.0.0", "2026-07-09", true),
+    UPDATE_LOGIN_STATUS("UPDATE_LOGIN_STATUS", "Access", "Login", "1.0.0", "2026-07-09", true),
+    DELETE_LOGIN("DELETE_LOGIN", "Access", "Login", "1.0.0", "2026-07-09", true),
 
     // Profile
-    GET_PROFILE(
-            "Consultar perfil",
-            "Get profile",
-            true
-    ),
-
-    CREATE_PROFILE(
-            "Criar perfil",
-            "Create profile",
-            true
-    ),
-
-    UPDATE_PROFILE(
-            "Atualizar perfil",
-            "Update profile",
-            true
-    ),
-
-    DELETE_PROFILE(
-            "Excluir perfil",
-            "Delete profile",
-            true
-    ),
-
-    ENABLE_PROFILE(
-            "Habilitar perfil",
-            "Enable profile",
-            true
-    ),
-
-    DISABLE_PROFILE(
-            "Desabilitar perfil",
-            "Disable profile",
-            true
-    ),
+    GET_PROFILE("GET_PROFILE", "Access", "Profile", "1.0.0", "2026-07-09", true),
+    CREATE_PROFILE("CREATE_PROFILE", "Access", "Profile", "1.0.0", "2026-07-09", true),
+    UPDATE_PROFILE("UPDATE_PROFILE", "Access", "Profile", "1.0.0", "2026-07-09", true),
+    DELETE_PROFILE("DELETE_PROFILE", "Access", "Profile", "1.0.0", "2026-07-09", true),
+    ENABLE_PROFILE("ENABLE_PROFILE", "Access", "Profile", "1.0.0", "2026-07-09", true),
+    DISABLE_PROFILE("DISABLE_PROFILE", "Access", "Profile", "1.0.0", "2026-07-09", true),
 
     // Resource
-    GET_RESOURCE(
-            "Consultar recurso",
-            "Get resource",
-            true
-    ),
+    GET_RESOURCE("GET_RESOURCE", "Access", "Resource", "1.0.0", "2026-07-09", true),
 
     // Outbox
-    GET_OUTBOX_EVENT(
-            "Consultar evento do outbox",
-            "Get outbox event",
-            true
-    ),
-
-    RETRY_OUTBOX_EVENT(
-            "Reprocessar evento do outbox",
-            "Retry outbox event",
-            true
-    ),
-
-    GET_OUTBOX_EVENT_DEAD_LETTER(
-            "Consultar dead letter do outbox",
-            "Get outbox event dead letter",
-            true
-    ),
+    GET_OUTBOX_EVENT("GET_OUTBOX_EVENT", "Outbox", "Outbox", "1.0.0", "2026-07-09", true),
+    RETRY_OUTBOX_EVENT("RETRY_OUTBOX_EVENT", "Outbox", "Outbox", "1.0.0", "2026-07-09", true),
+    GET_OUTBOX_EVENT_DEAD_LETTER("GET_OUTBOX_EVENT_DEAD_LETTER", "Outbox", "Outbox", "1.0.0", "2026-07-09", true),
 
     // Company
-    GET_COMPANY(
-            "Consultar empresa",
-            "Get company",
-            true
-    ),
-
-    CREATE_COMPANY(
-            "Criar empresa",
-            "Create company",
-            true
-    ),
-
-    UPDATE_COMPANY(
-            "Atualizar empresa",
-            "Update company",
-            true
-    ),
-
-    DELETE_COMPANY(
-            "Excluir empresa",
-            "Delete company",
-            true
-    ),
-
-    ENABLE_COMPANY(
-            "Habilitar empresa",
-            "Enable company",
-            true
-    ),
-
-    DISABLE_COMPANY(
-            "Desabilitar empresa",
-            "Disable company",
-            true
-    ),
+    GET_COMPANY("GET_COMPANY", "Corporate", "Company", "1.0.0", "2026-07-09", true),
+    CREATE_COMPANY("CREATE_COMPANY", "Corporate", "Company", "1.0.0", "2026-07-09", true),
+    UPDATE_COMPANY("UPDATE_COMPANY", "Corporate", "Company", "1.0.0", "2026-07-09", true),
+    DELETE_COMPANY("DELETE_COMPANY", "Corporate", "Company", "1.0.0", "2026-07-09", true),
+    ENABLE_COMPANY("ENABLE_COMPANY", "Corporate", "Company", "1.0.0", "2026-07-09", true),
+    DISABLE_COMPANY("DISABLE_COMPANY", "Corporate", "Company", "1.0.0", "2026-07-09", true),
 
     // Company Contact
-    GET_COMPANY_CONTACT(
-            "Consultar contato da empresa",
-            "Get company contact",
-            true
-    ),
-
-    CREATE_COMPANY_CONTACT(
-            "Criar contato da empresa",
-            "Create company contact",
-            true
-    ),
-
-    UPDATE_COMPANY_CONTACT(
-            "Atualizar contato da empresa",
-            "Update company contact",
-            true
-    ),
-
-    DELETE_COMPANY_CONTACT(
-            "Excluir contato da empresa",
-            "Delete company contact",
-            true
-    ),
+    GET_COMPANY_CONTACT("GET_COMPANY_CONTACT", "Corporate", "Company Contact", "1.0.0", "2026-07-09", true),
+    CREATE_COMPANY_CONTACT("CREATE_COMPANY_CONTACT", "Corporate", "Company Contact", "1.0.0", "2026-07-09", true),
+    UPDATE_COMPANY_CONTACT("UPDATE_COMPANY_CONTACT", "Corporate", "Company Contact", "1.0.0", "2026-07-09", true),
+    DELETE_COMPANY_CONTACT("DELETE_COMPANY_CONTACT", "Corporate", "Company Contact", "1.0.0", "2026-07-09", true),
 
     // Company Address
-    GET_COMPANY_ADDRESS(
-            "Consultar endereço da empresa",
-            "Get company address",
-            true
-    ),
-
-    CREATE_COMPANY_ADDRESS(
-            "Criar endereço da empresa",
-            "Create company address",
-            true
-    ),
-
-    UPDATE_COMPANY_ADDRESS(
-            "Atualizar endereço da empresa",
-            "Update company address",
-            true
-    ),
-
-    DELETE_COMPANY_ADDRESS(
-            "Excluir endereço da empresa",
-            "Delete company address",
-            true
-    ),
+    GET_COMPANY_ADDRESS("GET_COMPANY_ADDRESS", "Corporate", "Company Address", "1.0.0", "2026-07-09", true),
+    CREATE_COMPANY_ADDRESS("CREATE_COMPANY_ADDRESS", "Corporate", "Company Address", "1.0.0", "2026-07-09", true),
+    UPDATE_COMPANY_ADDRESS("UPDATE_COMPANY_ADDRESS", "Corporate", "Company Address", "1.0.0", "2026-07-09", true),
+    DELETE_COMPANY_ADDRESS("DELETE_COMPANY_ADDRESS", "Corporate", "Company Address", "1.0.0", "2026-07-09", true),
 
     // Employee
-    GET_EMPLOYEE(
-            "Consultar colaborador",
-            "Get employee",
-            true
-    ),
-
-    CREATE_EMPLOYEE(
-            "Criar colaborador",
-            "Create employee",
-            true
-    ),
-
-    UPDATE_EMPLOYEE(
-            "Atualizar colaborador",
-            "Update employee",
-            true
-    ),
-
-    DELETE_EMPLOYEE(
-            "Excluir colaborador",
-            "Delete employee",
-            true
-    ),
-
-    ENABLE_EMPLOYEE(
-            "Habilitar colaborador",
-            "Enable employee",
-            true
-    ),
-
-    DISABLE_EMPLOYEE(
-            "Desabilitar colaborador",
-            "Disable employee",
-            true
-    ),
-
-    TRANSFER_EMPLOYEE(
-            "Transferir colaborador",
-            "Transfer employee",
-            true
-    ),
+    GET_EMPLOYEE("GET_EMPLOYEE", "Corporate", "Employee", "1.0.0", "2026-07-09", true),
+    CREATE_EMPLOYEE("CREATE_EMPLOYEE", "Corporate", "Employee", "1.0.0", "2026-07-09", true),
+    UPDATE_EMPLOYEE("UPDATE_EMPLOYEE", "Corporate", "Employee", "1.0.0", "2026-07-09", true),
+    DELETE_EMPLOYEE("DELETE_EMPLOYEE", "Corporate", "Employee", "1.0.0", "2026-07-09", true),
+    ENABLE_EMPLOYEE("ENABLE_EMPLOYEE", "Corporate", "Employee", "1.0.0", "2026-07-09", true),
+    DISABLE_EMPLOYEE("DISABLE_EMPLOYEE", "Corporate", "Employee", "1.0.0", "2026-07-09", true),
+    TRANSFER_EMPLOYEE("TRANSFER_EMPLOYEE", "Corporate", "Employee", "1.0.0", "2026-07-09", true),
 
     // Employee Contact
-    GET_EMPLOYEE_CONTACT(
-            "Consultar contato do colaborador",
-            "Get employee contact",
-            true
-    ),
-
-    CREATE_EMPLOYEE_CONTACT(
-            "Criar contato do colaborador",
-            "Create employee contact",
-            true
-    ),
-
-    UPDATE_EMPLOYEE_CONTACT(
-            "Atualizar contato do colaborador",
-            "Update employee contact",
-            true
-    ),
-
-    DELETE_EMPLOYEE_CONTACT(
-            "Excluir contato do colaborador",
-            "Delete employee contact",
-            true
-    ),
+    GET_EMPLOYEE_CONTACT("GET_EMPLOYEE_CONTACT", "Corporate", "Employee Contact", "1.0.0", "2026-07-09", true),
+    CREATE_EMPLOYEE_CONTACT("CREATE_EMPLOYEE_CONTACT", "Corporate", "Employee Contact", "1.0.0", "2026-07-09", true),
+    UPDATE_EMPLOYEE_CONTACT("UPDATE_EMPLOYEE_CONTACT", "Corporate", "Employee Contact", "1.0.0", "2026-07-09", true),
+    DELETE_EMPLOYEE_CONTACT("DELETE_EMPLOYEE_CONTACT", "Corporate", "Employee Contact", "1.0.0", "2026-07-09", true),
 
     // Employee Address
-    GET_EMPLOYEE_ADDRESS(
-            "Consultar endereço do colaborador",
-            "Get employee address",
-            true
-    ),
-
-    CREATE_EMPLOYEE_ADDRESS(
-            "Criar endereço do colaborador",
-            "Create employee address",
-            true
-    ),
-
-    UPDATE_EMPLOYEE_ADDRESS(
-            "Atualizar endereço do colaborador",
-            "Update employee address",
-            true
-    ),
-
-    DELETE_EMPLOYEE_ADDRESS(
-            "Excluir endereço do colaborador",
-            "Delete employee address",
-            true
-    ),
+    GET_EMPLOYEE_ADDRESS("GET_EMPLOYEE_ADDRESS", "Corporate", "Employee Address", "1.0.0", "2026-07-09", true),
+    CREATE_EMPLOYEE_ADDRESS("CREATE_EMPLOYEE_ADDRESS", "Corporate", "Employee Address", "1.0.0", "2026-07-09", true),
+    UPDATE_EMPLOYEE_ADDRESS("UPDATE_EMPLOYEE_ADDRESS", "Corporate", "Employee Address", "1.0.0", "2026-07-09", true),
+    DELETE_EMPLOYEE_ADDRESS("DELETE_EMPLOYEE_ADDRESS", "Corporate", "Employee Address", "1.0.0", "2026-07-09", true),
 
     // Configuration
-    GET_CONFIGURATION(
-            "Consultar configuração",
-            "Get configuration",
-            true
-    ),
-
-    UPDATE_CONFIGURATION(
-            "Atualizar configuração",
-            "Update configuration",
-            true
-    ),
+    GET_CONFIGURATION("GET_CONFIGURATION", "Configuration", "Configuration", "1.0.0", "2026-07-09", true),
+    UPDATE_CONFIGURATION("UPDATE_CONFIGURATION", "Configuration", "Configuration", "1.0.0", "2026-07-09", true),
 
     // Address Type
-    GET_ADDRESS_TYPE(
-            "Consultar tipo de endereço",
-            "Get address type",
-            true
-    ),
-
-    CREATE_ADDRESS_TYPE(
-            "Criar tipo de endereço",
-            "Create address type",
-            true
-    ),
-
-    UPDATE_ADDRESS_TYPE(
-            "Atualizar tipo de endereço",
-            "Update address type",
-            true
-    ),
-
-    ENABLE_ADDRESS_TYPE(
-            "Habilitar tipo de endereço",
-            "Enable address type",
-            true
-    ),
-
-    DISABLE_ADDRESS_TYPE(
-            "Desabilitar tipo de endereço",
-            "Disable address type",
-            true
-    ),
+    GET_ADDRESS_TYPE("GET_ADDRESS_TYPE", "Corporate", "Address Type", "1.0.0", "2026-07-09", true),
+    CREATE_ADDRESS_TYPE("CREATE_ADDRESS_TYPE", "Corporate", "Address Type", "1.0.0", "2026-07-09", true),
+    UPDATE_ADDRESS_TYPE("UPDATE_ADDRESS_TYPE", "Corporate", "Address Type", "1.0.0", "2026-07-09", true),
+    ENABLE_ADDRESS_TYPE("ENABLE_ADDRESS_TYPE", "Corporate", "Address Type", "1.0.0", "2026-07-09", true),
+    DISABLE_ADDRESS_TYPE("DISABLE_ADDRESS_TYPE", "Corporate", "Address Type", "1.0.0", "2026-07-09", true),
 
     // Contact Type
-    GET_CONTACT_TYPE(
-            "Consultar tipo de contato",
-            "Get contact type",
-            true
-    ),
-
-    CREATE_CONTACT_TYPE(
-            "Criar tipo de contato",
-            "Create contact type",
-            true
-    ),
-
-    UPDATE_CONTACT_TYPE(
-            "Atualizar tipo de contato",
-            "Update contact type",
-            true
-    ),
-
-    ENABLE_CONTACT_TYPE(
-            "Habilitar tipo de contato",
-            "Enable contact type",
-            true
-    ),
-
-    DISABLE_CONTACT_TYPE(
-            "Desabilitar tipo de contato",
-            "Disable contact type",
-            true
-    ),
+    GET_CONTACT_TYPE("GET_CONTACT_TYPE", "Corporate", "Contact Type", "1.0.0", "2026-07-09", true),
+    CREATE_CONTACT_TYPE("CREATE_CONTACT_TYPE", "Corporate", "Contact Type", "1.0.0", "2026-07-09", true),
+    UPDATE_CONTACT_TYPE("UPDATE_CONTACT_TYPE", "Corporate", "Contact Type", "1.0.0", "2026-07-09", true),
+    ENABLE_CONTACT_TYPE("ENABLE_CONTACT_TYPE", "Corporate", "Contact Type", "1.0.0", "2026-07-09", true),
+    DISABLE_CONTACT_TYPE("DISABLE_CONTACT_TYPE", "Corporate", "Contact Type", "1.0.0", "2026-07-09", true),
 
     // Cnae
-    GET_CNAE(
-            "Consultar CNAE",
-            "Get CNAE",
-            true
-    ),
-
-    CREATE_CNAE(
-            "Criar CNAE",
-            "Create CNAE",
-            true
-    ),
-
-    UPDATE_CNAE(
-            "Atualizar CNAE",
-            "Update CNAE",
-            true
-    ),
-
-    DELETE_CNAE(
-            "Excluir CNAE",
-            "Delete CNAE",
-            true
-    ),
+    GET_CNAE("GET_CNAE", "Corporate", "Cnae", "1.0.0", "2026-07-09", true),
+    CREATE_CNAE("CREATE_CNAE", "Corporate", "Cnae", "1.0.0", "2026-07-09", true),
+    UPDATE_CNAE("UPDATE_CNAE", "Corporate", "Cnae", "1.0.0", "2026-07-09", true),
+    DELETE_CNAE("DELETE_CNAE", "Corporate", "Cnae", "1.0.0", "2026-07-09", true),
 
     // Legal Nature
-    GET_LEGAL_NATURE(
-            "Consultar natureza jurídica",
-            "Get legal nature",
-            true
-    ),
-
-    CREATE_LEGAL_NATURE(
-            "Criar natureza jurídica",
-            "Create legal nature",
-            true
-    ),
-
-    UPDATE_LEGAL_NATURE(
-            "Atualizar natureza jurídica",
-            "Update legal nature",
-            true
-    ),
-
-    DELETE_LEGAL_NATURE(
-            "Excluir natureza jurídica",
-            "Delete legal nature",
-            true
-    ),
+    GET_LEGAL_NATURE("GET_LEGAL_NATURE", "Corporate", "Legal Nature", "1.0.0", "2026-07-09", true),
+    CREATE_LEGAL_NATURE("CREATE_LEGAL_NATURE", "Corporate", "Legal Nature", "1.0.0", "2026-07-09", true),
+    UPDATE_LEGAL_NATURE("UPDATE_LEGAL_NATURE", "Corporate", "Legal Nature", "1.0.0", "2026-07-09", true),
+    DELETE_LEGAL_NATURE("DELETE_LEGAL_NATURE", "Corporate", "Legal Nature", "1.0.0", "2026-07-09", true),
 
     // Reason Activate
-    GET_REASON_ACTIVATE(
-            "Consultar motivo de ativação",
-            "Get activation reason",
-            true
-    ),
-
-    CREATE_REASON_ACTIVATE(
-            "Criar motivo de ativação",
-            "Create activation reason",
-            true
-    ),
-
-    UPDATE_REASON_ACTIVATE(
-            "Atualizar motivo de ativação",
-            "Update activation reason",
-            true
-    ),
-
-    ENABLE_REASON_ACTIVATE(
-            "Habilitar motivo de ativação",
-            "Enable activation reason",
-            true
-    ),
-
-    DISABLE_REASON_ACTIVATE(
-            "Desabilitar motivo de ativação",
-            "Disable activation reason",
-            true
-    ),
+    GET_REASON_ACTIVATE("GET_REASON_ACTIVATE", "Access", "Reason Activate", "1.0.0", "2026-07-09", true),
+    CREATE_REASON_ACTIVATE("CREATE_REASON_ACTIVATE", "Access", "Reason Activate", "1.0.0", "2026-07-09", true),
+    UPDATE_REASON_ACTIVATE("UPDATE_REASON_ACTIVATE", "Access", "Reason Activate", "1.0.0", "2026-07-09", true),
+    ENABLE_REASON_ACTIVATE("ENABLE_REASON_ACTIVATE", "Access", "Reason Activate", "1.0.0", "2026-07-09", true),
+    DISABLE_REASON_ACTIVATE("DISABLE_REASON_ACTIVATE", "Access", "Reason Activate", "1.0.0", "2026-07-09", true),
 
     // Reason Inactivate
-    GET_REASON_INACTIVATE(
-            "Consultar motivo de inativação",
-            "Get inactivation reason",
-            true
-    ),
-
-    CREATE_REASON_INACTIVATE(
-            "Criar motivo de inativação",
-            "Create inactivation reason",
-            true
-    ),
-
-    UPDATE_REASON_INACTIVATE(
-            "Atualizar motivo de inativação",
-            "Update inactivation reason",
-            true
-    ),
-
-    ENABLE_REASON_INACTIVATE(
-            "Habilitar motivo de inativação",
-            "Enable inactivation reason",
-            true
-    ),
-
-    DISABLE_REASON_INACTIVATE(
-            "Desabilitar motivo de inativação",
-            "Disable inactivation reason",
-            true
-    ),
+    GET_REASON_INACTIVATE("GET_REASON_INACTIVATE", "Access", "Reason Inactivate", "1.0.0", "2026-07-09", true),
+    CREATE_REASON_INACTIVATE("CREATE_REASON_INACTIVATE", "Access", "Reason Inactivate", "1.0.0", "2026-07-09", true),
+    UPDATE_REASON_INACTIVATE("UPDATE_REASON_INACTIVATE", "Access", "Reason Inactivate", "1.0.0", "2026-07-09", true),
+    ENABLE_REASON_INACTIVATE("ENABLE_REASON_INACTIVATE", "Access", "Reason Inactivate", "1.0.0", "2026-07-09", true),
+    DISABLE_REASON_INACTIVATE("DISABLE_REASON_INACTIVATE", "Access", "Reason Inactivate", "1.0.0", "2026-07-09", true),
 
     // Reason Disable
-    GET_REASON_DISABLE(
-            "Consultar motivo de bloqueio",
-            "Get block reason",
-            true
-    ),
-
-    CREATE_REASON_DISABLE(
-            "Criar motivo de bloqueio",
-            "Create block reason",
-            true
-    ),
-
-    UPDATE_REASON_DISABLE(
-            "Atualizar motivo de bloqueio",
-            "Update block reason",
-            true
-    ),
-
-    ENABLE_REASON_DISABLE(
-            "Habilitar motivo de bloqueio",
-            "Enable block reason",
-            true
-    ),
-
-    DISABLE_REASON_DISABLE(
-            "Desabilitar motivo de bloqueio",
-            "Disable block reason",
-            true
-    ),
+    GET_REASON_DISABLE("GET_REASON_DISABLE", "Access", "Reason Disable", "1.0.0", "2026-07-09", true),
+    CREATE_REASON_DISABLE("CREATE_REASON_DISABLE", "Access", "Reason Disable", "1.0.0", "2026-07-09", true),
+    UPDATE_REASON_DISABLE("UPDATE_REASON_DISABLE", "Access", "Reason Disable", "1.0.0", "2026-07-09", true),
+    ENABLE_REASON_DISABLE("ENABLE_REASON_DISABLE", "Access", "Reason Disable", "1.0.0", "2026-07-09", true),
+    DISABLE_REASON_DISABLE("DISABLE_REASON_DISABLE", "Access", "Reason Disable", "1.0.0", "2026-07-09", true),
 
     // Reason Enable
-    GET_REASON_ENABLE(
-            "Consultar motivo de desbloqueio",
-            "Get unblock reason",
-            true
-    ),
-
-    CREATE_REASON_ENABLE(
-            "Criar motivo de desbloqueio",
-            "Create unblock reason",
-            true
-    ),
-
-    UPDATE_REASON_ENABLE(
-            "Atualizar motivo de desbloqueio",
-            "Update unblock reason",
-            true
-    ),
-
-    ENABLE_REASON_ENABLE(
-            "Habilitar motivo de desbloqueio",
-            "Enable unblock reason",
-            true
-    ),
-
-    DISABLE_REASON_ENABLE(
-            "Desabilitar motivo de desbloqueio",
-            "Disable unblock reason",
-            true
-    ),
+    GET_REASON_ENABLE("GET_REASON_ENABLE", "Access", "Reason Enable", "1.0.0", "2026-07-09", true),
+    CREATE_REASON_ENABLE("CREATE_REASON_ENABLE", "Access", "Reason Enable", "1.0.0", "2026-07-09", true),
+    UPDATE_REASON_ENABLE("UPDATE_REASON_ENABLE", "Access", "Reason Enable", "1.0.0", "2026-07-09", true),
+    ENABLE_REASON_ENABLE("ENABLE_REASON_ENABLE", "Access", "Reason Enable", "1.0.0", "2026-07-09", true),
+    DISABLE_REASON_ENABLE("DISABLE_REASON_ENABLE", "Access", "Reason Enable", "1.0.0", "2026-07-09", true),
 
     ;
 
-    private final String descriptionPtBr;
-    private final String descriptionEng;
+    private final String codeDescription;
+    private final String group;
+    private final String subGroup;
+    private final String version;
+    @Getter(AccessLevel.NONE)
+    private final String updatedAt;
     private final Boolean active;
-
 
     @Override
     public String getPermission() {
         return this.name();
+    }
+
+    @Override
+    public LocalDate getUpdatedAt() {
+        return LocalDate.parse(updatedAt);
     }
 }

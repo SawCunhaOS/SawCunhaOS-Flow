@@ -13,6 +13,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.corporate.company.fiscal.legalnature;
 
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.api.dto.UpdateLegalNatureRequest;
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.LegalNatureInput;
 import br.com.sawcunhaos.organization.domain.corporate.company.specification.LegalNatureService;
@@ -20,11 +21,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Implementação de {@link UpdateLegalNatureUseCase}. */
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(rollbackFor = ScosException.class)
 class UpdateLegalNatureUseCaseBean implements UpdateLegalNatureUseCase {
 
     private final LegalNatureService legalNatureService;

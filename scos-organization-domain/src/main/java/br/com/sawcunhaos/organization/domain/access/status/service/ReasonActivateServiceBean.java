@@ -27,6 +27,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_REASON_ACTIVATE_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_REASON_ACTIVATE_002;
@@ -48,6 +49,7 @@ public class ReasonActivateServiceBean implements ReasonActivateService {
      * @throws ScosException SCOS_REASON_ACTIVATE_002 se já existir um {@link ReasonActivate} com o mesmo {@code code}/{@code entityType}.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public ReasonActivateOutput create(@NonNull ReasonActivateInput reasonActivateInput) {
         log.info("Create ReasonActivate: {}", reasonActivateInput.code());
 
@@ -79,6 +81,7 @@ public class ReasonActivateServiceBean implements ReasonActivateService {
      * @throws ScosException SCOS_REASON_ACTIVATE_002 se o novo {@code code}/{@code entityType} colidir com outro registro.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void update(@NonNull ReasonActivateInput reasonActivateInput) {
         log.info("Update ReasonActivate: {}", reasonActivateInput.id());
         ReasonActivate reasonActivate = findReasonActivateById(reasonActivateInput.id());
@@ -98,6 +101,7 @@ public class ReasonActivateServiceBean implements ReasonActivateService {
      * @throws ScosException SCOS_REASON_ACTIVATE_001 se o {@code id} não existir.
      */
     @Override
+    @Transactional(readOnly = true)
     public ReasonActivateOutput findById(@NonNull Long reasonActivateId) {
         log.info("Find ReasonActivate by Id: {}", reasonActivateId);
         ReasonActivate reasonActivate = findReasonActivateById(reasonActivateId);
@@ -108,6 +112,7 @@ public class ReasonActivateServiceBean implements ReasonActivateService {
      * Lista paginada, filtrando por {@code entityType} quando informado.
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<ReasonActivateOutput> findAll(EntityType entityType,
                                               Boolean active,
                                               @NonNull Pageable pageable
@@ -122,6 +127,7 @@ public class ReasonActivateServiceBean implements ReasonActivateService {
      * @throws ScosException SCOS_REASON_ACTIVATE_003 se já estiver ativo.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void enable(@NonNull Long reasonActivateId) {
         log.info("Enable ReasonActivate: {}", reasonActivateId);
         ReasonActivate reasonActivate = findReasonActivateById(reasonActivateId);
@@ -136,6 +142,7 @@ public class ReasonActivateServiceBean implements ReasonActivateService {
      * @throws ScosException SCOS_REASON_ACTIVATE_004 se já estiver inativo.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void disable(@NonNull Long reasonActivateId) {
         log.info("Disable ReasonActivate: {}", reasonActivateId);
         ReasonActivate reasonActivate = findReasonActivateById(reasonActivateId);

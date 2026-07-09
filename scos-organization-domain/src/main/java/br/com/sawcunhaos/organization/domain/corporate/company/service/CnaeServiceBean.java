@@ -27,6 +27,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_CNAE_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_CNAE_002;
@@ -50,6 +51,7 @@ class CnaeServiceBean implements CnaeService {
      * @throws ScosException SCOS_CNAE_002 se já existir um {@link Cnae} com o mesmo {@code code}.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public CnaeOutput create(@NonNull CnaeInput cnaeInput) {
         log.info("Create Cnae: {}", cnaeInput.code());
 
@@ -72,6 +74,7 @@ class CnaeServiceBean implements CnaeService {
      * @throws ScosException SCOS_CNAE_002 se o novo {@code code} colidir com outro registro.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void update(@NonNull CnaeInput cnaeInput) {
         log.info("Update Cnae: {}", cnaeInput.id());
         Cnae cnae = findCnaeById(cnaeInput.id());
@@ -89,12 +92,14 @@ class CnaeServiceBean implements CnaeService {
      * @throws ScosException SCOS_CNAE_001 se o {@code id} não existir.
      */
     @Override
+    @Transactional(readOnly = true)
     public CnaeOutput findById(@NonNull Long cnaeId) {
         log.info("Find Cnae by Id: {}", cnaeId);
         return cnaeMapper.toCnaeOutput(findCnaeById(cnaeId));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<CnaeOutput> findAll(@NonNull Pageable pageable) {
         log.info("Find All Cnaes");
         return cnaeRepository.findAll(pageable).map(cnaeMapper::toCnaeOutput);
@@ -105,6 +110,7 @@ class CnaeServiceBean implements CnaeService {
      * @throws ScosException SCOS_CNAE_003 se o CNAE estiver vinculado a alguma empresa (principal ou secundário).
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void delete(@NonNull Long cnaeId) {
         log.info("Delete Cnae: {}", cnaeId);
         Cnae cnae = findCnaeById(cnaeId);
@@ -118,7 +124,9 @@ class CnaeServiceBean implements CnaeService {
         log.info("Cnae deleted");
     }
 
-    private Cnae findCnaeById(@NonNull Long cnaeId) {
+    @Override
+    @Transactional(readOnly = true)
+    public Cnae findCnaeById(@NonNull Long cnaeId) {
         return cnaeRepository.findById(cnaeId).orElseThrow(
                 () -> new ScosException(SCOS_CNAE_001)
         );

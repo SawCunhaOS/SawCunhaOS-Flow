@@ -68,7 +68,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_ADDRESS_TYPE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_ADDRESS_TYPE
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_ADDRESS_TYPE
         ttl: 1
 
   /v1/address-types/{id}:
@@ -118,7 +118,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_ADDRESS_TYPE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_ADDRESS_TYPE
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_ADDRESS_TYPE
         ttl: 1
 
   /v1/address-types/{id}/enable:
@@ -140,7 +140,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_ADDRESS_TYPE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_ADDRESS_TYPE
         ttl: 1
 
   /v1/address-types/{id}/disable:
@@ -162,7 +162,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_ADDRESS_TYPE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_ADDRESS_TYPE
         ttl: 1
 
   /v1/contact-types:
@@ -213,7 +213,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_CONTACT_TYPE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_CONTACT_TYPE
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_CONTACT_TYPE
         ttl: 1
 
   /v1/contact-types/{id}:
@@ -263,7 +263,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_CONTACT_TYPE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_CONTACT_TYPE
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_CONTACT_TYPE
         ttl: 1
 
   /v1/contact-types/{id}/enable:
@@ -285,7 +285,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_CONTACT_TYPE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_CONTACT_TYPE
         ttl: 1
 
   /v1/contact-types/{id}/disable:
@@ -307,7 +307,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_CONTACT_TYPE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_LOGIN
+        cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_CONTACT_TYPE
         ttl: 1
 
 components:

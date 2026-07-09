@@ -26,6 +26,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_DEPARTMENT_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_DEPARTMENT_002;
@@ -41,6 +42,7 @@ public class DepartmentServiceBean implements DepartmentService {
     private final ScosUserAuthentication scosUserAuthentication;
 
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public DepartmentOutput create(@NonNull DepartmentInput departmentInput) {
         log.info("Create Department: {}", departmentInput.code());
 
@@ -66,6 +68,7 @@ public class DepartmentServiceBean implements DepartmentService {
     }
 
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void update(@NonNull DepartmentInput departmentInput) {
         log.info("Update Department: {}", departmentInput.id());
         Department department = findDepartmentById(departmentInput.id());
@@ -81,6 +84,7 @@ public class DepartmentServiceBean implements DepartmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DepartmentOutput findById(@NonNull Long departmentId) {
         log.info("Find Department by Id: {}", departmentId);
         Department department = findDepartmentById(departmentId);
@@ -88,6 +92,7 @@ public class DepartmentServiceBean implements DepartmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<DepartmentOutput> findAll(@NonNull Boolean active, @NonNull Pageable pageable) {
         log.info("Find All Departments, Active: {}", active);
         return departmentRepository.findAllFiltered(active, pageable)
@@ -95,6 +100,7 @@ public class DepartmentServiceBean implements DepartmentService {
     }
 
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void enable(@NonNull Long departmentId) {
         log.info("Enable Department: {}", departmentId);
         Department department = findDepartmentById(departmentId);
@@ -105,6 +111,7 @@ public class DepartmentServiceBean implements DepartmentService {
     }
 
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void disable(@NonNull Long departmentId) {
         log.info("Disable Department: {}", departmentId);
 
@@ -121,6 +128,7 @@ public class DepartmentServiceBean implements DepartmentService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Department findDepartmentById(@NonNull Long departmentId) {
         log.info("Find Department by Id: {}", departmentId);
         return departmentRepository.findById(departmentId).orElseThrow(

@@ -27,6 +27,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_ADDRESS_TYPE_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_ADDRESS_TYPE_002;
@@ -48,6 +49,7 @@ public class AddressTypeServiceBean implements AddressTypeService {
      * @throws ScosException SCOS_ADDRESS_TYPE_002 se já existir um {@link AddressType} com o mesmo {@code code}/{@code entityType}.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public AddressTypeOutput create(@NonNull AddressTypeInput addressTypeInput) {
         log.info("Create AddressType: {}", addressTypeInput.code());
 
@@ -79,6 +81,7 @@ public class AddressTypeServiceBean implements AddressTypeService {
      * @throws ScosException SCOS_ADDRESS_TYPE_002 se o novo {@code code}/{@code entityType} colidir com outro registro.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void update(@NonNull AddressTypeInput addressTypeInput) {
         log.info("Update AddressType: {}", addressTypeInput.id());
         AddressType addressType = findAddressTypeById(addressTypeInput.id());
@@ -98,6 +101,7 @@ public class AddressTypeServiceBean implements AddressTypeService {
      * @throws ScosException SCOS_ADDRESS_TYPE_001 se o {@code id} não existir.
      */
     @Override
+    @Transactional(readOnly = true)
     public AddressTypeOutput findById(@NonNull Long addressTypeId) {
         log.info("Find AddressType by Id: {}", addressTypeId);
         AddressType addressType = findAddressTypeById(addressTypeId);
@@ -108,6 +112,7 @@ public class AddressTypeServiceBean implements AddressTypeService {
      * Lista paginada, filtrando por {@code entityType} quando informado.
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<AddressTypeOutput> findAll(EntityType entityType,
                                            Boolean active,
                                            @NonNull Pageable pageable
@@ -122,6 +127,7 @@ public class AddressTypeServiceBean implements AddressTypeService {
      * @throws ScosException SCOS_ADDRESS_TYPE_003 se já estiver ativo.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void enable(@NonNull Long addressTypeId) {
         log.info("Enable AddressType: {}", addressTypeId);
         AddressType addressType = findAddressTypeById(addressTypeId);
@@ -136,6 +142,7 @@ public class AddressTypeServiceBean implements AddressTypeService {
      * @throws ScosException SCOS_ADDRESS_TYPE_004 se já estiver inativo.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void disable(@NonNull Long addressTypeId) {
         log.info("Disable AddressType: {}", addressTypeId);
         AddressType addressType = findAddressTypeById(addressTypeId);
@@ -145,7 +152,9 @@ public class AddressTypeServiceBean implements AddressTypeService {
         log.info("AddressType disabled");
     }
 
-    private AddressType findAddressTypeById(@NonNull Long addressTypeId) {
+    @Override
+    @Transactional(readOnly = true)
+    public AddressType findAddressTypeById(@NonNull Long addressTypeId) {
         log.info("Find AddressType by Id: {}", addressTypeId);
         return addressTypeRepository.findById(addressTypeId).orElseThrow(
                 () -> new ScosException(SCOS_ADDRESS_TYPE_001)

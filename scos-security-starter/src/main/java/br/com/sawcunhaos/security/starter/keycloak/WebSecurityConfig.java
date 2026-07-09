@@ -15,7 +15,7 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(
-            @Qualifier("InsideHttpSecurityConfiguration") HttpSecurity httpSecurity,
+            @Qualifier("ScosHttpSecurityConfiguration") HttpSecurity httpSecurity,
             JwtAuthConverter jwtAuthConverter
     ) {
         httpSecurity

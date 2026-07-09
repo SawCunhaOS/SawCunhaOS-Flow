@@ -108,7 +108,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_CONFIGURATION]
       x-jdempotentresource:
-        cachePrefix: SCOS_CONFIGURATION_UPDATE_IDP
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_CONFIGURATION
         ttl: 1
 
 components:

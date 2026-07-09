@@ -27,6 +27,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_REASON_DISABLE_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_REASON_DISABLE_002;
@@ -48,6 +49,7 @@ public class ReasonDisableServiceBean implements ReasonDisableService {
      * @throws ScosException SCOS_REASON_DISABLE_002 se já existir um {@link ReasonDisable} com o mesmo {@code code}/{@code entityType}.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public ReasonDisableOutput create(@NonNull ReasonDisableInput reasonDisableInput) {
         log.info("Create ReasonDisable: {}", reasonDisableInput.code());
 
@@ -79,6 +81,7 @@ public class ReasonDisableServiceBean implements ReasonDisableService {
      * @throws ScosException SCOS_REASON_DISABLE_002 se o novo {@code code}/{@code entityType} colidir com outro registro.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void update(@NonNull ReasonDisableInput reasonDisableInput) {
         log.info("Update ReasonDisable: {}", reasonDisableInput.id());
         ReasonDisable reasonDisable = findReasonDisableById(reasonDisableInput.id());
@@ -98,6 +101,7 @@ public class ReasonDisableServiceBean implements ReasonDisableService {
      * @throws ScosException SCOS_REASON_DISABLE_001 se o {@code id} não existir.
      */
     @Override
+    @Transactional(readOnly = true)
     public ReasonDisableOutput findById(@NonNull Long reasonDisableId) {
         log.info("Find ReasonDisable by Id: {}", reasonDisableId);
         ReasonDisable reasonDisable = findReasonDisableById(reasonDisableId);
@@ -108,6 +112,7 @@ public class ReasonDisableServiceBean implements ReasonDisableService {
      * Lista paginada, filtrando por {@code entityType} quando informado.
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<ReasonDisableOutput> findAll(EntityType entityType,
                                              Boolean active,
                                              @NonNull Pageable pageable
@@ -122,6 +127,7 @@ public class ReasonDisableServiceBean implements ReasonDisableService {
      * @throws ScosException SCOS_REASON_DISABLE_003 se já estiver ativo.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void enable(@NonNull Long reasonDisableId) {
         log.info("Enable ReasonDisable: {}", reasonDisableId);
         ReasonDisable reasonDisable = findReasonDisableById(reasonDisableId);
@@ -136,6 +142,7 @@ public class ReasonDisableServiceBean implements ReasonDisableService {
      * @throws ScosException SCOS_REASON_DISABLE_004 se já estiver inativo.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void disable(@NonNull Long reasonDisableId) {
         log.info("Disable ReasonDisable: {}", reasonDisableId);
         ReasonDisable reasonDisable = findReasonDisableById(reasonDisableId);

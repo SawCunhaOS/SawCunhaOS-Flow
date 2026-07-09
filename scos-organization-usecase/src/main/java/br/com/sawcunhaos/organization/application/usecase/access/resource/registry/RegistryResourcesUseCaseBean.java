@@ -13,38 +13,47 @@
 
 package br.com.sawcunhaos.organization.application.usecase.access.resource.registry;
 
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.resource.dto.RegisterResourceInput;
 import br.com.sawcunhaos.organization.domain.access.resource.specification.ResourceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-class RegistryResourceUseCaseBean implements RegistryResourceUseCase {
+@Transactional(rollbackFor = ScosException.class)
+class RegistryResourcesUseCaseBean implements RegistryResourcesUseCase {
 
     private final ResourceService resourceService;
 
     @Override
-    public void execute(RegistryResourceInput request) {
-        log.info("Registry Resource : {}", request.code());
+    public void execute(List<RegistryResourceInput> requests) {
+        String systemCode = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication())
+                .getPrincipal().toString();
 
-        String systemCode = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getPrincipal().toString();
+        log.info("Registry Resources batch: {} - System: {}", requests.size(), systemCode);
 
-        resourceService.register(
+        requests.forEach(request -> resourceService.register(
                 RegisterResourceInput.builder()
                         .code(request.code())
-                        .descriptionEn(request.descriptionEn())
                         .descriptionPt(request.descriptionPt())
+                        .descriptionEn(request.descriptionEn())
+                        .group(request.group())
+                        .subGroup(request.subGroup())
+                        .version(request.version())
+                        .updatedAt(request.updatedAt())
                         .active(request.active())
                         .systemCode(systemCode)
                         .build()
-        );
+        ));
 
-        log.info("Registry Resource finished: {} - System: {}", request.code(), systemCode);
+        log.info("Registry Resources batch finished: {} - System: {}", requests.size(), systemCode);
     }
 }

@@ -26,6 +26,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LEGAL_NATURE_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LEGAL_NATURE_002;
@@ -48,6 +49,7 @@ class LegalNatureServiceBean implements LegalNatureService {
      * @throws ScosException SCOS_LEGAL_NATURE_002 se já existir uma {@link LegalNature} com o mesmo {@code code}.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public LegalNatureOutput create(@NonNull LegalNatureInput legalNatureInput) {
         log.info("Create LegalNature: {}", legalNatureInput.code());
 
@@ -70,6 +72,7 @@ class LegalNatureServiceBean implements LegalNatureService {
      * @throws ScosException SCOS_LEGAL_NATURE_002 se o novo {@code code} colidir com outro registro.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void update(@NonNull LegalNatureInput legalNatureInput) {
         log.info("Update LegalNature: {}", legalNatureInput.id());
         LegalNature legalNature = findLegalNatureById(legalNatureInput.id());
@@ -87,12 +90,14 @@ class LegalNatureServiceBean implements LegalNatureService {
      * @throws ScosException SCOS_LEGAL_NATURE_001 se o {@code id} não existir.
      */
     @Override
+    @Transactional(readOnly = true)
     public LegalNatureOutput findById(@NonNull Long legalNatureId) {
         log.info("Find LegalNature by Id: {}", legalNatureId);
         return legalNatureMapper.toLegalNatureOutput(findLegalNatureById(legalNatureId));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<LegalNatureOutput> findAll(@NonNull Pageable pageable) {
         log.info("Find All LegalNatures");
         return legalNatureRepository.findAll(pageable).map(legalNatureMapper::toLegalNatureOutput);
@@ -103,6 +108,7 @@ class LegalNatureServiceBean implements LegalNatureService {
      * @throws ScosException SCOS_LEGAL_NATURE_003 se a natureza jurídica estiver vinculada a alguma empresa.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void delete(@NonNull Long legalNatureId) {
         log.info("Delete LegalNature: {}", legalNatureId);
         LegalNature legalNature = findLegalNatureById(legalNatureId);
@@ -115,7 +121,9 @@ class LegalNatureServiceBean implements LegalNatureService {
         log.info("LegalNature deleted");
     }
 
-    private LegalNature findLegalNatureById(@NonNull Long legalNatureId) {
+    @Override
+    @Transactional(readOnly = true)
+    public LegalNature findLegalNatureById(@NonNull Long legalNatureId) {
         return legalNatureRepository.findById(legalNatureId).orElseThrow(
                 () -> new ScosException(SCOS_LEGAL_NATURE_001)
         );

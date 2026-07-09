@@ -13,16 +13,19 @@
 
 package br.com.sawcunhaos.organization.application.usecase.access.system.registry;
 
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.system.dto.RegisterScosSystemInput;
 import br.com.sawcunhaos.organization.domain.access.system.dto.ScosSystemOutput;
 import br.com.sawcunhaos.organization.domain.access.system.specification.ScosSystemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(rollbackFor = ScosException.class)
 class RegistrySystemUseCaseBean implements RegistrySystemUseCase {
 
     private final ScosSystemService scosystemService;

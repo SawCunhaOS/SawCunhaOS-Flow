@@ -73,7 +73,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_EMPLOYEE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_EMPLOYEE
         ttl: 1
 
   /v1/employees/rehire:
@@ -108,7 +108,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [REHIRE_EMPLOYEE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_REHIRE
+        cachePrefix: SCOS_ORGANIZATION_IDP_REHIRE_EMPLOYEE
         ttl: 1
 
     get:
@@ -157,7 +157,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_EMPLOYEE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_EMPLOYEE
         ttl: 1
   /v1/employees/{id}/enable:
     put:
@@ -187,7 +187,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_EMPLOYEE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_EMPLOYEE
         ttl: 1
 
   /v1/employees/{id}/disable:
@@ -218,7 +218,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_EMPLOYEE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_EMPLOYEE
         ttl: 1
 
   /v1/employees/{id}/block:
@@ -250,7 +250,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [BLOCK_EMPLOYEE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_BLOCK_EMPLOYEE
         ttl: 1
 
   /v1/employees/{id}/unblock:
@@ -281,7 +281,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UNBLOCK_EMPLOYEE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_UNBLOCK_EMPLOYEE
         ttl: 1
 
   /v1/employees/{id}/status-history:
@@ -334,7 +334,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [TRANSFER_EMPLOYEE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_TRANSFER_EMPLOYEE
         ttl: 1
 
   /v1/employees/{id}/hierarchy:
@@ -457,7 +457,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_EMPLOYEE_CONTACT]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_CONTACT
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_EMPLOYEE_CONTACT
         ttl: 1
 
   /v1/employees/{employeeId}/contacts/{id}:
@@ -509,7 +509,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_EMPLOYEE_CONTACT]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_EMPLOYEE_CONTACT
         ttl: 1
     delete:
       tags: [Employee Contact]
@@ -530,7 +530,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_EMPLOYEE_CONTACT]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_DELETE_EMPLOYEE_CONTACT
         ttl: 1
 
   /v1/employees/{employeeId}/addresses:
@@ -581,7 +581,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_EMPLOYEE_ADDRESS]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_ADDRESS
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_EMPLOYEE_ADDRESS
         ttl: 1
 
   /v1/employees/{employeeId}/addresses/{id}:
@@ -633,7 +633,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_EMPLOYEE_ADDRESS]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_EMPLOYEE_ADDRESS
         ttl: 1
     delete:
       tags: [Employee Address]
@@ -654,7 +654,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_EMPLOYEE_ADDRESS]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_DELETE_EMPLOYEE_ADDRESS
         ttl: 1
 
   /v1/employees/{employeeId}/work-schedule:
@@ -707,7 +707,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_EMPLOYEE_WORK_SCHEDULE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_EMPLOYEE_WORK_SCHEDULE
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_EMPLOYEE_WORK_SCHEDULE
         ttl: 1
 
   /v1/employees/{employeeId}/work-schedule/{dayOfWeek}:
@@ -737,7 +737,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_EMPLOYEE_WORK_SCHEDULE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_EMPLOYEE_WORK_SCHEDULE
         ttl: 1
     delete:
       tags: [Employee Work Schedule]
@@ -758,7 +758,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_EMPLOYEE_WORK_SCHEDULE]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_DELETE_EMPLOYEE_WORK_SCHEDULE
         ttl: 1
 
 components:

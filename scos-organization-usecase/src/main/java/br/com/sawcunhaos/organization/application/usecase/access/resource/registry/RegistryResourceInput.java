@@ -15,6 +15,17 @@ package br.com.sawcunhaos.organization.application.usecase.access.resource.regis
 
 import lombok.Builder;
 
+import java.time.LocalDate;
+
 @Builder
-public record RegistryResourceInput(String code, String descriptionPt, String descriptionEn, boolean active) {
+public record RegistryResourceInput(
+        String code,
+        String descriptionPt,
+        String descriptionEn,
+        String group,
+        String subGroup,
+        String version,
+        LocalDate updatedAt,
+        boolean active
+) {
 }

@@ -16,6 +16,7 @@ package br.com.sawcunhaos.organization.domain.corporate.catalog.specification;
 import br.com.sawcunhaos.organization.domain.access.status.internal.EntityType;
 import br.com.sawcunhaos.organization.domain.corporate.catalog.dto.AddressTypeInput;
 import br.com.sawcunhaos.organization.domain.corporate.catalog.dto.AddressTypeOutput;
+import br.com.sawcunhaos.organization.domain.corporate.catalog.internal.AddressType;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,5 +43,7 @@ public interface AddressTypeService {
 
     /** Inativa um tipo de endereço ativo — não remove vínculos existentes. */
     void disable(@NonNull Long addressTypeId);
+
+    AddressType findAddressTypeById(@NonNull Long addressTypeId);
 
 }

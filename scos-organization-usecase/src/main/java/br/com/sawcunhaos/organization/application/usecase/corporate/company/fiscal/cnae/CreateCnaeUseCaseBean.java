@@ -13,6 +13,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.corporate.company.fiscal.cnae;
 
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.api.dto.Cnae;
 import br.com.sawcunhaos.organization.api.dto.CreateCnaeRequest;
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.CnaeInput;
@@ -22,11 +23,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Implementação de {@link CreateCnaeUseCase}. */
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(rollbackFor = ScosException.class)
 class CreateCnaeUseCaseBean implements CreateCnaeUseCase {
 
     private final CnaeService cnaeService;

@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_AUTHORITY_001;
 
@@ -35,6 +36,7 @@ class AuthorityResponseServiceBean implements AuthorityResponseService {
     private final LoginRolesService loginRolesService;
 
     @Override
+    @Transactional(readOnly = true)
     public AuthorityResponseOutput validate(@NonNull String login) {
         log.info("Validating Authority: {}", login);
 

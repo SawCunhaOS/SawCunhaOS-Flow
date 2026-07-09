@@ -28,7 +28,11 @@ message Resource {
   string code = 1;
   string description_pt = 2;
   string description_en = 3;
-  bool active = 4;
+  string group = 4;
+  string sub_group = 5;
+  bool active = 6;
+  string version = 7;
+  string updated_at = 8;
 }
 
 message RegistryResourcesRequest {

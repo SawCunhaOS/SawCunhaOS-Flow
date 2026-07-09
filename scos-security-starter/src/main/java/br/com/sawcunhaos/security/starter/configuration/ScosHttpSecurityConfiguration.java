@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.session.SessionManagementFilter;
 
 @RequiredArgsConstructor
-public class InsideHttpSecurityConfiguration {
+public class ScosHttpSecurityConfiguration {
 
     private final ScosCorsFilter corsFilter;
     private final ScosAuthorizationRequiredFilter scosAuthorizationRequiredFilter;
@@ -25,8 +25,8 @@ public class InsideHttpSecurityConfiguration {
     private final ExceptionHandlerFilter exceptionHandlerFilter;
 
     @Primary
-    @Bean("InsideHttpSecurityConfiguration")
-    public HttpSecurity insideHttpSecurityConfiguration(HttpSecurity httpSecurity) throws Exception {
+    @Bean("ScosHttpSecurityConfiguration")
+    public HttpSecurity scosHttpSecurityConfiguration(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/swagger-ui/**", "/v*/api-docs/**", "/actuator/**").permitAll()

@@ -60,4 +60,12 @@ public class Resource extends BaseEntity {
     private String descriptionEn;
     @Column(name = "ACTIVE")
     private boolean active;
+    @Column(name = "RESOURCE_GROUP")
+    private String resourceGroup;
+    @Column(name = "SUB_GROUP")
+    private String subGroup;
+    @Column(name = "VERSION")
+    private String version;
+    @Column(name = "DEFINITION_UPDATED_AT")
+    private java.time.LocalDate definitionUpdatedAt;
 }

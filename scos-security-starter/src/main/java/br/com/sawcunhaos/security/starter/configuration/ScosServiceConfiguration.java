@@ -13,6 +13,7 @@ import br.com.sawcunhaos.security.starter.specification.ScosSystemRegistration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.info.BuildProperties;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
@@ -42,9 +43,11 @@ public class ScosServiceConfiguration {
     @Bean
     public ScosSystemRegistration scosSystemRegistrationService(
             ScosRegistryService scosRegistryService,
-            ScosRegistryProperties scosRegistryProperties
+            ScosRegistryProperties scosRegistryProperties,
+            MessageSource permissionMessageSource
     ) {
-        return new ScosSystemRegistrationService(scosRegistryService, scosRegistryProperties, buildProperties);
+        return new ScosSystemRegistrationService(
+                scosRegistryService, scosRegistryProperties, buildProperties, permissionMessageSource);
     }
 
     @Bean

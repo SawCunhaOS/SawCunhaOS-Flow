@@ -25,11 +25,13 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /** Implementação de {@link FindAllReasonActivateUseCase}. */
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional(readOnly = true)
 class FindAllReasonActivateUseCaseBean implements FindAllReasonActivateUseCase {
 
     private final ReasonActivateService reasonActivateService;

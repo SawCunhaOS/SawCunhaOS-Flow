@@ -14,7 +14,7 @@
 package br.com.sawcunhaos.organization.grpc.boot.delegate;
 
 import br.com.sawcunhaos.organization.application.usecase.access.resource.registry.RegistryResourceInput;
-import br.com.sawcunhaos.organization.application.usecase.access.resource.registry.RegistryResourceUseCase;
+import br.com.sawcunhaos.organization.application.usecase.access.resource.registry.RegistryResourcesUseCase;
 import br.com.sawcunhaos.organization.application.usecase.access.system.registry.RegistrySystemInput;
 import br.com.sawcunhaos.organization.application.usecase.access.system.registry.RegistrySystemOutput;
 import br.com.sawcunhaos.organization.application.usecase.access.system.registry.RegistrySystemUseCase;
@@ -28,13 +28,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class RegistreServiceImpl extends RegistryServiceGrpc.RegistryServiceImplBase {
 
     private final RegistrySystemUseCase registrySystemUseCase;
-    private final RegistryResourceUseCase registryResourceUseCase;
+    private final RegistryResourcesUseCase registryResourcesUseCase;
 
     @Override
     public void registrySystem(RegistrySystemRequest request, StreamObserver<RegistrySystemResponse> responseObserver) {
@@ -63,16 +67,20 @@ public class RegistreServiceImpl extends RegistryServiceGrpc.RegistryServiceImpl
     public void registryResources(RegistryResourcesRequest request, StreamObserver<Empty> responseObserver) {
         log.info("Registry Resources: {}", request.getSystemId());
 
-        request.getResourcesList().forEach(resource -> {
-            RegistryResourceInput registryResourceInput = RegistryResourceInput.builder()
-                    .code(resource.getCode())
-                    .descriptionPt(resource.getDescriptionPt())
-                    .descriptionEn(resource.getDescriptionEn())
-                    .active(resource.getActive())
-                    .build();
+        List<RegistryResourceInput> inputs = request.getResourcesList().stream()
+                .map(resource -> RegistryResourceInput.builder()
+                        .code(resource.getCode())
+                        .descriptionPt(resource.getDescriptionPt())
+                        .descriptionEn(resource.getDescriptionEn())
+                        .group(resource.getGroup())
+                        .subGroup(resource.getSubGroup())
+                        .version(resource.getVersion())
+                        .updatedAt(LocalDate.parse(resource.getUpdatedAt()))
+                        .active(resource.getActive())
+                        .build())
+                .collect(Collectors.toList());
 
-            registryResourceUseCase.execute(registryResourceInput);
-        });
+        registryResourcesUseCase.execute(inputs);
 
         responseObserver.onNext(Empty.newBuilder().build());
         responseObserver.onCompleted();

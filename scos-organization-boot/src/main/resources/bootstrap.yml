@@ -19,6 +19,13 @@ server:
       remote-ip-header: x-forwarded-for
       protocol-header: x-forwarded-proto
 
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+  instance:
+    preferIpAddress: true
+
 spring:
   grpc:
     server:
@@ -200,14 +207,14 @@ scos:
     system: SCOS_ORGANIZATION
     enabled: ${scos.audit.enabled}
     liquibase:
-      enabled: true
+      enabled: ${scos.audit.enabled}
       contexts: prod
       database-change-log-lock-table: IF_DATABASECHANGELOGLOCK
       database-change-log-table: IF_DATABASECHANGELOG
       change-log: classpath:db/changelog/db_audit.changelog-master.yaml
       default-schema: ${SCOS_DB_SCHEMA:scos}
   jdempotent:
-    enabled: ${scos.jdempotent.enabled:false}
+    enabled: ${scos.jdempotent.enabled:true}
     cache:
       redis:
         expirationTimeHour: ${scos.jdempotent.expiration-time-hour}
@@ -229,6 +236,7 @@ scos:
     host: ${SCOS_REGISTRY_HOST:localhost}                 # host do scos-registry
     port: ${SCOS_REGISTRY_PORT:8090}                      # porta gRPC
     key-access: '${SCOS_REGISTRY_KEY_ACCESS:ABLABLABLA}'  # prod: setar via env; default versionado é só dev
+    discovery-enabled: ${SCOS_REGISTRY_DISCOVERY_ENABLED:false}
     system-code: SCOS_ORGANIZATION
     system-name: Scos Organization
     system-description: Sistema de Gestão de Empresas e Funcionarios

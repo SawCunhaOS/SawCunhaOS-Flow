@@ -110,7 +110,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/5XX'
       x-authorize: [RETRY_OUTBOX_EVENT]
       x-jdempotentresource:
-        cachePrefix: SCOS_ORGANIZATION_IDP_COMPANY
+        cachePrefix: SCOS_ORGANIZATION_IDP_RETRY_OUTBOX_EVENT
         ttl: 1
 
   /v1/outbox-events/dead-letters:

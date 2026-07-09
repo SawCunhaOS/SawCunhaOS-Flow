@@ -27,6 +27,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_CONTACT_TYPE_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_CONTACT_TYPE_002;
@@ -48,6 +49,7 @@ class ContactTypeServiceBean implements ContactTypeService {
      * @throws ScosException SCOS_CONTACT_TYPE_002 se já existir um {@link ContactType} com o mesmo {@code code}/{@code entityType}.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public ContactTypeOutput create(@NonNull ContactTypeInput contactTypeInput) {
         log.info("Create ContactType: {}", contactTypeInput.code());
 
@@ -79,6 +81,7 @@ class ContactTypeServiceBean implements ContactTypeService {
      * @throws ScosException SCOS_CONTACT_TYPE_002 se o novo {@code code}/{@code entityType} colidir com outro registro.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void update(@NonNull ContactTypeInput contactTypeInput) {
         log.info("Update ContactType: {}", contactTypeInput.id());
         ContactType contactType = findContactTypeById(contactTypeInput.id());
@@ -98,6 +101,7 @@ class ContactTypeServiceBean implements ContactTypeService {
      * @throws ScosException SCOS_CONTACT_TYPE_001 se o {@code id} não existir.
      */
     @Override
+    @Transactional(readOnly = true)
     public ContactTypeOutput findById(@NonNull Long contactTypeId) {
         log.info("Find ContactType by Id: {}", contactTypeId);
         ContactType contactType = findContactTypeById(contactTypeId);
@@ -108,6 +112,7 @@ class ContactTypeServiceBean implements ContactTypeService {
      * Lista paginada, filtrando por {@code entityType} quando informado.
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<ContactTypeOutput> findAll(EntityType entityType,
                                            Boolean active,
                                            @NonNull Pageable pageable
@@ -122,6 +127,7 @@ class ContactTypeServiceBean implements ContactTypeService {
      * @throws ScosException SCOS_CONTACT_TYPE_003 se já estiver ativo.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void enable(@NonNull Long contactTypeId) {
         log.info("Enable ContactType: {}", contactTypeId);
         ContactType contactType = findContactTypeById(contactTypeId);
@@ -136,6 +142,7 @@ class ContactTypeServiceBean implements ContactTypeService {
      * @throws ScosException SCOS_CONTACT_TYPE_004 se já estiver inativo.
      */
     @Override
+    @Transactional(rollbackFor = ScosException.class)
     public void disable(@NonNull Long contactTypeId) {
         log.info("Disable ContactType: {}", contactTypeId);
         ContactType contactType = findContactTypeById(contactTypeId);
@@ -145,7 +152,9 @@ class ContactTypeServiceBean implements ContactTypeService {
         log.info("ContactType disabled");
     }
 
-    private ContactType findContactTypeById(@NonNull Long contactTypeId) {
+    @Override
+    @Transactional(readOnly = true)
+    public ContactType findContactTypeById(@NonNull Long contactTypeId) {
         log.info("Find ContactType by Id: {}", contactTypeId);
         return contactTypeRepository.findById(contactTypeId).orElseThrow(
                 () -> new ScosException(SCOS_CONTACT_TYPE_001)
