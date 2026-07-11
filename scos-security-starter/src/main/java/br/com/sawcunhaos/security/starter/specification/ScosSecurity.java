@@ -18,6 +18,6 @@ import org.jspecify.annotations.NonNull;
 
 public interface ScosSecurity {
 
-    ScosSecurityContext getSecurityContext(@NonNull String login);
+    ScosSecurityContext getSecurityContext(@NonNull String systemCode, @NonNull String login);
 
 }

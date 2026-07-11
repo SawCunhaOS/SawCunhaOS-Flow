@@ -5,7 +5,6 @@ import br.com.sawcunhaos.security.starter.ScosUserAuthenticationBean;
 import br.com.sawcunhaos.security.starter.configuration.properties.CorsProperties;
 import br.com.sawcunhaos.security.starter.exception.AccessDeniedExceptionHandler;
 import br.com.sawcunhaos.security.starter.exception.ExceptionHandlerFilter;
-import br.com.sawcunhaos.security.starter.filter.ScosAuthorizationRequiredFilter;
 import br.com.sawcunhaos.security.starter.filter.ScosCorsFilter;
 import br.com.sawcunhaos.security.starter.utils.FilterUtils;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -40,12 +39,6 @@ public class ScosWebConfiguration {
     public ExceptionHandlerFilter exceptionHandlerFilter(
             LocaleService localeService, ObjectMapper objectMapper) {
         return new ExceptionHandlerFilter(localeService, objectMapper);
-    }
-
-    @Bean
-    public ScosAuthorizationRequiredFilter scosAuthorizationRequiredFilter(
-            LocaleService localeService, ObjectMapper objectMapper) {
-        return new ScosAuthorizationRequiredFilter(localeService, objectMapper);
     }
 
     @Bean

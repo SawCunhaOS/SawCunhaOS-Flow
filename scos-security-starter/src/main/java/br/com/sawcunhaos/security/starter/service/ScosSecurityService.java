@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.slf4j.MDC;
+import org.springframework.cache.annotation.Cacheable;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -24,7 +25,8 @@ public class ScosSecurityService implements ScosSecurity {
     private final ScosAuthorityService scosAuthorityService;
 
     @Override
-    public ScosSecurityContext getSecurityContext(@NonNull String login) {
+    @Cacheable(cacheNames = "scos:authority:ctx", key = "#systemCode + ':' + #login", unless = "#result == null")
+    public ScosSecurityContext getSecurityContext(@NonNull String systemCode, @NonNull String login) {
         log.info("Getting all granted authority for login: {}", login);
         if(Objects.isNull(MDC.get(REQUEST_ID_HEADER)) || MDC.get(REQUEST_ID_HEADER).isBlank()){
             MDC.put(REQUEST_ID_HEADER, UUID.randomUUID().toString());

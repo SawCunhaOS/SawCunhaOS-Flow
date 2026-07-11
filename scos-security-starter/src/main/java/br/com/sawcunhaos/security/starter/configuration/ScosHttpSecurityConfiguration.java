@@ -2,9 +2,11 @@ package br.com.sawcunhaos.security.starter.configuration;
 
 import br.com.sawcunhaos.security.starter.exception.AccessDeniedExceptionHandler;
 import br.com.sawcunhaos.security.starter.exception.ExceptionHandlerFilter;
-import br.com.sawcunhaos.security.starter.filter.ScosAuthorizationRequiredFilter;
 import br.com.sawcunhaos.security.starter.filter.ScosCorsFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.actuate.info.InfoEndpoint;
+import org.springframework.boot.health.actuate.endpoint.HealthEndpoint;
+import org.springframework.boot.security.autoconfigure.actuate.web.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,7 +22,6 @@ import org.springframework.security.web.session.SessionManagementFilter;
 public class ScosHttpSecurityConfiguration {
 
     private final ScosCorsFilter corsFilter;
-    private final ScosAuthorizationRequiredFilter scosAuthorizationRequiredFilter;
     private final AccessDeniedExceptionHandler accessDeniedExceptionHandler;
     private final ExceptionHandlerFilter exceptionHandlerFilter;
 
@@ -29,7 +30,8 @@ public class ScosHttpSecurityConfiguration {
     public HttpSecurity scosHttpSecurityConfiguration(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/swagger-ui/**", "/v*/api-docs/**", "/actuator/**").permitAll()
+                        .requestMatchers(EndpointRequest.to(HealthEndpoint.class, InfoEndpoint.class)).permitAll()
+                        .requestMatchers(EndpointRequest.toAnyEndpoint()).denyAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().authenticated()
                 )
@@ -41,7 +43,6 @@ public class ScosHttpSecurityConfiguration {
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
 
                 .addFilterBefore(exceptionHandlerFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(scosAuthorizationRequiredFilter, SessionManagementFilter.class)
                 .addFilterBefore(corsFilter,SessionManagementFilter.class);
         return httpSecurity;
     }

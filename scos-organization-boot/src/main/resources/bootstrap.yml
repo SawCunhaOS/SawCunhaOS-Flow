@@ -152,10 +152,12 @@ spring:
           issuer-uri: ${scos.security.keycloak.issuer-uri}
 
 management:
+  server:
+    port: 9081
   endpoints:
     web:
       exposure:
-        include: '*'
+        include: health, info, prometheus
   info:
     build:
       enabled: true
@@ -163,7 +165,7 @@ management:
     prometheus:
       enabled: true
     health:
-      show-details: always
+      probes: { enabled: true }
   tracing:
     sampling:
       probability: ${SCOS_TRACING_SAMPLING:1.0}

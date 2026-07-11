@@ -1,6 +1,7 @@
 package br.com.sawcunhaos.security.starter.keycloak;
 
 import br.com.sawcunhaos.foundation.exception.error.ScosSecurityException;
+import br.com.sawcunhaos.security.starter.configuration.properties.ScosRegistryProperties;
 import br.com.sawcunhaos.security.starter.model.ScosAuthentication;
 import br.com.sawcunhaos.security.starter.model.ScosSecurityContext;
 import br.com.sawcunhaos.security.starter.specification.ScosSecurity;
@@ -16,6 +17,7 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
 
     private static final String PREFERRED_USERNAME = "preferred_username";
     private final ScosSecurity scosSecurityService;
+    private final ScosRegistryProperties scosRegistryProperties;
 
     @Override
     public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
@@ -25,7 +27,7 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
             throw new ScosSecurityException(SecurityExceptionCode.SCOS_AUTH_001);
         }
 
-        ScosSecurityContext context = scosSecurityService.getSecurityContext(login);
+        ScosSecurityContext context = scosSecurityService.getSecurityContext(scosRegistryProperties.getSystemCode(), login);
 
         return new ScosAuthentication(context, jwt);
     }

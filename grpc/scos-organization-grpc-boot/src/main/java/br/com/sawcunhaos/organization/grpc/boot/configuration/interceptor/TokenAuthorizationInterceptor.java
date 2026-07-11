@@ -23,6 +23,7 @@ import io.grpc.ServerInterceptor;
 import io.grpc.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.grpc.server.GlobalServerInterceptor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,6 +33,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -47,6 +49,8 @@ public class TokenAuthorizationInterceptor implements ServerInterceptor {
 
     private static final Metadata.Key<String> AUTHORIZATION_KEY =
             Metadata.Key.of("authentication", Metadata.ASCII_STRING_MARSHALLER);
+    private static final Metadata.Key<String> KEY_ACCESS =
+            Metadata.Key.of("KEY-ACCESS", Metadata.ASCII_STRING_MARSHALLER);
 
     // Apenas estes métodos exigem o token — ajuste para os seus
     private static final Set<String> PROTECTED_METHODS = Set.of(
@@ -54,11 +58,23 @@ public class TokenAuthorizationInterceptor implements ServerInterceptor {
             "br.com.sawcunhaos.organization.grpc.proto.ValidateAuthorityService/validateAuthority"
     );
 
+    @Value("${scos.registry.key-access}")           // SEM default no yml — falha no boot se ausente
+    private String expectedKeyAccess;
+
     @Override
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(
             ServerCall<ReqT, RespT> call,
             Metadata headers,
             ServerCallHandler<ReqT, RespT> next) {
+
+        String provided = headers.get(KEY_ACCESS);
+        if (provided == null || !MessageDigest.isEqual(
+                expectedKeyAccess.getBytes(StandardCharsets.UTF_8),
+                provided.getBytes(StandardCharsets.UTF_8))
+        ) {
+            call.close(Status.UNAUTHENTICATED.withDescription("Bootstrap negado"), new Metadata());
+            return new ServerCall.Listener<>() {};
+        }
 
         String methodName = call.getMethodDescriptor().getFullMethodName();
 

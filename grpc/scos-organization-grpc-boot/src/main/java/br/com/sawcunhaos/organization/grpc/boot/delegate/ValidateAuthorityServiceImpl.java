@@ -21,7 +21,13 @@ import br.com.sawcunhaos.organization.grpc.proto.ValidateAuthorityServiceGrpc;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import static br.com.sawcunhaos.foundation.utils.configuration.rest.filter.LoggingInitialFilter.REQUEST_ID_HEADER;
 
 @Service
 @RequiredArgsConstructor
@@ -29,10 +35,15 @@ import org.springframework.stereotype.Service;
 public class ValidateAuthorityServiceImpl extends ValidateAuthorityServiceGrpc.ValidateAuthorityServiceImplBase {
 
     private final ValidateAuthorityUseCase validateAuthorityUseCase;
+    private static final Marker AUDIT = MarkerFactory.getMarker("SCOS_AUDIT");
 
     @Override
     public void validateAuthority(AuthorityRequest request, StreamObserver<AuthorityResponse> responseObserver) {
-        log.info("Validating Authority: {}", request.getLogin());
+        log.info(AUDIT, "AUTHORITY_QUERY system={} login={} requestId={}",
+                SecurityContextHolder.getContext().getAuthentication().getPrincipal(),
+                request.getLogin(),
+                MDC.get(REQUEST_ID_HEADER)
+        );
 
         ValidateAuthorityOutput validateAuthorityOutput = validateAuthorityUseCase.execute(request.getLogin());
 
