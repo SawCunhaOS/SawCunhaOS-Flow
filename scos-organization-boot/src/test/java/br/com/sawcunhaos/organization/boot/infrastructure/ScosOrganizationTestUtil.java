@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.ComposeContainer;
@@ -50,6 +51,7 @@ import java.util.Objects;
 @Sql(scripts = "classpath:postgresql/setsup_database.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @SpringBootTest(classes = ScosOrganizationApplication.class)
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 public class ScosOrganizationTestUtil extends ScosOrganizationWiremockUtil {
 
     protected static final ComposeContainer COMPOSE_CONTAINER_REDIS = new ComposeContainer(

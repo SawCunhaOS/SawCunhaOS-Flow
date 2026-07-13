@@ -1,58 +1,82 @@
 scos:
-  port: ${SCOS_PORT:8081}
+  port: ${SCOS_PORT}
+  tomcat:
+    connection-timeout: ${SCOS_TOMCAT_CONNECTION_TIMEOUT}
+    max-connections: ${SCOS_TOMCAT_MAX_CONNECTIONS}
+  tracing:
+    sampling: ${SCOS_TRACING_SAMPLING}
   datasource:
-    url: '${SCOS_DB_URL:jdbc:postgresql://localhost:5432/scos?currentSchema=${SCOS_DB_SCHEMA:scos}}'
-    username: ${SCOS_DB_USERNAME:scos}
-    password: '${SCOS_DB_PASSWORD:scos#2026}'          # prod: setar via env; default versionado é só dev
-    connection-timeout: ${SCOS_DB_CONN_TIMEOUT:600000}
-    idle-timeout: ${SCOS_DB_IDLE_TIMEOUT:150000}
-    max-lifetime: ${SCOS_DB_MAX_LIFETIME:1800000}
-    minimum-idle: ${SCOS_DB_MIN_IDLE:25}               # manter <= SCOS_DB_MAX_POOL_SIZE
-    maximum-pool-size: ${SCOS_DB_MAX_POOL_SIZE:100}
+    url: ${SCOS_DATASOURCE_URL}
+    username: ${SCOS_DATASOURCE_USERNAME}
+    password: ${SCOS_DATASOURCE_PASSWORD}
+    connection-timeout: ${SCOS_DATASOURCE_CONNECTION_TIMEOUT}
+    idle-timeout: ${SCOS_DATASOURCE_IDLE_TIMEOUT}
+    max-lifetime: ${SCOS_DATASOURCE_MAX_LIFETIME}
+    minimum-idle: ${SCOS_DATASOURCE_MINIMUM_IDLE}
+    maximum-pool-size: ${SCOS_DATASOURCE_MAXIMUM_POOL_SIZE}
+    jpa:
+      show_sql: ${SCOS_DATASOURCE_JPA_SHOW_SQL}
+      format_sql: ${SCOS_DATASOURCE_JPA_FORMAT_SQL}
+      generate_statistics: ${SCOS_DATASOURCE_JPA_GENERATE_STATISTICS}
+      log_queries_slower: ${SCOS_DATASOURCE_JPA_LOG_QUERIES_SLOWER}
   audit:
-    enabled: ${SCOS_AUDIT_ENABLED:false}
+    enabled: ${SCOS_AUDIT_ENABLED}
     datasource:
-      url: '${SCOS_AUDIT_DB_URL:jdbc:postgresql://localhost:5432/scos?currentSchema=${SCOS_DB_SCHEMA:scos}}'
-      username: ${SCOS_AUDIT_DB_USERNAME:scos}
-      password: '${SCOS_AUDIT_DB_PASSWORD:scos#2026}'  # prod: setar via env; default versionado é só dev
-      connection-timeout: ${SCOS_AUDIT_DB_CONN_TIMEOUT:100000}
-      idle-timeout: ${SCOS_AUDIT_DB_IDLE_TIMEOUT:150000}
-      max-lifetime: ${SCOS_AUDIT_DB_MAX_LIFETIME:300000}
-      minimum-idle: ${SCOS_AUDIT_DB_MIN_IDLE:10}
-      maximum-pool-size: ${SCOS_AUDIT_DB_MAX_POOL_SIZE:30}
+      url: ${SCOS_AUDIT_DATASOURCE_URL}
+      username: ${SCOS_AUDIT_DATASOURCE_USERNAME}
+      password: ${SCOS_AUDIT_DATASOURCE_PASSWORD}
+      connection-timeout: ${SCOS_AUDIT_DATASOURCE_CONNECTION_TIMEOUT}
+      idle-timeout: ${SCOS_AUDIT_DATASOURCE_IDLE_TIMEOUT}
+      max-lifetime: ${SCOS_AUDIT_DATASOURCE_MAX_LIFETIME}
+      minimum-idle: ${SCOS_AUDIT_DATASOURCE_MINIMUM_IDLE}
+      maximum-pool-size: ${SCOS_AUDIT_DATASOURCE_MAXIMUM_POOL_SIZE}
+    liquibase:
+      default-schema: ${SCOS_AUDIT_LIQUIBASE_DEFAULT_SCHEMA}
+  liquibase:
+    enabled: ${SCOS_LIQUIBASE_ENABLED}
+    default-schema: ${SCOS_LIQUIBASE_DEFAULT_SCHEMA}
+  filter:
+    show-request-body: ${SCOS_FILTER_SHOW_REQUEST_BODY}
+    show-request-headers: ${SCOS_FILTER_SHOW_REQUEST_HEADERS}
+    show-response-body: ${SCOS_FILTER_SHOW_RESPONSE_BODY}
   security:
     keycloak:
-      client-id: Scos
-      authorization-grant-type: password
-      scope: openid
-      issuer-uri: '${SCOS_KEYCLOAK_ISSUER_URI:http://localhost:7080/realms/Scos}'
-      resourceId: "Scos"
+      client-id: ${SCOS_SECURITY_KEYCLOAK_CLIENT_ID}
+      authorization-grant-type: ${SCOS_SECURITY_KEYCLOAK_AUTHORIZATION_GRANT_TYPE}
+      scope: ${SCOS_SECURITY_KEYCLOAK_SCOPE}
+      issuer-uri: ${SCOS_SECURITY_KEYCLOAK_ISSUER_URI}
+      resourceId: ${SCOS_SECURITY_KEYCLOAK_RESOURCE_ID}
   jdempotent:
     enabled: ${SCOS_JDEMPOTENT_ENABLED:true}
-    expiration-time-hour: ${SCOS_JDEMPOTENT_EXPIRATION_HOUR:2}
-    dial-timeout-second: ${SCOS_JDEMPOTENT_DIAL_TIMEOUT_SEC:3}
-    read-timeout-second: ${SCOS_JDEMPOTENT_READ_TIMEOUT_SEC:3}
-    write-timeout-second: ${SCOS_JDEMPOTENT_WRITE_TIMEOUT_SEC:3}
-    max-retry-count: ${SCOS_JDEMPOTENT_MAX_RETRY:3}
-    expire-timeout-hour: ${SCOS_JDEMPOTENT_EXPIRE_TIMEOUT_HOUR:3}
+    expiration-time-hour: ${SCOS_JDEMPOTENT_EXPIRATION_TIME_HOUR}
+    dial-timeout-second: ${SCOS_JDEMPOTENT_DIAL_TIMEOUT_SECOND}
+    read-timeout-second: ${SCOS_JDEMPOTENT_READ_TIMEOUT_SECOND}
+    write-timeout-second: ${SCOS_JDEMPOTENT_WRITE_TIMEOUT_SECOND}
+    max-retry-count: ${SCOS_JDEMPOTENT_MAX_RETRY_COUNT}
+    expire-timeout-hour: ${SCOS_JDEMPOTENT_EXPIRE_TIMEOUT_HOUR}
   cache:
     enable: ${SCOS_CACHE_ENABLE:true}
-    key-prefix: 'api::'
-    time-to-live: ${SCOS_CACHE_TTL:12000000}
-    port: ${SCOS_REDIS_PORT:26379}
-    database: ${SCOS_CACHE_DATABASE:0}
-    master: scos_master
-    password: '${SCOS_REDIS_PASSWORD:scos#2026}'       # prod: setar via env; default versionado é só dev
-    sentinels: '${SCOS_REDIS_SENTINELS:localhost:26379}'
-  liquibase:
-    enabled: ${SCOS_LIQUIBASE_ENABLED:true}
+    key-prefix: ${SCOS_CACHE_KEY_PREFIX}
+    time-to-live: ${SCOS_CACHE_TIME_TO_LIVE}
+    timeout: ${SCOS_CACHE_TIMEOUT}
+    port: ${SCOS_CACHE_PORT}
+    database: ${SCOS_CACHE_DATABASE}
+    password: ${SCOS_CACHE_PASSWORD}
+    master: ${SCOS_CACHE_MASTER}
+    sentinels: ${SCOS_CACHE_SENTINELS}
   privacy:
-    enabled: ${SCOS_PRIVACY_ENABLED:true}             # loads on import
-    strict: ${SCOS_PRIVACY_STRICT:false}              # prod: error if hash/encrypt has no key (setar crypto.secret junto)
-    max-payload-kb: ${SCOS_PRIVACY_MAX_PAYLOAD_KB:64} # truncate before masking, bounds worst case
+    enabled: ${SCOS_PRIVACY_ENABLED}
+    strict: ${SCOS_PRIVACY_STRICT}
+    max-payload-kb: ${SCOS_PRIVACY_MAX_PAYLOAD_KB}
     masking:
-      default-patterns: true
+      default-patterns: ${SCOS_PRIVACY_MASKING_DEFAULT_PATTERNS}
     log:
-      register-converter: true                        # %mask registered programmatically (see below)
+      register-converter: ${SCOS_PRIVACY_LOG_REGISTER_CONVERTER}
     crypto:
-      secret: '${SCOS_PRIVACY_CRYPTO_SECRET:ASDASDASDA}'  # prod: setar via env; default versionado é só dev
+      secret: ${SCOS_PRIVACY_CRYPTO_SECRET}
+  registry:
+    host: ${SCOS_REGISTRY_HOST}
+    port: ${SCOS_REGISTRY_PORT}
+    key-access: ${SCOS_REGISTRY_KEY_ACCESS}
+    discovery-enabled: ${SCOS_REGISTRY_DISCOVERY_ENABLED}
+    tls-enabled: ${SCOS_REGISTRY_TLS_ENABLED}

@@ -1,0 +1,82 @@
+scos:
+  port: 8081
+  tomcat:
+    connection-timeout: 120000
+    max-connections: 5000
+  tracing:
+    sampling: 1.0
+  datasource:
+    url: jdbc:postgresql://localhost:5432/scos?currentSchema=scos
+    username: scos
+    password: scos#2026
+    connection-timeout: 600000
+    idle-timeout: 150000
+    max-lifetime: 1800000
+    minimum-idle: 25
+    maximum-pool-size: 100
+    jpa:
+      show_sql: true
+      format_sql: true
+      generate_statistics: true
+      log_queries_slower: 500
+  audit:
+    enabled: false
+    datasource:
+      url: jdbc:postgresql://localhost:5432/scos?currentSchema=scos
+      username: scos
+      password: scos#2026
+      connection-timeout: 100000
+      idle-timeout: 150000
+      max-lifetime: 300000
+      minimum-idle: 10
+      maximum-pool-size: 30
+    liquibase:
+      default-schema: scos
+  liquibase:
+    enabled: true
+    default-schema: scos
+  filter:
+    show-request-body: false
+    show-request-headers: false
+    show-response-body: false
+  security:
+    keycloak:
+      client-id: Scos
+      authorization-grant-type: password
+      scope: openid
+      issuer-uri: http://localhost:7080/realms/Scos
+      resourceId: "Scos"
+  jdempotent:
+    enabled: true
+    expiration-time-hour: 2
+    dial-timeout-second: 3
+    read-timeout-second: 3
+    write-timeout-second: 3
+    max-retry-count: 3
+    expire-timeout-hour: 3
+  cache:
+    enable: true
+    key-prefix: 'api::'
+    time-to-live: 12000000
+    timeout: 5000ms
+    port: 26379
+    database: 0
+    master: scos_master
+    password: scos#2026
+    sentinels: localhost:26379
+  privacy:
+    enabled: true
+    strict: false
+    max-payload-kb: 64
+    masking:
+      default-patterns: true
+    log:
+      register-converter: true
+    crypto:
+      secret: ASDASDASDA
+  registry:
+    host: localhost
+    port: 8090
+    key-access: ASDASDASDA
+    discovery-enabled: false
+    tls-enabled: false

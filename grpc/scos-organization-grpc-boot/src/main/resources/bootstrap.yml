@@ -1,5 +1,5 @@
 server:
-  port: ${scos.port:8090}
+  port: ${scos.port}
   http2:
     enabled: true
 
@@ -38,7 +38,7 @@ spring:
     username: ${scos.datasource.username}
     password: ${scos.datasource.password}
     hikari:
-      pool-name: Inside_Flow-Fat
+      pool-name: ScosOrganizationGRPCBoot
       registerMbeans: false
       connection-timeout: ${scos.datasource.connection-timeout}
       idle-timeout: ${scos.datasource.idle-timeout}
@@ -53,7 +53,7 @@ spring:
       username: ${scos.audit.datasource.username}
       password: ${scos.audit.datasource.password}
       hikari:
-        pool-name: Inside_Flow_Audit-Fat
+        pool-name: ScosOrganizationGRPCBoot-Audit-Fat
         registerMbeans: false
         connection-timeout: ${scos.audit.datasource.connection-timeout}
         idle-timeout: ${scos.audit.datasource.idle-timeout}
@@ -73,11 +73,11 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:
-        show_sql: ${SCOS_JPA_SHOW_SQL:true}
-        format_sql: ${SCOS_JPA_SHOW_SQL:true}
+        show_sql: ${scos.datasource.jpa.show_sql}
+        format_sql: ${scos.datasource.jpa.format_sql}
         enable_lazy_load_no_trans: false
         ddl-auto: validate
-        generate_statistics: ${SCOS_JPA_GENERATE_STATISTICS:true}
+        generate_statistics: ${scos.datasource.jpa.generate_statistics}
         naming:
           implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
           physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
@@ -86,7 +86,7 @@ spring:
         session:
           events:
             log:
-              LOG_QUERIES_SLOWER_THAN_MS: ${SCOS_JPA_SLOW_QUERY_MS:500}
+              LOG_QUERIES_SLOWER_THAN_MS: ${scos.datasource.jpa.log_queries_slower}
         jdbc:
           batch_size: 100
           order_updates: true
@@ -103,10 +103,12 @@ spring:
     pathmatch:
       matching-strategy: ant-path-matcher
 management:
+  server:
+    port: 9091
   endpoints:
     web:
       exposure:
-        include: '*'
+        include: health, info, prometheus
   info:
     build:
       enabled: true
@@ -114,10 +116,10 @@ management:
     prometheus:
       enabled: true
     health:
-      show-details: always
+      probes: { enabled: true }
   tracing:
     sampling:
-      probability: ${SCOS_TRACING_SAMPLING:1.0}
+      probability: ${scos.tracing.sampling}
   management:
     metrics:
       enable:
@@ -137,18 +139,18 @@ management:
             server:
               requests: 50ms,100ms,200ms,300ms,500ms,1s
       tags:
-        application: Inside_Flow-Fat
+        application: ScosOrganizationGRPCBoot
     observations:
       key-values:
         application: ${spring.application.name}
 
 scos:
   liquibase:
-    enabled: ${SCOS_LIQUIBASE_ENABLED:false}
+    enabled: false
   filter:
-    show-request-body: ${SCOS_LOG_SHOW_REQUEST_BODY:false}
-    show-request-headers: ${SCOS_LOG_SHOW_REQUEST_HEADERS:false}
-    show-response-body: ${SCOS_LOG_SHOW_RESPONSE_BODY:false}
+    show-request-body: false
+    show-request-headers: false
+    show-response-body: false
   audit:
     system: SCOS_ORGANIZATION
     enabled: ${scos.audit.enabled}
