@@ -33,7 +33,7 @@ Cria empresa matriz (`parentCompanyId` nulo) ou filial.
 | `nameTreatment` | O | ausente → `SCOS_VALIDATION_003`; vazio → `SCOS_VALIDATION_001`; ≤ 100 chars |
 | `taxIdentifier` | O | ausente → `SCOS_VALIDATION_003`; 14 chars alfanuméricos; DV válido (CNPJ Alfa) |
 | `foundationDate` | O | ausente → `SCOS_VALIDATION_003`; data válida, não futura |
-| `sectorOfActivity` | O | ausente → `SCOS_VALIDATION_003`; pertence à lista fixa de setores; ≤ 100 chars |
+| `sectorOfActivity` | O | ausente → `SCOS_VALIDATION_003`; texto livre; ≤ 100 chars (setor amplo — distinto de `cnaePrincipalId`/`legalNatureId`) |
 | `reasonActivateId` | O | ausente → `SCOS_VALIDATION_003`; FK para `SCOS_REASON_ACTIVATE` |
 | `observation` | F | — |
 | `parentCompanyId` | F | FK para `SCOS_COMPANY` |
@@ -44,7 +44,7 @@ Cria empresa matriz (`parentCompanyId` nulo) ou filial.
 
 **Regras em ordem:**
 1. Todos os campos obrigatórios presentes e não vazios.
-2. `taxIdentifier`: 14 chars alfanuméricos (`A–Z`, `0–9`); posições 13–14 numéricas; DV válido pelo algoritmo CNPJ Alfa. `foundationDate`: data válida, não futura. `sectorOfActivity` na lista permitida.
+2. `taxIdentifier`: 14 chars alfanuméricos (`A–Z`, `0–9`); posições 13–14 numéricas; DV válido pelo algoritmo CNPJ Alfa. `foundationDate`: data válida, não futura. `sectorOfActivity`: texto livre, ≤ 100 chars.
 3. Limites de tamanho conforme tabela acima.
 4. `taxIdentifier` único em `SCOS_COMPANY` (todos os status) — colisão retorna `SCOS_COMPANY_002`.
 5. `reasonActivateId` deve existir em `SCOS_REASON_ACTIVATE`. Se `parentCompanyId` informado: deve existir. Se `legalNatureId` informado: deve existir. Se `cnaePrincipalId` informado: deve existir.
@@ -93,7 +93,7 @@ Atualiza dados cadastrais. `parentCompanyId` não é editável.
 | `nameTreatment` | O | ausente → `SCOS_VALIDATION_003`; vazio → `SCOS_VALIDATION_001`; ≤ 100 chars |
 | `taxIdentifier` | O | ausente → `SCOS_VALIDATION_003`; 14 chars alfanuméricos; DV válido (CNPJ Alfa) |
 | `foundationDate` | O | ausente → `SCOS_VALIDATION_003`; data válida, não futura |
-| `sectorOfActivity` | O | ausente → `SCOS_VALIDATION_003`; pertence à lista fixa |
+| `sectorOfActivity` | O | ausente → `SCOS_VALIDATION_003`; texto livre; ≤ 100 chars |
 | `observation` | F | — |
 | `legalNatureId` | F | FK para `SCOS_LEGAL_NATURE` |
 | `cnaePrincipalId` | F | FK para `SCOS_CNAE` |

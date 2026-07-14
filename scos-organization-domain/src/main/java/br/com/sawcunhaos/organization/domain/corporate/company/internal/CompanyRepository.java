@@ -54,6 +54,19 @@ public interface CompanyRepository extends BaseJpaRepository<Company, Long>, Jpa
     }
 
     /**
+     * Verifica duplicidade de CNPJ excluindo a própria empresa — usado na atualização.
+     *
+     * @param taxIdentifier CNPJ formatado ou não
+     * @param companyId     empresa a ser excluída da checagem
+     * @return true se outra empresa já usa o CNPJ, false caso contrário
+     */
+    default boolean existsByTaxIdentifierAndNotId(String taxIdentifier, Long companyId) {
+        return exists(
+                company.taxIdentifier.cnpj.eq(taxIdentifier).and(company.id.ne(companyId))
+        );
+    }
+
+    /**
      * Verifica se existe uma empresa-mãe com o ID informado.
      *
      * @param parentCompanyId ID da empresa-mãe

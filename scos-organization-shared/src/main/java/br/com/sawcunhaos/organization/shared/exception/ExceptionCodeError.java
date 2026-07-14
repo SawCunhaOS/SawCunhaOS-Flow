@@ -77,6 +77,14 @@ public enum ExceptionCodeError implements ExceptionCode {
     /** Sem throw site hoje — reservado para bloqueio da única empresa ativa. HTTP 422. */
     SCOS_COMPANY_006("SCOS_COMPANY_006", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
     SCOS_COMPANY_007("SCOS_COMPANY_007", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de ativação informado está inativo. HTTP 422. */
+    SCOS_COMPANY_008("SCOS_COMPANY_008", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de ativação incompatível com a entidade Empresa (entityType != COMPANY). HTTP 422. */
+    SCOS_COMPANY_009("SCOS_COMPANY_009", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Empresa mãe informada não está ativa. HTTP 422. */
+    SCOS_COMPANY_010("SCOS_COMPANY_010", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Profundidade da hierarquia de empresas excede COMPANY_HIERARCHY_MAX_DEPTH. HTTP 422. */
+    SCOS_COMPANY_011("SCOS_COMPANY_011", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
 
     // Employee
     SCOS_EMPLOYEE_001("SCOS_EMPLOYEE_001", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),

@@ -91,6 +91,99 @@
 
 ---
 
+---
+
+## 2.1 Regras de Negócio
+
+> Esta seção é obrigatória e descreve as regras que governam o comportamento da funcionalidade.
+
+### RN-01
+- Descrição da regra
+- Justificativa
+- Exemplo válido
+- Exemplo inválido
+- Impacto técnico
+
+---
+
+## Casos de Uso
+
+### UC-01
+**Pré-condições**
+
+**Fluxo principal**
+
+**Fluxos alternativos**
+
+**Pós-condições**
+
+---
+
+## Critérios de Aceitação (BDD)
+
+```gherkin
+Cenário:
+Dado ...
+Quando ...
+Então ...
+```
+
+---
+
+## Contratos
+
+### REST / gRPC / Eventos
+
+**Request**
+```json
+{}
+```
+
+**Response**
+```json
+{}
+```
+
+---
+
+## Modelo de Dados
+
+|Campo|Tipo|Obrigatório|Regra|
+|---|---|---|---|
+
+---
+
+## Diagramas
+
+### Fluxo
+```mermaid
+flowchart TD
+A[Entrada]-->B[Processamento]-->C[Saída]
+```
+
+### Sequência
+```mermaid
+sequenceDiagram
+Client->>Service: Requisição
+Service-->>Client: Resposta
+```
+
+---
+
+## Exemplo de Implementação
+
+```java
+// Pseudocódigo ou trecho de referência
+```
+
+---
+
+## Estratégia de Testes
+
+- Unitário
+- Integração
+- E2E
+
 ## 📎 Referências
 - [ADR / Issue / PR / Documento relacionado]
 

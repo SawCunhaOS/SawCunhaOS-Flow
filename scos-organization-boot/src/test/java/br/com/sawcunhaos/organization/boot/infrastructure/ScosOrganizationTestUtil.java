@@ -14,9 +14,12 @@
 package br.com.sawcunhaos.organization.boot.infrastructure;
 
 import br.com.sawcunhaos.organization.boot.ScosOrganizationApplication;
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -24,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.ComposeContainer;
 
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -67,8 +71,34 @@ public class ScosOrganizationTestUtil extends ScosOrganizationWiremockUtil {
         COMPOSE_CONTAINER_POSTGRESQL.start();
     }
 
+    /** Nome do cache Spring (Redis) que guarda o contexto de autoridades — {@code @Cacheable} em ScosSecurityService. */
+    private static final String AUTHORITY_CONTEXT_CACHE = "scos:authority:ctx";
+
     @Autowired
     protected MockMvc mockMvc;
+
+    // Todos os CacheManagers do contexto — evita ambiguidade caso exista mais de um.
+    @Autowired(required = false)
+    private List<CacheManager> cacheManagers;
+
+    /**
+     * Limpa o cache {@code scos:authority:ctx} ao final de CADA teste. As permissões do login são
+     * cacheadas no Redis (compartilhado entre classes no mesmo JVM); sem essa limpeza, um teste que
+     * autentica com todas as permissões deixaria o cache populado e os cenários de 403
+     * ({@code stubValidateAuthorityWithoutPermissions}) do teste seguinte falhariam por cache-hit.
+     */
+    @AfterEach
+    void clearAuthorityContextCache() {
+        if (cacheManagers == null) {
+            return;
+        }
+        cacheManagers.forEach(cacheManager -> {
+            Cache cache = cacheManager.getCache(AUTHORITY_CONTEXT_CACHE);
+            if (cache != null) {
+                cache.clear();
+            }
+        });
+    }
 
     // Tokens emitidos em runtime e validados contra o JWKS mockado (ScosJwtTestSupport).
     // BEAR_TOKEN_VALID: exp ~100 anos, login "inside.admin". BEAR_TOKEN_INVALID: chave fora do JWKS → 401.
