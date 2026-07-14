@@ -152,7 +152,7 @@
                     <dependency>
                         <groupId>io.github.openfeign.querydsl</groupId>
                         <artifactId>querydsl-apt</artifactId>
-                        <version>${op_querydsl.version}</version>
+                        <version>${querydsl.version}</version>
                     </dependency>
                 </dependencies>
             </plugin>

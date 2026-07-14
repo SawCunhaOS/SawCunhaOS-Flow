@@ -230,12 +230,13 @@ scos:
   cache:
     caches:
       - name: scos:authority:ctx
-        timeToLiveSeconds: 300
+        timeToLiveSeconds: 1800
         description: Cache de autoridades do contexto
     redis-time-to-live: ${scos.cache.time-to-live}
     key-prefix: ${scos.cache.key-prefix}
   security:
     enabled: true
+    master-key: ${scos.security.maser-key}
   registry:
     host: ${scos.registry.host}                 # host do scos-registry
     port: ${scos.registry.port}                      # porta gRPC

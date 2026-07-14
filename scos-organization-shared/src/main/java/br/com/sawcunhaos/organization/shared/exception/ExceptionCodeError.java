@@ -45,6 +45,7 @@ public enum ExceptionCodeError implements ExceptionCode {
     // System
     /** Sistema informado no registro de resources não existe. HTTP 404. */
     SCOS_SYSTEM_001("SCOS_SYSTEM_001", 404, "SCOS_TITLE_NOT_FOUND"),
+    SCOS_SYSTEM_002("SCOS_SYSTEM_002", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
 
     // Department
     SCOS_DEPARTMENT_001("SCOS_DEPARTMENT_001", 404, "SCOS_TITLE_NOT_FOUND"),
@@ -164,6 +165,9 @@ public enum ExceptionCodeError implements ExceptionCode {
     SCOS_LOGIN_011("SCOS_LOGIN_011", 401, "SCOS_TITLE_UNAUTHORIZED"),
     /** Transição de status inválida solicitada para o Login informado. HTTP 422. */
     SCOS_LOGIN_013("SCOS_LOGIN_013", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+
+    SCOS_SECURITY_ENCRYPT("SCOS_SECURITY_ENCRYPT", 400, "SCOS_TITLE_GENERIC"),
+    SCOS_SECURITY_DECRYPT("SCOS_SECURITY_DECRYPT", 400, "SCOS_TITLE_GENERIC"),
 
     ;
 

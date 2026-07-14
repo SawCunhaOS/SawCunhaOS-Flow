@@ -21,5 +21,6 @@ public interface ScosSystemService {
 
     ScosSystemOutput register(@NonNull RegisterScosSystemInput registerScosSystemInput);
 
-    ScosSystemOutput findByCodeAndSecretKey(@NonNull String Code, @NonNull String secretKey);
+    ScosSystemOutput findByCode(@NonNull String code);
+    void validateSecretKey(@NonNull String code, @NonNull String secretKey);
 }

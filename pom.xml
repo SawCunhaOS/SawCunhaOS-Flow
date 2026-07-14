@@ -96,7 +96,6 @@
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <op_querydsl.version>7.1</op_querydsl.version>
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
 
         <scos-foundation.version>1.2.0-SNAPSHOT</scos-foundation.version>

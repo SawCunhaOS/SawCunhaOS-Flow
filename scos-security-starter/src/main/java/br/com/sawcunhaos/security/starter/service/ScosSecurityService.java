@@ -25,7 +25,7 @@ public class ScosSecurityService implements ScosSecurity {
     private final ScosAuthorityService scosAuthorityService;
 
     @Override
-    @Cacheable(cacheNames = "scos:authority:ctx", key = "#systemCode + ':' + #login", unless = "#result == null")
+    @Cacheable(cacheNames = "scos:authority:ctx", keyGenerator = "ScosCacheKeyGenerator")
     public ScosSecurityContext getSecurityContext(@NonNull String systemCode, @NonNull String login) {
         log.info("Getting all granted authority for login: {}", login);
         if(Objects.isNull(MDC.get(REQUEST_ID_HEADER)) || MDC.get(REQUEST_ID_HEADER).isBlank()){

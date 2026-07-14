@@ -33,9 +33,19 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: SECRET_KEY
-                  type: TEXT
+                  type: varchar(512)
                   constraints:
                     nullable: false
+              - column:
+                  name: PREVIOUS_SECRET_KEY
+                  type: varchar(512)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: PREVIOUS_SECRET_EXPIRES_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
               - column:
                   name: STATUS
                   type: varchar(50)

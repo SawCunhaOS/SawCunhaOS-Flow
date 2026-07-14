@@ -25,6 +25,4 @@ import java.util.UUID;
 public interface ScosSystemRepository extends BaseJpaRepository<ScosSystem, UUID>, JpaSpecificationExecutor<ScosSystem>, QuerydslPredicateExecutor<ScosSystem> {
 
     Optional<ScosSystem> findByCode(String code);
-
-    Optional<ScosSystem> findByCodeAndSecretKey(String code, String secretKey);
 }

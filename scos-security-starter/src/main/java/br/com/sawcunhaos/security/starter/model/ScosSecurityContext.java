@@ -13,26 +13,30 @@
 
 package br.com.sawcunhaos.security.starter.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Getter
+@Setter
 public final class ScosSecurityContext {
 
-    private final String   login;
-    private final String   name;
-    private final String   email;
-    private final Long     companyId;
-    private final String   companyName;
-    private final Long     branchId;
-    private final String   branchName;
-    private final Long     employeeId;
-    private final List<String> permissions;
+    private String   login;
+    private String   name;
+    private String   email;
+    private Long     companyId;
+    private String   companyName;
+    private Long     branchId;
+    private String   branchName;
+    private Long     employeeId;
+    private List<String> permissions;
 
     // construtor, getters — imutável por design
 

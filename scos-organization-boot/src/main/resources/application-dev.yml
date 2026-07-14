@@ -40,6 +40,7 @@ scos:
     show-request-headers: false
     show-response-body: false
   security:
+    master-key: bipGfGswQXxHcy04UnQvSCQwMFk4V1A2YCpCcDlGRkE=
     keycloak:
       client-id: Scos
       authorization-grant-type: password

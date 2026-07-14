@@ -17,7 +17,7 @@ scos:
       generate_statistics: true
       log_queries_slower: 500
   audit:
-    enabled: true
+    enabled: false
     datasource:
       url: jdbc:postgresql://localhost:5432/scos?currentSchema=scos
       username: scos
@@ -28,6 +28,7 @@ scos:
       minimum-idle: 10
       maximum-pool-size: 30
   security:
+    master-key: bipGfGswQXxHcy04UnQvSCQwMFk4V1A2YCpCcDlGRkE=
     keycloak:
       client-id: Scos
       authorization-grant-type: password
@@ -53,3 +54,5 @@ scos:
       register-converter: true
     crypto:
       secret: ASDASDASDA
+  registry:
+    key-access: ASDASDASDA

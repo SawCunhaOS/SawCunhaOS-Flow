@@ -15,7 +15,9 @@ package br.com.sawcunhaos.organization.domain.access.system.internal;
 
 import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
+import br.com.sawcunhaos.organization.shared.converter.SecretKeyConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,6 +30,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Setter
@@ -51,8 +57,14 @@ public class ScosSystem extends BaseEntity {
     private String code;
     @Column(name = "DESCRIPTION")
     private String description;
+    @Convert(converter = SecretKeyConverter.class)
     @Column(name = "SECRET_KEY")
     private String secretKey;
+    @Convert(converter = SecretKeyConverter.class)
+    @Column(name = "PREVIOUS_SECRET_KEY")
+    private String previousSecretKey;
+    @Column(name = "PREVIOUS_SECRET_EXPIRES_AT")
+    private LocalDateTime previousSecretExpiresAt;
     @Column(name = "STATUS")
     private String status;
     @Column(name = "VERSION")
@@ -60,4 +72,23 @@ public class ScosSystem extends BaseEntity {
 
     @Transient
     private boolean updateRegistration = false;
+
+    public String rotateSecret(String newRawSecret) {
+        this.previousSecretKey = this.secretKey;
+        this.secretKey         = newRawSecret;
+        this.previousSecretExpiresAt   = LocalDateTime.now();
+        return newRawSecret;
+    }
+
+    public boolean matchesSecret(String provided, Duration grace) {
+        if (constantTimeEquals(secretKey, provided)) return true;
+        boolean inGrace = previousSecretExpiresAt != null
+                && LocalDateTime.now().isBefore(previousSecretExpiresAt.plus(grace));
+        return inGrace && constantTimeEquals(previousSecretKey, provided);
+    }
+
+    private static boolean constantTimeEquals(String secretKey, String secretKeyCompare) {
+        return secretKey != null && secretKeyCompare != null && MessageDigest.isEqual(
+                secretKey.getBytes(StandardCharsets.UTF_8), secretKeyCompare.getBytes(StandardCharsets.UTF_8));
+    }
 }

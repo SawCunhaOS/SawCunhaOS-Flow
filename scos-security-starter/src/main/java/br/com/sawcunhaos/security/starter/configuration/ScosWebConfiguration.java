@@ -5,7 +5,6 @@ import br.com.sawcunhaos.security.starter.ScosUserAuthenticationBean;
 import br.com.sawcunhaos.security.starter.configuration.properties.CorsProperties;
 import br.com.sawcunhaos.security.starter.exception.AccessDeniedExceptionHandler;
 import br.com.sawcunhaos.security.starter.exception.ExceptionHandlerFilter;
-import br.com.sawcunhaos.security.starter.filter.ScosCorsFilter;
 import br.com.sawcunhaos.security.starter.utils.FilterUtils;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
@@ -22,11 +21,6 @@ public class ScosWebConfiguration {
     @Bean
     public FilterUtils filterUtils(CorsProperties corsProperties) {
         return new FilterUtils(corsProperties);
-    }
-
-    @Bean
-    public ScosCorsFilter scosCorsFilter(FilterUtils filterUtils) {
-        return new ScosCorsFilter(filterUtils);
     }
 
     @Bean

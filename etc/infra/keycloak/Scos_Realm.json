@@ -2230,11 +2230,10 @@
         {
           "type": "password",
           "value": "Admin@1234!",
-          "temporary": true
+          "temporary": false
         }
       ],
       "requiredActions": [
-        "UPDATE_PASSWORD"
       ],
       "groups": [
         "/SawCunhaOS/Admin"

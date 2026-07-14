@@ -16,17 +16,23 @@ package br.com.sawcunhaos.organization.domain.access.system.service;
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.system.dto.RegisterScosSystemInput;
 import br.com.sawcunhaos.organization.domain.access.system.dto.ScosSystemOutput;
-import br.com.sawcunhaos.organization.domain.access.system.specification.ScosSystemService;
 import br.com.sawcunhaos.organization.domain.access.system.internal.ScosSystem;
 import br.com.sawcunhaos.organization.domain.access.system.internal.ScosSystemRepository;
+import br.com.sawcunhaos.organization.domain.access.system.specification.ScosSystemService;
+import br.com.sawcunhaos.organization.shared.utils.SystemSecretCryptoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
+import java.time.Duration;
+import java.util.Base64;
 import java.util.Objects;
-import java.util.UUID;
+
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_SYSTEM_001;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_SYSTEM_002;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +40,9 @@ import java.util.UUID;
 class ScosSystemServiceBean implements ScosSystemService {
 
     private final ScosSystemRepository scosSystemRepository;
+    private final SystemSecretCryptoService systemSecretCryptoService;
+    private static final SecureRandom RNG = new SecureRandom();
+    private static final Duration ONE_DAY = Duration.ofDays(1);
 
     @Override
     @Transactional(rollbackFor = ScosException.class)
@@ -76,17 +85,32 @@ class ScosSystemServiceBean implements ScosSystemService {
 
     @Override
     @Transactional(readOnly = true)
-    public ScosSystemOutput findByCodeAndSecretKey(@NonNull String Code, @NonNull String secretKey) {
-        ScosSystem scosSystem = scosSystemRepository.findByCodeAndSecretKey(Code, secretKey).orElseThrow();
+    public ScosSystemOutput findByCode(@NonNull String code) {
+        ScosSystem scosSystem = getByCode(code);
         return ScosSystemOutput.builder()
                 .id(scosSystem.getId())
                 .name(scosSystem.getName())
                 .description(scosSystem.getDescription())
                 .code(scosSystem.getCode())
                 .status(scosSystem.getStatus())
-                .secretKey(scosSystem.getSecretKey())
                 .version(scosSystem.getVersion())
                 .build();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public void validateSecretKey(@NonNull String code, @NonNull String secretKey) {
+        ScosSystem scosSystem = getByCode(code);
+
+        if (scosSystem.matchesSecret(code, ONE_DAY) ) {
+            throw new ScosException(SCOS_SYSTEM_002);
+        }
+    }
+
+    private ScosSystem getByCode(@NonNull String code) {
+        return scosSystemRepository.findByCode(code).orElseThrow(
+                () -> new ScosException(SCOS_SYSTEM_001)
+        );
     }
 
     private ScosSystem createSystem(
@@ -100,7 +124,11 @@ class ScosSystemServiceBean implements ScosSystemService {
         scosSystem.setDescription(description);
         scosSystem.setName(name);
         scosSystem.updateAuditInfo("REGISTRY");
-        scosSystem.setSecretKey(UUID.randomUUID().toString());
+        scosSystem.setSecretKey(
+                systemSecretCryptoService.encrypt(
+                        generateRawSecret()
+                )
+        );
         scosSystem.setVersion(version);
         scosSystem.setStatus("ACTIVE");
         scosSystem = scosSystemRepository.merge(scosSystem);
@@ -123,5 +151,11 @@ class ScosSystemServiceBean implements ScosSystemService {
         scosSystem = scosSystemRepository.update(scosSystem);
         scosSystem.setUpdateRegistration(true);
         return scosSystem;
+    }
+
+    private String generateRawSecret() {
+        byte[] b = new byte[32];                                      // 256 bits
+        RNG.nextBytes(b);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(b);
     }
 }

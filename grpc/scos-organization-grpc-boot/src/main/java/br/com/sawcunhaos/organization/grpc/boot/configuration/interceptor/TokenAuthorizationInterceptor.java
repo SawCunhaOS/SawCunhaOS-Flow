@@ -13,8 +13,8 @@
 
 package br.com.sawcunhaos.organization.grpc.boot.configuration.interceptor;
 
-import br.com.sawcunhaos.organization.domain.access.system.dto.ScosSystemOutput;
 import br.com.sawcunhaos.organization.domain.access.system.specification.ScosSystemService;
+import br.com.sawcunhaos.organization.grpc.boot.configuration.properties.ScosGRPCProperties;
 import io.grpc.ForwardingServerCallListener;
 import io.grpc.Metadata;
 import io.grpc.ServerCall;
@@ -23,7 +23,7 @@ import io.grpc.ServerInterceptor;
 import io.grpc.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.annotation.Order;
 import org.springframework.grpc.server.GlobalServerInterceptor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -43,9 +43,11 @@ import java.util.Set;
 @GlobalServerInterceptor
 @Order(10) // depois do logging (Order 0), antes da lógica de negócio
 @RequiredArgsConstructor
+@EnableConfigurationProperties(ScosGRPCProperties.class)
 public class TokenAuthorizationInterceptor implements ServerInterceptor {
 
     private final ScosSystemService scosSystemService;
+    private final ScosGRPCProperties scosGRPCProperties;
 
     private static final Metadata.Key<String> AUTHORIZATION_KEY =
             Metadata.Key.of("authentication", Metadata.ASCII_STRING_MARSHALLER);
@@ -58,9 +60,6 @@ public class TokenAuthorizationInterceptor implements ServerInterceptor {
             "br.com.sawcunhaos.organization.grpc.proto.ValidateAuthorityService/validateAuthority"
     );
 
-    @Value("${scos.registry.key-access}")           // SEM default no yml — falha no boot se ausente
-    private String expectedKeyAccess;
-
     @Override
     public <ReqT, RespT> ServerCall.Listener<ReqT> interceptCall(
             ServerCall<ReqT, RespT> call,
@@ -69,7 +68,7 @@ public class TokenAuthorizationInterceptor implements ServerInterceptor {
 
         String provided = headers.get(KEY_ACCESS);
         if (provided == null || !MessageDigest.isEqual(
-                expectedKeyAccess.getBytes(StandardCharsets.UTF_8),
+                scosGRPCProperties.getKeyAccess().getBytes(StandardCharsets.UTF_8),
                 provided.getBytes(StandardCharsets.UTF_8))
         ) {
             call.close(Status.UNAUTHENTICATED.withDescription("Bootstrap negado"), new Metadata());
@@ -105,16 +104,15 @@ public class TokenAuthorizationInterceptor implements ServerInterceptor {
             return noopListener();
         }
 
-        ScosSystemOutput scosSystem;
         try {
-            scosSystem = scosSystemService.findByCodeAndSecretKey(parts[0], parts[1]);
+            scosSystemService.validateSecretKey(parts[0], parts[1]);
         } catch (NoSuchElementException ex) {
             log.error("Sistema informado nao existe: {}", parts[0]);
             call.close(Status.UNAUTHENTICATED.withDescription("Sistema informado nao existe"), new Metadata());
             return noopListener();
         }
 
-        var authentication = new UsernamePasswordAuthenticationToken(scosSystem.code(), null, null);
+        var authentication = new UsernamePasswordAuthenticationToken(parts[0], null, null);
         final SecurityContext context = new SecurityContextImpl(authentication);
 
         // Monta o listener real — ainda SEM colocar o context no Holder.
