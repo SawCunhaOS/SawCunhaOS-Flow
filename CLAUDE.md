@@ -1,8 +1,5 @@
 # Claude Instructions
 - Antes de responder a qualquer pergunta, valide a resposta se esta de acordo com o que foi perguntado.
-- Sempre que tiver no modo openspec explore deve ser criado um arquivo de ideia na pasta `etc/doc/ideia/` com base no template `etc/doc/templates/ideia.md`. O arquivo deve seguir o padrão `YYYYMMDD_titulo-da-funcionalidade.md`.
-- Cada arquivo de ideia deve respeitar o Princípio SRP: uma ideia = uma funcionalidade. Se a exploração revelar múltiplas features independentes, criar um arquivo separado por feature.
-- O comando do openspec propose deve sempre ter um arquivo de ideia criado.
 - NUNCA adivinhe soluções e nem mesmo tentar resolver problemas sem antes perguntar.
 - SEMPRE pergunte para ter todos os detalhes.
 - Sempre responda em PT-BR.
@@ -29,7 +26,6 @@
 - `scos-conventions` — delegate pattern, exceções, resposta OpenAPI
 - `ddd-tactical-design` — entidades, bounded contexts, domain services
 - `spring-boot-service` — setup de módulo, pom, configuração
-- `openspec-explore` / `openspec-propose` / `openspec-apply-change` / `openspec-archive-change` — fluxo de especificação (explore → propose → apply → archive)
 - `tdd-workflow` / `testcontainers-integration` — testes
 - `spring-security-scos` — Spring Security, OAuth2/JWT, @PreAuthorize
 - `observability-otel` — Micrometer, OpenTelemetry, traces/metrics/logs
