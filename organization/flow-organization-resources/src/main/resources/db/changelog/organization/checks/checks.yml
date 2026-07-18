@@ -13,7 +13,7 @@ databaseChangeLog:
                 ADD CONSTRAINT chk_employee_contract_type CHECK (contract_type IN ('CLT', 'PJ', 'ESTAGIO', 'TEMPORARIO'));
 
               ALTER TABLE scos.scos_login
-                ADD CONSTRAINT chk_login_status CHECK (status IN ('ACTIVE', 'INACTIVE', 'BLOCKED')),
+                ADD CONSTRAINT chk_login_status CHECK (status IN ('PENDING_APPROVAL', 'ACTIVE', 'INACTIVE', 'BLOCKED', 'REJECTED')),
                 ADD CONSTRAINT chk_login_type   CHECK (type IN ('EMPLOYEE', 'EXTERNAL', 'SERVICE'));
 
               ALTER TABLE scos.scos_company_status_history
@@ -25,8 +25,22 @@ databaseChangeLog:
                 ADD CONSTRAINT chk_employee_status_history_previous CHECK (previous_status IS NULL OR previous_status IN ('ACTIVE', 'INACTIVE', 'DISABLED'));
 
               ALTER TABLE scos.scos_login_status_history
-                ADD CONSTRAINT chk_login_status_history_status   CHECK (status IN ('ACTIVE', 'INACTIVE', 'BLOCKED')),
-                ADD CONSTRAINT chk_login_status_history_previous CHECK (previous_status IS NULL OR previous_status IN ('ACTIVE', 'INACTIVE', 'BLOCKED'));
+                ADD CONSTRAINT chk_login_status_history_status   CHECK (status IN ('PENDING_APPROVAL', 'ACTIVE', 'INACTIVE', 'BLOCKED', 'REJECTED')),
+                ADD CONSTRAINT chk_login_status_history_previous CHECK (previous_status IS NULL OR previous_status IN ('PENDING_APPROVAL', 'ACTIVE', 'INACTIVE', 'BLOCKED', 'REJECTED'));
+
+              ALTER TABLE scos.scos_login_approval_request
+                ADD CONSTRAINT chk_login_approval_request_level  CHECK (current_level IN ('SUPERVISOR', 'MANAGER', 'SYSTEM_ACCESS_GROUP')),
+                ADD CONSTRAINT chk_login_approval_request_policy CHECK (escalation_policy IN ('INDEFINITE', 'AUTO_CANCEL')),
+                ADD CONSTRAINT chk_login_approval_request_status CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED', 'CANCELLED')),
+                ADD CONSTRAINT chk_login_approval_request_requester CHECK (
+                  (escalation_policy = 'AUTO_CANCEL' AND requested_by_login_id IS NULL)
+                  OR
+                  (escalation_policy = 'INDEFINITE' AND requested_by_login_id IS NOT NULL)
+                );
+
+              ALTER TABLE scos.scos_shift_enforcement_log
+                ADD CONSTRAINT chk_shift_enforcement_log_decision   CHECK (decision IN ('ALLOWED', 'DENIED')),
+                ADD CONSTRAINT chk_shift_enforcement_log_allowed_via CHECK (allowed_via IS NULL OR allowed_via IN ('REGULAR_SCHEDULE', 'ON_CALL_WINDOW', 'UNRESTRICTED_PROFILE'));
 
               ALTER TABLE scos.scos_outbox_event ADD CONSTRAINT chk_outbox_event_status  CHECK (status  IN ('PENDING', 'PROCESSING', 'PROCESSED', 'FAILED'));
               ALTER TABLE scos.scos_outbox_topic ADD CONSTRAINT chk_outbox_topic_backend CHECK (backend IN ('PGMQ', 'KAFKA', 'DIRECT_API'));
@@ -55,6 +69,12 @@ databaseChangeLog:
               ALTER TABLE scos.scos_employee_status_history DROP CONSTRAINT IF EXISTS chk_employee_status_history_previous;
               ALTER TABLE scos.scos_login_status_history DROP CONSTRAINT IF EXISTS chk_login_status_history_status;
               ALTER TABLE scos.scos_login_status_history DROP CONSTRAINT IF EXISTS chk_login_status_history_previous;
+              ALTER TABLE scos.scos_login_approval_request DROP CONSTRAINT IF EXISTS chk_login_approval_request_level;
+              ALTER TABLE scos.scos_login_approval_request DROP CONSTRAINT IF EXISTS chk_login_approval_request_policy;
+              ALTER TABLE scos.scos_login_approval_request DROP CONSTRAINT IF EXISTS chk_login_approval_request_status;
+              ALTER TABLE scos.scos_login_approval_request DROP CONSTRAINT IF EXISTS chk_login_approval_request_requester;
+              ALTER TABLE scos.scos_shift_enforcement_log DROP CONSTRAINT IF EXISTS chk_shift_enforcement_log_decision;
+              ALTER TABLE scos.scos_shift_enforcement_log DROP CONSTRAINT IF EXISTS chk_shift_enforcement_log_allowed_via;
               ALTER TABLE scos.scos_outbox_event DROP CONSTRAINT IF EXISTS chk_outbox_event_status;
               ALTER TABLE scos.scos_outbox_topic DROP CONSTRAINT IF EXISTS chk_outbox_topic_backend;
               ALTER TABLE scos.scos_reason_activate DROP CONSTRAINT IF EXISTS chk_reason_activate_entity_type;

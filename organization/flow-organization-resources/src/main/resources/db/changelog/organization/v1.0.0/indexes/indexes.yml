@@ -17,3 +17,6 @@ databaseChangeLog:
   - include:
       file: position_history.yml
       relativeToChangelogFile: true
+  - include:
+      file: login_approval_request.yml
+      relativeToChangelogFile: true

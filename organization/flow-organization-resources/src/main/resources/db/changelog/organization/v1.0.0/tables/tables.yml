@@ -77,6 +77,9 @@ databaseChangeLog:
   - include:
       file: scos_employee.yml
       relativeToChangelogFile: true
+  - include:
+      file: scos_department_manager.yml
+      relativeToChangelogFile: true
 
   # Layer 5
   - include:
@@ -107,6 +110,12 @@ databaseChangeLog:
       relativeToChangelogFile: true
   - include:
       file: scos_login_status_history.yml
+      relativeToChangelogFile: true
+  - include:
+      file: scos_login_approval_request.yml
+      relativeToChangelogFile: true
+  - include:
+      file: scos_shift_enforcement_log.yml
       relativeToChangelogFile: true
   - include:
       file: scos_outbox_event.yml
