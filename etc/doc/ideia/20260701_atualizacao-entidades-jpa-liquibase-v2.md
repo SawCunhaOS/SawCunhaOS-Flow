@@ -11,7 +11,7 @@
 > **Regra**: Uma ideia = uma funcionalidade. Features independentes → arquivos separados.
 
 - **Nome da funcionalidade**: `atualizacao-entidades-jpa-liquibase-v2`
-- **Resumo em uma frase**: Sincronizar as entidades JPA e repositórios do módulo `scos-organization-domain` com o schema físico produzido pela change `adequacao-liquibase-domain-model-v2` (outbox, histórico de status auditável, dados fiscais, catálogo dinâmico de tipos, histórico de cargo, horários de trabalho).
+- **Resumo em uma frase**: Sincronizar as entidades JPA e repositórios do módulo `flow-organization-domain` com o schema físico produzido pela change `adequacao-liquibase-domain-model-v2` (outbox, histórico de status auditável, dados fiscais, catálogo dinâmico de tipos, histórico de cargo, horários de trabalho).
 
 **Checklist SRP**:
 - [x] Esta ideia cobre exatamente uma funcionalidade — sincronizar a camada de domínio JPA ao schema v2
@@ -23,16 +23,16 @@
 ## 1️⃣ Visão
 
 ### Problema
-A change `adequacao-liquibase-domain-model-v2` (completa, 57/57 tarefas) recriou o schema físico com ~34 tabelas — 21 novas, ~10 modificadas, 3 removidas — mas foi **estritamente Liquibase**, sem tocar código Java (decisão explícita de escopo). O módulo `scos-organization-domain` ainda reflete o schema v1: faltam entidades JPA para todas as tabelas novas, sobram entidades para as 3 tabelas removidas, e as entidades existentes têm colunas renomeadas/adicionadas/trocadas por FK que não estão mapeadas. Qualquer tentativa de usar o Hibernate contra o banco atual falha ou usa colunas inexistentes.
+A change `adequacao-liquibase-domain-model-v2` (completa, 57/57 tarefas) recriou o schema físico com ~34 tabelas — 21 novas, ~10 modificadas, 3 removidas — mas foi **estritamente Liquibase**, sem tocar código Java (decisão explícita de escopo). O módulo `flow-organization-domain` ainda reflete o schema v1: faltam entidades JPA para todas as tabelas novas, sobram entidades para as 3 tabelas removidas, e as entidades existentes têm colunas renomeadas/adicionadas/trocadas por FK que não estão mapeadas. Qualquer tentativa de usar o Hibernate contra o banco atual falha ou usa colunas inexistentes.
 
 Adicionalmente, o novo schema introduz uma restrição de **vocabulário fechado** via `CHECK` constraint que o código de domínio atual viola: `StatusCompany`/`StatusEmployee` têm o valor `DELETED`, `LoginStatus` tem `LOCKED`/`DELETED` — nenhum aceito pelos novos `CHECK`s (`ACTIVE/INACTIVE/DISABLED` para company/employee, `ACTIVE/INACTIVE/BLOCKED` para login). Os métodos `delete()` de `Company`/`Employee` e as regras `LoginDeletedRule`/`LoginLockedRule` quebrariam em runtime contra o banco novo.
 
 ### Objetivo
-Todas as entidades JPA e repositórios de `scos-organization-domain` devem refletir exatamente o schema Liquibase v2 e o `domain_model.md`. Critério de sucesso: nenhum campo mapeado que não exista no banco, nenhuma tabela relevante sem entidade correspondente, `Employee`/`Company`/`Login` usando o padrão de histórico de status como fonte de verdade, zero erro de schema-validation do Hibernate.
+Todas as entidades JPA e repositórios de `flow-organization-domain` devem refletir exatamente o schema Liquibase v2 e o `domain_model.md`. Critério de sucesso: nenhum campo mapeado que não exista no banco, nenhuma tabela relevante sem entidade correspondente, `Employee`/`Company`/`Login` usando o padrão de histórico de status como fonte de verdade, zero erro de schema-validation do Hibernate.
 
 ### Fora de Escopo
 - Alterações nas migrations Liquibase — já feitas em `adequacao-liquibase-domain-model-v2`, são a fonte da verdade
-- Camadas `usecase`/`api`/`infrastructure` — hoje não referenciam nenhuma das entidades afetadas fora de `domain` (confirmado por busca no repositório), então o blast radius desta ideia é `scos-organization-domain` isolado. Casos de uso que consumirão as entidades novas (outbox, histórico de status, cadastro de motivos/tipos, dados fiscais) ficam para ideias futuras
+- Camadas `usecase`/`api`/`infrastructure` — hoje não referenciam nenhuma das entidades afetadas fora de `domain` (confirmado por busca no repositório), então o blast radius desta ideia é `flow-organization-domain` isolado. Casos de uso que consumirão as entidades novas (outbox, histórico de status, cadastro de motivos/tipos, dados fiscais) ficam para ideias futuras
 - Rename do campo público `keycloakId` nos contratos OpenAPI/gRPC (`etc/api/organization/ScosOrganization_Login.yml`, `ScosOrganization_Integration.yml`) — só o campo interno (`Login.keycloakId` → `externalId`, `VwAuthorityResponse`, `AuthorityResponseOutput`, `AuthorityResponseMapper`) é renomeado aqui, para bater com a coluna `EXTERNAL_ID`. Mudança de contrato público é decisão separada (contrato antes do código)
 - Seed de dados oficiais (`SCOS_LEGAL_NATURE`/`SCOS_CNAE` IBGE) — já decidido fora de escopo na change Liquibase
 - Migração de dados — sistema sem produção, banco recriado do zero

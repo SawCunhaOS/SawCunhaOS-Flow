@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>br.com.sawcunhaos.flow</groupId>
+        <artifactId>organization</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>flow-organization-boot</artifactId>
+
+    <properties>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Build de imagem (buildpacks). Sobrescrevíveis por -D sem editar o pom. -->
+        <bp.cds.enabled>true</bp.cds.enabled>              <!-- -Dbp.cds.enabled=false p/ fallback do bug paketo #581 -->
+        <bp.jvm.thread.count>20</bp.jvm.thread.count>      <!-- dimensionar junto do mem_limit do container -->
+        <!-- Pinar em tag/digest verificado; NUNCA latest (RF-02). Confirmar a tag vigente antes do build. -->
+        <paketo.builder>paketobuildpacks/builder-noble-java-tiny:0.0.153</paketo.builder>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>br.com.sawcunhaos.flow</groupId>
+            <artifactId>flow-organization-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.sawcunhaos.flow</groupId>
+            <artifactId>flow-organization-usecase</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.sawcunhaos.flow</groupId>
+            <artifactId>flow-organization-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.sawcunhaos.flow</groupId>
+            <artifactId>flow-organization-infrastructure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.sawcunhaos.flow</groupId>
+            <artifactId>flow-organization-resources</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>br.com.sawcunhaos</groupId>
+            <artifactId>scos-foundation-jdempotent</artifactId>
+        </dependency>
+
+        <!-- Tests -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-testcontainers</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers-postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock-standalone</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.grpcmock</groupId>
+            <artifactId>grpcmock-spring-boot</artifactId>
+            <version>1.1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.grpcmock</groupId>
+            <artifactId>grpcmock-junit5</artifactId>
+            <version>1.1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>ScosOrganizationApplication</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>process-aot</id>
+                        <goals>
+                            <goal>process-aot</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                        <configuration>
+                            <additionalProperties>
+                                <!-- propriedades extras opcionais -->
+                                <java.version>${java.version} - ${java.runtime.name}</java.version>
+                            </additionalProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <image>
+                        <name>scos-organization-boot:local</name>
+                        <builder>${paketo.builder}</builder>
+                        <pullPolicy>IF_NOT_PRESENT</pullPolicy>
+                        <env>
+                            <BP_JVM_VERSION>25</BP_JVM_VERSION>
+                            <BP_JVM_CDS_ENABLED>${bp.cds.enabled}</BP_JVM_CDS_ENABLED>
+                            <BPL_JVM_THREAD_COUNT>${bp.jvm.thread.count}</BPL_JVM_THREAD_COUNT>
+                            <BP_JVM_TYPE>JRE</BP_JVM_TYPE>
+                        </env>
+                    </image>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
+                    <jvmArguments>--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --add-opens=java.base/sun.misc=ALL-UNNAMED</jvmArguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>25</source>
+                    <target>25</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --add-opens=java.base/sun.misc=ALL-UNNAMED</argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

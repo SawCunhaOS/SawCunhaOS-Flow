@@ -83,7 +83,7 @@ too early ossifies boundaries you don't understand yet.
 ## SCOS Organization — real project structure
 
 This project uses Maven modules (one per layer) with bounded-context grouping
-inside `scos-organization-domain`. The generic layout above maps to:
+inside `flow-organization-domain`. The generic layout above maps to:
 
 ```
 scos-organization-domain      ← domain layer
@@ -125,5 +125,5 @@ scos-organization-boot            ← app entry point + Liquibase changelogs
 Key differences from the generic template:
 - **Repositories live in `internal/`** alongside entities (not in a top-level `domain/repository/`).
 - **Domain service interface in `specification/`**, implementation in `service/` (Bean suffix).
-- **Use cases** follow interface + package-private Bean pattern in `scos-organization-usecase`.
+- **Use cases** follow interface + package-private Bean pattern in `flow-organization-usecase`.
 - **Controllers** are delegates (`XxxDelegate implements XxxApiDelegate`) — no `@RestController`.

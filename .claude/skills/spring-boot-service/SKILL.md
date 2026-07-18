@@ -8,26 +8,26 @@ description: >
   needs centralized error handling (SCOS ExceptionResponse via scos-foundation-exception), is setting up
   application.yml/profiles/externalized config, or wants a review of a service's
   web layer and structure — even if they don't name "Spring Boot" explicitly.
-  Targets the current stable Spring Boot 4.0.x / Spring Framework 7 / Java 25,
+  Targets the current stable Spring Boot 4.X.X / Spring Framework 7 / Java 25,
   Maven, and the user's SCOS BOM for dependency management. For the domain model
   itself use ddd-tactical-design; for tests use tdd-workflow and
   testcontainers-integration. For security and observability use
   spring-security-scos and observability-otel.
 ---
 
-# Spring Boot Service (4.0.x / Java 25 / Maven)
+# Spring Boot Service (4.X.X / Java 25 / Maven)
 
 This skill builds and reviews the "outer shell" of a service: the Maven project,
 the REST/web layer, configuration, and error handling. It deliberately leaves the
 domain model to `ddd-tactical-design` — the web layer should be thin and delegate
-inward to application services. Targets Spring Boot 4.0.x on Spring Framework 7
+inward to application services. Targets Spring Boot 4.X.X on Spring Framework 7
 (JSpecify null-safety, Jakarta EE, native OpenTelemetry observability, stable
 HTTP API versioning), Java 25, and Maven.
 
 ## Project foundation — the SCOS BOM (required)
 
 Every project uses the user's Bill of Materials, `br.com.sawcunhaos:scos-bom`,
-which pins the entire stack (Spring Boot 4.0.x, Framework 7, Spring
+which pins the entire stack (Spring Boot 4.X.X, Framework 7, Spring
 Data/Cloud/Kafka, Hibernate 7, Jackson 3, Liquibase, JUnit Jupiter, Mockito,
 Testcontainers, REST Assured, WireMock, Lombok, MapStruct, and more). Import it
 in `dependencyManagement` and declare dependencies WITHOUT versions; the BOM is
@@ -62,8 +62,8 @@ before producing substantial output.
 1. Scaffold the pom from `references/project-skeleton.md` — SCOS BOM imported,
    starters version-free, `spring-boot-maven-plugin` for packaging.
 2. Lay out packages per the `ddd-tactical-design` layering — in this project:
-   `scos-organization-api` (delegates), `scos-organization-usecase` (use cases),
-   `scos-organization-domain` (entities/domain services), `scos-organization-infrastructure`.
+   `flow-organization-api` (delegates), `flow-organization-usecase` (use cases),
+   `flow-organization-domain` (entities/domain services), `flow-organization-infrastructure`.
    This skill owns the `api` module wiring; the domain comes from the DDD skill.
 3. Build the web layer thin, in SCOS style (see the `scos-conventions` skill):
    - Define the contract in `etc/api/organization/*.yml` (OpenAPI 3) first.

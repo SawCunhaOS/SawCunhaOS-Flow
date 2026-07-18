@@ -10,15 +10,15 @@ description: >
   SQL migrations / queries actually work against the real engine — even if they
   don't name Testcontainers. Also trigger for "test against a real database
   instead of H2" and for speeding up an integration suite. Targets Testcontainers
-  with the current stable Spring Boot 4.0.x / Java 25 / JUnit 5.
+  with the current stable Spring Boot 4.X.X / Java 25 / JUnit 5.
 ---
 
-# Testcontainers Integration Testing (Spring Boot 4.0.x / Java 25)
+# Testcontainers Integration Testing (Spring Boot 4.X.X / Java 25)
 
 This skill covers integration tests that exercise real backing services in
 throwaway Docker containers, so you test against the engine you actually run in
 production instead of an H2 stand-in that quietly behaves differently. Targets
-Spring Boot 4.0.x, JUnit Jupiter, and Spring Boot's first-class Testcontainers
+Spring Boot 4.X.X, JUnit Jupiter, and Spring Boot's first-class Testcontainers
 support (`@ServiceConnection`), which auto-wires connection details with no
 manual property plumbing.
 

@@ -11,7 +11,7 @@
 > **Regra**: Uma ideia = uma funcionalidade. Features independentes → arquivos separados.
 
 - **Nome da funcionalidade**: `config-build-imagem-e-properties-docker`
-- **Resumo em uma frase**: Configurar `spring-boot-maven-plugin` (buildpacks) em `scos-organization-boot` e `scos-organization-grpc-boot` pra gerar imagem local com nome/builder fixos, e maximizar o que é configurável via env var (`${VAR:default}`, default = comportamento de hoje) — topologia de rede, portas e tuning operacional — pra uma **mesma imagem** servir dev local, docker, e instalação on-premise de qualquer cliente sem rebuild nem edição de arquivo.
+- **Resumo em uma frase**: Configurar `spring-boot-maven-plugin` (buildpacks) em `flow-organization-boot` e `flow-organization-grpc-boot` pra gerar imagem local com nome/builder fixos, e maximizar o que é configurável via env var (`${VAR:default}`, default = comportamento de hoje) — topologia de rede, portas e tuning operacional — pra uma **mesma imagem** servir dev local, docker, e instalação on-premise de qualquer cliente sem rebuild nem edição de arquivo.
 
 > **Contexto confirmado com o usuário**: "diversos clientes" aqui significa **deploy separado por cliente** (on-premise/whitelabel) — cada cliente tem sua própria instância de Postgres/Keycloak/Redis/registry. Além disso, o ambiente de destino pode ter **restrição de quantas aplicações sobem** (infra pequena/compartilhada) — por isso o objetivo é maximizar o que dá pra reconfigurar via env var (host, porta, pool, timeout, toggle) sem precisar de imagem diferente por cliente. Isso valida o mecanismo de placeholder+env var (padrão 12-factor): cada instalação seta suas próprias env vars, sem depender de um serviço central. Ver seção de Decisões pra detalhe sobre Config Server.
 
@@ -25,10 +25,10 @@
 ## 1️⃣ Visão
 
 ### Problema
-Nenhum dos 2 módulos deployáveis (`scos-organization-boot`, `scos-organization-grpc-boot`) tem o bloco `<image>` configurado no `spring-boot-maven-plugin` — `mvn spring-boot:build-image` funciona só de forma ad-hoc, sem nome/builder/tuning definidos. Além disso, `application.yml`/`bootstrap.yml` de ambos os módulos têm `datasource.url`, `security.keycloak.issuer-uri`, `cache.sentinels` e (só no `boot`) `registry.host` hardcoded pra `localhost` — dentro de um container, `localhost` aponta pro próprio container, não pros serviços de infra reais. Isso bloqueia qualquer cenário que precise rodar a imagem containerizada apontando pra infra real: ambiente de testes k6 ([[suite-testes-k6-ambiente-integracao]]) hoje, e **deploy on-premise por cliente** amanhã — cada cliente com seu próprio Postgres/Keycloak/Redis/registry.
+Nenhum dos 2 módulos deployáveis (`flow-organization-boot`, `flow-organization-grpc-boot`) tem o bloco `<image>` configurado no `spring-boot-maven-plugin` — `mvn spring-boot:build-image` funciona só de forma ad-hoc, sem nome/builder/tuning definidos. Além disso, `application.yml`/`bootstrap.yml` de ambos os módulos têm `datasource.url`, `security.keycloak.issuer-uri`, `cache.sentinels` e (só no `boot`) `registry.host` hardcoded pra `localhost` — dentro de um container, `localhost` aponta pro próprio container, não pros serviços de infra reais. Isso bloqueia qualquer cenário que precise rodar a imagem containerizada apontando pra infra real: ambiente de testes k6 ([[suite-testes-k6-ambiente-integracao]]) hoje, e **deploy on-premise por cliente** amanhã — cada cliente com seu próprio Postgres/Keycloak/Redis/registry.
 
 ### Objetivo
-- `pom.xml` de `scos-organization-boot` e `scos-organization-grpc-boot` com `<image>` configurado: nome fixo, builder pinado, `pullPolicy`, env de build tunados pra performance
+- `pom.xml` de `flow-organization-boot` e `flow-organization-grpc-boot` com `<image>` configurado: nome fixo, builder pinado, `pullPolicy`, env de build tunados pra performance
 - `application.yml`/`bootstrap.yml` dos 2 módulos com **topologia (host+porta de DB/Keycloak/Redis/Registry), porta da própria app, pool de conexão, toggles e tuning operacional** como placeholder `${VAR:default}` — mesmo arquivo funciona local (sem setar nada, cai no default de hoje), em docker, ou numa instalação on-premise pequena/restrita, só setando env var
 - Corrigir a inconsistência encontrada em `scos.cache.master` do `grpc-boot`
 - Deixar explícito o que **não** vira placeholder (identidade do sistema, convenções de arquitetura JPA/Hibernate) e o que é segredo (tratado em ideia própria, Jasypt)
@@ -284,8 +284,8 @@ Com "diversos clientes" confirmado como **deploy separado por cliente**, os segr
 - `grpc/scos-organization-grpc-boot/src/main/resources/logback-spring.xml` — idem
 
 ### Tarefas
-- [ ] **T-01**: Configurar `<image>` no pom do `scos-organization-boot`
-- [ ] **T-02**: Configurar `<image>` no pom do `scos-organization-grpc-boot`
+- [ ] **T-01**: Configurar `<image>` no pom do `flow-organization-boot`
+- [ ] **T-02**: Configurar `<image>` no pom do `flow-organization-grpc-boot`
 - [ ] **T-03**: `application.yml` do `boot` — placeholder de topologia+porta (DB, Keycloak, Redis)
 - [ ] **T-04**: `application.yml` do `boot` — placeholder de pool de conexão (principal + auditoria)
 - [ ] **T-05**: `application.yml` do `boot` — placeholder de toggles e tuning fino (cache, jdempotent, privacy)

@@ -1,6 +1,6 @@
 # Project skeleton — pom, layout, config
 
-Maven, Java 25, Spring Boot 4.0.x, SCOS BOM. The defining choice: import
+Maven, Java 25, Spring Boot 4.X.X, SCOS BOM. The defining choice: import
 `br.com.sawcunhaos:scos-bom` for dependency management instead of inheriting
 `spring-boot-starter-parent`, and declare dependencies without versions.
 
@@ -89,7 +89,7 @@ Maven, Java 25, Spring Boot 4.0.x, SCOS BOM. The defining choice: import
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <!-- align the plugin version with the Spring Boot line the BOM pins (4.0.x) -->
+        <!-- align the plugin version with the Spring Boot line the BOM pins (4.X.X) -->
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -112,7 +112,7 @@ Maven, Java 25, Spring Boot 4.0.x, SCOS BOM. The defining choice: import
 Note: since the project doesn't inherit `spring-boot-starter-parent`, the
 `spring-boot-maven-plugin` isn't given a version by a parent. Manage it in
 `<pluginManagement>` with a `${spring-boot.version}` property kept in lockstep
-with the Spring Boot line the SCOS BOM pins (the current 4.0.x), so the plugin
+with the Spring Boot line the SCOS BOM pins (the current 4.X.X), so the plugin
 and the runtime never drift apart.
 
 ## Package layout

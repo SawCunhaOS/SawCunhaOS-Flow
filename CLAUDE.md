@@ -6,7 +6,7 @@
 
 ## Convenções rápidas do projeto
 
-**Módulos Maven:** `scos-organization-api` (delegates) | `scos-organization-usecase` (use cases) | `scos-organization-domain` (entidades/repos/domain services) | `scos-organization-infrastructure` | `scos-organization-boot` (Liquibase/config).
+**Módulos Maven:** `flow-organization-api` (delegates) | `flow-organization-usecase` (use cases) | `flow-organization-domain` (entidades/repos/domain services) | `flow-organization-infrastructure` | `flow-organization-boot` (Liquibase/config).
 
 **Pacote base:** `br.com.sawcunhaos.organization`
 

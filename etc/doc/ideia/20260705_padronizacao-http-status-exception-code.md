@@ -34,7 +34,7 @@ ExceptionsHandler.handleScosException()
   → ResponseEntity.status(...)
 ```
 
-Mas `ExceptionCodeError` (`scos-organization-shared`) hoje tem:
+Mas `ExceptionCodeError` (`flow-organization-shared`) hoje tem:
 ```java
 @Override
 public int getHttpCode() {

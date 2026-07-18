@@ -9,24 +9,24 @@ description: >
   models — even if they don't say "DDD" explicitly. Also use it when the user
   asks to review whether a service "follows DDD", to refactor an anemic model,
   or to decide where a piece of logic belongs (domain vs application vs
-  infrastructure). Targets the current stable Spring Boot 4.0.x / Spring
+  infrastructure). Targets the current stable Spring Boot 4.X.X / Spring
   Framework 7 / Java 25.
 ---
 
-# DDD Tactical Design (Java 25 / Spring Boot 4.0.x)
+# DDD Tactical Design (Java 25 / Spring Boot 4.X.X)
 
 This skill helps build and review domain models using DDD tactical patterns. It
-targets the current stable Spring Boot 4.0.x line (Spring Framework 7, Java 25,
+targets the current stable Spring Boot 4.X.X line (Spring Framework 7, Java 25,
 JSpecify null-safety, Jakarta EE, Hibernate 7) and assumes the user keeps the
 patch version current — when a concrete version string is needed in config,
-prefer the latest stable 4.0.x rather than pinning an old patch. The goal is a
+prefer the latest stable 4.X.X rather than pinning an old patch. The goal is a
 domain layer that expresses business rules clearly and stays independent of
 frameworks, with Spring wiring pushed to the edges.
 
 ## Project foundation — the SCOS BOM (required)
 
 Projects in this ecosystem use the user's own Bill of Materials, which pins the
-whole stack (Spring Boot 4.0.x, Spring Framework 7, Hibernate 7, Jackson 3,
+whole stack (Spring Boot 4.X.X, Spring Framework 7, Hibernate 7, Jackson 3,
 JUnit Jupiter, Mockito, Testcontainers, Lombok, MapStruct, and more). When
 scaffolding any module or pom, import it in `dependencyManagement` and declare
 dependencies WITHOUT versions — the BOM manages them. Do not import other BOMs

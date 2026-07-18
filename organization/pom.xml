@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>br.com.sawcunhaos</groupId>
+        <artifactId>flow</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modules>
+        <module>flow-organization-grpc-proto</module>
+        <module>flow-organization-shared</module>
+        <module>flow-organization-infrastructure</module>
+        <module>flow-organization-domain</module>
+        <module>flow-organization-usecase</module>
+        <module>flow-organization-api</module>
+        <module>flow-organization-boot</module>
+        <module>flow-organization-grpc-boot</module>
+        <module>flow-security-starter</module>
+    </modules>
+
+    <groupId>br.com.sawcunhaos.flow</groupId>
+    <artifactId>organization</artifactId>
+    <packaging>pom</packaging>
+
+    <properties>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>br.com.sawcunhaos.flow</groupId>
+                <artifactId>flow-organization-shared</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.sawcunhaos.flow</groupId>
+                <artifactId>flow-organization-infrastructure</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.sawcunhaos.flow</groupId>
+                <artifactId>flow-organization-domain</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.sawcunhaos.flow</groupId>
+                <artifactId>flow-organization-usecase</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.sawcunhaos.flow</groupId>
+                <artifactId>flow-organization-grpc-proto</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.sawcunhaos.flow</groupId>
+                <artifactId>flow-organization-api</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.sawcunhaos.flow</groupId>
+                <artifactId>flow-organization-resources</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.sawcunhaos.flow</groupId>
+                <artifactId>flow-security-starter</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+</project>

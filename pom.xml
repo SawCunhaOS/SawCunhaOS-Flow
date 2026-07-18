@@ -18,15 +18,11 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>scos-organization-domain</module>
-        <module>scos-organization-api</module>
-        <module>scos-organization-usecase</module>
-        <module>scos-organization-boot</module>
-        <module>scos-organization-infrastructure</module>
-        <module>scos-security-starter</module>
-        <module>grpc/scos-organization-grpc-boot</module>
-        <module>grpc/scos-organization-grpc-proto</module>
-        <module>scos-organization-shared</module>
+        <module>organization</module>
+        <module>notification</module>
+        <module>geotemporal</module>
+        <module>infrastructure</module>
+        <module>organization/flow-organization-resources</module>
     </modules>
 
     <parent>
@@ -36,12 +32,11 @@
         <relativePath/>
     </parent>
 
-    <artifactId>scos-organization</artifactId>
+    <artifactId>flow</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
-    <name>SCOS Organization</name>
-    <description>Organization and company management system for SCOS, supporting headquarters and branch structures, business users, company configuration, and integration with external identity providers such as Keycloak.</description>
-    <url>https://github.com/SawCunhaOS/SawCunhaOS-Organization</url>
+    <name>SCOS Flow</name>
+    <description>Flow: An enterprise corporate and organization management system for SCOS supporting headquarters and branch operations, company configuration, and secure business user access. Built to mitigate labor risks through shift-aligned system access controls, protect company assets with immediate employee offboarding, and optimize regional efficiency using multi-level holiday calendars with custom operational tags and high-volume communication tools.</description>
     <inceptionYear>2026</inceptionYear>
 
     <licenses>
@@ -54,9 +49,9 @@
     </licenses>
 
     <scm>
-        <url>https://github.com/SawCunhaOS/SawCunhaOS-Organization</url>
-        <connection>scm:git:git://github.com/SawCunhaOS/SawCunhaOS-Organization.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/SawCunhaOS/SawCunhaOS-Organization.git</developerConnection>
+        <url>https://github.com/SawCunhaOS/SawCunhaOS-Flow</url>
+        <connection>scm:git:git://github.com/SawCunhaOS/SawCunhaOS-Flow.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/SawCunhaOS/SawCunhaOS-Flow.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
@@ -83,12 +78,12 @@
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/SawCunhaOS/SawCunhaOS-Organization/issues</url>
+        <url>https://github.com/SawCunhaOS/SawCunhaOS-Flow/issues</url>
     </issueManagement>
 
     <ciManagement>
         <system>GitHub Actions</system>
-        <url>https://github.com/SawCunhaOS/SawCunhaOS-Organization/actions</url>
+        <url>https://github.com/SawCunhaOS/SawCunhaOS-Flow/actions</url>
     </ciManagement>
 
     <properties>
@@ -111,44 +106,6 @@
                 <scope>import</scope>
             </dependency>
 
-            <dependency>
-                <groupId>br.com.sawcunhaos</groupId>
-                <artifactId>scos-organization-domain</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>br.com.sawcunhaos</groupId>
-                <artifactId>scos-organization-usecase</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>br.com.sawcunhaos</groupId>
-                <artifactId>scos-organization-api</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>br.com.sawcunhaos</groupId>
-                <artifactId>scos-organization-infrastructure</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>br.com.sawcunhaos</groupId>
-                <artifactId>scos-security-starter</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>br.com.sawcunhaos</groupId>
-                <artifactId>scos-organization-shared</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-            </dependency>
-
-            <!-- GRPC -->
-            <dependency>
-                <groupId>br.com.sawcunhaos</groupId>
-                <artifactId>scos-organization-grpc-proto</artifactId>
-                <version>1.0.0-SNAPSHOT</version>
-            </dependency>
-
             <!-- Convergência de dependência (enforcer RequireUpperBoundDeps):
                  grpc-stub traz error_prone_annotations 2.45.0 (nearest), mas guava (2.47.0)
                  e gson (2.48.0) trazem versões maiores. Fixa no máximo da árvore. -->
@@ -157,6 +114,19 @@
                 <artifactId>error_prone_annotations</artifactId>
                 <version>2.48.0</version>
             </dependency>
+
+            <dependency>
+                <groupId>br.com.sawcunhaos.flow</groupId>
+                <artifactId>infrastructure</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>br.com.sawcunhaos.flow</groupId>
+                <artifactId>organization</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>

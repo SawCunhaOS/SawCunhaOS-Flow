@@ -6,14 +6,14 @@ description: >
   on security: securing REST endpoints, OAuth2/OIDC resource server, JWT
   validation, method security / @PreAuthorize, role and scope mapping, CORS/CSRF
   for APIs, the current user, permission checks, or encrypting secrets — even if
-  they don't name Spring Security. Targets the current stable Spring Boot 4.0.x /
+  they don't name Spring Security. Targets the current stable Spring Boot 4.X.X /
   Spring Security 7 / Java 25, and integrates the SCOS foundation's security
   pieces (ScosUserAuthentication, ScosPermission, ScosFeature, ScosSecurityException,
   Jasypt). Follows the SCOS conventions (controllers under /api, errors via the
   foundation ExceptionsHandler).
 ---
 
-# Spring Security for SCOS (Security 7 / Spring Boot 4.0.x)
+# Spring Security for SCOS (Security 7 / Spring Boot 4.X.X)
 
 This skill secures and reviews SCOS services. Default posture for a SCOS API
 behind an identity provider: a **stateless OAuth2 resource server** validating

@@ -23,7 +23,7 @@
 ## 1️⃣ Visão
 
 ### Problema
-`scos-organization-boot` e `scos-organization-grpc-boot` têm 5 segredos hardcoded em texto plano nos arquivos de config versionados: `scos.datasource.password`, `scos.audit.datasource.password`, `scos.cache.password` (todos `scos#2026`), `scos.registry.key-access` (`ABLABLABLA`, valor claramente fake) e `scos.privacy.crypto.secret` (`ASDASDASDA`, idem). Isso foi tolerável enquanto só existia 1 ambiente de dev compartilhado. Com o modelo confirmado de **deploy separado por cliente** (on-premise/whitelabel, ver [[config-build-imagem-e-properties-docker]]), isso vira 2 problemas reais:
+`flow-organization-boot` e `flow-organization-grpc-boot` têm 5 segredos hardcoded em texto plano nos arquivos de config versionados: `scos.datasource.password`, `scos.audit.datasource.password`, `scos.cache.password` (todos `scos#2026`), `scos.registry.key-access` (`ABLABLABLA`, valor claramente fake) e `scos.privacy.crypto.secret` (`ASDASDASDA`, idem). Isso foi tolerável enquanto só existia 1 ambiente de dev compartilhado. Com o modelo confirmado de **deploy separado por cliente** (on-premise/whitelabel, ver [[config-build-imagem-e-properties-docker]]), isso vira 2 problemas reais:
 
 1. **Cada cliente precisa da sua própria credencial** — não dá pra todo cliente usar a mesma senha de banco/Redis/registry
 2. `scos.privacy.crypto.secret` é a chave que cifra dado sensível (PII) em repouso — se toda instalação usar a mesma chave hardcoded no jar/imagem, um vazamento em qualquer cliente compromete a cifra de **todos os outros clientes** também. Não é só má prática, é risco de segurança concreto num produto multi-cliente
@@ -45,7 +45,7 @@ A skill `spring-security-scos` já documenta o padrão SCOS esperado: segredo se
 ## 2️⃣ Requisitos
 
 ### Funcionais
-- [ ] **RF-01**: Adicionar dependência `com.github.ulisesbocchio:jasypt-spring-boot-starter` (sem version — já gerenciada em `scos-bom`) no `pom.xml` de `scos-organization-boot` e `scos-organization-grpc-boot`
+- [ ] **RF-01**: Adicionar dependência `com.github.ulisesbocchio:jasypt-spring-boot-starter` (sem version — já gerenciada em `scos-bom`) no `pom.xml` de `flow-organization-boot` e `flow-organization-grpc-boot`
 - [ ] **RF-02**: `scos.datasource.password` e `scos.audit.datasource.password` viram `${SCOS_DB_PASSWORD:scos#2026}` (mesma env var reaproveitada entre principal/auditoria, mesma instância física — mesmo padrão de reaproveitamento já usado pra `SCOS_DB_HOST` na outra ideia)
 - [ ] **RF-03**: `scos.cache.password` vira `${SCOS_CACHE_PASSWORD:scos#2026}`
 - [ ] **RF-04**: `scos.registry.key-access` (`bootstrap.yml`, só `boot`) vira `${SCOS_REGISTRY_KEY_ACCESS:ABLABLABLA}` — default mantém o valor fake de hoje só pra não quebrar dev local; qualquer deploy real **precisa** sobrescrever

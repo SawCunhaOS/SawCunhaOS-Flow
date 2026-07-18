@@ -28,7 +28,7 @@ Repositório hoje não tem nenhum teste (`src/test` = 0 arquivos em todo o proje
 
 ### Objetivo
 Runner bash reproduzível localmente que:
-1. Builda imagens `scos-organization-boot` e `scos-organization-grpc-boot`
+1. Builda imagens `flow-organization-boot` e `flow-organization-grpc-boot`
 2. Sobe infra completa (reuso dos composes existentes de `etc/infra/` + novo compose de apps)
 3. Popula `seed_data.sql` (dados base) após o schema (Liquibase roda no start da app)
 4. Roda k6 — cenários funcionais (checks de contrato, REST e gRPC) e cenários de carga (thresholds p95/p99)
@@ -46,8 +46,8 @@ Critério de sucesso: `runner.sh` executa do zero ao fim sem intervenção manua
 ## 2️⃣ Requisitos
 
 ### Funcionais
-- [ ] **RF-01**: Runner builda imagem `scos-organization-boot` via `mvn spring-boot:build-image`
-- [ ] **RF-02**: Runner builda imagem `scos-organization-grpc-boot` via `mvn spring-boot:build-image`
+- [ ] **RF-01**: Runner builda imagem `flow-organization-boot` via `mvn spring-boot:build-image`
+- [ ] **RF-02**: Runner builda imagem `flow-organization-grpc-boot` via `mvn spring-boot:build-image`
 - [ ] **RF-03**: Novo compose `etc/tests/k6/docker-compose-apps.yml` sobe as 2 imagens na rede `scos_network`
 - [ ] **RF-04**: Runner sobe infra completa combinando `-f docker-compose-database.yml -f docker-compose-keycloak.yml -f docker-compose-redis.yml -f etc/tests/k6/docker-compose-apps.yml` (reuso dos composes existentes de `etc/infra/`, sem duplicar configuração)
 - [ ] **RF-05**: Runner aguarda todos os containers ficarem prontos antes de seguir — infra (`postgresql`, `keycloak`, `redis`) via `HEALTHCHECK` nativo do compose; apps via polling HTTP (`GET /actuator/health`), já que a imagem usa builder `jammy-tiny` sem shell/curl (ver [[config-build-imagem-e-properties-docker]])

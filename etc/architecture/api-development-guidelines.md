@@ -1,10 +1,10 @@
 # Diretrizes de desenvolvimento — API (scos-organization-api → scos-organization-domain)
 
 ## Objetivo
-Documentar as **regras, convenções e checklist** para criar/alterar uma API desde o módulo `scos-organization-api` até `scos-organization-domain`, garantindo consistência entre contrato (OpenAPI), código (permissões, features), persistência (Liquibase) e testes.
+Documentar as **regras, convenções e checklist** para criar/alterar uma API desde o módulo `flow-organization-api` até `flow-organization-domain`, garantindo consistência entre contrato (OpenAPI), código (permissões, features), persistência (Liquibase) e testes.
 
 ## Escopo
-- Módulos: `scos-organization-api`, `scos-organization-usecase`, `scos-organization-domain`, `scos-organization-infrastructure`, `scos-organization-boot`.
+- Módulos: `flow-organization-api`, `flow-organization-usecase`, `flow-organization-domain`, `flow-organization-infrastructure`, `flow-organization-boot`.
 - Artefatos: OpenAPI (`etc/api/organization/*.yml`), enums de permission/feature, Use Cases, Entities, Repositories, changelogs Liquibase, seeds (`configure_system.sql`), testes e CI.
 
 ---
@@ -187,7 +187,7 @@ public class DepartmentDelegate implements DepartmentApiDelegate {
 ```
 
 ## Estrutura do Liquibase
-- **Changelogs:** Localizados no módulo `scos-organization-boot` em `src/main/resources/db/changelog/`, organizados por versão e tipo de alteração.
+- **Changelogs:** Localizados no módulo `flow-organization-boot` em `src/main/resources/db/changelog/`, organizados por versão e tipo de alteração.
 - **Regras:**
   - Todos os arquivos devem ser feitos com yml para manter consistência.
   - A Criação de views, functions, procedures e triggers deve ser criada em `sql` e feita via Liquibase, garantindo que a estrutura do banco de dados esteja sempre versionada e alinhada com o código.
@@ -359,7 +359,7 @@ if (!departmentRepository.existsById(id)) {
    - Criar a constante em `ScosOrganizationPermission.java` com o mesmo nome.
    - Atualizar `ScosOrganizationFeature.java` se precisar de nova feature.
    - Atualizar Keycloak realm / seed DB conforme necessário.
-   - Rodar o teste `PermissionsConsistencyTest` (módulo `scos-organization-infrastructure`) para validar consistência.
+   - Rodar o teste `PermissionsConsistencyTest` (módulo `flow-organization-infrastructure`) para validar consistência.
 
 2. Padrão de mapeamento sugerido:
    - Endpoints de leitura → `*_VIEW` + `ORGANIZATION_VIEW`
@@ -371,7 +371,7 @@ if (!departmentRepository.existsById(id)) {
    - Segunda opção: arquivo YAML em `etc/security/permissions.yml` seguido de um job que sincronize com Keycloak/DB.
 
 ### Automação / validação disponível
-- `PermissionsConsistencyTest` (módulo `scos-organization-infrastructure`): valida que todo `x-authorize` nos OpenAPI YAMLs possui constante em `ScosOrganizationPermission`.
+- `PermissionsConsistencyTest` (módulo `flow-organization-infrastructure`): valida que todo `x-authorize` nos OpenAPI YAMLs possui constante em `ScosOrganizationPermission`.
 - Recomenda-se adicionar CI step que execute esse teste para evitar drift.
 
 ### Exemplo prático (trecho)

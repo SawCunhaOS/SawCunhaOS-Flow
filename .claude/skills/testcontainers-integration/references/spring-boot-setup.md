@@ -1,6 +1,6 @@
-# Testcontainers + Spring Boot 4.0.x — setup
+# Testcontainers + Spring Boot 4.X.X — setup
 
-Maven, Java 25, JUnit 5, Spring Boot 4.0.x. The key modern pieces are
+Maven, Java 25, JUnit 5, Spring Boot 4.X.X. The key modern pieces are
 `spring-boot-testcontainers` and `@ServiceConnection`, which remove the manual
 property wiring older guides show.
 
