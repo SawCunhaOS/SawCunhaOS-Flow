@@ -1,4 +1,4 @@
-# Externalização e Cifra de Segredos (Jasypt) em scos-organization-boot/grpc-boot
+# Externalização e Cifra de Segredos (Jasypt) em flow-organization-boot/grpc-boot
 
 **Data**: 2026-07-05
 **Status**: 🔄 Em Análise
@@ -64,20 +64,20 @@ A skill `spring-security-scos` já documenta o padrão SCOS esperado: segredo se
 
 ### Componentes Afetados
 ```
-scos-organization-boot/pom.xml
+flow-organization-boot/pom.xml
 └── adiciona dependency com.github.ulisesbocchio:jasypt-spring-boot-starter
 
-scos-organization-boot/src/main/resources/application.yml
+flow-organization-boot/src/main/resources/application.yml
 └── datasource.password, audit.datasource.password, cache.password,
     privacy.crypto.secret: texto plano → ${VAR:valor-de-dev-atual}
 
-scos-organization-boot/src/main/resources/bootstrap.yml
+flow-organization-boot/src/main/resources/bootstrap.yml
 └── registry.key-access: texto plano → ${VAR:valor-de-dev-atual}
 
-grpc/scos-organization-grpc-boot/pom.xml
+grpc/flow-organization-grpc-boot/pom.xml
 └── adiciona dependency com.github.ulisesbocchio:jasypt-spring-boot-starter
 
-grpc/scos-organization-grpc-boot/src/main/resources/application.yml
+grpc/flow-organization-grpc-boot/src/main/resources/application.yml
 └── mesmos placeholders que o boot (sem registry, que só existe no boot)
 ```
 
@@ -115,11 +115,11 @@ Deploy real (cliente X)
 ### Arquivos
 
 **Modificados**:
-- `scos-organization-boot/pom.xml` — adiciona `jasypt-spring-boot-starter`
-- `scos-organization-boot/src/main/resources/application.yml` — segredos viram placeholder
-- `scos-organization-boot/src/main/resources/bootstrap.yml` — `registry.key-access` vira placeholder
-- `grpc/scos-organization-grpc-boot/pom.xml` — adiciona `jasypt-spring-boot-starter`
-- `grpc/scos-organization-grpc-boot/src/main/resources/application.yml` — segredos viram placeholder
+- `flow-organization-boot/pom.xml` — adiciona `jasypt-spring-boot-starter`
+- `flow-organization-boot/src/main/resources/application.yml` — segredos viram placeholder
+- `flow-organization-boot/src/main/resources/bootstrap.yml` — `registry.key-access` vira placeholder
+- `grpc/flow-organization-grpc-boot/pom.xml` — adiciona `jasypt-spring-boot-starter`
+- `grpc/flow-organization-grpc-boot/src/main/resources/application.yml` — segredos viram placeholder
 
 ### Tarefas
 - [ ] **T-01**: Adicionar `jasypt-spring-boot-starter` no pom do `boot`

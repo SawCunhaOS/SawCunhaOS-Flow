@@ -70,7 +70,7 @@ O documento `07-mensagens-erro-pt-en.md` ficou defasado em relação ao código-
 
 ### Componentes Afetados
 ```
-scos-organization-shared
+flow-organization-shared
 ├── resources/scos_message_organization.properties     : modificação (COMPANY_003/006 wording)
 ├── resources/scos_message_organization_en.properties  : modificação (completar + corrigir)
 ├── resources/scos_message_validation.properties       : modificação (typo 009 + fix 006)
@@ -100,10 +100,10 @@ etc/doc/usecase/07-mensagens-erro-pt-en.md               : modificação (sincro
 
 **Modificados** (nenhum novo arquivo):
 - `etc/doc/usecase/07-mensagens-erro-pt-en.md`
-- `scos-organization-shared/src/main/resources/scos_message_organization.properties`
-- `scos-organization-shared/src/main/resources/scos_message_organization_en.properties`
-- `scos-organization-shared/src/main/resources/scos_message_validation.properties`
-- `scos-organization-shared/src/main/resources/scos_message_validation_en.properties`
+- `flow-organization-shared/src/main/resources/scos_message_organization.properties`
+- `flow-organization-shared/src/main/resources/scos_message_organization_en.properties`
+- `flow-organization-shared/src/main/resources/scos_message_validation.properties`
+- `flow-organization-shared/src/main/resources/scos_message_validation_en.properties`
 
 ### Tarefas
 - [x] **T-01**: Atualizar `07-mensagens-erro-pt-en.md` (tabela EN + notas) com o texto final acordado — feito (seção 2.4 corrigida; resto já batia)

@@ -174,7 +174,7 @@ Em `infrastructure`, lê os YAMLs de `../etc/api/organization` com snakeyaml (se
 
 `ScosComponents.yml` é excluído: é biblioteca de componentes, seu `GET /` é exemplo ilustrativo sem execution em nenhum módulo. Se `Files.list` não achar spec, o teste **falha** em vez de passar vazio.
 
-Mexeu em `x-authorize`? Rode: `mvn -pl scos-organization-infrastructure test -Dtest=PermissionsConsistencyTest -Denforcer.skip=true` (o `-Denforcer.skip` é necessário só enquanto o build estiver quebrado — ver *Build quebrado*).
+Mexeu em `x-authorize`? Rode: `mvn -pl flow-organization-infrastructure test -Dtest=PermissionsConsistencyTest -Denforcer.skip=true` (o `-Denforcer.skip` é necessário só enquanto o build estiver quebrado — ver *Build quebrado*).
 
 #### Integração — `ScosOrganizationTestUtil` (LEIA ANTES DE ESCREVER)
 
@@ -298,7 +298,7 @@ mvn test                       # unitários + integração (surefire, JVM único
 
 | Fonte | Afirma | Realidade |
 |---|---|---|
-| `api-development-guidelines.md` | DTOs gerados em `scos-organization-api/target/...` | Gerados em **`flow-organization-usecase`** (`generateModels=true` lá; `false` em `api`) |
+| `api-development-guidelines.md` | DTOs gerados em `flow-organization-api/target/...` | Gerados em **`flow-organization-usecase`** (`generateModels=true` lá; `false` em `api`) |
 | `api-development-guidelines.md` | Exemplo `DepartmentDomainService` | Nome real: `DepartmentServiceBean implements DepartmentService` (specification+Bean) |
 | `pom.xml` (`ciManagement`) | GitHub Actions | Sem `.github/workflows` |
 | `pom.xml` (raiz) | Build íntegro | **`mvn clean install` NÃO passa** — enforcer reprova (ver *Build quebrado*) |

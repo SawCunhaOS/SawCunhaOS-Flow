@@ -19,13 +19,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * Configuração do cliente gRPC que aponta para o scos-organization-grpc-boot.
+ * Configuração do cliente gRPC que aponta para o flow-organization-grpc-boot.
  *
  * <p><b>Modo discovery (recomendado — load balancing automático):</b>
  * <pre>
  * scos.registry:
  *   discovery-enabled: true
- *   service-name: scos-organization-grpc-boot   # nome registrado no Eureka
+ *   service-name: flow-organization-grpc-boot   # nome registrado no Eureka
  *   discovery-refresh-interval-seconds: 30       # re-resolução periódica (padrão: 30)
  *   system-name: meu-sistema
  *   system-code: MEU_SISTEMA
@@ -61,7 +61,7 @@ public class ScosRegistryProperties {
     /**
      * Nome do serviço registrado no Eureka.
      * Obrigatório quando discoveryEnabled = true.
-     * Exemplo: scos-organization-grpc-boot
+     * Exemplo: flow-organization-grpc-boot
      */
     private String serviceName;
 

@@ -98,7 +98,7 @@ Todas as entidades JPA e repositórios de `flow-organization-domain` devem refle
 
 ### Componentes Afetados
 ```
-scos-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/
+flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/
 ├── corporate/
 │   ├── company/internal/       : Company (mod), CompanyAddress (mod), CompanyContact (mod),
 │   │                              LegalNature (novo), Cnae (novo), CompanyCnaeSecondary (novo)
@@ -151,8 +151,8 @@ scos-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/
 
 ## 📎 Referências
 - Domain model: `etc/database/domain_model.md` (fonte da verdade do schema v2)
-- Migrations: `scos-organization-boot/src/main/resources/db/changelog/` (produzidas por `adequacao-liquibase-domain-model-v2`)
-- `checks.yml`: `scos-organization-boot/src/main/resources/db/changelog/checks/checks.yml` — vocabulário fechado de `STATUS`/`TYPE`/`ENTITY_TYPE`/`BACKEND`/`DAY_OF_WEEK`
+- Migrations: `flow-organization-boot/src/main/resources/db/changelog/` (produzidas por `adequacao-liquibase-domain-model-v2`)
+- `checks.yml`: `flow-organization-boot/src/main/resources/db/changelog/checks/checks.yml` — vocabulário fechado de `STATUS`/`TYPE`/`ENTITY_TYPE`/`BACKEND`/`DAY_OF_WEEK`
 - Rodada anterior de sync JPA (arquivada): `openspec/changes/archive/2026-06-08-atualizacao-models-dominio-conforme-banco/`
 - Change Liquibase que originou este gap: `openspec/changes/adequacao-liquibase-domain-model-v2/`
 

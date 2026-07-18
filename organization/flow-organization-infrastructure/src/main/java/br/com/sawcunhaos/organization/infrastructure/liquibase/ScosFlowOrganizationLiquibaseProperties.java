@@ -10,4 +10,6 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "scos.liquibase.organization")
 class ScosFlowOrganizationLiquibaseProperties extends BaseLiquibaseProperties {
 
+    private String changeLog = "classpath:/db/changelog/organization/db.changelog-master.yaml";
+
 }

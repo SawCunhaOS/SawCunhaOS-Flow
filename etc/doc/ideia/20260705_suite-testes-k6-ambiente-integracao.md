@@ -54,12 +54,12 @@ Critério de sucesso: `runner.sh` executa do zero ao fim sem intervenção manua
 - [ ] **RF-06**: Runner executa `seed_data.sql` via `docker compose exec -T postgresql psql -U ... -f -` após o schema (Liquibase, automático no start do boot) e antes do k6
 - [ ] **RF-07**: Scripts k6 organizados em `etc/tests/k6/functional/*.js` e `etc/tests/k6/load/*.js`
 - [ ] **RF-08**: Cenários funcionais cobrem fluxo de negócio ponta-a-ponta via REST (empresa → funcionário → login → permissão) com checks rígidos
-- [ ] **RF-09**: Cenário funcional gRPC usa `k6/net/grpc` carregando os `.proto` direto de `grpc/scos-organization-grpc-proto/src/main/proto` (`authority.proto`, `registry.proto`) — sem depender de server reflection
+- [ ] **RF-09**: Cenário funcional gRPC usa `k6/net/grpc` carregando os `.proto` direto de `grpc/flow-organization-grpc-proto/src/main/proto` (`authority.proto`, `registry.proto`) — sem depender de server reflection
 - [ ] **RF-10**: Cenários de carga usam executor `ramping-vus`/`constant-arrival-rate` com thresholds de p95/p99
 - [ ] **RF-11**: Runner finaliza com `docker compose down -v` (reset total de volume — isolamento de dado entre execuções)
 - [ ] **RF-12**: `etc/infra/keycloak/Scos_Realm.json` — remover `temporary`/`requiredActions: ["UPDATE_PASSWORD"]` do usuário `scos-api` (usado pelo k6 pra obter token). `scos-admin` mantém como está
 - [ ] **RF-13**: `docker-compose-apps.yml` define, pros 2 containers de app, os env vars documentados em [[config-build-imagem-e-properties-docker]] (`SCOS_DATASOURCE_URL`, `SCOS_AUDIT_DATASOURCE_URL`, `SCOS_SECURITY_KEYCLOAK_ISSUER_URI`, `SCOS_CACHE_SENTINELS`) apontando pros hostnames do compose (`postgresql`, `keycloak`, `redis`)
-- [ ] **RF-14**: `docker-compose-apps.yml` referencia as imagens `scos-organization-boot:local` / `scos-organization-grpc-boot:local` geradas por [[config-build-imagem-e-properties-docker]], e define `mem_limit` explícito pros 2 containers (valor combinado com `BPL_JVM_THREAD_COUNT` daquela ideia)
+- [ ] **RF-14**: `docker-compose-apps.yml` referencia as imagens `flow-organization-boot:local` / `flow-organization-grpc-boot:local` geradas por [[config-build-imagem-e-properties-docker]], e define `mem_limit` explícito pros 2 containers (valor combinado com `BPL_JVM_THREAD_COUNT` daquela ideia)
 
 ### Não-Funcionais
 - [ ] **RNF-01**: Execução 100% local por enquanto (sem dependência de CI)
@@ -73,7 +73,7 @@ Critério de sucesso: `runner.sh` executa do zero ao fim sem intervenção manua
 ```
 etc/tests/k6/ (novo)
 ├── runner.sh                      — orquestra build → up → wait → seed → k6 → down
-├── docker-compose-apps.yml        — sobe scos-organization-boot + scos-organization-grpc-boot
+├── docker-compose-apps.yml        — sobe flow-organization-boot + flow-organization-grpc-boot
 ├── functional/
 │   ├── organization-flow.test.js  — fluxo negócio REST (empresa→funcionário→login→permissão)
 │   └── grpc-flow.test.js          — chamadas unary/streaming via k6/net/grpc
@@ -151,6 +151,6 @@ mvn spring-boot:build-image (boot + grpc-boot)
 ## 📎 Referências
 - `etc/infra/README.md` — composes existentes, ordem de inicialização, endpoints de saúde
 - `etc/database/seed_data.sql` — dados base
-- `grpc/scos-organization-grpc-proto/src/main/proto/` — `authority.proto`, `registry.proto`
+- `grpc/flow-organization-grpc-proto/src/main/proto/` — `authority.proto`, `registry.proto`
 
 ---

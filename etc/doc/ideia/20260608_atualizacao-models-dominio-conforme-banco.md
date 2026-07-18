@@ -111,7 +111,7 @@ Todos os models JPA e repositórios do pacote `flow-organization-domain` devem r
 
 ### Componentes Afetados
 ```
-scos-organization-domain/src/main/java/.../domain/
+flow-organization-domain/src/main/java/.../domain/
 ├── model/
 │   ├── company/
 │   │   ├── Company.java              : modificação
@@ -322,7 +322,7 @@ scos-organization-domain/src/main/java/.../domain/
 
 ## 📎 Referências
 - `etc/database/domain_model.md` — fonte da verdade do schema
-- `scos-organization-boot/src/main/resources/db/changelog/v1.0.0/tables/` — migrations Liquibase por tabela
+- `flow-organization-boot/src/main/resources/db/changelog/v1.0.0/tables/` — migrations Liquibase por tabela
 - `openspec/changes/adequacao-liquibase-domain-model/` — change anterior que alinhou o Liquibase ao domain model
 
 ---

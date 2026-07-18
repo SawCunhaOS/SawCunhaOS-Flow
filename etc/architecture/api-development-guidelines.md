@@ -1,4 +1,4 @@
-# Diretrizes de desenvolvimento — API (scos-organization-api → scos-organization-domain)
+# Diretrizes de desenvolvimento — API (flow-organization-api → flow-organization-domain)
 
 ## Objetivo
 Documentar as **regras, convenções e checklist** para criar/alterar uma API desde o módulo `flow-organization-api` até `flow-organization-domain`, garantindo consistência entre contrato (OpenAPI), código (permissões, features), persistência (Liquibase) e testes.
@@ -37,7 +37,7 @@ Documentar as **regras, convenções e checklist** para criar/alterar uma API de
 ---
 
 ## Estrutura de Entidades
-- **Entities:** Representam o modelo de domínio, com regras de negócio e validações. Organizadas por **bounded context** em `scos-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/<bounded-context>/<agregado>/internal/`.
+- **Entities:** Representam o modelo de domínio, com regras de negócio e validações. Organizadas por **bounded context** em `flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/<bounded-context>/<agregado>/internal/`.
 - **Bounded contexts ativos:** `corporate/` (company, department, employee, position), `access/` (login, profile, resource, system, integration), `configuration/`.
 - **Estrutura por agregado:**
   - `internal/` — entidades JPA, enums, repositórios (acesso direto ao banco)
@@ -81,7 +81,7 @@ public class Company extends BaseEntity {
 ```
 
 ## Estrutura de Repositórios
-- **Repositories:** Interfaces que definem as operações de persistência, localizadas em `scos-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/<bounded-context>/<agregado>/internal/`.
+- **Repositories:** Interfaces que definem as operações de persistência, localizadas em `flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/<bounded-context>/<agregado>/internal/`.
 - **Exemplo:** `CompanyRepository`, `DepartmentRepository`.
 - **Regras de Negócio:** 
    - Repositórios devem ser usados apenas para operações de acesso a dados (CRUD).
@@ -110,7 +110,7 @@ public interface DepartmentRepository extends BaseJpaRepository<Department, Long
 }```
 
 ## Estrutura de Dominio
-- **Domain Services:** Contêm lógica de negócio que não pertence a uma única entidade, como validações complexas ou operações que envolvem múltiplas entidades. Localizados em `scos-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/<bounded-context>/<agregado>/service/` (implementação Bean) e `specification/` (interface).
+- **Domain Services:** Contêm lógica de negócio que não pertence a uma única entidade, como validações complexas ou operações que envolvem múltiplas entidades. Localizados em `flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/<bounded-context>/<agregado>/service/` (implementação Bean) e `specification/` (interface).
 - **Exemplo:** `DepartmentServiceBean implements DepartmentService` com métodos de validação como `validateDepartmentCodeExistsValidation`
 - **Regras de Negócio:** Validações como "código de departamento deve ser único" ou "empresa deve existir para criar departamento" devem residir em serviços de domínio, garantindo que as entidades permaneçam focadas em seu estado e comportamento.
 - **Exemplo de Código:**
@@ -133,7 +133,7 @@ public class DepartmentDomainService {
 ```
 
 ## Estrutura de Use Cases
-- **Use Cases:** Contêm a lógica de aplicação, orquestrando entidades e serviços para atender a um caso de uso específico. Localizados em `scos-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/<bounded-context>/<agregado>/`.
+- **Use Cases:** Contêm a lógica de aplicação, orquestrando entidades e serviços para atender a um caso de uso específico. Localizados em `flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/<bounded-context>/<agregado>/`.
 - **Padrão:** Interface pública (`FindDepartmentUseCase`) + implementação Bean package-private (`FindDepartmentUseCaseBean`), ambas no mesmo pacote.
 - **Exemplo:** `FindDepartmentUseCase`, `FindDepartmentUseCaseBean`.
 - **Regras de Negócio:** Use Cases devem ser transacionais e conter a lógica de orquestração, mas não regras de negócio complexas, que devem residir nas entidades ou serviços de domínio.
@@ -161,13 +161,13 @@ class FindDepartmentUseCaseBean implements FindDepartmentUseCase {
 ```
 
 ## Estrutura de Controllers
-- **Controllers (Delegates):** Implementam as interfaces geradas pelo OpenAPI generator, mapeando as requisições para os Use Cases. Localizados em `scos-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/<agregado>/`.
+- **Controllers (Delegates):** Implementam as interfaces geradas pelo OpenAPI generator, mapeando as requisições para os Use Cases. Localizados em `flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/<agregado>/`.
 - **Nomenclatura:** `<Agregado>Delegate implements <Agregado>ApiDelegate`.
 - **Regras de Negócio:** 
    - Delegates devem ser finos: apenas delegam para Use Cases e constroem o objeto de resposta com os DTOs gerados.
    - O contrato da API deve ser definido primeiro no OpenAPI (`etc/api/organization/*.yml`), e o delegate deve implementar a interface gerada a partir desse contrato.
    - DTOs gerados ficam em `target/generated-sources/openapi/src/main/java/br/com/sawcunhaos/organization/api/` e **não** devem ser editados manualmente.
-   - A interface `XxxApiDelegate` é gerada; a implementação manual fica em `scos-organization-api/src/main/java/.../delegate/`.
+   - A interface `XxxApiDelegate` é gerada; a implementação manual fica em `flow-organization-api/src/main/java/.../delegate/`.
 - **Exemplo de Código:**
 ```java
 @Component

@@ -93,7 +93,7 @@ Cada constante de `ExceptionCodeError` passa a carregar:
 
 ### Componentes Afetados
 ```
-scos-organization-shared
+flow-organization-shared
 ├── exception/ExceptionCodeError.java: modificação
 │   (novos campos httpCode + title; +2 argumentos em todas as 29 constantes; remove override manual de getHttpCode())
 ├── resources/scos_message_organization.properties: modificação (+7 chaves SCOS_TITLE_*)
@@ -182,9 +182,9 @@ ExceptionsHandler.handleScosException()
 ### Arquivos
 
 **Modificados**:
-- `scos-organization-shared/.../exception/ExceptionCodeError.java` — novos campos `httpCode` + `title`, argumentos em cada uma das 29 constantes, remove override manual de `getHttpCode()`
-- `scos-organization-shared/src/main/resources/scos_message_organization.properties` — +7 chaves `SCOS_TITLE_*` (PT-BR)
-- `scos-organization-shared/src/main/resources/scos_message_organization_en.properties` — +7 chaves `SCOS_TITLE_*` (EN)
+- `flow-organization-shared/.../exception/ExceptionCodeError.java` — novos campos `httpCode` + `title`, argumentos em cada uma das 29 constantes, remove override manual de `getHttpCode()`
+- `flow-organization-shared/src/main/resources/scos_message_organization.properties` — +7 chaves `SCOS_TITLE_*` (PT-BR)
+- `flow-organization-shared/src/main/resources/scos_message_organization_en.properties` — +7 chaves `SCOS_TITLE_*` (EN)
 
 ### Tarefas
 - [ ] **T-01**: Adicionar campo `private final int httpCode` e atualizar as 29 constantes com o valor da tabela acima

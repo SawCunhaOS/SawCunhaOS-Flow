@@ -171,7 +171,7 @@ PUT /companies/{id}/disable {reasonId, observation?}
 
 ## 📎 Referências
 - Domain model: `etc/database/domain_model.md`
-- `checks.yml`: `scos-organization-boot/src/main/resources/db/changelog/checks/checks.yml`
+- `checks.yml`: `flow-organization-boot/src/main/resources/db/changelog/checks/checks.yml`
 - Sync JPA (completo): `openspec/changes/atualizacao-entidades-jpa-liquibase-v2/`
 - Migrations v2: `openspec/changes/adequacao-liquibase-domain-model-v2/`
 

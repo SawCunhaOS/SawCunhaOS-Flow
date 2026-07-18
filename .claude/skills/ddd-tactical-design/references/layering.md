@@ -86,7 +86,7 @@ This project uses Maven modules (one per layer) with bounded-context grouping
 inside `flow-organization-domain`. The generic layout above maps to:
 
 ```
-scos-organization-domain      ← domain layer
+flow-organization-domain      ← domain layer
   br.com.sawcunhaos.organization.domain
   ├── corporate/
   │   ├── company/
@@ -105,21 +105,21 @@ scos-organization-domain      ← domain layer
   │   └── ...
   └── configuration/   (same structure)
 
-scos-organization-usecase     ← application layer
+flow-organization-usecase     ← application layer
   br.com.sawcunhaos.organization.application.usecase
   └── corporate/
       └── department/
           ├── FindDepartmentUseCase.java      (public interface)
           └── FindDepartmentUseCaseBean.java  (package-private @Service)
 
-scos-organization-api         ← interfaces/api layer
+flow-organization-api         ← interfaces/api layer
   br.com.sawcunhaos.organization.api
   └── delegate/
       └── department/
           └── DepartmentDelegate.java         (@Component implements DepartmentApiDelegate)
 
-scos-organization-infrastructure  ← infrastructure layer (JPA config, async, message, etc.)
-scos-organization-boot            ← app entry point + Liquibase changelogs
+flow-organization-infrastructure  ← infrastructure layer (JPA config, async, message, etc.)
+flow-organization-boot            ← app entry point + Liquibase changelogs
 ```
 
 Key differences from the generic template:

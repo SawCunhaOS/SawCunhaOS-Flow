@@ -167,7 +167,7 @@
                 </executions>
                 <configuration>
                     <image>
-                        <name>scos-organization-boot:local</name>
+                        <name>flow-organization-boot:local</name>
                         <builder>${paketo.builder}</builder>
                         <pullPolicy>IF_NOT_PRESENT</pullPolicy>
                         <env>

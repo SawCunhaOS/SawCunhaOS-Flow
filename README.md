@@ -129,19 +129,19 @@ Optamos por uma abordagem pragmática para evitar complexidade desnecessária:
 ```
 scos-organization/
 │
-├── 📦 scos-organization-domain/          # Camada de Domínio
+├── 📦 flow-organization-domain/          # Camada de Domínio
 │   └── Regras de negócio, entidades, repositories (interfaces)
 │
-├── 📦 scos-organization-application/     # Camada de Aplicação
+├── 📦 flow-organization-application/     # Camada de Aplicação
 │   └── Casos de uso, DTOs, Ports (interfaces para integração)
 │
-├── 📦 scos-organization-infrastructure/  # Camada de Infraestrutura
+├── 📦 flow-organization-infrastructure/  # Camada de Infraestrutura
 │   └── Adapters (implementam Ports), mensageria, configurações
 │
-├── 📦 scos-organization-api/             # Camada de API REST
+├── 📦 flow-organization-api/             # Camada de API REST
 │   └── Controllers, validações, mapeamento de requisições
 │
-├── 📦 scos-organization-boot/            # Módulo de Inicialização
+├── 📦 flow-organization-boot/            # Módulo de Inicialização
 │   └── Spring Boot application, migrations, configurações
 │
 └── pom.xml                                # Parent POM
@@ -150,14 +150,14 @@ scos-organization/
 ### Dependências entre Módulos
 
 ```
-scos-organization-boot
-    ├─→ scos-organization-api
-    │       └─→ scos-organization-application
-    │               └─→ scos-organization-domain
+flow-organization-boot
+    ├─→ flow-organization-api
+    │       └─→ flow-organization-application
+    │               └─→ flow-organization-domain
     │
-    └─→ scos-organization-infrastructure
-            └─→ scos-organization-application
-                    └─→ scos-organization-domain
+    └─→ flow-organization-infrastructure
+            └─→ flow-organization-application
+                    └─→ flow-organization-domain
 ```
 
 **Importante**: Infrastructure **NÃO** implementa interfaces do Domain. Infrastructure implementa **Ports** da Application.
@@ -166,7 +166,7 @@ scos-organization-boot
 
 ## 📦 Módulos
 
-### 1️⃣ Domain Layer (scos-organization-domain)
+### 1️⃣ Domain Layer (flow-organization-domain)
 
 **Responsabilidade**: Contém o **coração do sistema** - as regras de negócio puras.
 
@@ -300,7 +300,7 @@ public interface CompanyRepository extends JpaRepository<Company, UUID> {
 
 ---
 
-### 2️⃣ Application Layer (scos-organization-application)
+### 2️⃣ Application Layer (flow-organization-application)
 
 **Responsabilidade**: Orquestra os **casos de uso** e define **Ports** para integrações externas.
 
@@ -399,7 +399,7 @@ public class CreateCompanyUseCase {
 
 ---
 
-### 3️⃣ Infrastructure Layer (scos-organization-infrastructure)
+### 3️⃣ Infrastructure Layer (flow-organization-infrastructure)
 
 **Responsabilidade**: Implementa **Adapters** para as **Ports** e fornece configurações técnicas.
 
@@ -536,7 +536,7 @@ public class CreateCompanyUseCase {
 
 ---
 
-### 4️⃣ API Layer (scos-organization-api)
+### 4️⃣ API Layer (flow-organization-api)
 
 **Responsabilidade**: Expor **endpoints REST** e validar entradas.
 
@@ -594,7 +594,7 @@ public class CompanyController {
 
 ---
 
-### 5️⃣ Boot Module (scos-organization-boot)
+### 5️⃣ Boot Module (flow-organization-boot)
 
 **Responsabilidade**: **Inicializar** a aplicação e agregar todos os módulos.
 
@@ -854,10 +854,10 @@ mvn clean install
 mvn liquibase:update
 
 # 3. Iniciar aplicação
-mvn spring-boot:run -pl scos-organization-boot
+mvn spring-boot:run -pl flow-organization-boot
 
 # Ou via JAR
-java -jar scos-organization-boot/target/scos-organization-boot-1.0.0.jar
+java -jar flow-organization-boot/target/flow-organization-boot-1.0.0.jar
 ```
 
 ### Perfis de Ambiente

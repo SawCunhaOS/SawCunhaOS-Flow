@@ -22,9 +22,7 @@ final class ScosFlowOrganizationLiquibaseConfiguration {
 
     private final ScosFlowOrganizationLiquibaseProperties liquibaseProperties;
 
-
-
-    @Bean("ScosLiquibase")
+    @Bean("ScosFlowOrganizationLiquibase")
     @Primary
     @DependsOn("ScosDataSource")
     public MultiTenantSpringLiquibase ScosLiquibase(@Qualifier("ScosDataSource") DataSource dataSource) {

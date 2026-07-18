@@ -156,7 +156,7 @@ classes manually; implement the generated `XxxApiDelegate` interface instead.
 **Structure:**
 - Generated interface: `XxxApiDelegate` (in `target/generated-sources/...`, read-only)
 - Manual implementation: `XxxDelegate implements XxxApiDelegate` in
-  `scos-organization-api/src/main/java/.../api/delegate/<aggregate>/`
+  `flow-organization-api/src/main/java/.../api/delegate/<aggregate>/`
 - Annotated with `@Component` + `@RequiredArgsConstructor` + `@Slf4j`
 - Thin: delegates immediately to a Use Case, builds the generated response DTO
 

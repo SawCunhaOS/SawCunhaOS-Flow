@@ -146,7 +146,9 @@ management:
 
 scos:
   liquibase:
-    enabled: false
+    organization:
+      enabled: false
+      change-log: classpath:/db/changelog/organization/db.changelog-master.yml
   filter:
     show-request-body: false
     show-request-headers: false

@@ -63,14 +63,14 @@ Critério de sucesso: os 6 endpoints funcionam de acordo com as regras do Docume
 
 ### Componentes Afetados
 ```
-scos-organization-domain/.../corporate/position/
+flow-organization-domain/.../corporate/position/
 ├── dto/PositionInput.java              (novo)
 ├── dto/PositionOutput.java             (novo, com Department aninhado)
 ├── service/PositionMapper.java         (novo)
 ├── service/PositionServiceBean.java    (novo)
 └── specification/PositionService.java  (novo)
 
-scos-organization-usecase/.../usecase/corporate/position/
+flow-organization-usecase/.../usecase/corporate/position/
 ├── CreatePositionUseCase(+Bean).java   (novo)
 ├── UpdatePositionUseCase(+Bean).java   (novo)
 ├── FindPositionUseCase(+Bean).java     (novo)
@@ -78,7 +78,7 @@ scos-organization-usecase/.../usecase/corporate/position/
 ├── EnablePositionUseCase(+Bean).java   (novo)
 └── DisablePositionUseCase(+Bean).java  (novo)
 
-scos-organization-api/.../delegate/position/
+flow-organization-api/.../delegate/position/
 └── PositionDelegate.java               (novo, implements PositionApiDelegate)
 ```
 
@@ -133,7 +133,7 @@ Ver árvore da Seção 3.
 - `etc/doc/usecase/02-departamento-cargo.md` (Seção 3 — Cargo)
 - `etc/api/organization/ScosOrganization_Department-Position.yml`
 - `etc/doc/usecase/07-mensagens-erro-pt-en.md`
-- Padrão de referência: `scos-organization-domain/.../corporate/department/*`, `scos-organization-usecase/.../corporate/department/*`, `DepartmentDelegate.java`
+- Padrão de referência: `flow-organization-domain/.../corporate/department/*`, `flow-organization-usecase/.../corporate/department/*`, `DepartmentDelegate.java`
 - Padrão de arquitetura: `etc/architecture/api-development-guidelines.md`
 
 ---

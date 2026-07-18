@@ -61,15 +61,15 @@ O `Resource` recebeu upsert nativo condicional + `ScosException`/status gRPC, ma
 
 ### Componentes Afetados
 ```
-scos-organization-domain
+flow-organization-domain
 ├── access/system/service/ScosSystemServiceBean : register → upsert; findByCodeAndSecretKey → ScosException
 └── access/system/internal/ScosSystemRepository : +upsert nativo condicional
 
-scos-organization-shared
+flow-organization-shared
 ├── exception/ExceptionCodeError                : +SCOS_SYSTEM_00x (credencial inválida etc.)
 └── resources/scos_message_organization*.properties : +mensagens
 
-grpc/scos-organization-grpc-boot
+grpc/flow-organization-grpc-boot
 └── interceptor/TokenAuthorizationInterceptor   : deixar o ScosException fluir p/ o handler (ou mapear)
 ```
 
@@ -105,10 +105,10 @@ autenticação (interceptor): findByCodeAndSecretKey
 ### Arquivos
 
 **Modificados**:
-- `scos-organization-domain/.../system/internal/ScosSystemRepository.java` — +`upsert` nativo condicional (com `RETURNING`).
-- `scos-organization-domain/.../system/service/ScosSystemServiceBean.java` — `register` via upsert; `findByCodeAndSecretKey` → `ScosException`.
-- `scos-organization-shared/.../exception/ExceptionCodeError.java` — +`SCOS_SYSTEM_00x`.
-- `scos-organization-shared/.../resources/scos_message_organization{,_en}.properties` — +mensagens.
+- `flow-organization-domain/.../system/internal/ScosSystemRepository.java` — +`upsert` nativo condicional (com `RETURNING`).
+- `flow-organization-domain/.../system/service/ScosSystemServiceBean.java` — `register` via upsert; `findByCodeAndSecretKey` → `ScosException`.
+- `flow-organization-shared/.../exception/ExceptionCodeError.java` — +`SCOS_SYSTEM_00x`.
+- `flow-organization-shared/.../resources/scos_message_organization{,_en}.properties` — +mensagens.
 - `grpc/.../interceptor/TokenAuthorizationInterceptor.java` — tratar `ScosException` (deixar fluir ao handler, ou mapear para `UNAUTHENTICATED` com `code`).
 
 ### Tarefas
@@ -128,7 +128,7 @@ autenticação (interceptor): findByCodeAndSecretKey
 ---
 
 ## 📎 Referências
-- `scos-organization-domain/.../system/service/ScosSystemServiceBean.java` (register + findByCodeAndSecretKey)
+- `flow-organization-domain/.../system/service/ScosSystemServiceBean.java` (register + findByCodeAndSecretKey)
 - `grpc/.../interceptor/TokenAuthorizationInterceptor.java` (autenticação de sistema)
 - Padrão de referência (já implementado): `openspec/changes/permission-metadata-registry-enrichment/` (upsert condicional + handler)
 

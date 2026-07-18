@@ -260,7 +260,7 @@ Reescrever as migrations Liquibase para que `liquibase update` em banco limpo pr
 
 ### Componentes Afetados
 ```
-scos-organization-boot/src/main/resources/db/changelog/v1.0.0/tables/
+flow-organization-boot/src/main/resources/db/changelog/v1.0.0/tables/
 ├── tables.yml                            modificação — reordenar, adicionar novos, remover permission
 ├── scos_department.yml                   modificação — DESCRIPTION size, UPDATED_AT/USER_AT
 ├── scos_position.yml                     modificação — DESCRIPTION size, UPDATED_AT/USER_AT
@@ -377,4 +377,4 @@ Domain model (fonte da verdade) → Gap analysis → Reescrita migrations → li
 
 ## 📎 Referências
 - Domain model: `etc/database/domain_model.md`
-- Migrations atuais: `scos-organization-boot/src/main/resources/db/changelog/v1.0.0/tables/`
+- Migrations atuais: `flow-organization-boot/src/main/resources/db/changelog/v1.0.0/tables/`

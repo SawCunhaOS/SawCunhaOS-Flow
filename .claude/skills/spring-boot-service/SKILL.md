@@ -68,7 +68,7 @@ before producing substantial output.
 3. Build the web layer thin, in SCOS style (see the `scos-conventions` skill):
    - Define the contract in `etc/api/organization/*.yml` (OpenAPI 3) first.
    - Implement the generated `XxxApiDelegate` interface — one `@Component` class
-     per resource, in `scos-organization-api/src/.../api/delegate/<aggregate>/`.
+     per resource, in `flow-organization-api/src/.../api/delegate/<aggregate>/`.
    - Delegates accept and return generated DTOs; never expose domain aggregates or
      JPA entities.
    - Bean Validation (`@Valid`, `jakarta.validation` + the foundation's BR

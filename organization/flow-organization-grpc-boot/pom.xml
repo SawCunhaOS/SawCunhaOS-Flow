@@ -111,7 +111,7 @@
                 </executions>
                 <configuration>
                     <image>
-                        <name>scos-organization-grpc-boot:local</name>
+                        <name>flow-organization-grpc-boot:local</name>
                         <builder>${paketo.builder}</builder>
                         <pullPolicy>IF_NOT_PRESENT</pullPolicy>
                         <env>
