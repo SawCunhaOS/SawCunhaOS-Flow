@@ -12,6 +12,11 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
     -- uuid-ossp pode nao ter sido instalado pelo 10_postgis.sh
     CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+    -- pgmq: extensao pronta pra uso, sem fila criada ainda —
+    -- criar fila especifica com SELECT pgmq.create('nome_da_fila')
+    -- quando os topicos forem definidos
+    CREATE EXTENSION IF NOT EXISTS pgmq;
+
     -- Role da aplicacao (pula se for o mesmo superusuario ou ja existir)
     DO \$\$
     BEGIN
@@ -58,6 +63,8 @@ EOSQL
 # -----------------------------------------------------------------
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "postgres" <<-EOSQL
 
+    CREATE EXTENSION IF NOT EXISTS pg_cron;
+
     DO \$\$
     BEGIN
         IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$KC_DB_USER') THEN
@@ -68,5 +75,5 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "postgres" <<-EOSQL
 
     SELECT 'CREATE DATABASE "$KC_DB_NAME" OWNER "$KC_DB_USER"'
     WHERE NOT EXISTS (SELECT 1 FROM pg_database WHERE datname = '$KC_DB_NAME')\gexec
-
+    
 EOSQL
