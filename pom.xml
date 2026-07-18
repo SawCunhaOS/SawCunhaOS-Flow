@@ -23,6 +23,7 @@
         <module>geotemporal</module>
         <module>infrastructure</module>
         <module>organization/flow-organization-resources</module>
+        <module>server-fat</module>
     </modules>
 
     <parent>
@@ -123,11 +124,9 @@
 
             <dependency>
                 <groupId>br.com.sawcunhaos.flow</groupId>
-                <artifactId>organization</artifactId>
+                <artifactId>flow-security-starter</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
-
-
         </dependencies>
     </dependencyManagement>
 
