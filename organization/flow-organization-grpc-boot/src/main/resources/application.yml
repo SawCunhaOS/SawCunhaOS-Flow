@@ -28,7 +28,7 @@ scos:
       minimum-idle: ${SCOS_AUDIT_DATASOURCE_MINIMUM_IDLE}
       maximum-pool-size: ${SCOS_AUDIT_DATASOURCE_MAXIMUM_POOL_SIZE}
   security:
-    master-key: ${scos.security.master-key}
+    master-key: ${SCOS_SECURITY_MASTER_KEY}
     keycloak:
       client-id: ${SCOS_SECURITY_KEYCLOAK_CLIENT_ID}
       authorization-grant-type: ${SCOS_SECURITY_KEYCLOAK_AUTHORIZATION_GRANT_TYPE}
