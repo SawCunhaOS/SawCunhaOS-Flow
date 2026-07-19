@@ -41,7 +41,7 @@ public class SystemSecretCryptoService {
     @Value("${scos.security.iv-length:12}")
     private int ivLength = 12;
     @Value("${scos.security.tag-length:128}")
-    private int tagLength = 12;
+    private int tagLength = 128;
 
 
     private SecretKeySpec secretKey;
@@ -58,15 +58,15 @@ public class SystemSecretCryptoService {
         }
 
         if (ivLength < 12) {
-            log.error("iv-length deve ser maior que 12");
+            log.error("O Valor do iv-length deve ser maior ou igual a 12");
             throw new IllegalStateException(
-                    "iv-length deve ser maior que 12");
+                    "O Valor do iv-length deve ser maior ou igual a 12");
         }
 
         if (tagLength < 128) {
-            log.error("tag-length deve ser maior que 128");
+            log.error("O Valor do tag-length deve ser maior ou igual a 128");
             throw new IllegalStateException(
-                    "tag-length deve ser maior que 128");
+                    "O Valor do tag-length deve ser maior ou igual a 128");
         }
 
         this.secretKey = new SecretKeySpec(key, "AES");

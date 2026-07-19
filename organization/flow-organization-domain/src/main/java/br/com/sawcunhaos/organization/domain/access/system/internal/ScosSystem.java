@@ -90,4 +90,18 @@ public class ScosSystem extends BaseEntity {
         return secretKey != null && secretKeyCompare != null && MessageDigest.isEqual(
                 secretKey.getBytes(StandardCharsets.UTF_8), secretKeyCompare.getBytes(StandardCharsets.UTF_8));
     }
+
+    @Override
+    public String toString() {
+        return "ScosSystem{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", description='" + description + '\'' +
+                ", previousSecretExpiresAt=" + previousSecretExpiresAt +
+                ", status='" + status + '\'' +
+                ", version='" + version + '\'' +
+                ", updateRegistration=" + updateRegistration +
+                '}';
+    }
 }

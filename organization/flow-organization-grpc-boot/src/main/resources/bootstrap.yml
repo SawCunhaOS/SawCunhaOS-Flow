@@ -160,3 +160,4 @@ scos:
       enabled: false
   security:
     enabled: false
+    master-key: ${scos.security.master-key}
