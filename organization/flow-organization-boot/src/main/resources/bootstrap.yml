@@ -237,7 +237,7 @@ scos:
     key-prefix: ${scos.cache.key-prefix}
   security:
     enabled: true
-    master-key: ${scos.security.maser-key}
+    master-key: ${scos.security.master-key}
   registry:
     host: ${scos.registry.host}                 # host do scos-registry
     port: ${scos.registry.port}                      # porta gRPC
