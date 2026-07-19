@@ -32,7 +32,6 @@ import lombok.Setter;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -73,17 +72,17 @@ public class ScosSystem extends BaseEntity {
     @Transient
     private boolean updateRegistration = false;
 
-    public String rotateSecret(String newRawSecret) {
+    public String rotateSecret(String newRawSecret, LocalDateTime previousSecretExpiresAt) {
         this.previousSecretKey = this.secretKey;
         this.secretKey         = newRawSecret;
-        this.previousSecretExpiresAt   = LocalDateTime.now();
+        this.previousSecretExpiresAt   = previousSecretExpiresAt;
         return newRawSecret;
     }
 
-    public boolean matchesSecret(String provided, Duration grace) {
+    public boolean matchesSecret(String provided) {
         if (constantTimeEquals(secretKey, provided)) return true;
         boolean inGrace = previousSecretExpiresAt != null
-                && LocalDateTime.now().isBefore(previousSecretExpiresAt.plus(grace));
+                && LocalDateTime.now().isBefore(previousSecretExpiresAt);
         return inGrace && constantTimeEquals(previousSecretKey, provided);
     }
 

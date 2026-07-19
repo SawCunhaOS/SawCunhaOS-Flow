@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
-import java.time.Duration;
 import java.util.Base64;
 import java.util.Objects;
 
@@ -42,7 +41,6 @@ class ScosSystemServiceBean implements ScosSystemService {
     private final ScosSystemRepository scosSystemRepository;
     private final SystemSecretCryptoService systemSecretCryptoService;
     private static final SecureRandom RNG = new SecureRandom();
-    private static final Duration ONE_DAY = Duration.ofDays(1);
 
     @Override
     @Transactional(rollbackFor = ScosException.class)
@@ -102,7 +100,7 @@ class ScosSystemServiceBean implements ScosSystemService {
     public void validateSecretKey(@NonNull String code, @NonNull String secretKey) {
         ScosSystem scosSystem = getByCode(code);
 
-        if (scosSystem.matchesSecret(code, ONE_DAY) ) {
+        if (!scosSystem.matchesSecret(secretKey) ) {
             throw new ScosException(SCOS_SYSTEM_002);
         }
     }
