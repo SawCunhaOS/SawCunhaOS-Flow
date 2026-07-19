@@ -11,6 +11,8 @@ Este documento quebra em épicos e stories o escopo da **Etapa 1 (P0)** do PRD "
 
 **Estado real do código (auditoria + implementação já feita nesta sessão):** schema Liquibase da Etapa 1 já está implementado (`SCOS_LOGIN_APPROVAL_REQUEST`, `SCOS_SHIFT_ENFORCEMENT_LOG`, `DEPARTMENT.MANAGER_ID`, checks e triggers). A camada Java (entidades, Use Cases, Delegates, o Filter de turno) ainda não existe — é o que estes épicos cobrem.
 
+**Epic 0 (adicionado em 2026-07-19):** débito técnico de fundação — não vem de FR do PRD, vem de correção de padrão detectada em auditoria de código. Precede o Epic 1 porque padroniza uma convenção (tipos temporais) que os épicos de Governança de Turno (Epic 5) e Kill Switch (Epic 6) dependem para precisão de janela/latência.
+
 ## Requirements Inventory
 
 ### Functional Requirements
@@ -83,6 +85,8 @@ NFR-7 (Segurança de credenciais): nenhum segredo literal em YAML — só via Ja
 - **Vocabulário de enum é sempre em inglês** no código/schema (`PENDING_APPROVAL`, `SUPERVISOR`, `MANAGER`, `SYSTEM_ACCESS_GROUP`, `INDEFINITE`, `AUTO_CANCEL`, `PENDING`/`APPROVED`/`REJECTED`/`CANCELLED`) — rótulos em PT-BR só em mensagem ao usuário/diagrama, nunca no valor persistido.
 - **Convenções de nomenclatura já em vigor** (não redefinir): `SCOS_<ENTIDADE>`, `PK_SCOS_<T>`, `FK_<COL>_SCOS_<T>`, permissão `ACTION_RESOURCE`, erro `SCOS_<MÓDULO>_<NNN>`, `ScosException`/`ExceptionCodeError` (nunca `RuntimeException` cru), `@Transactional(rollbackFor = ScosException.class)` em Use Case de escrita.
 - **Open question não resolvida (não bloqueia stories de código, mas bloqueia decisão de deploy/CI):** qual módulo é o deployável real de produção — `server-fat` (composition root próprio, `ScosFlowApplication`, importa `organization` via BOM) ou `flow-organization-boot` standalone. Sinalizar para o time antes de configurar pipeline.
+- **AD-8 (Tipos temporais, adicionado em 2026-07-19):** `Instant`↔`TIMESTAMPTZ` (fato/instante), `LocalDate`↔`DATE` (calendário), `LocalTime`↔`TIME` (hora de parede/jornada). `LocalDateTime` proibido no domínio; `.now()` proibido no domínio — hora "agora" só via `Clock` injetável no Service. Formalizado no Epic 0 e replicado em `project-context.md`.
+- **AD-9 (Fuso horário por filial, adicionado em 2026-07-19):** `SCOS_COMPANY.TIME_ZONE` (IANA, `NOT NULL DEFAULT 'America/Sao_Paulo'`), `Company.timeZone` (`ZoneId`, `@Builder.Default`), resolução com herança defensiva subindo `parentCompany` (mesmo padrão de `CompanyServiceBean.depthOf()`, não CTE — AD-7 só exige CTE para descer subárvore). Fuso é imutável após criação (D3, Story 0.3) — sem endpoint de alteração nesta Etapa. `ShiftWindowEvaluator` (domain service novo, `domain/shift/`) é o único ponto de conversão `Instant`→hora local; trata turno que cruza meia-noite; limites `[startTime, endTime]` inclusivos.
 
 ### UX Design Requirements
 
@@ -113,6 +117,12 @@ FR-14: Epic 6 - Reativação não restaura sessão antiga
 
 ## Epic List
 
+### Epic 0: Fundação Técnica — Tipos Temporais e Relógio Injetável
+Débito técnico transversal, não mapeado a FR do PRD: padroniza a representação de tempo no domínio (`Instant` para instante/`TIMESTAMPTZ`, `LocalDate` para calendário/`DATE`, `LocalTime` para hora de parede/`TIME`, nunca `LocalDateTime`) e introduz `Clock` injetável para que nenhuma regra de negócio dependa de `.now()` estático; modela o fuso horário por filial (inexistente hoje) e entrega um avaliador de janela de turno reutilizável — pré-requisito de confiabilidade e de dado para Epic 5 (Governança de Turno) e Epic 6 (Kill Switch), onde precisão de janela/latência é crítica.
+**FRs covered:** Nenhuma — débito técnico (ver AD-8/AD-9 em Additional Requirements).
+**Depende de:** nenhum épico anterior (é fundação).
+**Nota:** Story 0.1 cobre testes do caminho crítico de autenticação de sistema (interceptor gRPC + cifra + validação de secret) e CI mínimo — pré-requisito de fato para considerar a Onda 2 (secret em repouso) entregue. Story 0.2 cobre a padronização de tipos temporais/Clock. Story 0.3 modela fuso horário por filial e o avaliador de janela de turno reutilizável — **pré-requisito bloqueante das stories de bloqueio de turno da Etapa 1 (Epic 5: FR-9, FR-10, FR-12)**, que hoje não têm de onde ler o fuso da filial.
+
 ### Epic 1: Estrutura Organizacional
 RH consegue montar e manter toda a estrutura organizacional do ISP: empresas/filiais em hierarquia íntegra (sem ciclos, sem filial órfã ativa em nenhum nível), departamentos, cargos, e o horário de trabalho padrão de cada cargo.
 **FRs covered:** FR-1, FR-2, FR-3, FR-4
@@ -137,12 +147,161 @@ A equipe de TI consegue criar Logins de sistema/serviço sem Funcionário por tr
 ### Epic 5: Governança de Turno (Zero Trust)
 O sistema passa a barrar sozinho qualquer chamada de API de um Perfil sujeito a bloqueio, fora da Jornada de Trabalho vigente — com plantão pré-aprovado como exceção legítima — e cada decisão (permitida ou negada) fica registrada em auditoria imutável.
 **FRs covered:** FR-8, FR-9, FR-10, FR-11, FR-12
-**Depende de:** Epic 1 (Jornada de Trabalho) e Epic 3 (Login/Perfil já precisam existir e estar ativos).
+**Depende de:** Epic 1 (Jornada de Trabalho), Epic 3 (Login/Perfil já precisam existir e estar ativos) e **Epic 0 / Story 0.3 (bloqueante para FR-9, FR-10, FR-12)** — sem fuso horário por filial nem `ShiftWindowEvaluator`, não há como converter `Instant` em hora local da filial para comparar contra a Jornada.
 
 ### Epic 6: Kill Switch
 Desligar ou bloquear um colaborador mata a sessão dele em menos de 1 segundo, mesmo se o mecanismo de invalidação estiver temporariamente indisponível — e reativar não devolve sessões antigas.
 **FRs covered:** FR-13, FR-14
 **Depende de:** Epic 2 (Funcionário) e Epic 3 (Login).
+
+---
+
+## Epic 0: Fundação Técnica — Tipos Temporais e Relógio Injetável
+
+Débito técnico transversal: padroniza a representação de tempo no domínio (`Instant` para instante/`TIMESTAMPTZ`, `LocalDate` para calendário/`DATE`, `LocalTime` para hora de parede/`TIME`, nunca `LocalDateTime`) e introduz `Clock` injetável — pré-requisito de confiabilidade para Epic 5 e Epic 6.
+
+### Story 0.1: Cobertura de Testes do Caminho Crítico de Autenticação de Sistema
+
+Como time de plataforma,
+Eu quero cobertura de teste no caminho de autenticação sistema-a-sistema (interceptor gRPC, cifra do secret, validação do secret) e um CI mínimo rodando esses testes automaticamente,
+Para que os quatro bugs já identificados por auditoria fiquem provados fechados e não voltem a regredir silenciosamente.
+
+**Pré-requisito de fato para considerar a Onda 2 (secret em repouso) entregue** — hoje o crypto e o schema estão corretos, mas o caminho de validação nunca foi exercitado por teste.
+
+**Acceptance Criteria:**
+
+**Given** `TokenAuthorizationInterceptor`, `SystemSecretCryptoService` e `ScosSystemServiceBean.validateSecretKey` têm hoje **zero teste**
+**When** esta story é implementada
+**Then** os três ganham cobertura de teste determinística (sem chamada de rede, sem sleep)
+
+**Given** `SystemSecretCryptoService.tagLength` tem default de campo `12` mas default de `@Value` (`"${scos.security.tag-length:128}"`) é `128` — inconsistentes
+**When** esta story é implementada
+**Then** o default do campo é alinhado para `128`
+
+**Given** `bootstrap.yml` referencia `${scos.security.maser-key}` (typo, falta o "t") em vez de `master-key` — presente em **dois** arquivos (`flow-organization-boot` e `server-fat`, não só um)
+**When** esta story é implementada
+**Then** ambos são corrigidos para `master-key`
+
+**Given** `ScosSystemServiceBean.validateSecretKey` tinha, no HEAD commitado, condição invertida (lançava exceção quando o secret CONFERIA) e passava `code` em vez de `secretKey` para `matchesSecret` — bug real, mas **já corrigido na árvore de trabalho não commitada** no momento em que esta story foi escrita
+**When** esta story é implementada
+**Then** o Task correspondente é idempotente: garante o estado correto independente do ponto de partida (HEAD ou working tree), e adiciona os testes que HEAD hoje reprovaria
+
+**Given** achado adicional (fora da lista original de bugs do prompt, confirmado em auditoria própria): `TokenAuthorizationInterceptor` captura `NoSuchElementException`, mas `ScosSystemServiceBean` sempre lança `ScosException` (nunca `NoSuchElementException`) — o catch nunca dispara, e tanto "sistema inexistente" quanto "secret incorreto" hoje vazam sem virar `UNAUTHENTICATED`
+**When** esta story é implementada
+**Then** o interceptor passa a capturar `ScosException`
+
+**Given** os cenários obrigatórios de `TokenAuthorizationInterceptorTest` (KEY-ACCESS ausente/incorreto, token ausente/Base64 inválido/formato inesperado, code inexistente, caminho feliz)
+**When** implementados
+**Then** cada cenário negativo prova `UNAUTHENTICATED` + listener noop + `call.close()` chamado, e o caminho feliz prova `SecurityContext` montado e `handler.startCall` invocado
+
+**Given** os cenários obrigatórios de `SystemSecretCryptoServiceTest` (roundtrip, IV/ciphertext diferentes a cada `encrypt()`, `decrypt()` com master-key diferente falha, payload corrompido falha)
+**When** implementados
+**Then** todos passam sem exceção de teste, com o crypto instanciado sem contexto Spring completo (reflection para os campos `@Value`)
+
+**Given** os cenários obrigatórios de `validateSecretKey` (secret correto autentica, secret incorreto lança `SCOS_SYSTEM_002`, code inexistente lança `SCOS_SYSTEM_001`)
+**When** implementados **Then** todos passam, e nenhum teste de grace period/previous-secret é incluído (guarda de escopo — pertence à Story 0.2)
+
+**Given** o teste de wiring do `SecretKeyConverter`
+**When** persiste um `ScosSystem` e lê `SECRET_KEY` direto via query nativa
+**Then** prova que o valor em coluna é diferente do secret original (cifrado em repouso) **And**, ao recarregar via repositório, o campo em memória volta ao valor original em claro
+**And** se falhar por erro de instanciação do converter, adicionar `@Component` a `SecretKeyConverter` é parte desta story
+
+**Given** não existe `.github/workflows` no projeto hoje
+**When** esta story é implementada
+**Then** `.github/workflows/ci.yml` passa a disparar em push/PR para `feature/**` e `main`, rodando `mvn -B verify` com sucesso — o que exige `-Denforcer.skip=true` (verificado nesta auditoria: o enforcer `RequireUpperBoundDeps` falha hoje em `infrastructure`/`flow-security-starter`, débito pré-existente documentado em `project-context.md`, não desta story) **And** sem gate de JaCoCo/dependency-check (deliberadamente mínimo)
+
+**Given** a guarda de escopo
+**When** esta story é implementada
+**Then** NÃO cobre `flow-organization-api` (zero testes, vira nota de backlog do Epic 0) **And** NÃO cria teste `*IT`/Testcontainers (vira nota de backlog) **And** NÃO implementa Use Case de rotação de secret **And** NÃO toca em grace period/previous-secret (Story 0.2)
+
+### Story 0.2: Padronizar Tipos Temporais e Introduzir Clock Injetável
+
+Como Desenvolvedor da plataforma,
+Eu quero que todo campo de instante no domínio use `Instant` (nunca `LocalDateTime`) e que a hora "agora" venha sempre de um `Clock` injetável,
+Para que a persistência corresponda de fato à coluna `TIMESTAMPTZ` real e testes de janela de tempo sejam determinísticos, sem `sleep`.
+
+**Acceptance Criteria:**
+
+**Given** as 14 ocorrências de campo `LocalDateTime` hoje mapeadas contra coluna `TIMESTAMPTZ` no módulo `domain` (`ScosSystem`, `OutboxEvent`, `OutboxEventDeadLetter`, `OutboxEventLog`, `Login`, `CompanyStatusHistory`, `EmployeeStatusHistory`, `EmployeePositionHistory`, `LoginStatusHistory`, `Cnae`, `LegalNature`, `CompanyCnaeSecondary`, `LoginProfile`, `ProfileResource`)
+**When** esta story é implementada
+**Then** todas passam a `Instant`, preservando nome de campo, nome de coluna e semântica
+**And** `PositionWorkSchedule`/`EmployeeWorkSchedule` (`LocalTime`) e `Employee.birthDate`/`dateOfHiring`/`probationEndDate`/`Company.foundationDate`/`EmployeePositionHistory.startDate`/`endDate` (`LocalDate`) permanecem intocados — já corretos
+
+**Given** o campo `Resource.definitionUpdatedAt` hoje é `LocalDate` contra uma coluna que hoje é `DATE` (divergência da premissa original desta story, confirmada contra o changelog)
+**When** esta story é implementada
+**Then** a coluna `SCOS_RESOURCE.DEFINITION_UPDATED_AT` é migrada para `TIMESTAMPTZ` via novo changeSet Liquibase com rollback, e o campo passa a `Instant`
+**And** a mudança de tipo se propaga por `RegisterResourceInput` (domain/dto), `ResourceRepository.upsert` (domain/internal, native query), `RegistryResourceInput` (usecase) e `RegistreServiceImpl` (grpc-boot) — o contrato gRPC (`registry.proto`) continua enviando `updated_at` como `string`, só o parse interno muda de `LocalDate.parse` para conversão em `Instant`
+
+**Given** `ScosSystem.matchesSecret`/`rotateSecret` hoje calculam ou comparam contra `LocalDateTime.now()` diretamente
+**When** esta story é implementada
+**Then** nenhuma chamada a `.now()` permanece no módulo `domain` (verificável por grep)
+**And** o "agora" é sempre recebido via `Clock` injetado no `ScosSystemServiceBean` (bean novo `Clock.systemUTC()` em produção; `Clock.fixed(...)` em teste)
+
+**Given** o bug de semântica em que `PREVIOUS_SECRET_EXPIRES_AT` grava o instante da rotação (não a expiração) e `matchesSecret` soma o grace na leitura
+**When** esta story é implementada
+**Then** `rotateSecret(String newRawSecret, Instant expiresAt)` passa a receber a expiração já calculada pelo Service (aplicando a política de grace vigente)
+**And** `matchesSecret` só compara contra `clock.instant()`, nunca soma duração — mudar a constante de grace no futuro não altera retroativamente secrets já rotacionados
+
+**Given** `secretKey`/`previousSecretKey` trafegam em texto claro em memória (via `SecretKeyConverter`) e `ScosSystem` hoje não tem `@ToString`
+**When** esta story é implementada
+**Then** `ScosSystem` ganha `@ToString` de classe excluindo os dois campos via `@ToString.Exclude`, para nunca vazar segredo em log de entidade
+
+**Given** os testes existentes que tocam campos afetados (`ResourceServiceBeanTest` no domain, `RegistryResourcesUseCaseBeanTest` no usecase — únicos encontrados; os demais 12 campos não têm teste unitário que os referencie hoje, só `@CreationTimestamp` gerenciado pelo Hibernate)
+**When** esta story é implementada
+**Then** ambos são atualizados para `Instant` sem mudar a asserção de comportamento
+**And** um novo `ScosSystemServiceBeanTest` (hoje inexistente — primeiro teste da classe) cobre o grace period do secret com `Clock.fixed`: válido dentro da janela, inválido após, determinístico, sem `sleep`
+
+**Given** `BaseEntity` (biblioteca externa `scos-foundation-utils`) ainda expõe `createdAt`/`updatedAt` como `LocalDateTime`, herdado por `ScosSystem`/`Login`/`Resource`/etc.
+**When** esta story é implementada
+**Then** esse resíduo NÃO é corrigido aqui — é débito fora do controle deste projeto, registrado em Dev Notes e em `project-context.md`, não em código
+
+### Story 0.3: Modelar Fuso Horário por Filial e Avaliar Janela de Turno
+
+Como sistema,
+Eu quero saber o fuso horário efetivo de cada filial e converter um `Instant` em hora local dela em um único ponto do código,
+Para que a futura checagem de bloqueio de turno (Epic 5) compare corretamente contra a Jornada de Trabalho, inclusive quando o turno cruza a meia-noite.
+
+**Acceptance Criteria:**
+
+**Given** o fuso por filial não existe hoje (`SCOS_COMPANY` sem coluna de timezone, `SCOS_CONFIGURATION` é global, sem `ZoneId` no código — README promete a capacidade, código não entrega)
+**When** esta story é implementada
+**Then** `SCOS_COMPANY` ganha `TIME_ZONE VARCHAR(64)` (IANA, ex. `America/Manaus`), `NOT NULL DEFAULT 'America/Sao_Paulo'`
+**And** a coluna entra editando o changeSet **baseline** de `scos_company.yml` (não um `addColumn` corretivo) — decisão do PM porque nenhum ambiente rodou esse changelog ainda; o baseline congela assim que entrar em homologação
+
+**Given** a entidade `Company`
+**When** esta story é implementada
+**Then** ganha campo `timeZone` (`ZoneId`, `@Builder.Default = America/Sao_Paulo`) com `AttributeConverter` próprio (`@Component`, ao contrário do `SecretKeyConverter` existente — bug separado, não corrigido aqui)
+
+**Given** a decisão de produto D3 (fuso é imutável — mudar reinterpretaria decisões de turno já auditadas)
+**When** esta story é implementada
+**Then** nenhum endpoint/Use Case expõe alteração de `timeZone` — regra só documentada, sem endpoint nesta Etapa
+
+**Given** uma filial sem fuso próprio (cenário defensivo — hoje sempre preenchido por default, mas o campo pode ser nulo por construção explícita)
+**When** o fuso efetivo é resolvido
+**Then** sobe a cadeia `parentCompany` (mesmo padrão de `CompanyServiceBean.depthOf()`, não CTE) até achar o primeiro não nulo
+
+**Given** `ShiftWindowEvaluator` (domain service novo, `domain/shift/`)
+**When** avalia um `Instant` contra uma Jornada (`startTime`/`lunchStart`/`lunchEnd`/`endTime`, `LocalTime`)
+**Then** converte para hora local da filial em um único ponto do código (delegates/use cases futuros não replicam `atZone()`)
+**And** os limites `[startTime, endTime]` são inclusivos nas duas pontas
+**And** turno que cruza meia-noite (`endTime < startTime`, ex. 22:00→06:00) é tratado corretamente — caso de teste obrigatório
+**And** o intervalo de almoço é excluído do turno (decorre de FR-9: "fora do intervalo, exceto almoço")
+
+**Given** a mesma `Instant` avaliada para filiais em fusos diferentes
+**When** convertida para hora local de cada uma
+**Then** produz horas locais diferentes e, quando aplicável, decisões de turno diferentes — caso de teste obrigatório
+
+**Given** esta story
+**When** concluída
+**Then** as stories de bloqueio de turno da Etapa 1 (Epic 5: FR-9, FR-10, FR-12) passam a ter dependência explícita e satisfeita nela — sem Filter nem endpoint construído aqui, só o dado e o avaliador reutilizável
+
+### Backlog do Epic 0 (notas, não stories — registrado em 2026-07-19)
+
+Itens identificados durante a auditoria de cobertura de teste (Story 0.1) e explicitamente fora de escopo de qualquer story atual do Epic 0. Não têm story própria ainda — viram uma quando priorizados:
+
+- **Baseline de cobertura do módulo `flow-organization-api`** — hoje zero testes (`project-context.md`, tabela de Testing Rules). Nenhum delegate tem teste, unitário ou de integração.
+- **Cobertura ampliada de `flow-organization-infrastructure`** além do único teste hoje existente (`PermissionsConsistencyTest`) — o módulo não tem nenhum outro teste de contrato/config.
+- **Suíte de testes `*IT` com Testcontainers fora do padrão `*ControllerTest` já em uso no `boot`** — especificamente, testes de persistência/repositório que hoje só têm alternativa em `@DataJpaTest`+H2 (Story 0.1, escopo D) ou no `boot` completo; não há hoje uma suíte `*IT` intermediária.
 
 ---
 
@@ -543,6 +702,8 @@ Para controlar o impacto de segurança sobre todos os Logins que usam aquele Per
 ## Epic 5: Governança de Turno (Zero Trust)
 
 O sistema passa a barrar sozinho qualquer chamada de API de um Perfil sujeito a bloqueio, fora da Jornada de Trabalho vigente — com plantão pré-aprovado como exceção legítima — e cada decisão fica registrada em auditoria imutável.
+
+**Bloqueado por Epic 0 / Story 0.3** (fuso horário por filial + `ShiftWindowEvaluator`) para as stories que efetivamente convertem `Instant` em hora local (5.2, 5.4).
 
 ### Story 5.1: Classificação de Perfil para Bloqueio de Turno
 

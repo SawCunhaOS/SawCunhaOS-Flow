@@ -65,6 +65,18 @@ Precisa da versão exata? Leia o BOM:
 - **Records** para DTOs de domínio (`DepartmentInput`/`DepartmentOutput`) — acesso via `.code()`, não `.getCode()`. DTOs gerados do OpenAPI também são records com builder.
 - **Exceções:** só `ScosException` (de `foundation.utils.exception`) com constante de `ExceptionCodeError`. NUNCA `RuntimeException`/`IllegalArgumentException` cru, nunca mensagem em string literal. Detalhes em *Erros (RFC 9457)*.
 
+#### Tipos temporais (obrigatório)
+
+| Pergunta que o dado responde | Tipo Java | Coluna |
+|---|---|---|
+| "Em que instante aconteceu?" (fato) | `Instant` | `TIMESTAMPTZ` |
+| "Que dia?" (calendário) | `LocalDate` | `DATE` |
+| "Que hora do relógio?" (jornada/template) | `LocalTime` | `TIME` |
+
+`LocalDateTime` é **proibido** no domínio — toda coluna de instante do schema é `TIMESTAMPTZ`, logo `Instant` é o único tipo Java correto para ela. `.now()` também é **proibido** no domínio (entidade ou service) — o "agora" só entra via `Clock` injetável (bean `Clock.systemUTC()` em produção; `Clock.fixed(...)` em teste, determinístico, sem `sleep`). Exceção: `@CreationTimestamp`/`@UpdateTimestamp` do Hibernate, que gerenciam o "agora" fora do código Java e são compatíveis com `Instant`.
+
+**Débito conhecido, fora do controle deste projeto:** `BaseEntity` (biblioteca externa `scos-foundation-utils`) ainda expõe `createdAt`/`updatedAt` como `LocalDateTime` — toda entidade que estende `BaseEntity` (`ScosSystem`, `Login`, `Resource`, etc.) herda esse tipo mesmo depois de qualquer padronização feita neste projeto. Só corrigível atualizando a foundation.
+
 ### Framework-Specific Rules
 
 #### Fluxo OpenAPI — NÃO ÓBVIO, erro mais comum
@@ -331,6 +343,7 @@ Hoje só se roda teste com `-Denforcer.skip=true`. **Não use esse flag para "re
 - ❌ Declarar `<version>` de dependência gerida pelo BOM.
 - ❌ Remover o pin de `error_prone_annotations:2.48.0` → enforcer quebra o build.
 - ❌ `builder:latest` do Paketo (RF-02) — tag pinada sempre.
+- ❌ `LocalDateTime` em campo de domínio, ou `.now()` direto em entidade/service → `Instant` + `Clock` injetável (ver *Tipos temporais*).
 
 #### Segurança
 
@@ -375,7 +388,8 @@ Hoje só se roda teste com `-Denforcer.skip=true`. **Não use esse flag para "re
 5. `etc/architecture/api-development-guidelines.md` desatualizado em 2 pontos (DTOs, `DepartmentDomainService`).
 6. 5 permissões `DELETE_*` órfãs no enum (sem `x-authorize`): remover do enum ou criar os endpoints.
 7. As 32 permissões adicionadas em 2026-07-15 podem não estar no realm do Keycloak nem no seed — não verificado.
+8. `BaseEntity` (foundation externa) ainda usa `LocalDateTime` para `createdAt`/`updatedAt` herdados por toda entidade — fora do controle deste projeto até a foundation ser atualizada (ver *Tipos temporais*).
 
 **Resolvido em 2026-07-15:** `PermissionsConsistencyTest` criado (`infrastructure`); 32 permissões que estavam em `x-authorize` sem constante no enum foram adicionadas (97 → 129), com i18n pt/en. Eram 403 permanente esperando quem chamasse.
 
-Last Updated: 2026-07-15
+Last Updated: 2026-07-19
