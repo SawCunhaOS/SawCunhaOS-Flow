@@ -1,0 +1,861 @@
+openapi: 3.0.3
+info:
+  title: SawCunhaOS Organization - Reason
+  description: APIs para gestão dos catálogos de motivo de transição de status (ativação/inativação/bloqueio/desbloqueio), compartilhados entre Company, Employee e Login.
+  termsOfService: https://www.apache.org/licenses/LICENSE-2.0
+  contact:
+    name: Samuel Cunha
+    url: https://github.com/SawCunhaOS
+    email: samukasaww@live.com
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: '1.0'
+servers:
+  - url: /organization/api
+tags:
+  - name: ReasonActivate
+    description: APIs para gestão do catálogo de motivo de ativação
+  - name: ReasonInactivate
+    description: APIs para gestão do catálogo de motivo de inativação
+  - name: ReasonDisable
+    description: APIs para gestão do catálogo de motivo de bloqueio
+  - name: ReasonEnable
+    description: APIs para gestão do catálogo de motivo de desbloqueio
+
+paths:
+  /v1/reason-activate:
+    get:
+      tags: [ReasonActivate]
+      summary: Get all ReasonActivate entries
+      description: UC-113 - Lista todos os motivos de ativação com paginação. Pode filtrar por entityType
+      operationId: getAllReasonActivate
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/entityTypeFilter'
+        - $ref: '#/components/parameters/activeFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllReasonActivateResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_REASON_ACTIVATE]
+    post:
+      tags: [ReasonActivate]
+      summary: Create a ReasonActivate entry
+      description: UC-114 - Cria um novo motivo de ativação
+      operationId: createReasonActivate
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReasonActivateRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_REASON_ACTIVATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_REASON_ACTIVATE
+        ttl: 1
+
+  /v1/reason-activate/{id}:
+    get:
+      tags: [ReasonActivate]
+      summary: Get activation reason by id
+      description: UC-115 - Retorna os dados de um motivo de ativação
+      operationId: getReasonActivateById
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetReasonActivateResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_REASON_ACTIVATE]
+    put:
+      tags: [ReasonActivate]
+      summary: Update activation reason
+      description: UC-116 - Atualiza o código, descrição ou entityType de um motivo de ativação
+      operationId: updateReasonActivate
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReasonActivateRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_REASON_ACTIVATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_REASON_ACTIVATE
+        ttl: 1
+
+  /v1/reason-activate/{id}/enable:
+    put:
+      tags: [ReasonActivate]
+      summary: Reactivate ReasonActivate entry
+      description: UC-117 - Reativa motivo de ativação com active=false
+      operationId: activateReasonActivate
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ENABLE_REASON_ACTIVATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_REASON_ACTIVATE
+        ttl: 1
+
+  /v1/reason-activate/{id}/disable:
+    put:
+      tags: [ReasonActivate]
+      summary: Deactivate ReasonActivate entry
+      description: UC-118 - Inativa motivo de ativação com active=true
+      operationId: inactivateReasonActivate
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DISABLE_REASON_ACTIVATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_REASON_ACTIVATE
+        ttl: 1
+
+  /v1/reason-inactivate:
+    get:
+      tags: [ReasonInactivate]
+      summary: Get all ReasonInactivate entries
+      description: UC-119 - Lista todos os motivos de inativação com paginação. Pode filtrar por entityType
+      operationId: getAllReasonInactivate
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/entityTypeFilter'
+        - $ref: '#/components/parameters/activeFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllReasonInactivateResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_REASON_INACTIVATE]
+    post:
+      tags: [ReasonInactivate]
+      summary: Create a ReasonInactivate entry
+      description: UC-120 - Cria um novo motivo de inativação
+      operationId: createReasonInactivate
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReasonInactivateRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_REASON_INACTIVATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_REASON_INACTIVATE
+        ttl: 1
+
+  /v1/reason-inactivate/{id}:
+    get:
+      tags: [ReasonInactivate]
+      summary: Get inactivation reason by id
+      description: UC-121 - Retorna os dados de um motivo de inativação
+      operationId: getReasonInactivateById
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetReasonInactivateResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_REASON_INACTIVATE]
+    put:
+      tags: [ReasonInactivate]
+      summary: Update inactivation reason
+      description: UC-122 - Atualiza o código, descrição ou entityType de um motivo de inativação
+      operationId: updateReasonInactivate
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReasonInactivateRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_REASON_INACTIVATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_REASON_INACTIVATE
+        ttl: 1
+
+  /v1/reason-inactivate/{id}/enable:
+    put:
+      tags: [ReasonInactivate]
+      summary: Reactivate ReasonInactivate entry
+      description: UC-123 - Reativa motivo de inativação com active=false
+      operationId: activateReasonInactivate
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ENABLE_REASON_INACTIVATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_REASON_INACTIVATE
+        ttl: 1
+
+  /v1/reason-inactivate/{id}/disable:
+    put:
+      tags: [ReasonInactivate]
+      summary: Deactivate ReasonInactivate entry
+      description: UC-124 - Inativa motivo de inativação com active=true
+      operationId: inactivateReasonInactivate
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DISABLE_REASON_INACTIVATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_REASON_INACTIVATE
+        ttl: 1
+
+  /v1/reason-disable:
+    get:
+      tags: [ReasonDisable]
+      summary: Get all ReasonDisable entries
+      description: UC-125 - Lista todos os motivos de bloqueio com paginação. Pode filtrar por entityType
+      operationId: getAllReasonDisable
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/entityTypeFilter'
+        - $ref: '#/components/parameters/activeFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllReasonDisableResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_REASON_DISABLE]
+    post:
+      tags: [ReasonDisable]
+      summary: Create a ReasonDisable entry
+      description: UC-126 - Cria um novo motivo de bloqueio
+      operationId: createReasonDisable
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReasonDisableRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_REASON_DISABLE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_REASON_DISABLE
+        ttl: 1
+
+  /v1/reason-disable/{id}:
+    get:
+      tags: [ReasonDisable]
+      summary: Get disable reason by id
+      description: UC-127 - Retorna os dados de um motivo de bloqueio
+      operationId: getReasonDisableById
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetReasonDisableResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_REASON_DISABLE]
+    put:
+      tags: [ReasonDisable]
+      summary: Update disable reason
+      description: UC-128 - Atualiza o código, descrição ou entityType de um motivo de bloqueio
+      operationId: updateReasonDisable
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReasonDisableRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_REASON_DISABLE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_REASON_DISABLE
+        ttl: 1
+
+  /v1/reason-disable/{id}/enable:
+    put:
+      tags: [ReasonDisable]
+      summary: Reactivate ReasonDisable entry
+      description: UC-129 - Reativa motivo de bloqueio com active=false
+      operationId: activateReasonDisable
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ENABLE_REASON_DISABLE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_REASON_DISABLE
+        ttl: 1
+
+  /v1/reason-disable/{id}/disable:
+    put:
+      tags: [ReasonDisable]
+      summary: Deactivate ReasonDisable entry
+      description: UC-130 - Inativa motivo de bloqueio com active=true
+      operationId: inactivateReasonDisable
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DISABLE_REASON_DISABLE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_REASON_DISABLE
+        ttl: 1
+
+  /v1/reason-enable:
+    get:
+      tags: [ReasonEnable]
+      summary: Get all ReasonEnable entries
+      description: UC-131 - Lista todos os motivos de desbloqueio com paginação. Pode filtrar por entityType
+      operationId: getAllReasonEnable
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/entityTypeFilter'
+        - $ref: '#/components/parameters/activeFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllReasonEnableResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_REASON_ENABLE]
+    post:
+      tags: [ReasonEnable]
+      summary: Create a ReasonEnable entry
+      description: UC-132 - Cria um novo motivo de desbloqueio
+      operationId: createReasonEnable
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReasonEnableRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_REASON_ENABLE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_REASON_ENABLE
+        ttl: 1
+
+  /v1/reason-enable/{id}:
+    get:
+      tags: [ReasonEnable]
+      summary: Get enable reason by id
+      description: UC-133 - Retorna os dados de um motivo de desbloqueio
+      operationId: getReasonEnableById
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetReasonEnableResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_REASON_ENABLE]
+    put:
+      tags: [ReasonEnable]
+      summary: Update enable reason
+      description: UC-134 - Atualiza o código, descrição ou entityType de um motivo de desbloqueio
+      operationId: updateReasonEnable
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReasonEnableRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_REASON_ENABLE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_REASON_ENABLE
+        ttl: 1
+
+  /v1/reason-enable/{id}/enable:
+    put:
+      tags: [ReasonEnable]
+      summary: Reactivate ReasonEnable entry
+      description: UC-135 - Reativa motivo de desbloqueio com active=false
+      operationId: activateReasonEnable
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ENABLE_REASON_ENABLE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_REASON_ENABLE
+        ttl: 1
+
+  /v1/reason-enable/{id}/disable:
+    put:
+      tags: [ReasonEnable]
+      summary: Deactivate ReasonEnable entry
+      description: UC-136 - Inativa motivo de desbloqueio com active=true
+      operationId: inactivateReasonEnable
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DISABLE_REASON_ENABLE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_REASON_ENABLE
+        ttl: 1
+
+components:
+  securitySchemes:
+    BearerAuth:
+      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
+  parameters:
+    entityTypeFilter:
+      name: entityType
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/ReasonEntityType'
+    activeFilter:
+      name: active
+      in: query
+      required: false
+      schema:
+        type: boolean
+  schemas:
+    ReasonEntityType:
+      type: string
+      enum:
+        - COMPANY
+        - EMPLOYEE
+        - LOGIN
+    ReasonActivate:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        code:
+          type: string
+        description:
+          type: string
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+        active:
+          type: boolean
+    GetReasonActivateResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ReasonActivate'
+    GetAllReasonActivateResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReasonActivate'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    CreateReasonActivateRequest:
+      required: [code, description, entityType]
+      type: object
+      properties:
+        code:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          x-jdempotentrequestpayload: true
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+    UpdateReasonActivateRequest:
+      required: [code, description, entityType]
+      type: object
+      properties:
+        code:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+    ReasonInactivate:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        code:
+          type: string
+        description:
+          type: string
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+        active:
+          type: boolean
+    GetReasonInactivateResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ReasonInactivate'
+    GetAllReasonInactivateResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReasonInactivate'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    CreateReasonInactivateRequest:
+      required: [code, description, entityType]
+      type: object
+      properties:
+        code:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          x-jdempotentrequestpayload: true
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+    UpdateReasonInactivateRequest:
+      required: [code, description, entityType]
+      type: object
+      properties:
+        code:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+    ReasonDisable:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        code:
+          type: string
+        description:
+          type: string
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+        active:
+          type: boolean
+    GetReasonDisableResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ReasonDisable'
+    GetAllReasonDisableResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReasonDisable'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    CreateReasonDisableRequest:
+      required: [code, description, entityType]
+      type: object
+      properties:
+        code:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          x-jdempotentrequestpayload: true
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+    UpdateReasonDisableRequest:
+      required: [code, description, entityType]
+      type: object
+      properties:
+        code:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+    ReasonEnable:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        code:
+          type: string
+        description:
+          type: string
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+        active:
+          type: boolean
+    GetReasonEnableResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ReasonEnable'
+    GetAllReasonEnableResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReasonEnable'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    CreateReasonEnableRequest:
+      required: [code, description, entityType]
+      type: object
+      properties:
+        code:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          x-jdempotentrequestpayload: true
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+    UpdateReasonEnableRequest:
+      required: [code, description, entityType]
+      type: object
+      properties:
+        code:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        entityType:
+          $ref: '#/components/schemas/ReasonEntityType'
+
+security:
+  - BearerAuth: []

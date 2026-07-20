@@ -1,0 +1,84 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260701-Samuel.Cunha-021
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_LOGIN_STATUS_HISTORY"
+      changes:
+        - createTable:
+            tableName: SCOS_LOGIN_STATUS_HISTORY
+            schemaName: scos
+            columns:
+              - column:
+                  name: LOGIN_STATUS_HISTORY_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_LOGIN_STATUS_HISTORY
+                    nullable: false
+              - column:
+                  name: LOGIN_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_LOGIN_ID_SCOS_LOGIN_STATUS_HISTORY
+                    references: scos.SCOS_LOGIN(LOGIN_ID)
+              - column:
+                  name: STATUS
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PREVIOUS_STATUS
+                  type: varchar(20)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: REASON_ACTIVATE_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: FK_REASON_ACTIVATE_ID_SCOS_LOGIN_STATUS_HISTORY
+                    references: scos.SCOS_REASON_ACTIVATE(REASON_ACTIVATE_ID)
+              - column:
+                  name: REASON_INACTIVATE_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: FK_REASON_INACTIVATE_ID_SCOS_LOGIN_STATUS_HISTORY
+                    references: scos.SCOS_REASON_INACTIVATE(REASON_INACTIVATE_ID)
+              - column:
+                  name: REASON_DISABLE_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: FK_REASON_DISABLE_ID_SCOS_LOGIN_STATUS_HISTORY
+                    references: scos.SCOS_REASON_DISABLE(REASON_DISABLE_ID)
+              - column:
+                  name: REASON_ENABLE_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: FK_REASON_ENABLE_ID_SCOS_LOGIN_STATUS_HISTORY
+                    references: scos.SCOS_REASON_ENABLE(REASON_ENABLE_ID)
+              - column:
+                  name: OBSERVATION
+                  type: TEXT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USER_AT
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: SCOS_LOGIN_STATUS_HISTORY
+            schemaName: scos
+            cascadeConstraints: true

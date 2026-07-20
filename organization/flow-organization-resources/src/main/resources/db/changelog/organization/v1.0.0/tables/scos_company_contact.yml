@@ -1,0 +1,100 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260606-Samuel.Cunha-005
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_COMPANY_CONTACT"
+      changes:
+        - createTable:
+            tableName: SCOS_COMPANY_CONTACT
+            schemaName: scos
+            columns:
+              - column:
+                  name: COMPANY_ID_CONTACT
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_COMPANY_CONTACT
+                    nullable: false
+              - column:
+                  name: COMPANY_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_COMPANY_ID_SCOS_COMPANY_CONTACT
+                    references: scos.SCOS_COMPANY(COMPANY_ID)
+              - column:
+                  name: PHONE
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: EMAIL
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CONTACT_TYPE_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_CONTACT_TYPE_ID_SCOS_COMPANY_CONTACT
+                    references: scos.SCOS_CONTACT_TYPE(CONTACT_TYPE_ID)
+              - column:
+                  name: RESPONSIBLE_PERSON
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USER_AT
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: SCOS_COMPANY_CONTACT
+            schemaName: scos
+            columnNames: PHONE, COMPANY_ID
+            constraintName: UK_PHONE_COMPANY_ID_SCOS_COMPANY_CONTACT
+            validate: true
+        - addUniqueConstraint:
+            tableName: SCOS_COMPANY_CONTACT
+            schemaName: scos
+            columnNames: EMAIL, COMPANY_ID
+            constraintName: UK_EMAIL_COMPANY_ID_SCOS_COMPANY_CONTACT
+            validate: true
+        - addUniqueConstraint:
+            tableName: SCOS_COMPANY_CONTACT
+            schemaName: scos
+            columnNames: CONTACT_TYPE_ID, COMPANY_ID
+            constraintName: UK_CONTACT_TYPE_ID_COMPANY_ID_SCOS_COMPANY_CONTACT
+            validate: true
+        - createIndex:
+            tableName: SCOS_COMPANY_CONTACT
+            schemaName: scos
+            indexName: IDX_COMPANY_ID_SCOS_COMPANY_CONTACT
+            columns:
+              - column:
+                  name: COMPANY_ID
+        - createIndex:
+            tableName: SCOS_COMPANY_CONTACT
+            schemaName: scos
+            indexName: IDX_CONTACT_TYPE_ID_SCOS_COMPANY_CONTACT
+            columns:
+              - column:
+                  name: CONTACT_TYPE_ID
+      rollback:
+        - dropTable:
+            tableName: SCOS_COMPANY_CONTACT
+            schemaName: scos
+            cascadeConstraints: true

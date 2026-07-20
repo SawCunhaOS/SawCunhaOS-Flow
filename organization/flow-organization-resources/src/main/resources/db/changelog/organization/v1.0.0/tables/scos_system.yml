@@ -1,0 +1,85 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260606-Samuel.Cunha-010
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_SYSTEM"
+      changes:
+        - createTable:
+            tableName: SCOS_SYSTEM
+            schemaName: scos
+            columns:
+              - column:
+                  name: SYSTEM_ID
+                  type: UUID
+                  defaultValueComputed: ${uuid_function}
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_SYSTEM
+                    nullable: false
+              - column:
+                  name: NAME
+                  type: varchar(250)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CODE
+                  type: varchar(25)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: SECRET_KEY
+                  type: varchar(512)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PREVIOUS_SECRET_KEY
+                  type: varchar(512)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: PREVIOUS_SECRET_EXPIRES_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: STATUS
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: VERSION
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USER_AT
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: SCOS_SYSTEM
+            schemaName: scos
+            columnNames: CODE
+            constraintName: UK_CODE_SCOS_SYSTEM
+            validate: true
+      rollback:
+        - dropTable:
+            tableName: SCOS_SYSTEM
+            schemaName: scos
+            cascadeConstraints: true

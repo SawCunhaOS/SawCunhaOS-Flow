@@ -1,0 +1,117 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260701-Samuel.Cunha-016
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_OUTBOX_EVENT"
+      changes:
+        - createTable:
+            tableName: SCOS_OUTBOX_EVENT
+            schemaName: scos
+            columns:
+              - column:
+                  name: OUTBOX_EVENT_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_OUTBOX_EVENT
+                    nullable: false
+              - column:
+                  name: EVENT_HASH
+                  type: char(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: TOPIC
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_TOPIC_SCOS_OUTBOX_EVENT
+                    references: scos.SCOS_OUTBOX_TOPIC(TOPIC)
+              - column:
+                  name: AGGREGATE_ID
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PAYLOAD
+                  type: JSONB
+                  constraints:
+                    nullable: false
+              - column:
+                  name: RESPONSE_DATA
+                  type: JSONB
+                  constraints:
+                    nullable: true
+              - column:
+                  name: STATUS
+                  type: varchar(20)
+                  defaultValue: PENDING
+                  constraints:
+                    nullable: false
+              - column:
+                  name: RETRY_COUNT
+                  type: INT
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: MAX_RETRIES
+                  type: INT
+                  defaultValueNumeric: 3
+                  constraints:
+                    nullable: false
+              - column:
+                  name: MESSAGE
+                  type: varchar(2500)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: REQUESTING
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: STARTED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: PROCESSED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: USER_AT
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+        - addUniqueConstraint:
+            tableName: SCOS_OUTBOX_EVENT
+            schemaName: scos
+            columnNames: EVENT_HASH
+            constraintName: UK_EVENT_HASH_SCOS_OUTBOX_EVENT
+            validate: true
+        - createIndex:
+            tableName: SCOS_OUTBOX_EVENT
+            schemaName: scos
+            indexName: IDX_TOPIC_SCOS_OUTBOX_EVENT
+            columns:
+              - column:
+                  name: TOPIC
+      rollback:
+        - dropTable:
+            tableName: SCOS_OUTBOX_EVENT
+            schemaName: scos
+            cascadeConstraints: true

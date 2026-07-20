@@ -1,0 +1,368 @@
+{
+  "mappings": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "/realms/Scos"
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": {
+          "realm": "Scos",
+          "public_key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzUN1N2lPlHMbQ3SXELQqZXO0Ys1LmhiyqUVxCNbABKIs0P2bIsUulXF4GWPju1fyNVHSHOiM0zcqtihNspaImWBnF2l55+PSqULUbo9zj3ag4KrfcID+nYEC95yK8PG4yo0cPS3SSuFVUp7gDM1o2SpjutgtkVgx+jWuW5SkOJV7P3SyNqZfabfsxN/FE6KpVVKAkCLip31sO/ZHT6fbuXdXzSiAkCJj/3AkgSJ+ghOcx2najUQAI0zHEPhRKkqMuV5wIrhepboTzqto7pvgyuZd2EHY+MqdsIQwMUcpsHCU9wYHA+VpkNV4oE3iTo8TEAgSIWRsGYQe0YpYquXWTwIDAQAB",
+          "token-service": "http://localhost:7080/realms/Scos/protocol/openid-connect",
+          "account-service": "http://localhost:7080/realms/Scos/account",
+          "tokens-not-before": 0
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/realms/Scos/protocol/openid-connect/certs"
+      },
+      "response": {
+        "status": 200,
+        "jsonBody": {
+          "keys": [
+            {
+              "kid": "slCBU2fkjB6sGlma8dyqrLy6QgdMliQg9ptCW-uWsNA",
+              "kty": "RSA",
+              "alg": "RS256",
+              "use": "sig",
+              "n": "zUN1N2lPlHMbQ3SXELQqZXO0Ys1LmhiyqUVxCNbABKIs0P2bIsUulXF4GWPju1fyNVHSHOiM0zcqtihNspaImWBnF2l55-PSqULUbo9zj3ag4KrfcID-nYEC95yK8PG4yo0cPS3SSuFVUp7gDM1o2SpjutgtkVgx-jWuW5SkOJV7P3SyNqZfabfsxN_FE6KpVVKAkCLip31sO_ZHT6fbuXdXzSiAkCJj_3AkgSJ-ghOcx2najUQAI0zHEPhRKkqMuV5wIrhepboTzqto7pvgyuZd2EHY-MqdsIQwMUcpsHCU9wYHA-VpkNV4oE3iTo8TEAgSIWRsGYQe0YpYquXWTw",
+              "e": "AQAB",
+              "x5c": [
+                "MIICrTCCAZUCBgGLw7ExVTANBgkqhkiG9w0BAQsFADAaMRgwFgYDVQQDDA9JbnNpZGVTb2Z0d2FyZXMwHhcNMjMxMTEyMTMxOTExWhcNMzMxMTEyMTMyMDUxWjAaMRgwFgYDVQQDDA9JbnNpZGVTb2Z0d2FyZXMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDNQ3U3aU+UcxtDdJcQtCplc7RizUuaGLKpRXEI1sAEoizQ/ZsixS6VcXgZY+O7V/I1UdIc6IzTNyq2KE2yloiZYGcXaXnn49KpQtRuj3OPdqDgqt9wgP6dgQL3nIrw8bjKjRw9LdJK4VVSnuAMzWjZKmO62C2RWDH6Na5blKQ4lXs/dLI2pl9pt+zE38UToqlVUoCQIuKnfWw79kdPp9u5d1fNKICQImP/cCSBIn6CE5zHadqNRAAjTMcQ+FEqSoy5XnAiuF6luhPOq2jum+DK5l3YQdj4yp2whDAxRymwcJT3BgcD5WmQ1XigTeJOjxMQCBIhZGwZhB7Riliq5dZPAgMBAAEwDQYJKoZIhvcNAQELBQADggEBADhrHzBmekrcbb5HFv232QKXrnxgGr5v9tkNPNqvDvJPlIanVKfqVQ8GR4CwycVdA5n5qF5Qh6DfXTNfiTFhomcMHTTBAz4Gmb2vPS3/RTxtVSaj4wa4Pi/o7SZrtWzQX6ivZczrWupH5tyDfbUbHIXsnI4xwiJilXbp3fUTOj84Xt3DZPUIcBHD67KvP64UX8uM1AOZCD5Fbz0ODHPjQZlrpllmxT8w54ytDNUPTdepTFLoR2nBv2MsyTE7qosikrFVzZy89RcJJUx6iFB9jTo/zyblrTJ3mEADJF3t6mUFMtcVMkNV9QTkH1+JiFkrPwgHwtNqBEsH5Jf/mxPL7BE="
+              ],
+              "x5t": "bKSez8OWldCgkzlnMv8-rTBx1Mo",
+              "x5t#S256": "f2Oz1a7_57sPaasMfGGdm0eIxt6px08C1VDAQQC22RI"
+            },
+            {
+              "kid": "vVdBOPjb1p5VqjUnhIAFIzrZoF_pNi4iw1TqyPK1wHI",
+              "kty": "RSA",
+              "alg": "RSA-OAEP",
+              "use": "enc",
+              "n": "o69tB4u7hazAQf6F5GIo6EQpA1fud5C3L42NEKZ3LCmDNcfDaNdAs1Oj-vs3iWFSKQFrNJt4nVnOrYaKeQtRinZFrHfwS_Bf0Ir_7YRMQVyubjvT446J7mFsn6u1lX_z3QOQdYKD74yE-vXYamUzmO-pPnIBhf4f8F5kQiLF5IJ-ImsHphLw14cHsLDrN4Qqo7NAnv7TF63n4uTr_Dwpv5WLPv3IS2JDOLFzNMK6MN6ZrsSU8prJA3eIpgxHtqYyTR_3OT5jiO1J5iKCXFt10SwkFKivGSsOW1n4kIQMMxDPxH5aXxf7-X7HUsrdfW8uLqk5BX1KPj5u0ktJ-iq8tw",
+              "e": "AQAB",
+              "x5c": [
+                "MIICrTCCAZUCBgGLw7EwhjANBgkqhkiG9w0BAQsFADAaMRgwFgYDVQQDDA9JbnNpZGVTb2Z0d2FyZXMwHhcNMjMxMTEyMTMxOTExWhcNMzMxMTEyMTMyMDUxWjAaMRgwFgYDVQQDDA9JbnNpZGVTb2Z0d2FyZXMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCjr20Hi7uFrMBB/oXkYijoRCkDV+53kLcvjY0QpncsKYM1x8No10CzU6P6+zeJYVIpAWs0m3idWc6thop5C1GKdkWsd/BL8F/Qiv/thExBXK5uO9PjjonuYWyfq7WVf/PdA5B1goPvjIT69dhqZTOY76k+cgGF/h/wXmRCIsXkgn4iawemEvDXhwewsOs3hCqjs0Ce/tMXrefi5Ov8PCm/lYs+/chLYkM4sXM0wrow3pmuxJTymskDd4imDEe2pjJNH/c5PmOI7UnmIoJcW3XRLCQUqK8ZKw5bWfiQhAwzEM/EflpfF/v5fsdSyt19by4uqTkFfUo+Pm7SS0n6Kry3AgMBAAEwDQYJKoZIhvcNAQELBQADggEBACgJcaidy6EP5Hk0MUF7SeeHmlo1rkuAuMGUdRE5DhBow/KjcoQVZTHsO2G7G/CEJvfJJrbjfGuApKnkNHpD6LtrUf2jZciLzNCJqMwDRbZxSQIaLPBNT1TDNZ8zFkBArJsnR0/vlFy2Eg4vOugax8+YcCw1+on7L1pv+F6Z5Whyv/uRkjVyJeIvMXlmloK2cwkBxIidmUZ7Qzmr8Vh2agWUOQh5pRR/vwzEOxn2gvPKmD/sOmE91UR6ST/Ky4CjGoUZRHZcSVE8c2Y9PwwmjxmhP7OxJL/CuzR28TLU2QcKQSXXb71UatLG6F9rqegnOOX8z62BxGEjA7JG8DYlX/U="
+              ],
+              "x5t": "ybdc_ex9MAXdaEMDfrVdTOWwzVs",
+              "x5t#S256": "5YsBlIdTqH4JncCHrjKmzDhoVW9LnGzXf0BZXiGATXM"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "/realms/Scos/.well-known/openid-configuration"
+      },
+
+      "response": {
+        "status": 200,
+        "jsonBody": {
+          "issuer": "http://localhost:7080/realms/Scos",
+          "authorization_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/auth",
+          "token_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/token",
+          "introspection_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/token/introspect",
+          "userinfo_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/userinfo",
+          "end_session_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/logout",
+          "frontchannel_logout_session_supported": true,
+          "frontchannel_logout_supported": true,
+          "jwks_uri": "http://localhost:7080/realms/Scos/protocol/openid-connect/certs",
+          "check_session_iframe": "http://localhost:7080/realms/Scos/protocol/openid-connect/login-status-iframe.html",
+          "grant_types_supported": [
+            "authorization_code",
+            "implicit",
+            "refresh_token",
+            "password",
+            "client_credentials",
+            "urn:ietf:params:oauth:grant-type:device_code",
+            "urn:openid:params:grant-type:ciba"
+          ],
+          "acr_values_supported": [
+            "0",
+            "1"
+          ],
+          "response_types_supported": [
+            "code",
+            "none",
+            "id_token",
+            "token",
+            "id_token token",
+            "code id_token",
+            "code token",
+            "code id_token token"
+          ],
+          "subject_types_supported": [
+            "public",
+            "pairwise"
+          ],
+          "id_token_signing_alg_values_supported": [
+            "PS384",
+            "ES384",
+            "RS384",
+            "HS256",
+            "HS512",
+            "ES256",
+            "RS256",
+            "HS384",
+            "ES512",
+            "PS256",
+            "PS512",
+            "RS512"
+          ],
+          "id_token_encryption_alg_values_supported": [
+            "RSA-OAEP",
+            "RSA-OAEP-256",
+            "RSA1_5"
+          ],
+          "id_token_encryption_enc_values_supported": [
+            "A256GCM",
+            "A192GCM",
+            "A128GCM",
+            "A128CBC-HS256",
+            "A192CBC-HS384",
+            "A256CBC-HS512"
+          ],
+          "userinfo_signing_alg_values_supported": [
+            "PS384",
+            "ES384",
+            "RS384",
+            "HS256",
+            "HS512",
+            "ES256",
+            "RS256",
+            "HS384",
+            "ES512",
+            "PS256",
+            "PS512",
+            "RS512",
+            "none"
+          ],
+          "userinfo_encryption_alg_values_supported": [
+            "RSA-OAEP",
+            "RSA-OAEP-256",
+            "RSA1_5"
+          ],
+          "userinfo_encryption_enc_values_supported": [
+            "A256GCM",
+            "A192GCM",
+            "A128GCM",
+            "A128CBC-HS256",
+            "A192CBC-HS384",
+            "A256CBC-HS512"
+          ],
+          "request_object_signing_alg_values_supported": [
+            "PS384",
+            "ES384",
+            "RS384",
+            "HS256",
+            "HS512",
+            "ES256",
+            "RS256",
+            "HS384",
+            "ES512",
+            "PS256",
+            "PS512",
+            "RS512",
+            "none"
+          ],
+          "request_object_encryption_alg_values_supported": [
+            "RSA-OAEP",
+            "RSA-OAEP-256",
+            "RSA1_5"
+          ],
+          "request_object_encryption_enc_values_supported": [
+            "A256GCM",
+            "A192GCM",
+            "A128GCM",
+            "A128CBC-HS256",
+            "A192CBC-HS384",
+            "A256CBC-HS512"
+          ],
+          "response_modes_supported": [
+            "query",
+            "fragment",
+            "form_post",
+            "query.jwt",
+            "fragment.jwt",
+            "form_post.jwt",
+            "jwt"
+          ],
+          "registration_endpoint": "http://localhost:7080/realms/Scos/clients-registrations/openid-connect",
+          "token_endpoint_auth_methods_supported": [
+            "private_key_jwt",
+            "client_secret_basic",
+            "client_secret_post",
+            "tls_client_auth",
+            "client_secret_jwt"
+          ],
+          "token_endpoint_auth_signing_alg_values_supported": [
+            "PS384",
+            "ES384",
+            "RS384",
+            "HS256",
+            "HS512",
+            "ES256",
+            "RS256",
+            "HS384",
+            "ES512",
+            "PS256",
+            "PS512",
+            "RS512"
+          ],
+          "introspection_endpoint_auth_methods_supported": [
+            "private_key_jwt",
+            "client_secret_basic",
+            "client_secret_post",
+            "tls_client_auth",
+            "client_secret_jwt"
+          ],
+          "introspection_endpoint_auth_signing_alg_values_supported": [
+            "PS384",
+            "ES384",
+            "RS384",
+            "HS256",
+            "HS512",
+            "ES256",
+            "RS256",
+            "HS384",
+            "ES512",
+            "PS256",
+            "PS512",
+            "RS512"
+          ],
+          "authorization_signing_alg_values_supported": [
+            "PS384",
+            "ES384",
+            "RS384",
+            "HS256",
+            "HS512",
+            "ES256",
+            "RS256",
+            "HS384",
+            "ES512",
+            "PS256",
+            "PS512",
+            "RS512"
+          ],
+          "authorization_encryption_alg_values_supported": [
+            "RSA-OAEP",
+            "RSA-OAEP-256",
+            "RSA1_5"
+          ],
+          "authorization_encryption_enc_values_supported": [
+            "A256GCM",
+            "A192GCM",
+            "A128GCM",
+            "A128CBC-HS256",
+            "A192CBC-HS384",
+            "A256CBC-HS512"
+          ],
+          "claims_supported": [
+            "aud",
+            "sub",
+            "iss",
+            "auth_time",
+            "name",
+            "given_name",
+            "family_name",
+            "preferred_username",
+            "email",
+            "acr"
+          ],
+          "claim_types_supported": [
+            "normal"
+          ],
+          "claims_parameter_supported": true,
+          "scopes_supported": [
+            "openid",
+            "profile",
+            "acr",
+            "microprofile-jwt",
+            "roles",
+            "offline_access",
+            "phone",
+            "email",
+            "web-origins",
+            "address"
+          ],
+          "request_parameter_supported": true,
+          "request_uri_parameter_supported": true,
+          "require_request_uri_registration": true,
+          "code_challenge_methods_supported": [
+            "plain",
+            "S256"
+          ],
+          "tls_client_certificate_bound_access_tokens": true,
+          "revocation_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/revoke",
+          "revocation_endpoint_auth_methods_supported": [
+            "private_key_jwt",
+            "client_secret_basic",
+            "client_secret_post",
+            "tls_client_auth",
+            "client_secret_jwt"
+          ],
+          "revocation_endpoint_auth_signing_alg_values_supported": [
+            "PS384",
+            "ES384",
+            "RS384",
+            "HS256",
+            "HS512",
+            "ES256",
+            "RS256",
+            "HS384",
+            "ES512",
+            "PS256",
+            "PS512",
+            "RS512"
+          ],
+          "backchannel_logout_supported": true,
+          "backchannel_logout_session_supported": true,
+          "device_authorization_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/auth/device",
+          "backchannel_token_delivery_modes_supported": [
+            "poll",
+            "ping"
+          ],
+          "backchannel_authentication_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/ext/ciba/auth",
+          "backchannel_authentication_request_signing_alg_values_supported": [
+            "PS384",
+            "ES384",
+            "RS384",
+            "ES256",
+            "RS256",
+            "ES512",
+            "PS256",
+            "PS512",
+            "RS512"
+          ],
+          "require_pushed_authorization_requests": false,
+          "pushed_authorization_request_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/ext/par/request",
+          "mtls_endpoint_aliases": {
+            "token_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/token",
+            "revocation_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/revoke",
+            "introspection_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/token/introspect",
+            "device_authorization_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/auth/device",
+            "registration_endpoint": "http://localhost:7080/realms/Scos/clients-registrations/openid-connect",
+            "userinfo_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/userinfo",
+            "pushed_authorization_request_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/ext/par/request",
+            "backchannel_authentication_endpoint": "http://localhost:7080/realms/Scos/protocol/openid-connect/ext/ciba/auth"
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        }
+      }
+    }
+  ]
+}

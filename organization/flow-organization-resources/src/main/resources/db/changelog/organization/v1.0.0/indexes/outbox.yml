@@ -1,0 +1,33 @@
+databaseChangeLog:
+  # ============================================================
+  # idx_outbox_event_pending (parcial — somente eventos PENDING)
+  # Índice principal do polling: worker busca pendentes de um tópico em ordem de chegada.
+  # ============================================================
+  - changeSet:
+      id: 20260701-Index-010
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX IF NOT EXISTS idx_outbox_event_pending
+              ON scos.scos_outbox_event (topic, created_at)
+              WHERE status = 'PENDING';
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_outbox_event_pending;
+
+  # ============================================================
+  # idx_outbox_dead_letter_topic_created
+  # Revisão manual filtrada por tópico/integração, mais recentes primeiro.
+  # ============================================================
+  - changeSet:
+      id: 20260701-Index-011
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX IF NOT EXISTS idx_outbox_dead_letter_topic_created
+              ON scos.scos_outbox_event_dead_letter (topic, created_at DESC);
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_outbox_dead_letter_topic_created;

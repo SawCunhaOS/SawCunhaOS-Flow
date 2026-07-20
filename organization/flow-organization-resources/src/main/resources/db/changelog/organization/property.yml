@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - property:
+      name: now
+      value: now()
+      dbms: postgresql
+  - property:
+      name: POINTType
+      value: point
+      dbms: postgresql
+  - property:
+      name: defaultValueBoolean
+      value: "false"
+      dbms: postgresql
+  - property:
+      name: trueValueBoolean
+      value: "true"
+      dbms: postgresql
+  - property:
+      name: uuid_function
+      value: gen_random_uuid()
+      dbms: postgresql

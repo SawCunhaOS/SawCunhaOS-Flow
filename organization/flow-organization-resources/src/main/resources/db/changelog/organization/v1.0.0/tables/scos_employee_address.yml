@@ -1,0 +1,90 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260606-Samuel.Cunha-007
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_EMPLOYEE_ADDRESS"
+      changes:
+        - createTable:
+            tableName: SCOS_EMPLOYEE_ADDRESS
+            schemaName: scos
+            columns:
+              - column:
+                  name: EMPLOYEE_ID_ADDRESS
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: EMPLOYEE_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_EMPLOYEE_ID_SCOS_EMPLOYEE_ADDRESS
+                    references: scos.SCOS_EMPLOYEE(EMPLOYEE_ID)
+              - column:
+                  name: ADDRESS_TYPE_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_ADDRESS_TYPE_ID_SCOS_EMPLOYEE_ADDRESS
+                    references: scos.SCOS_ADDRESS_TYPE(ADDRESS_TYPE_ID)
+              - column:
+                  name: NUMBER
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: COMPLEMENT
+                  type: varchar(250)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: GEOLOCATION
+                  type: ${POINTType}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USER_AT
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: SCOS_EMPLOYEE_ADDRESS
+            schemaName: scos
+            columnNames: EMPLOYEE_ID_ADDRESS, EMPLOYEE_ID
+            constraintName: PK_SCOS_EMPLOYEE_ADDRESS
+        - addUniqueConstraint:
+            tableName: SCOS_EMPLOYEE_ADDRESS
+            schemaName: scos
+            columnNames: ADDRESS_TYPE_ID, EMPLOYEE_ID
+            constraintName: UK_ADDRESS_TYPE_ID_EMPLOYEE_ID_SCOS_EMPLOYEE_ADDRESS
+            validate: true
+        - createIndex:
+            tableName: SCOS_EMPLOYEE_ADDRESS
+            schemaName: scos
+            indexName: IDX_EMPLOYEE_ID_SCOS_EMPLOYEE_ADDRESS
+            columns:
+              - column:
+                  name: EMPLOYEE_ID
+        - createIndex:
+            tableName: SCOS_EMPLOYEE_ADDRESS
+            schemaName: scos
+            indexName: IDX_ADDRESS_TYPE_ID_SCOS_EMPLOYEE_ADDRESS
+            columns:
+              - column:
+                  name: ADDRESS_TYPE_ID
+      rollback:
+        - dropTable:
+            tableName: SCOS_EMPLOYEE_ADDRESS
+            schemaName: scos
+            cascadeConstraints: true

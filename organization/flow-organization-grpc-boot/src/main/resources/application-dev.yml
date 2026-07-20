@@ -1,0 +1,58 @@
+scos:
+  port: 8090
+  tracing:
+    sampling: 1.0
+  datasource:
+    url: jdbc:postgresql://localhost:5432/scos?currentSchema=scos
+    username: scos
+    password: scos#2026
+    connection-timeout: 600000
+    idle-timeout: 150000
+    max-lifetime: 1800000
+    minimum-idle: 25
+    maximum-pool-size: 100
+    jpa:
+      show_sql: true
+      format_sql: true
+      generate_statistics: true
+      log_queries_slower: 500
+  audit:
+    enabled: false
+    datasource:
+      url: jdbc:postgresql://localhost:5432/scos?currentSchema=scos
+      username: scos
+      password: scos#2026
+      connection-timeout: 100000
+      idle-timeout: 150000
+      max-lifetime: 300000
+      minimum-idle: 10
+      maximum-pool-size: 30
+  security:
+    master-key: bipGfGswQXxHcy04UnQvSCQwMFk4V1A2YCpCcDlGRkE=
+    keycloak:
+      client-id: Scos
+      authorization-grant-type: password
+      scope: openid
+      issuer-uri: http://localhost:7080/realms/Scos
+      resourceId: "Scos"
+  cache:
+    enable: false
+    key-prefix: 'grpc::'
+    time-to-live: 12000000
+    port: 26379
+    database: 0
+    master: scos_master
+    password: scos#2026
+    sentinels: localhost:26379
+  privacy:
+    enabled: true
+    strict: false
+    max-payload-kb: 64
+    masking:
+      default-patterns: true
+    log:
+      register-converter: true
+    crypto:
+      secret: ASDASDASDA
+  registry:
+    key-access: ASDASDASDA

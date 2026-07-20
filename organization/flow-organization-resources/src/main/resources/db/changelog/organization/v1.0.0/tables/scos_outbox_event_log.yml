@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260701-Samuel.Cunha-017
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_OUTBOX_EVENT_LOG"
+      changes:
+        - createTable:
+            tableName: SCOS_OUTBOX_EVENT_LOG
+            schemaName: scos
+            columns:
+              - column:
+                  name: OUTBOX_EVENT_LOG_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_OUTBOX_EVENT_LOG
+                    nullable: false
+              - column:
+                  name: OUTBOX_EVENT_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_OUTBOX_EVENT_ID_SCOS_OUTBOX_EVENT_LOG
+                    references: scos.SCOS_OUTBOX_EVENT(OUTBOX_EVENT_ID)
+              - column:
+                  name: CONSUMER
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: SUCCESS
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: RESPONSE
+                  type: varchar(5000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USER_AT
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+        - createIndex:
+            tableName: SCOS_OUTBOX_EVENT_LOG
+            schemaName: scos
+            indexName: IDX_OUTBOX_EVENT_LOG_EVENT_ID
+            columns:
+              - column:
+                  name: OUTBOX_EVENT_ID
+      rollback:
+        - dropTable:
+            tableName: SCOS_OUTBOX_EVENT_LOG
+            schemaName: scos
+            cascadeConstraints: true

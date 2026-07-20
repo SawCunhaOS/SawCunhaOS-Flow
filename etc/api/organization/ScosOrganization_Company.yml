@@ -1,0 +1,1522 @@
+openapi: 3.0.3
+info:
+  title: SawCunhaOS Organization - Company
+  description: APIs para gestão de empresas, filiais, contatos e endereços.
+  termsOfService: https://www.apache.org/licenses/LICENSE-2.0
+  contact:
+    name: Samuel Cunha
+    url: https://github.com/SawCunhaOS
+    email: samukasaww@live.com
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: '1.0'
+servers:
+  - url: /organization/api
+tags:
+  - name: Company
+    description: APIs para registro dos dados da Empresa
+  - name: Company Contact
+    description: APIs para registro dos dados de contato da Empresa
+  - name: Company Address
+    description: APIs para registro dos endereços da Empresa
+  - name: Legal Nature
+    description: APIs para gestão do catálogo de naturezas jurídicas
+  - name: Cnae
+    description: APIs para gestão do catálogo de CNAEs
+  - name: Company Cnae Secondary
+    description: APIs para associação de CNAEs secundários à empresa
+
+paths:
+  /v1/companies:
+    get:
+      tags: [Company]
+      summary: Get all companies
+      description: UC-004 - Lista todas as empresas e filiais com paginação
+      operationId: getAllCompanies
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/statusFilter'
+        - $ref: '#/components/parameters/nameFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllCompaniesResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_COMPANY]
+    post:
+      tags: [Company]
+      summary: Create a company
+      description: UC-001/UC-002 - Cadastra empresa matriz (parentCompanyId nulo) ou filial
+      operationId: createCompany
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCompanyRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_COMPANY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_COMPANY
+        ttl: 1
+
+  /v1/companies/{id}:
+    get:
+      tags: [Company]
+      summary: Get company by id
+      description: UC-003 - Retorna os dados completos de uma empresa pelo ID
+      operationId: getCompanyById
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCompanyResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_COMPANY]
+    put:
+      tags: [Company]
+      summary: Update company
+      description: UC-005 - Atualiza os dados cadastrais. Não altera o vínculo com a empresa mãe
+      operationId: updateCompany
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCompanyRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_COMPANY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_COMPANY
+        ttl: 1
+  /v1/companies/{id}/enable:
+    put:
+      tags: [Company]
+      summary: Activate company
+      description: >-
+        UC-006 - Transição de domínio "activate": reativa empresa com status INACTIVE para ACTIVE.
+        Nome da rota (`enable`) não corresponde 1:1 ao nome da transição de domínio (`activate`) - motivo vem do catálogo ReasonActivate
+      operationId: activateCompany
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyStatusTransitionRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ENABLE_COMPANY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_COMPANY
+        ttl: 1
+
+  /v1/companies/{id}/disable:
+    put:
+      tags: [Company]
+      summary: Inactivate company
+      description: >-
+        UC-007 - Transição de domínio "inactivate": inativa empresa com status ACTIVE para INACTIVE.
+        Nome da rota (`disable`) não corresponde 1:1 ao nome da transição de domínio (`inactivate`) - motivo vem do catálogo ReasonInactivate
+      operationId: inactivateCompany
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyStatusTransitionRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DISABLE_COMPANY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_COMPANY
+        ttl: 1
+
+  /v1/companies/{id}/block:
+    put:
+      tags: [Company]
+      summary: Block company
+      description: >-
+        UC-008 - Transição de domínio "disable": bloqueia empresa, status muda para DISABLED.
+        Nome da rota (`block`) não corresponde 1:1 ao nome da transição de domínio (`disable`) - motivo vem do catálogo ReasonDisable.
+        Só é aceito quando o status atual é ACTIVE - a partir de INACTIVE retorna 4XX
+      operationId: blockCompany
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyStatusTransitionRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [BLOCK_COMPANY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_BLOCK_COMPANY
+        ttl: 1
+
+  /v1/companies/{id}/unblock:
+    put:
+      tags: [Company]
+      summary: Unblock company
+      description: >-
+        UC-137 - Transição de domínio "enable": desbloqueia empresa com status DISABLED para ACTIVE.
+        Nome da rota (`unblock`) não corresponde 1:1 ao nome da transição de domínio (`enable`) - motivo vem do catálogo ReasonEnable
+      operationId: unblockCompany
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyStatusTransitionRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UNBLOCK_COMPANY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_UNBLOCK_COMPANY
+        ttl: 1
+
+  /v1/companies/{id}/status-history:
+    get:
+      tags: [Company]
+      summary: Get company status history
+      description: UC-138 - Histórico paginado e somente leitura das transições de status da empresa, populado exclusivamente pelas rotas enable/disable/block/unblock
+      operationId: getCompanyStatusHistory
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllCompanyStatusHistoryResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_COMPANY_STATUS_HISTORY]
+
+  /v1/companies/{id}/hierarchy:
+    get:
+      tags: [Company]
+      summary: Get company hierarchy
+      description: UC-009 - Retorna a hierarquia completa em árvore recursiva - matriz e filiais em todos os níveis
+      operationId: getCompanyHierarchy
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCompanyHierarchyResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_COMPANY]
+
+  /v1/companies/{id}/branches:
+    get:
+      tags: [Company]
+      summary: Get company branches
+      description: UC-010 - Lista as filiais diretamente vinculadas - primeiro nível, sem recursividade
+      operationId: getCompanyBranches
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '#/components/parameters/statusFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllCompaniesResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_COMPANY]
+
+  /v1/companies/{companyId}/contacts:
+    get:
+      tags: [Company Contact]
+      summary: Get all company contacts
+      description: UC-011 - Lista todos os contatos de uma empresa
+      operationId: getAllCompanyContacts
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/idCompany'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllCompanyContactsResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_COMPANY_CONTACT]
+    post:
+      tags: [Company Contact]
+      summary: Create a company contact
+      description: UC-012 - Adiciona um contato à empresa
+      operationId: createCompanyContact
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idCompany'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCompanyContactRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_COMPANY_CONTACT]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_COMPANY_CONTACT
+        ttl: 1
+
+  /v1/companies/{companyId}/contacts/{id}:
+    get:
+      tags: [Company Contact]
+      summary: Get company contact by id
+      description: UC-013 - Retorna um contato específico da empresa
+      operationId: getCompanyContactById
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idCompany'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCompanyContactResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_COMPANY_CONTACT]
+    put:
+      tags: [Company Contact]
+      summary: Update company contact
+      description: UC-014 - Atualiza os dados de um contato da empresa
+      operationId: updateCompanyContact
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idCompany'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCompanyContactRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_COMPANY_CONTACT]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_COMPANY_CONTACT
+        ttl: 1
+    delete:
+      tags: [Company Contact]
+      summary: Delete company contact
+      description: UC-015 - Remove um contato da empresa
+      operationId: deleteCompanyContact
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idCompany'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DELETE_COMPANY_CONTACT]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_DELETE_COMPANY_CONTACT
+        ttl: 1
+
+  /v1/companies/{companyId}/addresses:
+    get:
+      tags: [Company Address]
+      summary: Get all company addresses
+      description: UC-016 - Lista todos os endereços vinculados a uma empresa
+      operationId: getAllCompanyAddress
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/idCompany'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllCompanyAddressResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_COMPANY_ADDRESS]
+    post:
+      tags: [Company Address]
+      summary: Create a company address
+      description: UC-017 - Vincula um endereço externo à empresa. Integridade do addressId garantida pela aplicação
+      operationId: createCompanyAddress
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idCompany'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCompanyAddressRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_COMPANY_ADDRESS]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_COMPANY_ADDRESS
+        ttl: 1
+
+  /v1/companies/{companyId}/addresses/{id}:
+    get:
+      tags: [Company Address]
+      summary: Get company address by id
+      description: UC-018 - Retorna o vínculo de endereço da empresa
+      operationId: getCompanyAddressById
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idCompany'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCompanyAddressResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_COMPANY_ADDRESS]
+    put:
+      tags: [Company Address]
+      summary: Update company address
+      description: UC-019 - Atualiza os dados do vínculo. Não altera o addressId externo
+      operationId: updateCompanyAddress
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idCompany'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCompanyAddressRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_COMPANY_ADDRESS]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_COMPANY_ADDRESS
+        ttl: 1
+    delete:
+      tags: [Company Address]
+      summary: Delete company address
+      description: UC-020 - Remove o vínculo de endereço. O registro externo não é afetado
+      operationId: deleteCompanyAddress
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idCompany'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DELETE_COMPANY_ADDRESS]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_DELETE_COMPANY_ADDRESS
+        ttl: 1
+
+  /v1/legal-natures:
+    get:
+      tags: [Legal Nature]
+      summary: Get all legal natures
+      description: UC-093 - Lista todas as naturezas jurídicas com paginação
+      operationId: getAllLegalNatures
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllLegalNaturesResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_LEGAL_NATURE]
+    post:
+      tags: [Legal Nature]
+      summary: Create a legal nature
+      description: UC-094 - Cria uma nova natureza jurídica
+      operationId: createLegalNature
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLegalNatureRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_LEGAL_NATURE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_LEGAL_NATURE
+        ttl: 1
+
+  /v1/legal-natures/{id}:
+    get:
+      tags: [Legal Nature]
+      summary: Get legal nature by id
+      description: UC-095 - Retorna os dados de uma natureza jurídica
+      operationId: getLegalNatureById
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLegalNatureResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_LEGAL_NATURE]
+    put:
+      tags: [Legal Nature]
+      summary: Update legal nature
+      description: UC-096 - Atualiza o código ou descrição de uma natureza jurídica
+      operationId: updateLegalNature
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLegalNatureRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_LEGAL_NATURE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_LEGAL_NATURE
+        ttl: 1
+    delete:
+      tags: [Legal Nature]
+      summary: Delete legal nature
+      description: UC-097 - Exclusão física. Rejeitada se houver Company referenciando o registro
+      operationId: deleteLegalNature
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DELETE_LEGAL_NATURE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_DELETE_LEGAL_NATURE
+        ttl: 1
+
+  /v1/cnaes:
+    get:
+      tags: [Cnae]
+      summary: Get all CNAEs
+      description: UC-098 - Lista todos os CNAEs com paginação
+      operationId: getAllCnaes
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllCnaesResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_CNAE]
+    post:
+      tags: [Cnae]
+      summary: Create a CNAE
+      description: UC-099 - Cria um novo CNAE
+      operationId: createCnae
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCnaeRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_CNAE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_CNAE
+        ttl: 1
+
+  /v1/cnaes/{id}:
+    get:
+      tags: [Cnae]
+      summary: Get CNAE by id
+      description: UC-100 - Retorna os dados de um CNAE
+      operationId: getCnaeById
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCnaeResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_CNAE]
+    put:
+      tags: [Cnae]
+      summary: Update CNAE
+      description: UC-101 - Atualiza o código ou descrição de um CNAE
+      operationId: updateCnae
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCnaeRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_CNAE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_CNAE
+        ttl: 1
+    delete:
+      tags: [Cnae]
+      summary: Delete CNAE
+      description: UC-102 - Exclusão física. Rejeitada se houver Company.cnaePrincipalId ou CompanyCnaeSecondary referenciando o registro
+      operationId: deleteCnae
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DELETE_CNAE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_DELETE_CNAE
+        ttl: 1
+
+  /v1/companies/{companyId}/cnaes-secondary:
+    get:
+      tags: [Company Cnae Secondary]
+      summary: Get all secondary CNAEs of a company
+      description: UC-103 - Lista os CNAEs secundários associados à empresa, com paginação
+      operationId: getAllCompanyCnaeSecondary
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/idCompany'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllCompanyCnaeSecondaryResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_COMPANY_CNAE_SECONDARY]
+
+  /v1/companies/{companyId}/cnaes-secondary/{cnaeId}:
+    post:
+      tags: [Company Cnae Secondary]
+      summary: Add a secondary CNAE to a company
+      description: UC-104 - Associa um CNAE existente como secundário da empresa. Rejeita duplicidade e referências inexistentes
+      operationId: createCompanyCnaeSecondary
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idCompany'
+        - $ref: '#/components/parameters/idCnae'
+      responses:
+        '201':
+          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_COMPANY_CNAE_SECONDARY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_COMPANY_CNAE_SECONDARY
+        ttl: 1
+    delete:
+      tags: [Company Cnae Secondary]
+      summary: Remove a secondary CNAE from a company
+      description: UC-105 - Remove a associação do CNAE secundário com a empresa
+      operationId: deleteCompanyCnaeSecondary
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idCompany'
+        - $ref: '#/components/parameters/idCnae'
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DELETE_COMPANY_CNAE_SECONDARY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_DELETE_COMPANY_CNAE_SECONDARY
+        ttl: 1
+
+components:
+  securitySchemes:
+    BearerAuth:
+      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
+  parameters:
+    idCompany:
+      name: companyId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+      x-jdempotentrequestpayload: true
+    idCnae:
+      name: cnaeId
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int64
+      x-jdempotentrequestpayload: true
+    statusFilter:
+      name: status
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/StatusCompany'
+    nameFilter:
+      name: name
+      in: query
+      required: false
+      description: >-
+        Filtro por nome da empresa. Correspondência exata - não faz busca parcial,
+        não normaliza acentuação e é sensível a maiúsculas/minúsculas
+      schema:
+        type: string
+  schemas:
+    Companies:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        nameTreatment:
+          type: string
+        sectorOfActivity:
+          type: string
+        observation:
+          type: string
+        status:
+          $ref: '#/components/schemas/StatusCompany'
+    Company:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        nameTreatment:
+          type: string
+        taxIdentifier:
+          type: string
+        foundationDate:
+          type: string
+          format: date
+        sectorOfActivity:
+          type: string
+        observation:
+          type: string
+        parentCompany:
+          $ref: '#/components/schemas/ParentCompany'
+        status:
+          $ref: '#/components/schemas/StatusCompany'
+        legalNatureId:
+          type: integer
+          format: int64
+          nullable: true
+        cnaePrincipalId:
+          type: integer
+          format: int64
+          nullable: true
+        stateRegistration:
+          type: string
+          nullable: true
+          description: Inscrição estadual. Aceita o valor "ISENTO"
+        municipalRegistration:
+          type: string
+          nullable: true
+    ParentCompany:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        nameTreatment:
+          type: string
+        taxIdentifier:
+          type: string
+    CompanyHierarchyNode:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        nameTreatment:
+          type: string
+        taxIdentifier:
+          type: string
+        status:
+          $ref: '#/components/schemas/StatusCompany'
+        branches:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyHierarchyNode'
+    GetCompanyResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Company'
+    GetAllCompaniesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Companies'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    GetCompanyHierarchyResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CompanyHierarchyNode'
+    CreateCompanyRequest:
+      required: [name, nameTreatment, taxIdentifier, foundationDate, sectorOfActivity, reasonActivateId]
+      type: object
+      properties:
+        name:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 250
+          x-size-message: SCOS_VALIDATION_008
+        nameTreatment:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 100
+          x-size-message: SCOS_VALIDATION_008
+        taxIdentifier:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          x-jdempotentrequestpayload: true
+          x-is-cnpj: true
+          minLength: 14
+          maxLength: 14
+          x-size-message: SCOS_VALIDATION_010
+          pattern: '^[A-Z0-9]{12}[0-9]{2}$'
+          x-pattern-message: SCOS_VALIDATION_010
+          description: >-
+            CNPJ sem máscara, 14 caracteres. Segue o padrão CNPJ Alfa (IN RFB nº 2.229/2024, vigente a partir de julho/2026):
+            os 12 primeiros caracteres são alfanuméricos (0-9, A-Z), os 2 últimos são os dígitos verificadores, sempre numéricos
+        foundationDate:
+          type: string
+          format: date
+          x-required-message: SCOS_VALIDATION_003
+        sectorOfActivity:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 100
+          x-size-message: SCOS_VALIDATION_008
+        observation:
+          type: string
+        parentCompanyId:
+          type: integer
+          format: int64
+          description: Preenchido apenas para filiais. Nulo indica empresa matriz
+        reasonActivateId:
+          type: integer
+          format: int64
+          description: Motivo da criação (primeira linha de status ACTIVE em CompanyStatusHistory). Referencia ReasonActivate com entityType=COMPANY
+          x-required-message: SCOS_VALIDATION_003
+        legalNatureId:
+          type: integer
+          format: int64
+          nullable: true
+        cnaePrincipalId:
+          type: integer
+          format: int64
+          nullable: true
+        stateRegistration:
+          type: string
+          nullable: true
+          maxLength: 20
+          x-size-message: SCOS_VALIDATION_008
+          description: Inscrição estadual. Aceita o valor "ISENTO"
+        municipalRegistration:
+          type: string
+          nullable: true
+          maxLength: 20
+          x-size-message: SCOS_VALIDATION_008
+    UpdateCompanyRequest:
+      required: [name, nameTreatment, foundationDate, sectorOfActivity]
+      type: object
+      properties:
+        name:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 250
+          x-size-message: SCOS_VALIDATION_008
+        nameTreatment:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 100
+          x-size-message: SCOS_VALIDATION_008
+        foundationDate:
+          type: string
+          format: date
+          x-required-message: SCOS_VALIDATION_003
+        sectorOfActivity:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 100
+          x-size-message: SCOS_VALIDATION_008
+        observation:
+          type: string
+        legalNatureId:
+          type: integer
+          format: int64
+          nullable: true
+        cnaePrincipalId:
+          type: integer
+          format: int64
+          nullable: true
+        stateRegistration:
+          type: string
+          nullable: true
+          maxLength: 20
+          x-size-message: SCOS_VALIDATION_008
+          description: Inscrição estadual. Aceita o valor "ISENTO"
+        municipalRegistration:
+          type: string
+          nullable: true
+          maxLength: 20
+          x-size-message: SCOS_VALIDATION_008
+    CompanyContact:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        contactTypeId:
+          type: integer
+          format: int64
+        phone:
+          type: string
+        email:
+          type: string
+        responsiblePerson:
+          type: string
+    GetCompanyContactResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CompanyContact'
+    GetAllCompanyContactsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyContact'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    CreateCompanyContactRequest:
+      required: [contactTypeId, phone, email, responsiblePerson]
+      type: object
+      properties:
+        contactTypeId:
+          type: integer
+          format: int64
+          x-required-message: SCOS_VALIDATION_003
+          x-jdempotentrequestpayload: true
+        phone:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          x-jdempotentrequestpayload: true
+          maxLength: 50
+          x-size-message: SCOS_VALIDATION_008
+        email:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          x-jdempotentrequestpayload: true
+          maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
+          pattern: '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
+          x-pattern-message: SCOS_VALIDATION_005
+        responsiblePerson:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
+    UpdateCompanyContactRequest:
+      required: [contactTypeId, phone, email, responsiblePerson]
+      type: object
+      properties:
+        contactTypeId:
+          type: integer
+          format: int64
+          x-required-message: SCOS_VALIDATION_003
+        phone:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 50
+          x-size-message: SCOS_VALIDATION_008
+        email:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
+          pattern: '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
+          x-pattern-message: SCOS_VALIDATION_005
+        responsiblePerson:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
+    CompanyAddresses:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        addressTypeId:
+          type: integer
+          format: int64
+        number:
+          type: string
+        complement:
+          type: string
+    CompanyAddress:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        addressId:
+          type: integer
+          format: int64
+        addressTypeId:
+          type: integer
+          format: int64
+        number:
+          type: string
+        complement:
+          type: string
+        latitude:
+          type: number
+        longitude:
+          type: number
+    GetCompanyAddressResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/CompanyAddress'
+    GetAllCompanyAddressResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyAddresses'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    CreateCompanyAddressRequest:
+      required: [addressTypeId, number, latitude, longitude, addressId]
+      type: object
+      properties:
+        addressTypeId:
+          type: integer
+          format: int64
+          x-required-message: SCOS_VALIDATION_003
+          x-jdempotentrequestpayload: true
+        number:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-jdempotentrequestpayload: true
+          description: >-
+            Número do endereço. Alfanumérico - aceita valores como "S/N", "123A" ou "45-B"
+        complement:
+          type: string
+          maxLength: 250
+          x-size-message: SCOS_VALIDATION_008
+        latitude:
+          type: number
+          x-required-message: SCOS_VALIDATION_003
+        longitude:
+          type: number
+          x-required-message: SCOS_VALIDATION_003
+        addressId:
+          type: integer
+          format: int64
+          x-required-message: SCOS_VALIDATION_003
+          x-jdempotentrequestpayload: true
+    UpdateCompanyAddressRequest:
+      required: [addressTypeId, number, latitude, longitude]
+      type: object
+      properties:
+        addressTypeId:
+          type: integer
+          format: int64
+          x-required-message: SCOS_VALIDATION_003
+        number:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          description: >-
+            Número do endereço. Alfanumérico - aceita valores como "S/N", "123A" ou "45-B"
+        complement:
+          type: string
+          maxLength: 250
+          x-size-message: SCOS_VALIDATION_008
+        latitude:
+          type: number
+          x-required-message: SCOS_VALIDATION_003
+        longitude:
+          type: number
+          x-required-message: SCOS_VALIDATION_003
+    LegalNature:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        code:
+          type: string
+        description:
+          type: string
+    GetLegalNatureResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/LegalNature'
+    GetAllLegalNaturesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LegalNature'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    CreateLegalNatureRequest:
+      required: [code, description]
+      type: object
+      properties:
+        code:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          x-jdempotentrequestpayload: true
+          maxLength: 10
+          x-size-message: SCOS_VALIDATION_008
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
+    UpdateLegalNatureRequest:
+      required: [code, description]
+      type: object
+      properties:
+        code:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 10
+          x-size-message: SCOS_VALIDATION_008
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
+    Cnae:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        code:
+          type: string
+        description:
+          type: string
+    GetCnaeResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Cnae'
+    GetAllCnaesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Cnae'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    CreateCnaeRequest:
+      required: [code, description]
+      type: object
+      properties:
+        code:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          x-jdempotentrequestpayload: true
+          maxLength: 10
+          x-size-message: SCOS_VALIDATION_008
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
+    UpdateCnaeRequest:
+      required: [code, description]
+      type: object
+      properties:
+        code:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 10
+          x-size-message: SCOS_VALIDATION_008
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
+    CompanyCnaeSecondary:
+      type: object
+      properties:
+        cnaeId:
+          type: integer
+          format: int64
+        code:
+          type: string
+        description:
+          type: string
+    GetAllCompanyCnaeSecondaryResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyCnaeSecondary'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    StatusCompany:
+      type: string
+      enum:
+        - ACTIVE
+        - INACTIVE
+        - DISABLED
+    CompanyStatusTransitionRequest:
+      required: [reasonId]
+      type: object
+      properties:
+        reasonId:
+          type: integer
+          format: int64
+          description: >-
+            Motivo da transição. Referencia o catálogo Reason* correspondente à transição de domínio
+            (enable→ReasonActivate, disable→ReasonInactivate, block→ReasonDisable, unblock→ReasonEnable)
+          x-required-message: SCOS_VALIDATION_003
+          x-jdempotentrequestpayload: true
+        observation:
+          type: string
+    CompanyStatusHistory:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/StatusCompany'
+        previousStatus:
+          $ref: '#/components/schemas/StatusCompany'
+        reasonActivateId:
+          type: integer
+          format: int64
+          nullable: true
+        reasonInactivateId:
+          type: integer
+          format: int64
+          nullable: true
+        reasonDisableId:
+          type: integer
+          format: int64
+          nullable: true
+        reasonEnableId:
+          type: integer
+          format: int64
+          nullable: true
+        observation:
+          type: string
+          nullable: true
+        userAt:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    GetAllCompanyStatusHistoryResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyStatusHistory'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+
+security:
+  - BearerAuth: []

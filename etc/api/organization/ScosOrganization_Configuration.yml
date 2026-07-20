@@ -1,0 +1,191 @@
+openapi: 3.0.3
+info:
+  title: SawCunhaOS Organization - Configuration
+  description: APIs para gestão das configurações gerais do sistema SCOS.
+  termsOfService: https://www.apache.org/licenses/LICENSE-2.0
+  contact:
+    name: Samuel Cunha
+    url: https://github.com/SawCunhaOS
+    email: samukasaww@live.com
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: '1.0'
+servers:
+  - url: /organization/api
+tags:
+  - name: Configuration
+    description: APIs para gestão das configurações gerais do sistema
+
+paths:
+  /v1/configurations/keys:
+    get:
+      tags: [ Configuration ]
+      summary: Get all Keys configurations
+      description: UC-160 - Lista todas as chaves de configurações disponivel no sistema.
+      operationId: getAllKeysConfigurations
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllKeysConfigurationsResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ GET_CONFIGURATION ]
+  /v1/configurations:
+    get:
+      tags: [Configuration]
+      summary: Get all configurations
+      description: UC-077 - Lista todas as configurações do sistema. Valores sensíveis são mascarados
+      operationId: getAllConfigurations
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllConfigurationsResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_CONFIGURATION]
+
+  /v1/configurations/{id}:
+    get:
+      tags: [Configuration]
+      summary: Get configuration by id
+      description: UC-078 - Retorna uma configuração pelo identificador textual. Valores sensíveis são mascarados
+      operationId: getConfigurationById
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idConfiguration'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetConfigurationResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_CONFIGURATION]
+    put:
+      tags: [Configuration]
+      summary: Update configuration
+      description: UC-079 - Atualiza o valor de uma configuração existente em tempo real. O valor deve ser compatível com o tipo declarado
+      operationId: updateConfiguration
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idConfiguration'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateConfigurationRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_CONFIGURATION]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_CONFIGURATION
+        ttl: 1
+
+components:
+  securitySchemes:
+    BearerAuth:
+      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
+  parameters:
+    idConfiguration:
+      name: id
+      in: path
+      required: true
+      description: Identificador textual da configuração - ex. TOKEN_EXPIRY_MINUTES
+      schema:
+        type: string
+      x-jdempotentrequestpayload: true
+  schemas:
+    ConfigurationType:
+      type: string
+      enum:
+        - STRING
+        - INTEGER
+        - NUMBER
+        - BOOLEAN
+        - JSON
+        - PASSWORD
+    Configuration:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Chave identificadora - ex. TOKEN_EXPIRY_MINUTES
+        description:
+          type: string
+        value:
+          type: string
+        type:
+          $ref: '#/components/schemas/ConfigurationType'
+    KeyConfiguration:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Chave identificadora - ex. TOKEN_EXPIRY_MINUTES
+        description:
+          type: string
+          description: Descrição da chave
+        type:
+          $ref: '#/components/schemas/ConfigurationType'
+    GetConfigurationResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Configuration'
+    GetAllConfigurationsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Configuration'
+    GetAllKeysConfigurationsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyConfiguration'
+    UpdateConfigurationRequest:
+      required: [value]
+      type: object
+      properties:
+        value:
+          type: string
+          description: Novo valor. Deve ser compatível com o tipo declarado da configuração
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          x-jdempotentrequestpayload: true
+
+security:
+  - BearerAuth: []

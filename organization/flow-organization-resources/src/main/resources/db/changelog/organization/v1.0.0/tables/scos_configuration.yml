@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260606-Samuel.Cunha-014
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_CONFIGURATION"
+      changes:
+        - createTable:
+            tableName: SCOS_CONFIGURATION
+            schemaName: scos
+            columns:
+              - column:
+                  name: CONFIGURATION_ID
+                  type: varchar(50)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_CONFIGURATION
+                    nullable: false
+              - column:
+                  name: VALUE
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: TYPE
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USER_AT
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: SCOS_CONFIGURATION
+            schemaName: scos
+            cascadeConstraints: true

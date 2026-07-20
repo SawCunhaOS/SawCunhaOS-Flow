@@ -1,0 +1,105 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260606-Samuel.Cunha-013
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_LOGIN"
+      changes:
+        - createTable:
+            tableName: SCOS_LOGIN
+            schemaName: scos
+            columns:
+              - column:
+                  name: LOGIN_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_LOGIN
+                    nullable: false
+              - column:
+                  name: PROFILE_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_PROFILE_ID_SCOS_LOGIN
+                    references: scos.SCOS_PROFILE(PROFILE_ID)
+              - column:
+                  name: EMPLOYEE_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: FK_EMPLOYEE_ID_SCOS_LOGIN
+                    references: scos.SCOS_EMPLOYEE(EMPLOYEE_ID)
+              - column:
+                  name: EXTERNAL_ID
+                  type: UUID
+                  constraints:
+                    nullable: true
+              - column:
+                  name: LOGIN
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: STATUS
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: TYPE
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: LAST_USED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USER_AT
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: SCOS_LOGIN
+            schemaName: scos
+            columnNames: LOGIN
+            constraintName: UK_LOGIN_SCOS_LOGIN
+            validate: true
+        - createIndex:
+            tableName: SCOS_LOGIN
+            schemaName: scos
+            indexName: IDX_PROFILE_ID_SCOS_LOGIN
+            columns:
+              - column:
+                  name: PROFILE_ID
+        - createIndex:
+            tableName: SCOS_LOGIN
+            schemaName: scos
+            indexName: IDX_EMPLOYEE_ID_SCOS_LOGIN
+            columns:
+              - column:
+                  name: EMPLOYEE_ID
+        - createIndex:
+            tableName: SCOS_LOGIN
+            schemaName: scos
+            indexName: IDX_EXTERNAL_ID_SCOS_LOGIN
+            columns:
+              - column:
+                  name: EXTERNAL_ID
+      rollback:
+        - dropTable:
+            tableName: SCOS_LOGIN
+            schemaName: scos
+            cascadeConstraints: true

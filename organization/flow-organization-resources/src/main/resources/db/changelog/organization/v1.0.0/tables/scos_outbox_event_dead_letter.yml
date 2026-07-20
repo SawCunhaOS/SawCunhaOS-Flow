@@ -1,0 +1,67 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260701-Samuel.Cunha-018
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_OUTBOX_EVENT_DEAD_LETTER"
+      changes:
+        - createTable:
+            tableName: SCOS_OUTBOX_EVENT_DEAD_LETTER
+            schemaName: scos
+            columns:
+              - column:
+                  name: OUTBOX_EVENT_DEAD_LETTER_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_OUTBOX_EVENT_DEAD_LETTER
+                    nullable: false
+              - column:
+                  name: OUTBOX_EVENT_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: FK_OUTBOX_EVENT_ID_SCOS_OUTBOX_EVENT_DEAD_LETTER
+                    references: scos.SCOS_OUTBOX_EVENT(OUTBOX_EVENT_ID)
+              - column:
+                  name: TOPIC
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: SOURCE
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PAYLOAD
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ERROR_TYPE
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: RETRY_COUNT
+                  type: INT
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USER_AT
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+      rollback:
+        - dropTable:
+            tableName: SCOS_OUTBOX_EVENT_DEAD_LETTER
+            schemaName: scos
+            cascadeConstraints: true

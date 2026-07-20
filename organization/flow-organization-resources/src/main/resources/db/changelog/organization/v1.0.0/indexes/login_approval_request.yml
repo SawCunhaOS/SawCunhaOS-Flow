@@ -1,0 +1,33 @@
+databaseChangeLog:
+  # ============================================================
+  # idx_scos_login_approval_request_login_id
+  # Hot path: resolver a solicitação pendente de um Login (FR-23/24/25).
+  # ============================================================
+  - changeSet:
+      id: 20260718-Index-001
+      author: Samuel.Cunha
+      changes:
+        - createIndex:
+            schemaName: scos
+            tableName: scos_login_approval_request
+            indexName: idx_scos_login_approval_request_login_id
+            columns:
+              - column:
+                  name: login_id
+
+  # ============================================================
+  # idx_scos_login_approval_request_sla_scan (parcial — só pendentes)
+  # Job de escalonamento: varre quem estourou o SLA no nível atual.
+  # ============================================================
+  - changeSet:
+      id: 20260718-Index-002
+      author: Samuel.Cunha
+      changes:
+        - sql:
+            sql: >-
+              CREATE INDEX IF NOT EXISTS idx_scos_login_approval_request_sla_scan
+              ON scos.scos_login_approval_request (sla_deadline)
+              WHERE status = 'PENDING';
+      rollback:
+        - sql:
+            sql: DROP INDEX IF EXISTS scos.idx_scos_login_approval_request_sla_scan;

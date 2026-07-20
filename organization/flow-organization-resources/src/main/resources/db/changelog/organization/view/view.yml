@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260612-Samuel.Cunha-026
+      author: Samuel.Cunha
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: vw_login_context.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: true
+      rollback:
+        - sql:
+            sql: DROP MATERIALIZED VIEW IF EXISTS scos.vw_login_context CASCADE;
+
+  - changeSet:
+      id: 20260612-Samuel.Cunha-027
+      author: Samuel.Cunha
+      runOnChange: true
+      runAlways: true
+      changes:
+        - sqlFile:
+            path: vw_authority_response.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: true
+      rollback:
+        - sql:
+            sql: DROP MATERIALIZED VIEW IF EXISTS scos.vw_authority_response;
