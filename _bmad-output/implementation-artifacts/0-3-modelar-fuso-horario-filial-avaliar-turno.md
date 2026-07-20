@@ -4,7 +4,7 @@ baseline_commit: 86b0d42d93298f0c4180d56a31087654a67863a3
 
 # Story 0.3: Modelar Fuso Horário por Filial e Avaliar Janela de Turno
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 

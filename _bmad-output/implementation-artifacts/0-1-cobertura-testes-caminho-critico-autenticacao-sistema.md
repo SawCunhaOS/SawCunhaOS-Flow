@@ -4,7 +4,7 @@ baseline_commit: 89fb5239f217f634f2eb8470760a46fb6b747e9c
 
 # Story 0.1: Cobertura de Testes do Caminho Crítico de Autenticação de Sistema
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 

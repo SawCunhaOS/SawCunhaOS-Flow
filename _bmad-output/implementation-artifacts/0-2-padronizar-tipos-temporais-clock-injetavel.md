@@ -4,7 +4,7 @@ baseline_commit: 86b0d42d93298f0c4180d56a31087654a67863a3
 
 # Story 0.2: Padronizar Tipos Temporais e Introduzir Clock Injetável
 
-Status: review
+Status: done
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
