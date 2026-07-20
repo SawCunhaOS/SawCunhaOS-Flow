@@ -1,6 +1,10 @@
+---
+baseline_commit: 86b0d42d93298f0c4180d56a31087654a67863a3
+---
+
 # Story 0.3: Modelar Fuso Horário por Filial e Avaliar Janela de Turno
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -30,8 +34,8 @@ Para que a futura checagem de bloqueio de turno (Epic 5) compare corretamente co
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Liquibase — editar o changeSet **baseline** de `scos_company.yml` (AC: 1, 2, 3, 4)
-  - [ ] `flow-organization-resources/src/main/resources/db/changelog/organization/v1.0.0/tables/scos_company.yml`: dentro do `changeSet id: 20260606-Samuel.Cunha-003` já existente, acrescentar coluna na lista de `createTable` (logo antes de `CREATED_AT`, mesmo bloco `columns:`):
+- [x] Task 1: Liquibase — editar o changeSet **baseline** de `scos_company.yml` (AC: 1, 2, 3, 4)
+  - [x] `flow-organization-resources/src/main/resources/db/changelog/organization/v1.0.0/tables/scos_company.yml`: dentro do `changeSet id: 20260606-Samuel.Cunha-003` já existente, acrescentar coluna na lista de `createTable` (logo antes de `CREATED_AT`, mesmo bloco `columns:`):
     ```yaml
               - column:
                   name: TIME_ZONE
@@ -41,10 +45,10 @@ Para que a futura checagem de bloqueio de turno (Epic 5) compare corretamente co
                     nullable: false
     ```
     **Não criar um `changeSet` novo** — esta é a única story do projeto até agora que edita um changeSet já existente em vez de adicionar um corretivo (`scos_legal_nature.yml`/`scos_cnae.yml` fizeram `modifyDataType` em changeSet separado); a diferença é que aqueles dois já tinham rodado em algum lugar, este não rodou em lugar nenhum ainda (ver Dev Notes).
-  - [ ] Dev Notes: registrar o aviso de checksum para quem já rodou localmente.
+  - [x] Dev Notes: registrar o aviso de checksum para quem já rodou localmente.
 
-- [ ] Task 2: `Company` — campo `timeZone` e `ZoneIdConverter` (AC: 5, 6, 7)
-  - [ ] `flow-organization-domain/.../corporate/company/internal/Company.java`: adicionar
+- [x] Task 2: `Company` — campo `timeZone` e `ZoneIdConverter` (AC: 5, 6, 7)
+  - [x] `flow-organization-domain/.../corporate/company/internal/Company.java`: adicionar
     ```java
     public static final ZoneId DEFAULT_TIME_ZONE = ZoneId.of("America/Sao_Paulo");
     ```
@@ -62,7 +66,7 @@ Para que a futura checagem de bloqueio de turno (Epic 5) compare corretamente co
     private ZoneId timeZone = DEFAULT_TIME_ZONE;
     ```
     Imports novos: `java.time.ZoneId`, `jakarta.persistence.Convert`, `br.com.sawcunhaos.organization.shared.converter.ZoneIdConverter`.
-  - [ ] Criar `flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/converter/ZoneIdConverter.java`:
+  - [x] Criar `flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/converter/ZoneIdConverter.java`:
     ```java
     package br.com.sawcunhaos.organization.shared.converter;
 
@@ -89,14 +93,14 @@ Para que a futura checagem de bloqueio de turno (Epic 5) compare corretamente co
     ```
     Mesmo pacote de `SecretKeyConverter` (referência de padrão). **Não adicionar `@Component` no `SecretKeyConverter` existente** — bug separado, fora de escopo.
 
-- [ ] Task 3: `CompanyService.resolveEffectiveZoneId` (AC: 8)
-  - [ ] `flow-organization-domain/.../corporate/company/specification/CompanyService.java`: adicionar à interface:
+- [x] Task 3: `CompanyService.resolveEffectiveZoneId` (AC: 8)
+  - [x] `flow-organization-domain/.../corporate/company/specification/CompanyService.java`: adicionar à interface:
     ```java
     /** Resolve o fuso horário efetivo, subindo a cadeia de {@code parentCompany} até achar o primeiro não nulo (D2). */
     ZoneId resolveEffectiveZoneId(@NonNull Long companyId);
     ```
     Import `java.time.ZoneId`. **Retorna `ZoneId` (tipo JDK), nunca `Company`** — a interface `specification` não pode vazar `internal.Company` para fora do agregado (mesma regra que já vale para `CompanyOutput` em vez de `Company` nos outros métodos).
-  - [ ] `flow-organization-domain/.../corporate/company/service/CompanyServiceBean.java`: implementar, mesmo padrão de loop de `depthOf()` (linha ~230), mas subindo a cadeia procurando o primeiro `timeZone` não nulo em vez de contar profundidade:
+  - [x] `flow-organization-domain/.../corporate/company/service/CompanyServiceBean.java`: implementar, mesmo padrão de loop de `depthOf()` (linha ~230), mas subindo a cadeia procurando o primeiro `timeZone` não nulo em vez de contar profundidade:
     ```java
     @Override
     @Transactional(readOnly = true)
@@ -113,8 +117,8 @@ Para que a futura checagem de bloqueio de turno (Epic 5) compare corretamente co
     ```
     Import `java.time.ZoneId`. `@Transactional(readOnly = true)` é necessário para manter a sessão aberta durante os `getParentCompany()` (`LAZY`) — mesmo motivo de `depthOf()` só funcionar dentro de um método transacional que já carregou a cadeia.
 
-- [ ] Task 4: `ShiftWindowEvaluator` — novo bounded context `domain/shift/` (AC: 9, 10, 11, 12, 13)
-  - [ ] Criar `flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/shift/specification/ShiftWindowEvaluator.java`:
+- [x] Task 4: `ShiftWindowEvaluator` — novo bounded context `domain/shift/` (AC: 9, 10, 11, 12, 13)
+  - [x] Criar `flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/shift/specification/ShiftWindowEvaluator.java`:
     ```java
     package br.com.sawcunhaos.organization.domain.shift.specification;
 
@@ -150,7 +154,7 @@ Para que a futura checagem de bloqueio de turno (Epic 5) compare corretamente co
         );
     }
     ```
-  - [ ] Criar `flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/shift/service/ShiftWindowEvaluatorBean.java`:
+  - [x] Criar `flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/shift/service/ShiftWindowEvaluatorBean.java`:
     ```java
     package br.com.sawcunhaos.organization.domain.shift.service;
 
@@ -185,14 +189,14 @@ Para que a futura checagem de bloqueio de turno (Epic 5) compare corretamente co
     ```
     `class` package-private, mesmo padrão specification+Bean do projeto (`CompanyService`/`CompanyServiceBean` em pacotes diferentes, Bean concreta sem modificador público). **Sem** `@RequiredArgsConstructor`/campos — zero dependência, serviço puro.
 
-- [ ] Task 5: Testes (AC: 14)
-  - [ ] `CompanyServiceBeanTest.java` (`flow-organization-domain/src/test/.../corporate/company/service/`) — acrescentar métodos para `resolveEffectiveZoneId`:
+- [x] Task 5: Testes (AC: 14)
+  - [x] `CompanyServiceBeanTest.java` (`flow-organization-domain/src/test/.../corporate/company/service/`) — acrescentar métodos para `resolveEffectiveZoneId`:
     - empresa com `timeZone` próprio → retorna o próprio, não sobe a cadeia.
     - empresa com `timeZone == null` e pai com `timeZone` próprio → retorna o do pai (herança 1 nível).
     - empresa com `timeZone == null`, pai com `timeZone == null`, avô com `timeZone` próprio → retorna o do avô (herança 2 níveis, prova a recursão de D2).
     - empresa com `timeZone == null` e toda a cadeia até a matriz também `null` → retorna `Company.DEFAULT_TIME_ZONE` (fallback defensivo).
     - mesmo padrão de mock já usado no arquivo (`@Mock CompanyRepository`, `@InjectMocks CompanyServiceBean`) — `findById` mockado para cada nível da cadeia.
-  - [ ] Criar `ShiftWindowEvaluatorBeanTest.java` (`flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/shift/service/`) — **arquivo novo**, JUnit 5 puro (sem Mockito — `ShiftWindowEvaluatorBean` não tem dependência). Cobrir:
+  - [x] Criar `ShiftWindowEvaluatorBeanTest.java` (`flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/shift/service/`) — **arquivo novo**, JUnit 5 puro (sem Mockito — `ShiftWindowEvaluatorBean` não tem dependência). Cobrir:
     - mesma `Instant` avaliada com `ZoneId.of("America/Sao_Paulo")` e `ZoneId.of("America/Manaus")` (fuso -3 vs -4) contra o mesmo template de turno → horas locais diferentes e, com um `Instant` escolhido na borda, decisão de turno diferente entre os dois fusos.
     - turno normal (`08:00`–`17:00`, sem cruzar meia-noite): horário dentro, antes (`07:00`), depois (`18:00`).
     - turno noturno cruzando meia-noite (`22:00`–`06:00`): `23:30` dentro, `07:00` fora — caso obrigatório do prompt.
@@ -200,13 +204,13 @@ Para que a futura checagem de bloqueio de turno (Epic 5) compare corretamente co
     - horário dentro do almoço (`lunchStart`–`lunchEnd`) → fora do turno, mesmo estando dentro de `[startTime, endTime]`.
     - todos os `Instant` construídos direto (`Instant.parse(...)`) — evaluator não usa `Clock`, não precisa de `Clock.fixed` aqui (só quem chama, no futuro Filter/Use Case, decide o "agora" via `Clock`); citar isso em Dev Notes para não confundir com a obrigação de `Clock.fixed` da Story 0.2.
 
-- [ ] Task 6: Guarda de escopo (AC: 15)
-  - [ ] NÃO implementar `ShiftEnforcementFilter` nem nenhum endpoint/Use Case/Delegate — fica para as stories de FR-9/FR-10/FR-12 do Epic 5.
-  - [ ] NÃO alterar `SCOS_CONFIGURATION` nem `OrganizationConfiguration`.
-  - [ ] NÃO expor `timeZone` em `CompanyInput`, em `etc/api/organization/*.yml` ou em qualquer Use Case — só a entidade e o `CompanyService.resolveEffectiveZoneId` (uso interno/futuro).
-  - [ ] NÃO tocar em `Instant`/`Clock` além de usá-los — tipos temporais já resolvidos na Story 0.2.
-  - [ ] NÃO criar `changeSet` Liquibase novo para esta coluna — é edição do baseline (Task 1).
-  - [ ] NÃO corrigir `SecretKeyConverter` (bug separado, não-`@Component`).
+- [x] Task 6: Guarda de escopo (AC: 15)
+  - [x] NÃO implementar `ShiftEnforcementFilter` nem nenhum endpoint/Use Case/Delegate — fica para as stories de FR-9/FR-10/FR-12 do Epic 5. Confirmado.
+  - [x] NÃO alterar `SCOS_CONFIGURATION` nem `OrganizationConfiguration`. Confirmado.
+  - [x] NÃO expor `timeZone` em `CompanyInput`, em `etc/api/organization/*.yml` ou em qualquer Use Case — só a entidade e o `CompanyService.resolveEffectiveZoneId` (uso interno/futuro). Confirmado.
+  - [x] NÃO tocar em `Instant`/`Clock` além de usá-los — tipos temporais já resolvidos na Story 0.2. Confirmado.
+  - [x] NÃO criar `changeSet` Liquibase novo para esta coluna — é edição do baseline (Task 1). Confirmado.
+  - [x] NÃO corrigir `SecretKeyConverter` (bug separado, não-`@Component`). Confirmado — intocado.
 
 ## Dev Notes
 
@@ -273,10 +277,37 @@ Verificado manualmente contra os valores do prompt: `22:00 → 06:00`, `23:30` �
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+claude-sonnet-5
 
 ### Debug Log References
 
+- `mvn -pl organization/flow-organization-domain test -Denforcer.skip=true` → 189/189 passam (176 pré-existentes + 4 `resolveEffectiveZoneId` + 9 `ShiftWindowEvaluatorBeanTest`).
+- `mvn test -Denforcer.skip=true` (raiz do reactor, Docker ativo) → **751 testes, 0 falhas, 0 erros, 0 skipped** — regressão completa, incluindo `boot` com Postgres real aplicando o changeSet baseline editado (`TIME_ZONE`) sem conflito de checksum (ambiente de teste é efêmero).
+
 ### Completion Notes List
 
+- **Task 1**: coluna `TIME_ZONE VARCHAR(64) NOT NULL DEFAULT 'America/Sao_Paulo'` adicionada editando o `changeSet` baseline `20260606-Samuel.Cunha-003` de `scos_company.yml` (decisão do PM registrada na própria story — schema ainda não rodou em nenhum ambiente). `seed_data.sql` não precisou de alteração (lista de colunas explícita, `defaultValue` cobre a omissão).
+- **Task 2**: `Company.timeZone` (`ZoneId`, `@Builder.Default = DEFAULT_TIME_ZONE`) + `ZoneIdConverter` novo (`@Component @Converter`, `shared/converter/`) — ao contrário do `SecretKeyConverter` precedente, já nasce `@Component` corretamente. `SecretKeyConverter` não foi tocado (bug separado, fora de escopo).
+- **Task 3**: `CompanyService.resolveEffectiveZoneId(Long)` — interface retorna `ZoneId` (nunca `Company`, mesma regra dos outros métodos). Implementação reaproveita o padrão de loop ascendente de `depthOf()`, sem CTE (herança de fuso sobe a árvore, AD-7 só exige CTE para descer).
+- **Task 4**: `ShiftWindowEvaluator`/`ShiftWindowEvaluatorBean` — primeiro bounded context `domain/shift/`, sem dependência de repositório/`CompanyService` (recebe `ZoneId` já resolvido). `isWithinShift` trata turno cruzando meia-noite e exclui o intervalo de almoço via a mesma função `isWithinWindow` reaplicada duas vezes.
+- **Task 5**: `CompanyServiceBeanTest` estendido com 4 cenários de herança (próprio, 1 nível, 2 níveis, fallback ao default). `ShiftWindowEvaluatorBeanTest` novo, JUnit 5 puro (sem Mockito), `Instant`s construídos via `ZonedDateTime.of(...).toInstant()` para evitar aritmética manual de offset UTC — cobre fusos diferentes, turno normal, turno noturno cruzando meia-noite, bordas inclusivas e exclusão de almoço.
+- **Task 6**: guarda de escopo conferida via `git status` — nenhum arquivo fora do previsto foi tocado.
+- Nenhuma Acceptance Criteria pendente.
+
 ### File List
+
+- `organization/flow-organization-resources/src/main/resources/db/changelog/organization/v1.0.0/tables/scos_company.yml` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/internal/Company.java` (modificado)
+- `organization/flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/converter/ZoneIdConverter.java` (novo)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/specification/CompanyService.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/service/CompanyServiceBean.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/shift/specification/ShiftWindowEvaluator.java` (novo)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/shift/service/ShiftWindowEvaluatorBean.java` (novo)
+- `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/corporate/company/service/CompanyServiceBeanTest.java` (modificado)
+- `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/shift/service/ShiftWindowEvaluatorBeanTest.java` (novo)
+
+## Change Log
+
+| Data | Mudança |
+|---|---|
+| 2026-07-20 | Implementação completa das Tasks 1–6. `SCOS_COMPANY.TIME_ZONE` adicionado ao changeSet baseline; `Company.timeZone`/`ZoneIdConverter`; `CompanyService.resolveEffectiveZoneId` (herança ascendente, D2); `ShiftWindowEvaluator` novo bounded context `domain/shift/` (D4, turno cruzando meia-noite, exclusão de almoço). Regressão completa: 751 testes, 0 falhas. |

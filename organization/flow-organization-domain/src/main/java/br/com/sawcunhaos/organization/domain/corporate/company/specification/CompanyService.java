@@ -20,6 +20,8 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.ZoneId;
+
 /**
  * Casos de uso de domínio do cadastro da {@code Company} (UC-001..005).
  * Concentra as regras que dependem do banco ou de outros agregados: unicidade de CNPJ,
@@ -38,5 +40,8 @@ public interface CompanyService {
 
     /** Lista paginada de empresas, filtrando por {@code status} e/ou {@code name} quando informados. */
     Page<CompanyOutput> findAll(StatusCompany status, String name, @NonNull Pageable pageable);
+
+    /** Resolve o fuso horário efetivo, subindo a cadeia de {@code parentCompany} até achar o primeiro não nulo (D2). */
+    ZoneId resolveEffectiveZoneId(@NonNull Long companyId);
 
 }

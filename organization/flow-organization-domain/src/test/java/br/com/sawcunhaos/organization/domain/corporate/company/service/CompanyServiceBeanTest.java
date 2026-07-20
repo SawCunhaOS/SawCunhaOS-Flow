@@ -41,6 +41,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -293,5 +294,43 @@ class CompanyServiceBeanTest {
         Page<CompanyOutput> result = companyServiceBean.findAll(StatusCompany.ACTIVE, "Saw", pageable);
 
         assertThat(result.getContent()).containsExactly(output);
+    }
+
+    // ---- resolveEffectiveZoneId (D2) ----
+
+    @Test
+    void resolveEffectiveZoneIdShouldReturnOwnTimeZoneWhenPresent() {
+        Company company = Company.builder().id(1L).timeZone(ZoneId.of("America/Manaus")).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+
+        assertThat(companyServiceBean.resolveEffectiveZoneId(1L)).isEqualTo(ZoneId.of("America/Manaus"));
+    }
+
+    @Test
+    void resolveEffectiveZoneIdShouldInheritFromParentWhenOwnIsNull() {
+        Company parent = Company.builder().id(2L).timeZone(ZoneId.of("America/Manaus")).build();
+        Company child = Company.builder().id(1L).timeZone(null).parentCompany(parent).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(child));
+
+        assertThat(companyServiceBean.resolveEffectiveZoneId(1L)).isEqualTo(ZoneId.of("America/Manaus"));
+    }
+
+    @Test
+    void resolveEffectiveZoneIdShouldInheritTwoLevelsUp() {
+        Company grandparent = Company.builder().id(3L).timeZone(ZoneId.of("America/Manaus")).build();
+        Company parent = Company.builder().id(2L).timeZone(null).parentCompany(grandparent).build();
+        Company child = Company.builder().id(1L).timeZone(null).parentCompany(parent).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(child));
+
+        assertThat(companyServiceBean.resolveEffectiveZoneId(1L)).isEqualTo(ZoneId.of("America/Manaus"));
+    }
+
+    @Test
+    void resolveEffectiveZoneIdShouldFallbackToDefaultWhenWholeChainIsNull() {
+        Company matrix = Company.builder().id(2L).timeZone(null).build();
+        Company child = Company.builder().id(1L).timeZone(null).parentCompany(matrix).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(child));
+
+        assertThat(companyServiceBean.resolveEffectiveZoneId(1L)).isEqualTo(Company.DEFAULT_TIME_ZONE);
     }
 }

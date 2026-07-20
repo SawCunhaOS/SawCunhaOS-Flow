@@ -23,8 +23,10 @@ import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonActiva
 import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonDisable;
 import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonEnable;
 import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonInactivate;
+import br.com.sawcunhaos.organization.shared.converter.ZoneIdConverter;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -44,6 +46,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,6 +61,8 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 @Table(name = "SCOS_COMPANY")
 @Auditable
 public class Company extends BaseEntity {
+
+    public static final ZoneId DEFAULT_TIME_ZONE = ZoneId.of("America/Sao_Paulo");
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -97,6 +102,17 @@ public class Company extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PARENT_COMPANY_ID")
     private Company parentCompany;
+
+    /**
+     * Fuso horário efetivo desta empresa (IANA). Imutável após a criação — decisão de
+     * produto D3 (2026-07-19): alterar reinterpretaria decisões de bloqueio de turno já
+     * auditadas. Nenhum Use Case/endpoint desta Etapa expõe alteração; não adicionar um
+     * "update timezone" sem revisitar essa decisão.
+     */
+    @Convert(converter = ZoneIdConverter.class)
+    @Column(name = "TIME_ZONE")
+    @Builder.Default
+    private ZoneId timeZone = DEFAULT_TIME_ZONE;
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
     private Set<CompanyContact> companyContacts = new HashSet<>();

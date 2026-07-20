@@ -83,6 +83,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: TIME_ZONE
+                  type: varchar(64)
+                  defaultValue: America/Sao_Paulo
+                  constraints:
+                    nullable: false
+              - column:
                   name: CREATED_AT
                   type: TIMESTAMPTZ
                   defaultValueComputed: NOW()

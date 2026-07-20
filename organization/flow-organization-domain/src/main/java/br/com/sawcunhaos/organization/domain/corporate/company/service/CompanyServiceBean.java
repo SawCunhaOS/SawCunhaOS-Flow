@@ -47,6 +47,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
+
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_CNAE_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_002;
@@ -183,6 +185,19 @@ class CompanyServiceBean implements CompanyService {
         }
 
         return companyRepository.findAll(predicate, pageable).map(companyMapper::toCompanyOutput);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ZoneId resolveEffectiveZoneId(@NonNull Long companyId) {
+        Company current = findCompanyById(companyId);
+        while (current != null) {
+            if (current.getTimeZone() != null) {
+                return current.getTimeZone();
+            }
+            current = current.getParentCompany();
+        }
+        return Company.DEFAULT_TIME_ZONE;
     }
 
     private Company findCompanyById(@NonNull Long companyId) {
