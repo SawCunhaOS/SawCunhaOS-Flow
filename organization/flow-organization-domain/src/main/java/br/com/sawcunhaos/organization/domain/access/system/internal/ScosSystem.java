@@ -29,10 +29,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Setter
@@ -43,6 +44,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "SCOS_SYSTEM")
 @Auditable
+@ToString(exclude = {"secretKey", "previousSecretKey"})
 public class ScosSystem extends BaseEntity {
 
     @Id
@@ -63,7 +65,7 @@ public class ScosSystem extends BaseEntity {
     @Column(name = "PREVIOUS_SECRET_KEY")
     private String previousSecretKey;
     @Column(name = "PREVIOUS_SECRET_EXPIRES_AT")
-    private LocalDateTime previousSecretExpiresAt;
+    private Instant previousSecretExpiresAt;
     @Column(name = "STATUS")
     private String status;
     @Column(name = "VERSION")
@@ -72,36 +74,21 @@ public class ScosSystem extends BaseEntity {
     @Transient
     private boolean updateRegistration = false;
 
-    public String rotateSecret(String newRawSecret, LocalDateTime previousSecretExpiresAt) {
+    public String rotateSecret(String newRawSecret, Instant expiresAt) {
         this.previousSecretKey = this.secretKey;
         this.secretKey         = newRawSecret;
-        this.previousSecretExpiresAt   = previousSecretExpiresAt;
+        this.previousSecretExpiresAt   = expiresAt;
         return newRawSecret;
     }
 
-    public boolean matchesSecret(String provided) {
+    public boolean matchesSecret(String provided, Instant now) {
         if (constantTimeEquals(secretKey, provided)) return true;
-        boolean inGrace = previousSecretExpiresAt != null
-                && LocalDateTime.now().isBefore(previousSecretExpiresAt);
+        boolean inGrace = previousSecretExpiresAt != null && now.isBefore(previousSecretExpiresAt);
         return inGrace && constantTimeEquals(previousSecretKey, provided);
     }
 
     private static boolean constantTimeEquals(String secretKey, String secretKeyCompare) {
         return secretKey != null && secretKeyCompare != null && MessageDigest.isEqual(
                 secretKey.getBytes(StandardCharsets.UTF_8), secretKeyCompare.getBytes(StandardCharsets.UTF_8));
-    }
-
-    @Override
-    public String toString() {
-        return "ScosSystem{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", code='" + code + '\'' +
-                ", description='" + description + '\'' +
-                ", previousSecretExpiresAt=" + previousSecretExpiresAt +
-                ", status='" + status + '\'' +
-                ", version='" + version + '\'' +
-                ", updateRegistration=" + updateRegistration +
-                '}';
     }
 }

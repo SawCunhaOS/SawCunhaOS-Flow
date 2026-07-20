@@ -15,7 +15,7 @@ package br.com.sawcunhaos.organization.application.usecase.access.resource.regis
 
 import lombok.Builder;
 
-import java.time.LocalDate;
+import java.time.Instant;
 
 @Builder
 public record RegistryResourceInput(
@@ -25,7 +25,7 @@ public record RegistryResourceInput(
         String group,
         String subGroup,
         String version,
-        LocalDate updatedAt,
+        Instant updatedAt,
         boolean active
 ) {
 }

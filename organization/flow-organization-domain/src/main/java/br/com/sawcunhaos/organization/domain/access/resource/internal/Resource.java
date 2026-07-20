@@ -31,6 +31,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Setter
@@ -67,5 +68,5 @@ public class Resource extends BaseEntity {
     @Column(name = "VERSION")
     private String version;
     @Column(name = "DEFINITION_UPDATED_AT")
-    private java.time.LocalDate definitionUpdatedAt;
+    private Instant definitionUpdatedAt;
 }

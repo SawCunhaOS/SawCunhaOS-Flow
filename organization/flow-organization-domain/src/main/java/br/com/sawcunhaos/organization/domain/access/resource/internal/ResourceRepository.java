@@ -21,7 +21,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.UUID;
 
 @Repository
@@ -65,7 +65,7 @@ public interface ResourceRepository extends BaseJpaRepository<Resource, UUID>, J
             @Param("resourceGroup") String resourceGroup,
             @Param("subGroup") String subGroup,
             @Param("version") String version,
-            @Param("definitionUpdatedAt") LocalDate definitionUpdatedAt,
+            @Param("definitionUpdatedAt") Instant definitionUpdatedAt,
             @Param("active") boolean active,
             @Param("userAt") String userAt
     );

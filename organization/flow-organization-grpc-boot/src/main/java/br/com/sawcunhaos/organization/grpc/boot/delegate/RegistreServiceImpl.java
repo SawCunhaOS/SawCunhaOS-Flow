@@ -29,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,7 +76,7 @@ public class RegistreServiceImpl extends RegistryServiceGrpc.RegistryServiceImpl
                         .group(resource.getGroup())
                         .subGroup(resource.getSubGroup())
                         .version(resource.getVersion())
-                        .updatedAt(LocalDate.parse(resource.getUpdatedAt()))
+                        .updatedAt(LocalDate.parse(resource.getUpdatedAt()).atStartOfDay(ZoneOffset.UTC).toInstant())
                         .active(resource.getActive())
                         .build())
                 .collect(Collectors.toList());

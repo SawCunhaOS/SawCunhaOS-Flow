@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Setter
 @Getter
@@ -64,7 +64,7 @@ public class OutboxEventDeadLetter {
 
     @CreationTimestamp
     @Column(name = "CREATED_AT")
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     @Column(name = "USER_AT")
     private String userAt;
 }

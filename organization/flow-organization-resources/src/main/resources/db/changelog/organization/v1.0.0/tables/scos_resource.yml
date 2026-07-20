@@ -98,3 +98,16 @@ databaseChangeLog:
             tableName: SCOS_RESOURCE
             schemaName: scos
             cascadeConstraints: true
+  - changeSet:
+      id: 20260719-Samuel.Cunha-001
+      author: Samuel.Cunha
+      comment: "Migra SCOS_RESOURCE.DEFINITION_UPDATED_AT de DATE para TIMESTAMPTZ (Story 0.2 — tipos temporais); passa a representar instante, não mais data de calendário"
+      changes:
+        - modifyDataType:
+            tableName: SCOS_RESOURCE
+            schemaName: scos
+            columnName: DEFINITION_UPDATED_AT
+            newDataType: TIMESTAMPTZ
+      rollback:
+        - sql:
+            sql: "ALTER TABLE scos.SCOS_RESOURCE ALTER COLUMN DEFINITION_UPDATED_AT TYPE DATE USING DEFINITION_UPDATED_AT::date"

@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.time.Clock;
 import java.util.Base64;
 import java.util.Objects;
 
@@ -40,6 +41,7 @@ class ScosSystemServiceBean implements ScosSystemService {
 
     private final ScosSystemRepository scosSystemRepository;
     private final SystemSecretCryptoService systemSecretCryptoService;
+    private final Clock clock;
     private static final SecureRandom RNG = new SecureRandom();
 
     @Override
@@ -100,7 +102,7 @@ class ScosSystemServiceBean implements ScosSystemService {
     public void validateSecretKey(@NonNull String code, @NonNull String secretKey) {
         ScosSystem scosSystem = getByCode(code);
 
-        if (!scosSystem.matchesSecret(secretKey) ) {
+        if (!scosSystem.matchesSecret(secretKey, clock.instant())) {
             throw new ScosException(SCOS_SYSTEM_002);
         }
     }

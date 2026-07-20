@@ -24,7 +24,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -52,7 +54,8 @@ class ResourceServiceBeanTest {
 
     private static final String SYSTEM_CODE = "ORG";
     private static final UUID SYSTEM_ID = UUID.fromString("11111111-1111-1111-1111-111111111111");
-    private static final LocalDate DEFINITION_UPDATED_AT = LocalDate.of(2026, 7, 9);
+    private static final Instant DEFINITION_UPDATED_AT =
+            LocalDate.of(2026, 7, 9).atStartOfDay(ZoneOffset.UTC).toInstant();
 
     @Mock
     private ResourceRepository resourceRepository;

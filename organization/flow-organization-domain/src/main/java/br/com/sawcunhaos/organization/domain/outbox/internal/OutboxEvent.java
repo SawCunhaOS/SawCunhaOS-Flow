@@ -34,7 +34,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Setter
 @Getter
@@ -81,15 +81,15 @@ public class OutboxEvent {
     private String requesting;
 
     @Column(name = "STARTED_AT")
-    private LocalDateTime startedAt;
+    private Instant startedAt;
     @Column(name = "PROCESSED_AT")
-    private LocalDateTime processedAt;
+    private Instant processedAt;
 
     @CreationTimestamp
     @Column(name = "CREATED_AT")
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     @Column(name = "UPDATED_AT")
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
     @Column(name = "USER_AT")
     private String userAt;
 }

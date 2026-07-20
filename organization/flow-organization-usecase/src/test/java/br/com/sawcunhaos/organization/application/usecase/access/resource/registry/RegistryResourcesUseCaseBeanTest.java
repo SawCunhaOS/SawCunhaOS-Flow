@@ -26,7 +26,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,6 +46,8 @@ import static org.mockito.Mockito.verify;
 class RegistryResourcesUseCaseBeanTest {
 
     private static final String SYSTEM_CODE = "ORG";
+    private static final Instant DEFINITION_UPDATED_AT =
+            LocalDate.of(2026, 7, 9).atStartOfDay(ZoneOffset.UTC).toInstant();
 
     @Mock
     private ResourceService resourceService;
@@ -69,7 +73,7 @@ class RegistryResourcesUseCaseBeanTest {
                 .group("Corporate")
                 .subGroup("Department")
                 .version("1.0.0")
-                .updatedAt(LocalDate.of(2026, 7, 9))
+                .updatedAt(DEFINITION_UPDATED_AT)
                 .active(active)
                 .build();
     }
@@ -91,7 +95,7 @@ class RegistryResourcesUseCaseBeanTest {
             assertThat(r.group()).isEqualTo("Corporate");
             assertThat(r.subGroup()).isEqualTo("Department");
             assertThat(r.version()).isEqualTo("1.0.0");
-            assertThat(r.updatedAt()).isEqualTo(LocalDate.of(2026, 7, 9));
+            assertThat(r.updatedAt()).isEqualTo(DEFINITION_UPDATED_AT);
         });
         assertThat(registered).extracting(RegisterResourceInput::active)
                 .containsExactly(true, false);

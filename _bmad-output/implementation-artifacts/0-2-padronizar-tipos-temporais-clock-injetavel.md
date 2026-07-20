@@ -1,6 +1,10 @@
+---
+baseline_commit: 86b0d42d93298f0c4180d56a31087654a67863a3
+---
+
 # Story 0.2: Padronizar Tipos Temporais e Introduzir Clock Injetável
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -24,28 +28,28 @@ Para que a persistência corresponda de fato à coluna `TIMESTAMPTZ` real e test
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Trocar tipo dos 12 campos `createdAt`/`lastUsedAt` sem cascata (AC: 1)
-  - [ ] `flow-organization-domain/.../access/login/internal/Login.java` — `lastUsedAt`: `LocalDateTime` → `Instant` (import `java.time.Instant`).
-  - [ ] `flow-organization-domain/.../outbox/internal/OutboxEvent.java` — `startedAt`, `processedAt`, `createdAt`, `updatedAt`.
-  - [ ] `flow-organization-domain/.../outbox/internal/OutboxEventDeadLetter.java` — `createdAt`.
-  - [ ] `flow-organization-domain/.../outbox/internal/OutboxEventLog.java` — `createdAt`.
-  - [ ] `flow-organization-domain/.../access/status/internal/CompanyStatusHistory.java` — `createdAt`.
-  - [ ] `flow-organization-domain/.../access/status/internal/EmployeeStatusHistory.java` — `createdAt`.
-  - [ ] `flow-organization-domain/.../access/status/internal/LoginStatusHistory.java` — `createdAt`.
-  - [ ] `flow-organization-domain/.../corporate/employee/internal/EmployeePositionHistory.java` — `createdAt` (manter `startDate`/`endDate` como `LocalDate`, intocados).
-  - [ ] `flow-organization-domain/.../corporate/company/internal/Cnae.java` — `createdAt`.
-  - [ ] `flow-organization-domain/.../corporate/company/internal/LegalNature.java` — `createdAt`.
-  - [ ] `flow-organization-domain/.../corporate/company/internal/CompanyCnaeSecondary.java` — `createdAt`.
-  - [ ] `flow-organization-domain/.../access/profile/internal/LoginProfile.java` — `createdAt`.
-  - [ ] `flow-organization-domain/.../access/resource/internal/ProfileResource.java` — `createdAt`.
-  - [ ] Em todos: trocar só `import java.time.LocalDateTime;` → `import java.time.Instant;` e o tipo do campo. `@CreationTimestamp` do Hibernate aceita `Instant` nativamente (nenhuma outra mudança). Nenhum teste unitário toca esses 12 campos hoje (confirmado por grep) — nada a atualizar neles.
+- [x] Task 1: Trocar tipo dos 12 campos `createdAt`/`lastUsedAt` sem cascata (AC: 1)
+  - [x] `flow-organization-domain/.../access/login/internal/Login.java` — `lastUsedAt`: `LocalDateTime` → `Instant` (import `java.time.Instant`).
+  - [x] `flow-organization-domain/.../outbox/internal/OutboxEvent.java` — `startedAt`, `processedAt`, `createdAt`, `updatedAt`.
+  - [x] `flow-organization-domain/.../outbox/internal/OutboxEventDeadLetter.java` — `createdAt`.
+  - [x] `flow-organization-domain/.../outbox/internal/OutboxEventLog.java` — `createdAt`.
+  - [x] `flow-organization-domain/.../access/status/internal/CompanyStatusHistory.java` — `createdAt`.
+  - [x] `flow-organization-domain/.../access/status/internal/EmployeeStatusHistory.java` — `createdAt`.
+  - [x] `flow-organization-domain/.../access/status/internal/LoginStatusHistory.java` — `createdAt`.
+  - [x] `flow-organization-domain/.../corporate/employee/internal/EmployeePositionHistory.java` — `createdAt` (manter `startDate`/`endDate` como `LocalDate`, intocados).
+  - [x] `flow-organization-domain/.../corporate/company/internal/Cnae.java` — `createdAt`.
+  - [x] `flow-organization-domain/.../corporate/company/internal/LegalNature.java` — `createdAt`.
+  - [x] `flow-organization-domain/.../corporate/company/internal/CompanyCnaeSecondary.java` — `createdAt`.
+  - [x] `flow-organization-domain/.../access/profile/internal/LoginProfile.java` — `createdAt`.
+  - [x] `flow-organization-domain/.../access/resource/internal/ProfileResource.java` — `createdAt`.
+  - [x] Em todos: trocar só `import java.time.LocalDateTime;` → `import java.time.Instant;` e o tipo do campo. `@CreationTimestamp` do Hibernate aceita `Instant` nativamente (nenhuma outra mudança). Nenhum teste unitário toca esses 12 campos hoje (confirmado por grep) — nada a atualizar neles. Regressão: 174/174 testes do módulo `domain` passam.
 
-- [ ] Task 2: `ScosSystem` — Clock injetável e correção de semântica do secret rotation (AC: 1, 4, 5, 6)
-  - [ ] `ScosSystem.java` (`flow-organization-domain/.../access/system/internal/ScosSystem.java`): `previousSecretExpiresAt` `LocalDateTime` → `Instant`.
-  - [ ] Assinatura `rotateSecret(String newRawSecret, Instant expiresAt)` — recebe a expiração já calculada pelo chamador; não computa nada internamente. Javadoc explicitando que o método está pronto mas **sem call site hoje** (ver Dev Notes — mesmo padrão de `CompanyService.assertNoCycle` da Story 1.1).
-  - [ ] Assinatura `matchesSecret(String provided, Instant now)` — remove `LocalDateTime.now()` de dentro do método; `now` passa a vir de fora.
-  - [ ] Adicionar `@ToString(exclude = {"secretKey", "previousSecretKey"})` na classe (hoje não existe `@ToString` nenhum — esta task cria o método já protegido, não é um exclude vazio).
-  - [ ] Criar `flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/config/ClockConfig.java` (pacote novo `domain/config/` — hoje não existe nenhuma classe `@Configuration` no módulo `domain`):
+- [x] Task 2: `ScosSystem` — Clock injetável e correção de semântica do secret rotation (AC: 1, 4, 5, 6)
+  - [x] `ScosSystem.java` (`flow-organization-domain/.../access/system/internal/ScosSystem.java`): `previousSecretExpiresAt` `LocalDateTime` → `Instant`.
+  - [x] Assinatura `rotateSecret(String newRawSecret, Instant expiresAt)` — recebe a expiração já calculada pelo chamador; não computa nada internamente. Javadoc explicitando que o método está pronto mas **sem call site hoje** (ver Dev Notes — mesmo padrão de `CompanyService.assertNoCycle` da Story 1.1).
+  - [x] Assinatura `matchesSecret(String provided, Instant now)` — remove `LocalDateTime.now()` de dentro do método; `now` passa a vir de fora.
+  - [x] Adicionar `@ToString(exclude = {"secretKey", "previousSecretKey"})` na classe. **Nota:** já existia um `toString()` manual (que também excluía os dois campos secretos) — removido e substituído pela anotação Lombok, alinhado ao house style do projeto (nunca escrever à mão o que Lombok gera).
+  - [x] Criar `flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/config/ClockConfig.java` (pacote novo `domain/config/` — hoje não existe nenhuma classe `@Configuration` no módulo `domain`):
     ```java
     package br.com.sawcunhaos.organization.domain.config;
 
@@ -63,10 +67,10 @@ Para que a persistência corresponda de fato à coluna `TIMESTAMPTZ` real e test
         }
     }
     ```
-  - [ ] `ScosSystemServiceBean.java` (`flow-organization-domain/.../access/system/service/ScosSystemServiceBean.java`): adicionar campo `private final Clock clock;` (ordem: `scosSystemRepository`, `systemSecretCryptoService`, `clock` — `@RequiredArgsConstructor` gera o construtor nessa ordem). Em `validateSecretKey`, trocar `scosSystem.matchesSecret(secretKey)` por `scosSystem.matchesSecret(secretKey, clock.instant())`.
+  - [x] `ScosSystemServiceBean.java` (`flow-organization-domain/.../access/system/service/ScosSystemServiceBean.java`): adicionar campo `private final Clock clock;` (ordem: `scosSystemRepository`, `systemSecretCryptoService`, `clock` — `@RequiredArgsConstructor` gera o construtor nessa ordem). Em `validateSecretKey`, trocar `scosSystem.matchesSecret(secretKey)` por `scosSystem.matchesSecret(secretKey, clock.instant())`.
 
-- [ ] Task 3: `Resource.definitionUpdatedAt` — migração de coluna e cascata cross-módulo (AC: 2, 3, 7)
-  - [ ] Liquibase — `flow-organization-resources/src/main/resources/db/changelog/organization/v1.0.0/tables/scos_resource.yml`: acrescentar (não editar) um segundo `changeSet` no mesmo arquivo, no padrão já usado em `scos_legal_nature.yml`/`scos_cnae.yml` para `modifyDataType`:
+- [x] Task 3: `Resource.definitionUpdatedAt` — migração de coluna e cascata cross-módulo (AC: 2, 3, 7)
+  - [x] Liquibase — `flow-organization-resources/src/main/resources/db/changelog/organization/v1.0.0/tables/scos_resource.yml`: acrescentar (não editar) um segundo `changeSet` no mesmo arquivo, no padrão já usado em `scos_legal_nature.yml`/`scos_cnae.yml` para `modifyDataType`:
     ```yaml
       - changeSet:
           id: 20260719-Samuel.Cunha-001
@@ -83,29 +87,29 @@ Para que a persistência corresponda de fato à coluna `TIMESTAMPTZ` real e test
                 sql: "ALTER TABLE scos.SCOS_RESOURCE ALTER COLUMN DEFINITION_UPDATED_AT TYPE DATE USING DEFINITION_UPDATED_AT::date"
     ```
     Rollback usa `sql`/`USING` explícito (não `modifyDataType` simétrico) porque `TIMESTAMPTZ → DATE` é um downcast — ver Dev Notes.
-  - [ ] `Resource.java` (`flow-organization-domain/.../access/resource/internal/Resource.java`): `definitionUpdatedAt` de `java.time.LocalDate` (fully-qualified) para `java.time.Instant` — trocar para import formal (`import java.time.Instant;`).
-  - [ ] `RegisterResourceInput.java` (`flow-organization-domain/.../access/resource/dto/RegisterResourceInput.java`): `updatedAt` `LocalDate` → `Instant`.
-  - [ ] `ResourceRepository.java` (`flow-organization-domain/.../access/resource/internal/ResourceRepository.java`): parâmetro `definitionUpdatedAt` do `upsert(...)` nativo, `LocalDate` → `Instant`; import correspondente.
-  - [ ] `RegistryResourceInput.java` (`flow-organization-usecase/.../access/resource/registry/RegistryResourceInput.java`): `updatedAt` `LocalDate` → `Instant`.
-  - [ ] `RegistreServiceImpl.java` (`flow-organization-grpc-boot/.../delegate/RegistreServiceImpl.java`): troca `.updatedAt(LocalDate.parse(resource.getUpdatedAt()))` por `.updatedAt(LocalDate.parse(resource.getUpdatedAt()).atStartOfDay(ZoneOffset.UTC).toInstant())` — mantém o formato de entrada do wire (`registry.proto` continua `string updated_at`, formato de data pura tipo `"2026-07-09"`), só a representação interna vira `Instant`. **Não mudar `registry.proto`.**
+  - [x] `Resource.java` (`flow-organization-domain/.../access/resource/internal/Resource.java`): `definitionUpdatedAt` de `java.time.LocalDate` (fully-qualified) para `java.time.Instant` — trocar para import formal (`import java.time.Instant;`).
+  - [x] `RegisterResourceInput.java` (`flow-organization-domain/.../access/resource/dto/RegisterResourceInput.java`): `updatedAt` `LocalDate` → `Instant`.
+  - [x] `ResourceRepository.java` (`flow-organization-domain/.../access/resource/internal/ResourceRepository.java`): parâmetro `definitionUpdatedAt` do `upsert(...)` nativo, `LocalDate` → `Instant`; import correspondente.
+  - [x] `RegistryResourceInput.java` (`flow-organization-usecase/.../access/resource/registry/RegistryResourceInput.java`): `updatedAt` `LocalDate` → `Instant`.
+  - [x] `RegistreServiceImpl.java` (`flow-organization-grpc-boot/.../delegate/RegistreServiceImpl.java`): troca `.updatedAt(LocalDate.parse(resource.getUpdatedAt()))` por `.updatedAt(LocalDate.parse(resource.getUpdatedAt()).atStartOfDay(ZoneOffset.UTC).toInstant())` — mantém o formato de entrada do wire (`registry.proto` continua `string updated_at`, formato de data pura tipo `"2026-07-09"`), só a representação interna vira `Instant`. **Não mudar `registry.proto`** — confirmado, intocado.
 
-- [ ] Task 4: Testes (AC: 7, 8)
-  - [ ] `ResourceServiceBeanTest.java` (`flow-organization-domain/src/test/.../access/resource/service/`): `DEFINITION_UPDATED_AT` de `LocalDate.of(2026, 7, 9)` para `LocalDate.of(2026, 7, 9).atStartOfDay(ZoneOffset.UTC).toInstant()`; import `java.time.LocalDate` → `java.time.Instant` (+ `ZoneOffset` só na constante, pode ser local). Nenhuma outra asserção muda.
-  - [ ] `RegistryResourcesUseCaseBeanTest.java` (`flow-organization-usecase/src/test/.../access/resource/registry/`): mesma troca em `input()` e na asserção `assertThat(r.updatedAt()).isEqualTo(...)`.
-  - [ ] Criar `ScosSystemServiceBeanTest.java` (`flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/access/system/service/`) — **arquivo novo**, primeiro teste da classe. `@ExtendWith(MockitoExtension.class)`, `@Mock ScosSystemRepository`/`@Mock SystemSecretCryptoService`, **sem** `@InjectMocks` (Clock precisa ser uma instância real `Clock.fixed(...)`, não um mock — instanciar `ScosSystemServiceBean` manualmente no `@BeforeEach`/em cada teste). Cobrir em `validateSecretKey`:
+- [x] Task 4: Testes (AC: 7, 8)
+  - [x] `ResourceServiceBeanTest.java` (`flow-organization-domain/src/test/.../access/resource/service/`): `DEFINITION_UPDATED_AT` de `LocalDate.of(2026, 7, 9)` para `LocalDate.of(2026, 7, 9).atStartOfDay(ZoneOffset.UTC).toInstant()`; import `java.time.LocalDate` → `java.time.Instant` (+ `ZoneOffset` só na constante, pode ser local). Nenhuma outra asserção muda.
+  - [x] `RegistryResourcesUseCaseBeanTest.java` (`flow-organization-usecase/src/test/.../access/resource/registry/`): mesma troca em `input()` e na asserção `assertThat(r.updatedAt()).isEqualTo(...)`.
+  - [x] `ScosSystemServiceBeanTest.java` (`flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/access/system/service/`) — **arquivo já existia** (criado pela Story 0.1, conforme AC 13 daquela story previu: "0.1 cria o arquivo, 0.2 só estende"); **estendido**, não recriado. `@ExtendWith(MockitoExtension.class)`, `@Mock ScosSystemRepository`/`@Mock SystemSecretCryptoService`, sem `@InjectMocks` (Clock precisa ser uma instância real `Clock.fixed(...)` — bean construído manualmente por teste via helper `serviceAt(Instant)`). Cobre em `validateSecretKey`:
     - secret atual (`secretKey`) bate → não lança.
     - secret anterior (`previousSecretKey`) dentro da janela de grace (`Clock.fixed` antes de `previousSecretExpiresAt`) → não lança.
     - secret anterior fora da janela de grace (`Clock.fixed` depois de `previousSecretExpiresAt`) → lança `ScosException` com `SCOS_SYSTEM_002.getCode()`.
     - secret errado, sem grace válido (`previousSecretExpiresAt == null`) → lança.
     - `code` inexistente → lança `SCOS_SYSTEM_001` (regressão do que `getByCode` já faz).
 
-- [ ] Task 5: Guarda de escopo — NÃO fazer (AC: todas)
-  - [ ] NÃO criar coluna nem entidade de timezone (fica para a Story 0.3).
-  - [ ] NÃO implementar avaliador de turno (fica para a Story 0.3).
-  - [ ] NÃO alterar nenhum outro changelog além do único `changeSet` de `SCOS_RESOURCE.DEFINITION_UPDATED_AT` — os outros 13 campos já são `TIMESTAMPTZ`, zero migração para eles.
-  - [ ] NÃO alterar `PositionWorkSchedule`/`EmployeeWorkSchedule` (`LocalTime`) nem `Employee.birthDate`/`dateOfHiring`/`probationEndDate`, `Company.foundationDate`, `EmployeePositionHistory.startDate`/`endDate` (`LocalDate`) — já corretos.
-  - [ ] NÃO corrigir `BaseEntity` (biblioteca externa `scos-foundation-utils`) — fora do controle deste projeto (AC 9).
-  - [ ] NÃO alterar `registry.proto` — o campo `updated_at` continua `string` no contrato gRPC.
+- [x] Task 5: Guarda de escopo — NÃO fazer (AC: todas)
+  - [x] NÃO criar coluna nem entidade de timezone (fica para a Story 0.3). Confirmado.
+  - [x] NÃO implementar avaliador de turno (fica para a Story 0.3). Confirmado.
+  - [x] NÃO alterar nenhum outro changelog além do único `changeSet` de `SCOS_RESOURCE.DEFINITION_UPDATED_AT` — os outros 13 campos já são `TIMESTAMPTZ`, zero migração para eles. Confirmado — só `scos_resource.yml` tocado.
+  - [x] NÃO alterar `PositionWorkSchedule`/`EmployeeWorkSchedule` (`LocalTime`) nem `Employee.birthDate`/`dateOfHiring`/`probationEndDate`, `Company.foundationDate`, `EmployeePositionHistory.startDate`/`endDate` (`LocalDate`) — já corretos. Confirmado (`EmployeePositionHistory` só teve `createdAt` tocado).
+  - [x] NÃO corrigir `BaseEntity` (biblioteca externa `scos-foundation-utils`) — fora do controle deste projeto (AC 9). Confirmado, intocado.
+  - [x] NÃO alterar `registry.proto` — o campo `updated_at` continua `string` no contrato gRPC. Confirmado, intocado.
 
 ## Dev Notes
 
@@ -177,10 +181,54 @@ O precedente do projeto para `modifyDataType` (`scos_legal_nature.yml`, `scos_cn
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+claude-sonnet-5
 
 ### Debug Log References
 
+- `mvn -pl organization/flow-organization-domain test -Denforcer.skip=true` → 176/176 passam (174 pré-existentes + 2 novos cenários de grace period).
+- `mvn -pl organization/flow-organization-usecase test -Denforcer.skip=true` (após `install` do domain) → 178/178 passam.
+- `mvn -pl organization/flow-organization-grpc-boot test -Denforcer.skip=true` → 8/8 passam (interceptor, não afetado por esta story).
+- `mvn test -Denforcer.skip=true` (raiz do reactor `organization`, Docker ativo) → **738 testes, 0 falhas, 0 erros, 0 skipped** — regressão completa, incluindo integração real (`boot`) com o novo bean `Clock` e a nova assinatura de `ScosSystemServiceBean` (3 argumentos) resolvidos corretamente pelo Spring context.
+
 ### Completion Notes List
 
+- **Task 1**: 12 campos `LocalDateTime` → `Instant` em 11 arquivos (`Login`, `OutboxEvent`×4, `OutboxEventDeadLetter`, `OutboxEventLog`, `CompanyStatusHistory`, `EmployeeStatusHistory`, `LoginStatusHistory`, `EmployeePositionHistory`, `Cnae`, `LegalNature`, `CompanyCnaeSecondary`, `LoginProfile`, `ProfileResource`) — troca mecânica de import+tipo, `@CreationTimestamp` do Hibernate aceita `Instant` nativamente. Zero teste tocava esses campos (confirmado por grep antes de editar); zero regressão.
+- **Task 2**: `ScosSystem.previousSecretExpiresAt` → `Instant`; `rotateSecret(String, Instant)` e `matchesSecret(String, Instant)` — "agora" passa a vir de fora, nunca mais `LocalDateTime.now()` interno. `ClockConfig` novo (`domain/config/`, único bean `Clock.systemUTC()`). `ScosSystemServiceBean` ganhou campo `Clock clock` (3º parâmetro do construtor `@RequiredArgsConstructor`) e passa `clock.instant()` para `matchesSecret`. Removido o `toString()` manual de `ScosSystem` (que já excluía os campos secretos) em favor de `@ToString(exclude=...)` Lombok, alinhado ao house style do projeto.
+- **Task 3**: `Resource.definitionUpdatedAt` migrado de `LocalDate`/`DATE` para `Instant`/`TIMESTAMPTZ` — decisão confirmada com PM registrada nos Dev Notes originais da story, não revertida. Cascata em 3 módulos: `Resource`/`RegisterResourceInput`/`ResourceRepository` (domain), `RegistryResourceInput` (usecase, pass-through sem lógica), `RegistreServiceImpl` (grpc-boot — ponto de conversão `LocalDate.parse(...).atStartOfDay(ZoneOffset.UTC).toInstant()`, mantendo o wire gRPC (`registry.proto`) intocado, `string updated_at` continua no formato `"2026-07-09"`). Novo changeSet Liquibase `20260719-Samuel.Cunha-001` com rollback via `sql`/`USING` (downcast `TIMESTAMPTZ → DATE`).
+- **Task 4**: `ResourceServiceBeanTest`/`RegistryResourcesUseCaseBeanTest` — só troca de constante (`LocalDate` → `Instant` via `atStartOfDay(UTC).toInstant()`), mesmas asserções. `ScosSystemServiceBeanTest` (criado pela Story 0.1) **estendido**, não recriado — 2 cenários novos de grace period usando `Clock.fixed` (dentro/fora da janela), mais os 3 já existentes adaptados à nova assinatura de 3 argumentos do construtor (sem `@InjectMocks`, bean construído manualmente por teste via helper `serviceAt(Instant)`).
+- **Task 5**: guarda de escopo conferida via `git status` — nenhum arquivo fora do previsto foi tocado.
+- Nenhuma Acceptance Criteria pendente.
+
 ### File List
+
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/internal/Login.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/outbox/internal/OutboxEvent.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/outbox/internal/OutboxEventDeadLetter.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/outbox/internal/OutboxEventLog.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/internal/CompanyStatusHistory.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/internal/EmployeeStatusHistory.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/internal/LoginStatusHistory.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/internal/EmployeePositionHistory.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/internal/Cnae.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/internal/LegalNature.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/internal/CompanyCnaeSecondary.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/profile/internal/LoginProfile.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/resource/internal/ProfileResource.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/system/internal/ScosSystem.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/system/service/ScosSystemServiceBean.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/config/ClockConfig.java` (novo)
+- `organization/flow-organization-resources/src/main/resources/db/changelog/organization/v1.0.0/tables/scos_resource.yml` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/resource/internal/Resource.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/resource/dto/RegisterResourceInput.java` (modificado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/resource/internal/ResourceRepository.java` (modificado)
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/access/resource/registry/RegistryResourceInput.java` (modificado)
+- `organization/flow-organization-grpc-boot/src/main/java/br/com/sawcunhaos/organization/grpc/boot/delegate/RegistreServiceImpl.java` (modificado)
+- `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/access/resource/service/ResourceServiceBeanTest.java` (modificado)
+- `organization/flow-organization-usecase/src/test/java/br/com/sawcunhaos/organization/application/usecase/access/resource/registry/RegistryResourcesUseCaseBeanTest.java` (modificado)
+- `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/access/system/service/ScosSystemServiceBeanTest.java` (modificado)
+
+## Change Log
+
+| Data | Mudança |
+|---|---|
+| 2026-07-20 | Implementação completa das Tasks 1–5. 12 campos `LocalDateTime`→`Instant` sem cascata; `ScosSystem` com `Clock` injetável e semântica de grace period corrigida; `Resource.definitionUpdatedAt` migrado para `Instant`/`TIMESTAMPTZ` com cascata em 3 módulos; testes atualizados/estendidos. Regressão completa: 738 testes, 0 falhas. |
