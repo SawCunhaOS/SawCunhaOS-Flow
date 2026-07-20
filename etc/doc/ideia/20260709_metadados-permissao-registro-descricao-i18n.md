@@ -79,27 +79,27 @@ scos-security-starter (CONSUMIDOR/genérico)
 ├── service/ScosSystemRegistrationService: modificação (resolver i18n + preencher proto)
 └── config MessageSource do bundle de permissão: adição
 
-scos-organization-infrastructure
+flow-organization-infrastructure
 ├── enumaration/ScosOrganizationPermission: modificação (~110 constantes)
 ├── resources/messages_permission.properties: adição
 └── resources/messages_permission_en.properties: adição
 
-grpc/scos-organization-grpc-proto
+grpc/flow-organization-grpc-proto
 └── proto/registry.proto: modificação (Resource: renomear updateAt→updated_at; manter description_pt/en)
 
-grpc/scos-organization-grpc-boot
+grpc/flow-organization-grpc-boot
 └── delegate/RegistreServiceImpl: modificação (mapear campos novos)
 
-scos-organization-usecase
+flow-organization-usecase
 ├── .../resource/registry/RegistryResourceInput: modificação (+campos)
 └── .../resource/registry/RegistryResourceUseCaseBean: modificação (pass-through)
 
-scos-organization-domain
+flow-organization-domain
 ├── .../resource/dto/RegisterResourceInput: modificação (+campos)
 ├── .../resource/internal/Resource: modificação (+colunas)
 └── .../resource/service/ResourceServiceBean: modificação (persistir no insert e update)
 
-scos-organization-boot
+flow-organization-boot
 └── db/changelog/v1.0.0/tables/scos_resource.yml: modificação (+colunas)
 ```
 
@@ -174,25 +174,25 @@ WHERE  SCOS_RESOURCE.ACTIVE                IS DISTINCT FROM EXCLUDED.ACTIVE
 ### Arquivos
 
 **Novos**:
-- `scos-organization-infrastructure/src/main/resources/messages_permission.properties` — descrições pt-BR chaveadas por `codeDescription`.
-- `scos-organization-infrastructure/src/main/resources/messages_permission_en.properties` — descrições en.
+- `flow-organization-infrastructure/src/main/resources/messages_permission.properties` — descrições pt-BR chaveadas por `codeDescription`.
+- `flow-organization-infrastructure/src/main/resources/messages_permission_en.properties` — descrições en.
 - Config `MessageSource` do bundle de permissão (no starter ou exposto pelo consumidor) — definir na proposta.
 
 **Modificados**:
 - `scos-security-starter/.../specification/ScosPermission.java` — set final de métodos (já iniciado).
 - `scos-security-starter/.../service/ScosSystemRegistrationService.java` — resolver i18n + preencher proto completo.
-- `scos-organization-infrastructure/.../enumaration/ScosOrganizationPermission.java` — refatorar ~110 constantes.
-- `grpc/scos-organization-grpc-proto/.../registry.proto` — `Resource`: renomear `updateAt`→`updated_at`; manter `description_pt/en`.
-- `grpc/scos-organization-grpc-boot/.../delegate/RegistreServiceImpl.java` — mapear campos novos.
-- `scos-organization-usecase/.../resource/registry/RegistryResourceInput.java` + `RegistryResourceUseCaseBean.java` — pass-through dos campos.
-- `scos-organization-domain/.../resource/dto/RegisterResourceInput.java` — +campos.
-- `scos-organization-domain/.../resource/internal/Resource.java` — +colunas.
-- `scos-organization-domain/.../resource/internal/ResourceRepository.java` — +`upsert(...)` `@Modifying @Query(nativeQuery=true)`; remover `findIdByCodeAndSystemCode` (dead após upsert).
-- `scos-organization-domain/.../resource/service/ResourceServiceBean.java` — `orElseThrow(SCOS_SYSTEM_001)` + chamar `upsert` condicional (substitui find + merge/update).
-- `scos-organization-shared/.../exception/ExceptionCodeError.java` — +`SCOS_SYSTEM_001` (404, `SCOS_TITLE_NOT_FOUND`).
-- `scos-organization-shared/.../resources/scos_message_organization.properties` + `_en.properties` — +mensagem `SCOS_SYSTEM_001`.
-- `grpc/scos-organization-grpc-boot/.../handler/GrpcGlobalExceptionHandler.java` — `handleScosException` mapeia `httpCode`→`Status` de negócio + `code` no trailer; passa `ex.getArgs()` ao `getMessage`.
-- `scos-organization-boot/.../tables/scos_resource.yml` — +colunas.
+- `flow-organization-infrastructure/.../enumaration/ScosOrganizationPermission.java` — refatorar ~110 constantes.
+- `grpc/flow-organization-grpc-proto/.../registry.proto` — `Resource`: renomear `updateAt`→`updated_at`; manter `description_pt/en`.
+- `grpc/flow-organization-grpc-boot/.../delegate/RegistreServiceImpl.java` — mapear campos novos.
+- `flow-organization-usecase/.../resource/registry/RegistryResourceInput.java` + `RegistryResourceUseCaseBean.java` — pass-through dos campos.
+- `flow-organization-domain/.../resource/dto/RegisterResourceInput.java` — +campos.
+- `flow-organization-domain/.../resource/internal/Resource.java` — +colunas.
+- `flow-organization-domain/.../resource/internal/ResourceRepository.java` — +`upsert(...)` `@Modifying @Query(nativeQuery=true)`; remover `findIdByCodeAndSystemCode` (dead após upsert).
+- `flow-organization-domain/.../resource/service/ResourceServiceBean.java` — `orElseThrow(SCOS_SYSTEM_001)` + chamar `upsert` condicional (substitui find + merge/update).
+- `flow-organization-shared/.../exception/ExceptionCodeError.java` — +`SCOS_SYSTEM_001` (404, `SCOS_TITLE_NOT_FOUND`).
+- `flow-organization-shared/.../resources/scos_message_organization.properties` + `_en.properties` — +mensagem `SCOS_SYSTEM_001`.
+- `grpc/flow-organization-grpc-boot/.../handler/GrpcGlobalExceptionHandler.java` — `handleScosException` mapeia `httpCode`→`Status` de negócio + `code` no trailer; passa `ex.getArgs()` ao `getMessage`.
+- `flow-organization-boot/.../tables/scos_resource.yml` — +colunas.
 
 ### Tarefas
 - [ ] **T-01**: Fechar set final da interface `ScosPermission`.
@@ -219,9 +219,9 @@ WHERE  SCOS_RESOURCE.ACTIVE                IS DISTINCT FROM EXCLUDED.ACTIVE
 
 ## 📎 Referências
 - `scos-security-starter/.../specification/ScosPermission.java` (interface em edição)
-- `scos-organization-infrastructure/.../enumaration/ScosOrganizationPermission.java` (enum)
-- `grpc/scos-organization-grpc-proto/.../registry.proto` (proto `Resource`)
-- `scos-organization-boot/.../view/vw_authority_response.sql` (prova de não-impacto no login)
+- `flow-organization-infrastructure/.../enumaration/ScosOrganizationPermission.java` (enum)
+- `grpc/flow-organization-grpc-proto/.../registry.proto` (proto `Resource`)
+- `flow-organization-boot/.../view/vw_authority_response.sql` (prova de não-impacto no login)
 - Padrão i18n de referência: `messages_security.properties` (formato dos arquivos de erro)
 
 ---

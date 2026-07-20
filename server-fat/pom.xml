@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ /*
+  ~  * Copyright 2026 SawCunha Open System - SawCunhaOS-Organization
+  ~  *
+  ~  * Licensed under the Apache License, Version 2.0 (the "License");
+  ~  * you may not use this file except in compliance with the License.
+  ~  * You may obtain a copy of the License at
+  ~  *
+  ~  *     http://www.apache.org/licenses/LICENSE-2.0
+  ~  */
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>br.com.sawcunhaos</groupId>
+        <artifactId>flow</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <groupId>br.com.sawcunhaos.flow</groupId>
+    <artifactId>server-fat</artifactId>
+
+    <properties>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>br.com.sawcunhaos.flow</groupId>
+                <artifactId>organization</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>br.com.sawcunhaos.flow</groupId>
+            <artifactId>flow-organization-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.sawcunhaos.flow</groupId>
+            <artifactId>flow-organization-usecase</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.sawcunhaos.flow</groupId>
+            <artifactId>flow-organization-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.sawcunhaos.flow</groupId>
+            <artifactId>flow-organization-infrastructure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.sawcunhaos.flow</groupId>
+            <artifactId>flow-organization-resources</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>br.com.sawcunhaos</groupId>
+            <artifactId>scos-foundation-jdempotent</artifactId>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <finalName>ScosFlowServerApplication</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>process-aot</id>
+                        <goals>
+                            <goal>process-aot</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <goals>
+                            <goal>build-info</goal>
+                        </goals>
+                        <configuration>
+                            <additionalProperties>
+                                <!-- propriedades extras opcionais -->
+                                <java.version>${java.version} - ${java.runtime.name}</java.version>
+                            </additionalProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <image>
+                        <name>flow-organization-boot:local</name>
+                        <builder>${paketo.builder}</builder>
+                        <pullPolicy>IF_NOT_PRESENT</pullPolicy>
+                        <env>
+                            <BP_JVM_VERSION>25</BP_JVM_VERSION>
+                            <BP_JVM_CDS_ENABLED>${bp.cds.enabled}</BP_JVM_CDS_ENABLED>
+                            <BPL_JVM_THREAD_COUNT>${bp.jvm.thread.count}</BPL_JVM_THREAD_COUNT>
+                            <BP_JVM_TYPE>JRE</BP_JVM_TYPE>
+                        </env>
+                    </image>
+                    <layers>
+                        <enabled>true</enabled>
+                    </layers>
+                    <jvmArguments>--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --add-opens=java.base/sun.misc=ALL-UNNAMED</jvmArguments>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>25</source>
+                    <target>25</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED --add-opens=java.base/sun.misc=ALL-UNNAMED</argLine>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

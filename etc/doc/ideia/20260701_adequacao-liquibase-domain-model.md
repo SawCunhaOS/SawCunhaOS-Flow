@@ -35,7 +35,7 @@
 O Liquibase hoje só implementa uma fração do domain model atual — qualquer `liquibase update` em banco limpo produz um schema defasado.
 
 ### Objetivo
-`liquibase update` em banco limpo produz exatamente o schema descrito em `domain_model.md`: todas as tabelas, colunas, tipos, nullability, UKs/FKs, `CHECK`s, triggers e índices. Escopo: **somente Liquibase** (`scos-organization-boot/src/main/resources/db/changelog/`) — mesma premissa da rodada anterior: sistema sem produção, reescrita limpa sem migração de dados.
+`liquibase update` em banco limpo produz exatamente o schema descrito em `domain_model.md`: todas as tabelas, colunas, tipos, nullability, UKs/FKs, `CHECK`s, triggers e índices. Escopo: **somente Liquibase** (`flow-organization-boot/src/main/resources/db/changelog/`) — mesma premissa da rodada anterior: sistema sem produção, reescrita limpa sem migração de dados.
 
 ### Fora de Escopo
 - Entidades JPA / código Java — impacto secundário, ideia(s) separada(s)
@@ -106,7 +106,7 @@ O Liquibase hoje só implementa uma fração do domain model atual — qualquer 
 
 ### Componentes Afetados
 ```
-scos-organization-boot/src/main/resources/db/changelog/
+flow-organization-boot/src/main/resources/db/changelog/
 ├── v1.0.0/tables/            18 novos arquivos .yml + ~10 modificados + 3 removidos + tables.yml reordenado
 ├── v1.0.0/indexes/           extensão de indexes.yml (~20 índices novos)
 ├── function/                 ~10 novas .sql (fn_before_insert_*, fn_sync_*, fn_block_delete, fn_validate_*)
@@ -145,5 +145,5 @@ scos-organization-boot/src/main/resources/db/changelog/
 
 ## 📎 Referências
 - Domain model: `etc/database/domain_model.md` (não commitado — `git diff` local)
-- Migrations atuais: `scos-organization-boot/src/main/resources/db/changelog/`
+- Migrations atuais: `flow-organization-boot/src/main/resources/db/changelog/`
 - Rodada anterior (arquivada): `openspec/changes/archive/2026-06-08-adequacao-liquibase-domain-model/`

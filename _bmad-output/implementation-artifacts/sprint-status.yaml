@@ -1,0 +1,95 @@
+# generated: 2026-07-20
+# last_updated: 2026-07-20
+# project: SawCunhaOS-Organization
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# Action Item Status:
+#   - open: Committed during a retrospective, not yet addressed
+#   - in-progress: Actively being worked on
+#   - done: Completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+# - Retrospective appends its action items to action_items; sprint-status surfaces open ones
+
+generated: 2026-07-20
+last_updated: 2026-07-20
+project: SawCunhaOS-Organization
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  epic-0: done
+  0-1-cobertura-testes-caminho-critico-autenticacao-sistema: done
+  0-2-padronizar-tipos-temporais-clock-injetavel: done
+  0-3-modelar-fuso-horario-filial-avaliar-turno: done
+  epic-0-retrospective: optional
+
+  epic-1: backlog
+  1-1-bloquear-ciclo-hierarquia-empresa: ready-for-dev
+  1-2-ciclo-vida-completo-empresa: ready-for-dev
+  1-3-guardas-integridade-desativar-empresa: ready-for-dev
+  1-4-departamento-cargo-verificacao: ready-for-dev
+  1-5-template-jornada-trabalho-cargo: ready-for-dev
+  epic-1-retrospective: optional
+
+  epic-2: backlog
+  2-1-admissao-funcionario-copia-jornada-trabalho: backlog
+  2-2-ciclo-vida-funcionario: backlog
+  2-3-recontratacao-funcionario: backlog
+  2-4-licenca-ferias-colocar-funcionario-licenca: backlog
+  epic-2-retrospective: optional
+
+  epic-3: backlog
+  3-1-criacao-login-vinculado-funcionario: backlog
+  3-2-cadeia-aprovacao-criacao-login: backlog
+  3-3-aprovacao-reativacao-login: backlog
+  3-4-perfis-recursos-aprovacao-mudanca-perfil: backlog
+  3-5-retorno-automatico-assistido-licenca-ferias: backlog
+  epic-3-retrospective: optional
+
+  epic-4: backlog
+  4-1-criacao-login-sistema-servico: backlog
+  4-2-criacao-edicao-perfil-aprovacao: backlog
+  epic-4-retrospective: optional
+
+  epic-5: backlog
+  5-1-classificacao-perfil-bloqueio-turno: backlog
+  5-2-bloqueio-requisicao-fora-jornada-trabalho: backlog
+  5-3-auditoria-imutavel-decisao-turno: backlog
+  5-4-plantao-pre-aprovado: backlog
+  epic-5-retrospective: optional
+
+  epic-6: backlog
+  6-1-invalidacao-sincrona-sessoes-kill-switch: backlog
+  6-2-reativacao-nao-restaura-sessoes-antigas: backlog
+  epic-6-retrospective: optional

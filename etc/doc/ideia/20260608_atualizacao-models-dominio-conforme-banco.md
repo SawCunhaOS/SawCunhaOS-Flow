@@ -11,7 +11,7 @@
 > **Regra**: Uma ideia = uma funcionalidade. Features independentes → arquivos separados.
 
 - **Nome da funcionalidade**: `atualizacao-models-dominio-conforme-banco`
-- **Resumo em uma frase**: Sincronizar as entidades JPA e repositórios do módulo `scos-organization-domain` com o schema real do banco de dados definido nas migrations Liquibase e no `domain_model.md`.
+- **Resumo em uma frase**: Sincronizar as entidades JPA e repositórios do módulo `flow-organization-domain` com o schema real do banco de dados definido nas migrations Liquibase e no `domain_model.md`.
 
 **Checklist SRP**:
 - [x] Esta ideia cobre exatamente uma funcionalidade
@@ -26,7 +26,7 @@
 As entidades JPA no pacote `domain/model` foram criadas antes das migrations Liquibase serem finalizadas. O resultado é uma divergência significativa: campos que não existem no banco estão mapeados nas entidades, campos que existem no banco estão ausentes nas entidades, nomes de colunas PK incorretos, e seis tabelas do schema não possuem nenhuma entidade JPA correspondente. Isso faz o Hibernate gerar SQL inválido e impossibilita o uso correto das tabelas de integração, permissões e sistema.
 
 ### Objetivo
-Todos os models JPA e repositórios do pacote `scos-organization-domain` devem refletir exatamente o schema definido no Liquibase (`v1.0.0`) e no `domain_model.md`. O critério de sucesso é: nenhum campo mapeado que não exista no banco, nenhum campo do banco relevante sem mapeamento, zero erro de schema-validation do Hibernate.
+Todos os models JPA e repositórios do pacote `flow-organization-domain` devem refletir exatamente o schema definido no Liquibase (`v1.0.0`) e no `domain_model.md`. O critério de sucesso é: nenhum campo mapeado que não exista no banco, nenhum campo do banco relevante sem mapeamento, zero erro de schema-validation do Hibernate.
 
 ### Fora de Escopo
 - Alterações nas migrations Liquibase — elas são a fonte da verdade, não serão modificadas
@@ -111,7 +111,7 @@ Todos os models JPA e repositórios do pacote `scos-organization-domain` devem r
 
 ### Componentes Afetados
 ```
-scos-organization-domain/src/main/java/.../domain/
+flow-organization-domain/src/main/java/.../domain/
 ├── model/
 │   ├── company/
 │   │   ├── Company.java              : modificação
@@ -322,7 +322,7 @@ scos-organization-domain/src/main/java/.../domain/
 
 ## 📎 Referências
 - `etc/database/domain_model.md` — fonte da verdade do schema
-- `scos-organization-boot/src/main/resources/db/changelog/v1.0.0/tables/` — migrations Liquibase por tabela
+- `flow-organization-boot/src/main/resources/db/changelog/v1.0.0/tables/` — migrations Liquibase por tabela
 - `openspec/changes/adequacao-liquibase-domain-model/` — change anterior que alinhou o Liquibase ao domain model
 
 ---

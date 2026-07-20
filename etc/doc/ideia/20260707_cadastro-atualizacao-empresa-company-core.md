@@ -63,17 +63,17 @@ Empresa matriz e filial podem ser cadastradas, atualizadas, consultadas por id e
 
 ### Componentes Afetados
 ```
-scos-organization-api
+flow-organization-api
 └── delegate/company/CompanyDelegate: adição (implements CompanyApiDelegate)
 
-scos-organization-usecase
+flow-organization-usecase
 ├── .../company/CreateCompanyUseCase(+Bean): adição
 ├── .../company/UpdateCompanyUseCase(+Bean): adição
 ├── .../company/FindCompanyUseCase(+Bean): adição
 ├── .../company/FindAllCompanyUseCase(+Bean): adição
 └── .../company/CompanyApiMapper: adição
 
-scos-organization-domain
+flow-organization-domain
 ├── .../company/specification/CompanyService: adição
 ├── .../company/service/CompanyServiceBean: adição
 ├── .../company/service/CompanyMapper: adição
@@ -116,11 +116,11 @@ Request → [Delegate/boundary: formato+presença+DV] → [UseCase Bean: só orq
 ### Arquivos
 
 **Novos**:
-- `scos-organization-api/.../delegate/company/CompanyDelegate.java` — expõe UC-001..005.
-- `scos-organization-usecase/.../company/{Create,Update,Find,FindAll}CompanyUseCase(+Bean).java` — orquestração.
-- `scos-organization-usecase/.../company/CompanyApiMapper.java` — API DTO ⇄ domain Input/Output.
-- `scos-organization-domain/.../company/specification/CompanyService.java` + `service/CompanyServiceBean.java` + `service/CompanyMapper.java` — regras de negócio.
-- `scos-organization-domain/.../company/dto/CompanyInput.java` + `CompanyOutput.java`.
+- `flow-organization-api/.../delegate/company/CompanyDelegate.java` — expõe UC-001..005.
+- `flow-organization-usecase/.../company/{Create,Update,Find,FindAll}CompanyUseCase(+Bean).java` — orquestração.
+- `flow-organization-usecase/.../company/CompanyApiMapper.java` — API DTO ⇄ domain Input/Output.
+- `flow-organization-domain/.../company/specification/CompanyService.java` + `service/CompanyServiceBean.java` + `service/CompanyMapper.java` — regras de negócio.
+- `flow-organization-domain/.../company/dto/CompanyInput.java` + `CompanyOutput.java`.
 
 **Modificados**:
 - `etc/api/organization/ScosOrganization_Company.yml` — confirmar operations/responses de UC-001..005 (schemas já existem).
@@ -390,7 +390,7 @@ CompanyDelegate-->>Client: 201
 ## Exemplo de Implementação
 
 ```java
-// scos-organization-domain — regra de negócio no Service (espelha ContactTypeServiceBean)
+// flow-organization-domain — regra de negócio no Service (espelha ContactTypeServiceBean)
 @Service
 @Transactional
 class CompanyServiceBean implements CompanyService {
@@ -409,7 +409,7 @@ class CompanyServiceBean implements CompanyService {
 ```
 
 ```java
-// scos-organization-usecase — só orquestra, NÃO valida
+// flow-organization-usecase — só orquestra, NÃO valida
 @Service
 class CreateCompanyUseCaseBean implements CreateCompanyUseCase {
     @Override

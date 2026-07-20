@@ -1,6 +1,6 @@
 # Configuração por variável de ambiente — SCOS Organization
 
-Referência das properties externalizadas dos módulos deployáveis (`scos-organization-boot`, `scos-organization-grpc-boot`). O arquivo `.env.example` na raiz lista todas as env vars com seus defaults prontas para copiar. Este documento explica **o que setar** e, principalmente, **o que NÃO mexer**.
+Referência das properties externalizadas dos módulos deployáveis (`flow-organization-boot`, `flow-organization-grpc-boot`). O arquivo `.env.example` na raiz lista todas as env vars com seus defaults prontas para copiar. Este documento explica **o que setar** e, principalmente, **o que NÃO mexer**.
 
 Padrão: toda property usa `${VAR:default}`, com default = valor de hoje. **Rodar sem setar nada reproduz o comportamento atual** (regressão-zero). Onde o valor tem forma de URL, a env var carrega a string inteira (cobre scheme, porta, db, schema, realm; e listas de Sentinel).
 

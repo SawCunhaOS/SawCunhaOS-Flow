@@ -1,22 +1,19 @@
 # Claude Instructions
 - Antes de responder a qualquer pergunta, valide a resposta se esta de acordo com o que foi perguntado.
-- Sempre que tiver no modo openspec explore deve ser criado um arquivo de ideia na pasta `etc/doc/ideia/` com base no template `etc/doc/templates/ideia.md`. O arquivo deve seguir o padrão `YYYYMMDD_titulo-da-funcionalidade.md`.
-- Cada arquivo de ideia deve respeitar o Princípio SRP: uma ideia = uma funcionalidade. Se a exploração revelar múltiplas features independentes, criar um arquivo separado por feature.
-- O comando do openspec propose deve sempre ter um arquivo de ideia criado.
 - NUNCA adivinhe soluções e nem mesmo tentar resolver problemas sem antes perguntar.
 - SEMPRE pergunte para ter todos os detalhes.
 - Sempre responda em PT-BR.
 
 ## Convenções rápidas do projeto
 
-**Módulos Maven:** `scos-organization-api` (delegates) | `scos-organization-usecase` (use cases) | `scos-organization-domain` (entidades/repos/domain services) | `scos-organization-infrastructure` | `scos-organization-boot` (Liquibase/config).
+**Módulos Maven:** `flow-organization-api` (delegates) | `flow-organization-usecase` (use cases) | `flow-organization-domain` (entidades/repos/domain services) | `flow-organization-infrastructure` | `flow-organization-boot` (Liquibase/config).
 
 **Pacote base:** `br.com.sawcunhaos.organization`
 
 **Novo endpoint — ordem obrigatória:**
 1. Atualizar o YAML em `etc/api/organization/*.yml` primeiro (contrato antes do código)
-2. Implementar `XxxDelegate implements XxxApiDelegate` em `scos-organization-api/.../delegate/<agregado>/`
-3. Criar Use Case (interface pública + `@Service` Bean package-private) em `scos-organization-usecase/.../usecase/<bounded-context>/<agregado>/`
+2. Implementar `XxxDelegate implements XxxApiDelegate` em `flow-organization-api/.../delegate/<agregado>/`
+3. Criar Use Case (interface pública + `@Service` Bean package-private) em `flow-organization-usecase/.../usecase/<bounded-context>/<agregado>/`
 4. Adicionar permissão ao `ScosOrganizationPermission` se novo `x-authorize`
 
 **Padrão de resposta OpenAPI:**
@@ -29,7 +26,6 @@
 - `scos-conventions` — delegate pattern, exceções, resposta OpenAPI
 - `ddd-tactical-design` — entidades, bounded contexts, domain services
 - `spring-boot-service` — setup de módulo, pom, configuração
-- `openspec-explore` / `openspec-propose` / `openspec-apply-change` / `openspec-archive-change` — fluxo de especificação (explore → propose → apply → archive)
 - `tdd-workflow` / `testcontainers-integration` — testes
 - `spring-security-scos` — Spring Security, OAuth2/JWT, @PreAuthorize
 - `observability-otel` — Micrometer, OpenTelemetry, traces/metrics/logs

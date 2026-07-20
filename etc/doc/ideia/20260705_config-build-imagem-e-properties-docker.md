@@ -11,7 +11,7 @@
 > **Regra**: Uma ideia = uma funcionalidade. Features independentes → arquivos separados.
 
 - **Nome da funcionalidade**: `config-build-imagem-e-properties-docker`
-- **Resumo em uma frase**: Configurar `spring-boot-maven-plugin` (buildpacks) em `scos-organization-boot` e `scos-organization-grpc-boot` pra gerar imagem local com nome/builder fixos, e maximizar o que é configurável via env var (`${VAR:default}`, default = comportamento de hoje) — topologia de rede, portas e tuning operacional — pra uma **mesma imagem** servir dev local, docker, e instalação on-premise de qualquer cliente sem rebuild nem edição de arquivo.
+- **Resumo em uma frase**: Configurar `spring-boot-maven-plugin` (buildpacks) em `flow-organization-boot` e `flow-organization-grpc-boot` pra gerar imagem local com nome/builder fixos, e maximizar o que é configurável via env var (`${VAR:default}`, default = comportamento de hoje) — topologia de rede, portas e tuning operacional — pra uma **mesma imagem** servir dev local, docker, e instalação on-premise de qualquer cliente sem rebuild nem edição de arquivo.
 
 > **Contexto confirmado com o usuário**: "diversos clientes" aqui significa **deploy separado por cliente** (on-premise/whitelabel) — cada cliente tem sua própria instância de Postgres/Keycloak/Redis/registry. Além disso, o ambiente de destino pode ter **restrição de quantas aplicações sobem** (infra pequena/compartilhada) — por isso o objetivo é maximizar o que dá pra reconfigurar via env var (host, porta, pool, timeout, toggle) sem precisar de imagem diferente por cliente. Isso valida o mecanismo de placeholder+env var (padrão 12-factor): cada instalação seta suas próprias env vars, sem depender de um serviço central. Ver seção de Decisões pra detalhe sobre Config Server.
 
@@ -25,10 +25,10 @@
 ## 1️⃣ Visão
 
 ### Problema
-Nenhum dos 2 módulos deployáveis (`scos-organization-boot`, `scos-organization-grpc-boot`) tem o bloco `<image>` configurado no `spring-boot-maven-plugin` — `mvn spring-boot:build-image` funciona só de forma ad-hoc, sem nome/builder/tuning definidos. Além disso, `application.yml`/`bootstrap.yml` de ambos os módulos têm `datasource.url`, `security.keycloak.issuer-uri`, `cache.sentinels` e (só no `boot`) `registry.host` hardcoded pra `localhost` — dentro de um container, `localhost` aponta pro próprio container, não pros serviços de infra reais. Isso bloqueia qualquer cenário que precise rodar a imagem containerizada apontando pra infra real: ambiente de testes k6 ([[suite-testes-k6-ambiente-integracao]]) hoje, e **deploy on-premise por cliente** amanhã — cada cliente com seu próprio Postgres/Keycloak/Redis/registry.
+Nenhum dos 2 módulos deployáveis (`flow-organization-boot`, `flow-organization-grpc-boot`) tem o bloco `<image>` configurado no `spring-boot-maven-plugin` — `mvn spring-boot:build-image` funciona só de forma ad-hoc, sem nome/builder/tuning definidos. Além disso, `application.yml`/`bootstrap.yml` de ambos os módulos têm `datasource.url`, `security.keycloak.issuer-uri`, `cache.sentinels` e (só no `boot`) `registry.host` hardcoded pra `localhost` — dentro de um container, `localhost` aponta pro próprio container, não pros serviços de infra reais. Isso bloqueia qualquer cenário que precise rodar a imagem containerizada apontando pra infra real: ambiente de testes k6 ([[suite-testes-k6-ambiente-integracao]]) hoje, e **deploy on-premise por cliente** amanhã — cada cliente com seu próprio Postgres/Keycloak/Redis/registry.
 
 ### Objetivo
-- `pom.xml` de `scos-organization-boot` e `scos-organization-grpc-boot` com `<image>` configurado: nome fixo, builder pinado, `pullPolicy`, env de build tunados pra performance
+- `pom.xml` de `flow-organization-boot` e `flow-organization-grpc-boot` com `<image>` configurado: nome fixo, builder pinado, `pullPolicy`, env de build tunados pra performance
 - `application.yml`/`bootstrap.yml` dos 2 módulos com **topologia (host+porta de DB/Keycloak/Redis/Registry), porta da própria app, pool de conexão, toggles e tuning operacional** como placeholder `${VAR:default}` — mesmo arquivo funciona local (sem setar nada, cai no default de hoje), em docker, ou numa instalação on-premise pequena/restrita, só setando env var
 - Corrigir a inconsistência encontrada em `scos.cache.master` do `grpc-boot`
 - Deixar explícito o que **não** vira placeholder (identidade do sistema, convenções de arquitetura JPA/Hibernate) e o que é segredo (tratado em ideia própria, Jasypt)
@@ -43,7 +43,7 @@ Nenhum dos 2 módulos deployáveis (`scos-organization-boot`, `scos-organization
 ## 2️⃣ Requisitos
 
 ### Funcionais
-- [ ] **RF-01**: `<image><name>` fixo em ambos os poms (ex: `scos-organization-boot:local`, `scos-organization-grpc-boot:local`)
+- [ ] **RF-01**: `<image><name>` fixo em ambos os poms (ex: `flow-organization-boot:local`, `flow-organization-grpc-boot:local`)
 - [ ] **RF-02**: `<image><builder>` pinado em tag exata (`paketobuildpacks/builder-jammy-tiny:<tag>`, nunca `latest`), `<pullPolicy>IF_NOT_PRESENT</pullPolicy>`
 - [ ] **RF-03**: `<image><env>` com `BP_JVM_VERSION=25` fixo
 - [ ] **RF-04**: `<image><env><BP_JVM_CDS_ENABLED>` parametrizado via propriedade Maven (`${bp.cds.enabled}`, default `true`) — permite `-Dbp.cds.enabled=false` via linha de comando sem editar o pom. Contrato consumido pelo runner do ambiente k6 pro fallback automático (bug [#581](https://github.com/paketo-buildpacks/spring-boot/issues/581))
@@ -54,7 +54,7 @@ Nenhum dos 2 módulos deployáveis (`scos-organization-boot`, `scos-organization
 - [ ] **RF-09**: Pool de conexão do datasource principal e de auditoria viram placeholder (timeouts, min-idle, max-pool-size) nos 2 módulos — `SCOS_DB_CONN_TIMEOUT`, `SCOS_DB_IDLE_TIMEOUT`, `SCOS_DB_MAX_LIFETIME`, `SCOS_DB_MIN_IDLE`, `SCOS_DB_MAX_POOL_SIZE` (principal) e os mesmos com prefixo `SCOS_AUDIT_DB_*` (auditoria)
 - [ ] **RF-10**: Toggles operacionais viram placeholder: `SCOS_AUDIT_ENABLED`, `SCOS_CACHE_ENABLE`, `SCOS_LIQUIBASE_ENABLED`, `SCOS_PRIVACY_ENABLED`, `SCOS_PRIVACY_STRICT`, `SCOS_JDEMPOTENT_ENABLED` (jdempotent só existe no `boot`)
 - [ ] **RF-11**: Tuning fino vira placeholder: cache (`SCOS_CACHE_TTL`, `SCOS_CACHE_DATABASE`), jdempotent (`SCOS_JDEMPOTENT_EXPIRATION_HOUR`, `SCOS_JDEMPOTENT_DIAL_TIMEOUT_SEC`, `SCOS_JDEMPOTENT_READ_TIMEOUT_SEC`, `SCOS_JDEMPOTENT_WRITE_TIMEOUT_SEC`, `SCOS_JDEMPOTENT_MAX_RETRY`, `SCOS_JDEMPOTENT_EXPIRE_TIMEOUT_HOUR`), privacy (`SCOS_PRIVACY_MAX_PAYLOAD_KB`)
-- [ ] **RF-12**: Corrigir `scos.cache.master` em `grpc/scos-organization-grpc-boot/src/main/resources/application.yml` — hoje `inside_flow_master`, não bate com `REDIS_MASTER_SET=scos_master` de `etc/infra/docker-compose-redis.yml` (bug pré-existente, dormente porque `cache.enable: false` nesse módulo hoje). Esse valor não vira placeholder — é constante, só corrige o valor errado
+- [ ] **RF-12**: Corrigir `scos.cache.master` em `grpc/flow-organization-grpc-boot/src/main/resources/application.yml` — hoje `inside_flow_master`, não bate com `REDIS_MASTER_SET=scos_master` de `etc/infra/docker-compose-redis.yml` (bug pré-existente, dormente porque `cache.enable: false` nesse módulo hoje). Esse valor não vira placeholder — é constante, só corrige o valor errado
 - [ ] **RF-13**: Documentar (README próprio ou seção deste repositório) a tabela completa properties → env var, agrupada por categoria (topologia, porta, pool, toggle, tuning, fixo, segredo), pra qualquer consumidor (runner k6, deploy on-premise futuro) saber exatamente o que setar e o que não mexer
 
 #### Requisitos adicionados na revalidação (2026-07-05)
@@ -68,7 +68,7 @@ Nenhum dos 2 módulos deployáveis (`scos-organization-boot`, `scos-organization
 
 ### Não-Funcionais
 - [ ] **RNF-01**: Rodar local sem setar nenhuma env var reproduz exatamente o comportamento de hoje — todo default de placeholder é o valor atual do `application.yml`/`bootstrap.yml`. Qualquer outro alvo (docker, on-premise) só requer setar as env vars relevantes, sem editar arquivo
-- [ ] **RNF-02**: Build de imagem funciona isoladamente por módulo (`mvn -pl scos-organization-boot spring-boot:build-image`), sem precisar buildar o reactor inteiro
+- [ ] **RNF-02**: Build de imagem funciona isoladamente por módulo (`mvn -pl flow-organization-boot spring-boot:build-image`), sem precisar buildar o reactor inteiro
 - [ ] **RNF-03**: Nenhuma propriedade de identidade de sistema (`registry.system-code`, `keycloak.client-id` etc.), convenção de arquitetura (JPA/Hibernate, naming strategy) ou segredo vira placeholder nesta ideia — mantém escopo fechado em topologia + tuning operacional
 
 ---
@@ -77,32 +77,32 @@ Nenhum dos 2 módulos deployáveis (`scos-organization-boot`, `scos-organization
 
 ### Componentes Afetados
 ```
-scos-organization-boot/pom.xml
+flow-organization-boot/pom.xml
 └── spring-boot-maven-plugin: adiciona bloco <image>
 
-scos-organization-boot/src/main/resources/application.yml
+flow-organization-boot/src/main/resources/application.yml
 └── host+porta (DB/Keycloak/Redis), scos.port, pool de conexão,
     toggles, tuning de cache/jdempotent/privacy: valor fixo → ${VAR:default}
 
-scos-organization-boot/src/main/resources/bootstrap.yml
+flow-organization-boot/src/main/resources/bootstrap.yml
 └── scos.registry.host/port/tls-enabled: valor fixo → ${VAR:default}
 
-grpc/scos-organization-grpc-boot/pom.xml
+grpc/flow-organization-grpc-boot/pom.xml
 └── spring-boot-maven-plugin: adiciona bloco <image>
 
-grpc/scos-organization-grpc-boot/src/main/resources/application.yml
+grpc/flow-organization-grpc-boot/src/main/resources/application.yml
 ├── mesmos placeholders que o boot (sem jdempotent, que não existe nesse módulo)
 └── scos.cache.master: inside_flow_master → scos_master (correção, valor fixo)
 
 # Adicionados na revalidação 2026-07-05:
-scos-organization-boot/src/main/resources/bootstrap.yml
-grpc/scos-organization-grpc-boot/src/main/resources/bootstrap.yml
+flow-organization-boot/src/main/resources/bootstrap.yml
+grpc/flow-organization-grpc-boot/src/main/resources/bootstrap.yml
 └── ATENÇÃO: JPA show_sql/generate_statistics/slow-query, tracing.sampling,
     scos.filter.*, redis.timeout, tomcat.* NÃO ficam no application.yml (raw scos.*)
     e sim no bootstrap.yml (bindings + management + jpa). Placeholder vai aqui (RF-16..19)
 
-scos-organization-boot/src/main/resources/logback-spring.xml
-grpc/scos-organization-grpc-boot/src/main/resources/logback-spring.xml
+flow-organization-boot/src/main/resources/logback-spring.xml
+grpc/flow-organization-grpc-boot/src/main/resources/logback-spring.xml
 ├── LOG_DIR fixo → ${LOG_DIR:logs}; <root level> → ${LOG_LEVEL:INFO} (RF-14)
 └── ScosJson: FileAppender → RollingFileAppender (RF-15, bug rotação morta)
 ```
@@ -110,7 +110,7 @@ grpc/scos-organization-grpc-boot/src/main/resources/logback-spring.xml
 ### Fluxo Principal
 ```
 mvn spring-boot:build-image [-Dbp.cds.enabled=false]
-  → imagem local (scos-organization-boot:local | scos-organization-grpc-boot:local)
+  → imagem local (flow-organization-boot:local | flow-organization-grpc-boot:local)
 
 Rodando local (nada setado)       → todo placeholder cai no default de hoje, comportamento idêntico
 Rodando em docker (env setada)    → SCOS_DB_HOST=postgresql, SCOS_KEYCLOAK_HOST=keycloak,
@@ -274,18 +274,18 @@ Com "diversos clientes" confirmado como **deploy separado por cliente**, os segr
 ### Arquivos
 
 **Modificados**:
-- `scos-organization-boot/pom.xml` — bloco `<image>` no `spring-boot-maven-plugin`
-- `scos-organization-boot/src/main/resources/application.yml` — topologia, portas, pool, toggles e tuning viram placeholder
-- `scos-organization-boot/src/main/resources/bootstrap.yml` — `scos.registry.host`/`port`/`tls-enabled` + (revalidação) JPA diag, tracing.sampling, `scos.filter.*`, redis.timeout, tomcat viram placeholder
-- `grpc/scos-organization-grpc-boot/pom.xml` — bloco `<image>` no `spring-boot-maven-plugin`
-- `grpc/scos-organization-grpc-boot/src/main/resources/application.yml` — mesmo padrão do boot (sem jdempotent) + corrige `scos.cache.master`
-- `grpc/scos-organization-grpc-boot/src/main/resources/bootstrap.yml` — (revalidação) JPA diag, tracing.sampling, `scos.filter.*` viram placeholder
-- `scos-organization-boot/src/main/resources/logback-spring.xml` — (revalidação) `LOG_DIR`/`LOG_LEVEL` env + corrige appender `ScosJson`
-- `grpc/scos-organization-grpc-boot/src/main/resources/logback-spring.xml` — idem
+- `flow-organization-boot/pom.xml` — bloco `<image>` no `spring-boot-maven-plugin`
+- `flow-organization-boot/src/main/resources/application.yml` — topologia, portas, pool, toggles e tuning viram placeholder
+- `flow-organization-boot/src/main/resources/bootstrap.yml` — `scos.registry.host`/`port`/`tls-enabled` + (revalidação) JPA diag, tracing.sampling, `scos.filter.*`, redis.timeout, tomcat viram placeholder
+- `grpc/flow-organization-grpc-boot/pom.xml` — bloco `<image>` no `spring-boot-maven-plugin`
+- `grpc/flow-organization-grpc-boot/src/main/resources/application.yml` — mesmo padrão do boot (sem jdempotent) + corrige `scos.cache.master`
+- `grpc/flow-organization-grpc-boot/src/main/resources/bootstrap.yml` — (revalidação) JPA diag, tracing.sampling, `scos.filter.*` viram placeholder
+- `flow-organization-boot/src/main/resources/logback-spring.xml` — (revalidação) `LOG_DIR`/`LOG_LEVEL` env + corrige appender `ScosJson`
+- `grpc/flow-organization-grpc-boot/src/main/resources/logback-spring.xml` — idem
 
 ### Tarefas
-- [ ] **T-01**: Configurar `<image>` no pom do `scos-organization-boot`
-- [ ] **T-02**: Configurar `<image>` no pom do `scos-organization-grpc-boot`
+- [ ] **T-01**: Configurar `<image>` no pom do `flow-organization-boot`
+- [ ] **T-02**: Configurar `<image>` no pom do `flow-organization-grpc-boot`
 - [ ] **T-03**: `application.yml` do `boot` — placeholder de topologia+porta (DB, Keycloak, Redis)
 - [ ] **T-04**: `application.yml` do `boot` — placeholder de pool de conexão (principal + auditoria)
 - [ ] **T-05**: `application.yml` do `boot` — placeholder de toggles e tuning fino (cache, jdempotent, privacy)
@@ -348,8 +348,8 @@ Releitura dos 4 yaml + 2 `logback-spring.xml` reais contra a v1. Objetivo: (a) a
 ---
 
 ## 📎 Referências
-- `scos-organization-boot/src/main/resources/application.yml`, `bootstrap.yml`, `logback-spring.xml`
-- `grpc/scos-organization-grpc-boot/src/main/resources/application.yml`, `bootstrap.yml`, `logback-spring.xml`
+- `flow-organization-boot/src/main/resources/application.yml`, `bootstrap.yml`, `logback-spring.xml`
+- `grpc/flow-organization-grpc-boot/src/main/resources/application.yml`, `bootstrap.yml`, `logback-spring.xml`
 - `etc/infra/docker-compose-database.yml`, `docker-compose-keycloak.yml`, `docker-compose-redis.yml`
 - [paketo-buildpacks/spring-boot#581](https://github.com/paketo-buildpacks/spring-boot/issues/581) — bug CDS+AOT Java 25 / Spring Boot 4.0.1
 - `.claude/skills/spring-security-scos/references/resource-server.md` — convenção SCOS de Jasypt pra segredos ("issuer URIs, client secrets, and keys externalized (env) / Jasypt-encrypted")

@@ -1,6 +1,6 @@
 # Resource server, claim mapping, SCOS integration & review
 
-Spring Security 7 / Spring Boot 4.0.x. Stateless JWT resource server is the
+Spring Security 7 / Spring Boot 4.X.X. Stateless JWT resource server is the
 default for a SCOS API behind an IdP.
 
 ## Dependencies

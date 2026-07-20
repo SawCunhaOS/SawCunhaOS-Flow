@@ -1,1263 +1,304 @@
-# SCOS Organization - Sistema de Gestão de Organizações
+# SCOS Flow
 
 ![Java](https://img.shields.io/badge/Java-25-blue)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.x-green)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18+-blue)
-![Architecture](https://img.shields.io/badge/Architecture-Hexagonal%20%2B%20Clean-orange)
-![DDD](https://img.shields.io/badge/Design-DDD-purple)
+![Architecture](https://img.shields.io/badge/Architecture-DDD%20t%C3%A1tico%20em%20camadas-orange)
 ![License](https://img.shields.io/badge/License-Apache%202.0-yellowgreen)
 
 ## 📋 Índice
 
 - [Visão Geral](#-visão-geral)
+- [Estado Atual do Projeto](#-estado-atual-do-projeto)
 - [Arquitetura](#-arquitetura)
-- [Estrutura do Projeto](#-estrutura-do-projeto)
-- [Módulos](#-módulos)
-- [Conceitos de Domínio](#-conceitos-de-domínio)
-- [Fluxo de Dados](#-fluxo-de-dados)
-- [Tecnologias](#-tecnologias)
-- [Configuração](#-configuração)
-- [Exemplos de Uso](#-exemplos-de-uso)
+- [Estrutura de Módulos](#-estrutura-de-módulos)
+- [Convenções do Projeto](#-convenções-do-projeto)
+- [Stack Tecnológica](#-stack-tecnológica)
+- [Como Rodar](#-como-rodar)
+- [Testes](#-testes)
+- [Roadmap](#-roadmap)
+- [Licença](#-licença)
 
 ---
 
 ## 🎯 Visão Geral
 
-**SCOS Organization** (SawCunha Open System - Organization) é um sistema modular de gestão de organizações empresariais que oferece:
+**Flow** (`br.com.sawcunhaos:flow`) é o monorepo Maven multi-módulo do SawCunhaOS. Todo o trabalho de produto até agora está concentrado no módulo **`organization`** — o motor fundacional de **identidade, organização e governança de acesso** de um ISP (Internet Service Provider) brasileiro, Fase 1 (P0) do produto: back-end puro de API/gRPC, sem front-end no escopo desta etapa. Os demais módulos do monorepo (`notification`, `geotemporal`) são reservas vazias para fases futuras — ver [Estrutura de Módulos](#-estrutura-de-módulos).
 
-- ✅ **Gestão de Empresas**: Criação e administração de matrizes e filiais
-- ✅ **Hierarquia Multinível**: Suporte a estruturas organizacionais complexas
-- ✅ **Gestão de Usuários**: Controle de usuários de negócio com roles e permissões
-- ✅ **Integração com IdP**: Sincronização com Keycloak para autenticação centralizada
-- ✅ **Configuração Flexível**: Personalização por empresa (timezone, idioma)
-- ✅ **Auditoria Completa**: Rastreabilidade de todas as operações
-- ✅ **Eventos de Domínio**: Comunicação assíncrona via Kafka
+O módulo `organization` resolve três passivos concretos de um ISP:
 
-### Casos de Uso Principais
+- **Estrutura organizacional íntegra** — empresas/filiais em hierarquia sem ciclos e sem filial órfã ativa, departamentos, cargos e jornada de trabalho padrão por cargo.
+- **Governança de acesso Zero Trust** — toda requisição autenticada de um Perfil sujeito a bloqueio de turno é avaliada contra a jornada de trabalho vigente da filial, no back-end, antes de qualquer lógica de negócio — nunca confiando em validação de cliente.
+- **Kill Switch** — desligar ou bloquear um colaborador invalida as sessões dele em menos de 1 segundo via denylist Redis síncrono, com defesa em profundidade via Keycloak Admin API em paralelo.
 
-```
-📊 Cenários Suportados:
-├── Empresa matriz com múltiplas filiais
-├── Filiais com sub-filiais (até 5 níveis)
-├── Usuários com acesso a múltiplas empresas
-├── Sincronização automática com Keycloak
-└── Configurações específicas por empresa
-```
+Login e aprovação de acesso seguem uma cadeia de 3 níveis (Supervisor → Gerente → grupo de acesso de sistema), nunca autoaprovada pelo próprio solicitante, com escalonamento automático por SLA.
+
+---
+
+## 📊 Estado Atual do Projeto
+
+O projeto é conduzido pelo método **BMAD** (épicos/stories em `_bmad-output/`). Estado do sprint em `_bmad-output/implementation-artifacts/sprint-status.yaml`.
+
+### Baseline pré-existente (antes da quebra em épicos atual)
+
+Já implementado e em produção antes desta rodada de planejamento, confirmado por auditoria de código:
+
+- CRUD completo de **Company** (matriz/filial), **Department**, **Position**, **Employee**, com ciclo `enable`/`disable` e catálogo de motivos obrigatório (`SCOS_REASON_*`) para transições de status sensíveis.
+- **Login** vinculado a Funcionário, **Profile** (Perfil) e **Resource** (permissão), com sincronização parcial ao Keycloak.
+- Autenticação sistema-a-sistema via interceptor gRPC + segredo cifrado em repouso.
+- Auditoria (`@Auditable`), idempotência de requisição (jDempotent/Redis), mascaramento de PII em log, tratamento central de erro (`ScosException`/RFC 9457).
+- Schema de banco da Etapa 1 (Liquibase) já criado, incluindo tabelas novas (`SCOS_LOGIN_APPROVAL_REQUEST`, `SCOS_SHIFT_ENFORCEMENT_LOG`) e triggers de bloqueio de `DELETE` físico em tabela de histórico/decisão.
+
+### Epic 0 — Fundação Técnica: Tipos Temporais e Relógio Injetável — ✅ **done**
+
+Débito técnico transversal, pré-requisito de confiabilidade para Epic 5 (Governança de Turno) e Epic 6 (Kill Switch):
+
+| Story | Status | Entrega |
+|---|---|---|
+| 0.1 — Cobertura de Testes do Caminho Crítico de Autenticação de Sistema | ✅ done | Testes determinísticos de `TokenAuthorizationInterceptor`, `SystemSecretCryptoService`, `ScosSystemServiceBean.validateSecretKey`; correção de 3 bugs de configuração/typo; 4º bug de tratamento de exceção corrigido |
+| 0.2 — Padronizar Tipos Temporais e Introduzir Clock Injetável | ✅ done | 14 campos `LocalDateTime` migrados para `Instant` contra coluna `TIMESTAMPTZ`; `Clock` injetável no lugar de `.now()` estático no domínio; correção de bug de semântica do grace period de rotação de segredo |
+| 0.3 — Modelar Fuso Horário por Filial e Avaliar Janela de Turno | ✅ done | `SCOS_COMPANY.TIME_ZONE` (IANA) + `Company.timeZone`; `ShiftWindowEvaluator`, avaliador único de janela de turno (`Instant` → hora local, trata turno cruzando meia-noite) |
+
+### Epic 1 — Estrutura Organizacional — 🔄 **em andamento** (stories criadas, implementação pendente)
+
+RH consegue montar e manter toda a estrutura organizacional do ISP. Cobre FR-1 a FR-4 do PRD.
+
+| Story | Status | Escopo |
+|---|---|---|
+| 1.1 — Bloquear Ciclo na Hierarquia de Empresa | 📝 ready-for-dev | Guarda de ciclo indireto na hierarquia de Empresa via CTE recursiva (`WITH RECURSIVE`) |
+| 1.2 — Ciclo de Vida Completo de Empresa | 📝 ready-for-dev | Use Cases `activate`/`inactivate`/`disable`/`enable` para Company, com motivo obrigatório e histórico |
+| 1.3 — Guardas de Integridade ao Desativar Empresa | 📝 ready-for-dev | Impede inativar a última matriz ativa, bloquear a única empresa ativa, ou desativar/bloquear empresa com filial ativa em qualquer nível da subárvore |
+| 1.4 — Departamento e Cargo (Verificação) | 📝 ready-for-dev | Story de regressão — as guardas de Department/Position já existem e funcionam; fecha gap de cobertura de teste de integração |
+| 1.5 — Template de Jornada de Trabalho por Cargo | 📝 ready-for-dev | CRUD de `PositionWorkSchedule` (horário por dia da semana), contrato OpenAPI já publicado, camada de aplicação a criar |
+
+### Epic 2 a Epic 6 — 📋 **backlog** (ainda não quebrados em implementação)
+
+| Épico | Objetivo |
+|---|---|
+| Epic 2 — Ciclo de Vida do Funcionário | Admissão com cópia de jornada, ativar/inativar/bloquear/recontratar, licença/férias com retorno assistido |
+| Epic 3 — Login do Funcionário com Aprovação | Criação/reativação de Login com cadeia de aprovação de 3 níveis, escalonamento automático |
+| Epic 4 — Acesso de Sistema e Governança de Perfil | Login de sistema/serviço (sem Funcionário) e CRUD de Perfil, ambos com aprovação de grupo de TI |
+| Epic 5 — Governança de Turno (Zero Trust) | Bloqueio de requisição fora da jornada de trabalho, plantão pré-aprovado, auditoria imutável de decisão |
+| Epic 6 — Kill Switch | Invalidação síncrona de sessão via denylist Redis; reativação nunca restaura sessão antiga |
+
+> Detalhe completo de cada épico/story (contexto, acceptance criteria, dev notes): `_bmad-output/planning-artifacts/epics.md` e `_bmad-output/implementation-artifacts/*.md`.
 
 ---
 
 ## 🏛️ Arquitetura
 
-O sistema foi construído seguindo os princípios de **Clean Architecture**, **Hexagonal Architecture (Ports & Adapters)** e **Domain-Driven Design (DDD)**.
-
-### Princípios Fundamentais
-
-#### 1. Separação de Responsabilidades
-
-Cada camada possui responsabilidades claras e bem definidas:
+**DDD tático em camadas** (hexagonal-adjacente), já ratificado no código — não um template genérico:
 
 ```
-┌─────────────────────────────────────────────┐
-│           API Layer (REST)                  │  ← Apresentação
-├─────────────────────────────────────────────┤
-│       Application Layer (Use Cases)         │  ← Orquestração + Ports
-├─────────────────────────────────────────────┤
-│         Domain Layer (Negócio)              │  ← Regras de Negócio + Repositories
-├─────────────────────────────────────────────┤
-│    Infrastructure Layer (Técnico)           │  ← Adapters + Configurações
-└─────────────────────────────────────────────┘
+domain    → entidades JPA, domain services (specification + ServiceBean), repositórios
+usecase   → orquestração: interface pública XxxUseCase + XxxUseCaseBean (@Service, package-private)
+api       → XxxDelegate implements XxxApiDelegate — fino, sem regra de negócio
+infrastructure → cross-cutting (permissões, filtros, enums transversais)
+boot / grpc-boot → composition roots (REST e gRPC)
 ```
 
-#### 2. Inversão de Dependências
+### Regra de dependência
 
-As dependências sempre apontam **para dentro**, em direção ao domínio:
-
+```mermaid
+graph LR
+  boot --> api
+  boot --> usecase
+  boot --> domain
+  boot --> infrastructure
+  api --> usecase
+  usecase --> domain
+  usecase --> infrastructure
+  domain --> shared
+  api -.->|"exclusão intencional — nunca"| domain
 ```
-Infrastructure ──────┐
-                     ↓
-API ────> Application ────> Domain (núcleo isolado)
-```
 
-**Regras:**
-- ✅ **Domain**: Não depende de ninguém
-- ✅ **Application**: Depende apenas de Domain, define **Ports** (interfaces)
-- ✅ **Infrastructure**: Implementa os **Adapters** para as **Ports** da Application
-- ✅ **API**: Depende de Application
+`api` **nunca** enxerga `domain` diretamente — só via `usecase`. Regra que cruza entidades ou pertence ao estado do próprio agregado vive em `domain`; orquestração de fluxo (sem decidir regra) vive em `usecase`.
 
-#### 3. Repositories vs Ports
-
-**Diferença fundamental:**
-
-| Conceito | Camada | Implementação | Propósito |
-|----------|--------|---------------|-----------|
-| **Repository** | Domain (interface) | Spring Data JPA (automático) | Acesso a dados do próprio domínio |
-| **Port** | Application (interface) | Infrastructure (Adapter) | Integrações externas (Keycloak, Email, Kafka) |
+### Padrão real: specification + Bean (domain)
 
 ```java
-// ✅ Repository - Interface no DOMAIN
-public interface CompanyRepository extends JpaRepository<Company, UUID> {
-    // Spring Data JPA implementa automaticamente
+public interface CompanyService {
+    CompanyOutput create(@NonNull CompanyInput companyInput);
+    void update(@NonNull CompanyInput companyInput);
+    CompanyOutput findById(@NonNull Long companyId);
+    // ...
 }
 
-// ✅ Port - Interface na APPLICATION
-public interface IdentityProviderPort {
-    String createUser(String email, String name);
-}
-
-// ✅ Adapter - Implementação na INFRASTRUCTURE
-@Component
-public class KeycloakAdapter implements IdentityProviderPort {
-    // Implementação concreta
-}
-```
-
-#### 4. Pragmatismo sobre Purismo
-
-Optamos por uma abordagem pragmática para evitar complexidade desnecessária:
-
-- **Entities JPA = Domain Entities**: Sem duplicação de código
-- **Repositories**: Interfaces no Domain, implementação automática via Spring Data JPA
-- **Value Objects**: Usamos `@Embeddable` para reutilização
-- **Validações Simples**: Bean Validation na API, regras complexas no Domain Service
-
----
-
-## 📁 Estrutura do Projeto
-
-### Visão Hierárquica
-
-```
-scos-organization/
-│
-├── 📦 scos-organization-domain/          # Camada de Domínio
-│   └── Regras de negócio, entidades, repositories (interfaces)
-│
-├── 📦 scos-organization-application/     # Camada de Aplicação
-│   └── Casos de uso, DTOs, Ports (interfaces para integração)
-│
-├── 📦 scos-organization-infrastructure/  # Camada de Infraestrutura
-│   └── Adapters (implementam Ports), mensageria, configurações
-│
-├── 📦 scos-organization-api/             # Camada de API REST
-│   └── Controllers, validações, mapeamento de requisições
-│
-├── 📦 scos-organization-boot/            # Módulo de Inicialização
-│   └── Spring Boot application, migrations, configurações
-│
-└── pom.xml                                # Parent POM
-```
-
-### Dependências entre Módulos
-
-```
-scos-organization-boot
-    ├─→ scos-organization-api
-    │       └─→ scos-organization-application
-    │               └─→ scos-organization-domain
-    │
-    └─→ scos-organization-infrastructure
-            └─→ scos-organization-application
-                    └─→ scos-organization-domain
-```
-
-**Importante**: Infrastructure **NÃO** implementa interfaces do Domain. Infrastructure implementa **Ports** da Application.
-
----
-
-## 📦 Módulos
-
-### 1️⃣ Domain Layer (scos-organization-domain)
-
-**Responsabilidade**: Contém o **coração do sistema** - as regras de negócio puras.
-
-**NÃO contém**: Nenhuma referência a frameworks externos, exceto JPA (pragmatismo).
-
-#### Estrutura Detalhada
-
-```
-domain/
-├── model/                          # Entidades e Value Objects
-│   ├── company/
-│   │   ├── Company.java           # @Entity - Aggregate Root
-│   │   ├── CompanyType.java       # Enum: HEADQUARTERS, BRANCH
-│   │   ├── CompanyStatus.java     # Enum: ACTIVE, INACTIVE
-│   │   └── CompanyConfiguration.java  # @Embeddable
-│   │
-│   ├── branch/
-│   │   └── Branch.java            # @Entity - Filial com hierarquia
-│   │
-│   ├── user/
-│   │   ├── BusinessUser.java      # @Entity - Usuário de negócio
-│   │   ├── UserRole.java          # Enum: ADMIN, MANAGER
-│   │   └── UserPermissions.java   # @Embeddable
-│   │
-│   └── shared/                    # Value Objects compartilhados
-│       ├── Address.java           # @Embeddable - Endereço
-│       ├── TaxIdentifier.java     # @Embeddable - CNPJ com validação
-│       ├── Contact.java           # @Embeddable - Contatos
-│       └── AuditInfo.java         # @Embeddable - Auditoria
-│
-├── repository/                     # Interfaces (Spring Data JPA)
-│   ├── CompanyRepository.java
-│   ├── BranchRepository.java
-│   └── BusinessUserRepository.java
-│
-├── service/                        # Serviços de Domínio
-│   ├── CompanyDomainService.java
-│   ├── BranchHierarchyService.java
-│   └── UserAuthorizationService.java
-│
-├── specification/                  # Criteria API
-│   ├── CompanySpecification.java
-│   └── BranchSpecification.java
-│
-├── event/                          # Eventos de Domínio
-│   ├── CompanyCreatedEvent.java
-│   ├── BranchActivatedEvent.java
-│   └── UserAssignedToCompanyEvent.java
-│
-└── exception/                      # Exceções de Domínio
-    ├── CompanyNotFoundException.java
-    ├── DuplicateCompanyException.java
-    └── InvalidBranchHierarchyException.java
-```
-
-#### O que tem no Domain
-
-| Componente | Descrição | Exemplo |
-|------------|-----------|---------|
-| **Entity** | Conceitos centrais com identidade | `Company`, `Branch` |
-| **Value Object** | Conceitos imutáveis sem identidade | `TaxIdentifier`, `Address` |
-| **Repository Interface** | Contrato de persistência | `CompanyRepository` |
-| **Domain Service** | Lógica multi-entidade | Validar CNPJ duplicado |
-| **Specification** | Queries reutilizáveis | Filtros dinâmicos |
-| **Domain Event** | POJOs para eventos | `CompanyCreatedEvent` (classe disponível **para histórico/compatibilidade**, mas **NÃO** publicada em runtime para qualquer operação de `Company` ou sub‑recursos; operações são audit‑only) |
-| **Exception** | Exceções de negócio | `CompanyNotFoundException` |
-
-#### O que NÃO tem no Domain
-
-- ❌ Implementações de Repositories (Spring Data faz automaticamente)
-- ❌ Configurações de Spring
-- ❌ Chamadas HTTP, Kafka, etc
-- ❌ DTOs de API
-- ❌ Qualquer dependência de Infrastructure
-
-#### Exemplo: Entity com Lógica de Negócio
-
-```java
-@Entity
-@Table(name = "companies")
-public class Company {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-    
-    private String name;
-    
-    @Enumerated(EnumType.STRING)
-    private CompanyStatus status;
-    
-    // Lógica de negócio na própria entidade
-    public void activate() {
-        if (this.status == CompanyStatus.ACTIVE) {
-            throw new IllegalStateException("Already active");
-        }
-        this.status = CompanyStatus.ACTIVE;
-    }
-}
-```
-
-#### Exemplo: Domain Service
-
-```java
 @Service
-public class CompanyDomainService {
-    private final CompanyRepository repository;
-    
-    // Lógica que envolve consulta ao banco
-    public void validateUniqueTaxIdentifier(TaxIdentifier cnpj) {
-        if (repository.existsByTaxIdentifier(cnpj)) {
-            throw new DuplicateCompanyException();
-        }
-    }
+@RequiredArgsConstructor
+class CompanyServiceBean implements CompanyService {
+    // implementação package-private — só a interface é pública
 }
 ```
 
-#### Exemplo: Repository
+### Padrão real: Use Case (usecase)
 
 ```java
-@Repository
-public interface CompanyRepository extends JpaRepository<Company, UUID> {
-    
-    Optional<Company> findByTaxIdentifier(TaxIdentifier taxIdentifier);
-    
-    boolean existsByTaxIdentifier(TaxIdentifier taxIdentifier);
-    
-    @Query("SELECT c FROM Company c WHERE c.type = 'HEADQUARTERS'")
-    List<Company> findActiveHeadquarters();
+public interface ActivateCompanyUseCase {
+    void execute(@NonNull Long id, @NonNull CompanyStatusTransitionRequest request);
 }
-```
 
----
-
-### 2️⃣ Application Layer (scos-organization-application)
-
-**Responsabilidade**: Orquestra os **casos de uso** e define **Ports** para integrações externas.
-
-#### Estrutura Detalhada
-
-```
-application/
-├── usecase/                        # Casos de Uso
-│   ├── company/
-│   │   ├── CreateCompanyUseCase.java
-│   │   ├── UpdateCompanyUseCase.java
-│   │   ├── ActivateCompanyUseCase.java
-│   │   └── ListCompaniesUseCase.java
-│   │
-│   ├── branch/
-│   │   ├── CreateBranchUseCase.java
-│   │   └── GetBranchHierarchyUseCase.java
-│   │
-│   └── user/
-│       ├── RegisterBusinessUserUseCase.java
-│       └── AssignUserToCompanyUseCase.java
-│
-├── dto/                            # DTOs de Aplicação
-│   ├── company/
-│   │   ├── CreateCompanyDTO.java
-│   │   ├── UpdateCompanyDTO.java
-│   │   └── CompanyDetailDTO.java
-│   │
-│   └── user/
-│       ├── RegisterUserDTO.java
-│       └── UserDetailDTO.java
-│
-├── mapper/                         # Entity ↔ DTO
-│   ├── CompanyMapper.java
-│   ├── BranchMapper.java
-│   └── UserMapper.java
-│
-├── port/                           # 🔑 PORTS (Interfaces)
-│   ├── IdentityProviderPort.java
-│   ├── NotificationPort.java
-│   ├── EventPublisherPort.java
-│   └── AuditPort.java
-│
-└── validator/                      # Validadores
-    ├── CompanyValidator.java
-    └── BranchValidator.java
-```
-
-#### Ports (Hexagonal Architecture)
-
-**Ports são INTERFACES definidas na Application Layer:**
-
-```java
-// Port - Define O QUE precisa ser feito
-package br.com.sawcunha.scos.organization.application.port;
-
-public interface IdentityProviderPort {
-    String createUser(String email, String name, String password);
-    void updateUser(String externalId, String name);
-    void deleteUser(String externalId);
-}
-```
-
-**Por que Ports na Application?**
-- Use Cases precisam de integrações externas (Keycloak, Email, Kafka)
-- Mas não podem depender de detalhes técnicos
-- Ports definem **o que** precisa, Infrastructure define **como** fazer
-
-#### Exemplo: Use Case
-
-```java
-@Service
-public class CreateCompanyUseCase {
-    private final CompanyRepository repository;
-    private final CompanyDomainService domainService;
-    private final CompanyMapper mapper;
-    private final EventPublisherPort eventPublisher;
-    
-    @Transactional
-    public CompanyDetailDTO execute(CreateCompanyDTO dto) {
-        // 1. Validar com Domain Service
-        domainService.validateUniqueTaxIdentifier(dto.taxIdentifier());
-        
-        // 2. Converter e persistir
-        Company company = mapper.toEntity(dto);
-        Company saved = repository.save(company);
-        
-        // 3. Registrar auditoria (POLÍTICA DO PROJETO: não publicar evento Kafka nem sincronizar com Keycloak para CREATE/UPDATE de Company)
-        //    eventPublisher.publish(new CompanyCreatedEvent(saved.getId())); // **não usar** para criação/edição de Company
-        
-        // 4. Retornar DTO
-        return mapper.toDetailDTO(saved);
-    }
-}
-```
-
----
-
-### 3️⃣ Infrastructure Layer (scos-organization-infrastructure)
-
-**Responsabilidade**: Implementa **Adapters** para as **Ports** e fornece configurações técnicas.
-
-**Regra de Ouro**: Infrastructure **implementa Ports da Application**, **NÃO implementa Repositories do Domain**.
-
-#### Estrutura Detalhada
-
-```
-infrastructure/
-├── adapter/                        # 🔌 ADAPTERS (implementam Ports)
-│   ├── keycloak/
-│   │   ├── KeycloakAdapter.java   # implements IdentityProviderPort
-│   │   ├── KeycloakClient.java
-│   │   └── KeycloakMapper.java
-│   │
-│   ├── notification/
-│   │   ├── EmailNotificationAdapter.java
-│   │   └── SmsNotificationAdapter.java
-│   │
-│   └── audit/
-│       └── DatabaseAuditAdapter.java
-│
-├── messaging/                      # Mensageria
-│   ├── publisher/
-│   │   └── KafkaEventPublisher.java
-│   │
-│   ├── listener/
-│   │   ├── CompanyEventListener.java
-│   │   └── UserEventListener.java
-│   │
-│   └── config/
-│       └── KafkaConfig.java
-│
-├── config/                         # Configurações Spring
-│   ├── JpaConfig.java
-│   ├── SecurityConfig.java
-│   ├── KeycloakConfig.java
-│   └── CacheConfig.java
-│
-└── interceptor/
-    └── AuditInterceptor.java
-```
-
-#### Adapters (Implementam Ports)
-
-```java
-// Adapter - Implementa COMO fazer
-package br.com.sawcunha.scos.organization.infrastructure.adapter.keycloak;
-
-import br.com.sawcunha.scos.organization.application.port.IdentityProviderPort;
-
-@Component
-public class KeycloakAdapter implements IdentityProviderPort {
-    
-    private final KeycloakClient client;
-    
+@Service @RequiredArgsConstructor @Transactional(rollbackFor = ScosException.class)
+class ActivateCompanyUseCaseBean implements ActivateCompanyUseCase {
+    private final CompanyService companyService;
     @Override
-    public String createUser(String email, String name, String password) {
-        // Implementação técnica usando Keycloak Admin API
-        return client.createUser(email, name);
+    public void execute(@NonNull Long id, @NonNull CompanyStatusTransitionRequest request) {
+        companyService.activate(id, request.reasonId(), request.observation());
     }
 }
 ```
 
-#### O que Infrastructure FAZ
+### Padrão real: Delegate (api) — contrato OpenAPI-first
 
-- ✅ Implementa **Ports** da Application (via Adapters)
-- ✅ Configura Spring Boot
-- ✅ Configura JPA, Security, Kafka
-- ✅ Publica/consome eventos
-- ✅ Interceptors, Filters
-
-#### O que Infrastructure NÃO FAZ
-
-- ❌ **NÃO implementa Repositories do Domain** (Spring Data faz automaticamente)
-- ❌ NÃO contém regras de negócio
-- ❌ NÃO conhece casos de uso específicos
-
----
-
-### Esclarecimento: Repositories vs Ports
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    DIFERENÇA FUNDAMENTAL                    │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  REPOSITORIES (Domain)                                      │
-│  ├── Interface: Domain Layer                                │
-│  ├── Implementação: Spring Data JPA (automática)            │
-│  ├── Propósito: Persistência de entidades do domínio        │
-│  └── Exemplo: CompanyRepository.save(company)               │
-│                                                             │
-│  PORTS (Application)                                        │
-│  ├── Interface: Application Layer                           │
-│  ├── Implementação: Infrastructure (Adapters)               │
-│  ├── Propósito: Integrações externas ao domínio             │
-│  └── Exemplo: IdentityProviderPort.createUser()             │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
-
-**Exemplo Prático:**
+O contrato REST é escrito **primeiro** em `etc/api/organization/*.yml`; `openapi-generator-maven-plugin` gera `XxxApiDelegate` (interface); a classe concreta só implementa e delega:
 
 ```java
-@Service
-public class CreateCompanyUseCase {
-    
-    // ✅ Repository do Domain (Spring Data implementa)
-    private final CompanyRepository companyRepository;
-    
-    // ✅ Port da Application (Infrastructure implementa)
-    private final IdentityProviderPort identityProvider;
-    
-    // ✅ Port da Application (Infrastructure implementa)
-    private final EventPublisherPort eventPublisher;
-    
-    @Transactional
-    public CompanyDetailDTO execute(CreateCompanyDTO dto) {
-        // Repository: persistência
-        Company company = companyRepository.save(...);
-        
-        // Port: integração externa
-        identityProvider.createUser(...);
-        
-        // Port: publicar evento
-        // **POLÍTICA DO PROJETO**: não publicar evento Kafka nem sincronizar com Keycloak para CREATE/UPDATE de `Company`.
-        // eventPublisher.publish(new CompanyCreatedEvent(...)); // não usar para criação/edição de Company
-        
-        return ...;
+@Component
+@RequiredArgsConstructor
+public class CompanyDelegate implements CompanyApiDelegate {
+    private final ActivateCompanyUseCase activateCompanyUseCase;
+    // ...
+    @Override
+    public Void activateCompany(Long id, CompanyStatusTransitionRequest request, ...) {
+        activateCompanyUseCase.execute(id, request);
+        return null; // 204
     }
 }
 ```
 
----
-
-### 4️⃣ API Layer (scos-organization-api)
-
-**Responsabilidade**: Expor **endpoints REST** e validar entradas.
-
-#### Estrutura Detalhada
-
-```
-api/
-├── controller/                     # REST Controllers
-│   ├── CompanyController.java
-│   ├── BranchController.java
-│   └── UserController.java
-│
-├── request/                        # DTOs de Requisição
-│   ├── CreateCompanyRequest.java
-│   └── UpdateCompanyRequest.java
-│
-├── response/                       # DTOs de Resposta
-│   ├── CompanyResponse.java
-│   └── ApiErrorResponse.java
-│
-├── mapper/                         # Request/Response ↔ DTO
-│   ├── CompanyApiMapper.java
-│   └── UserApiMapper.java
-│
-├── exception/
-│   └── GlobalExceptionHandler.java
-│
-├── security/
-│   ├── JwtAuthenticationFilter.java
-│   └── SecurityContextHolder.java
-│
-└── validation/
-    ├── ValidCNPJ.java
-    └── CNPJValidator.java
-```
-
-#### Exemplo: Controller
-
-```java
-@RestController
-@RequestMapping("/api/v1/companies")
-public class CompanyController {
-    private final CreateCompanyUseCase createUseCase;
-    private final CompanyApiMapper mapper;
-    
-    @PostMapping
-    @ResponseStatus(CREATED)
-    public CompanyResponse create(@Valid @RequestBody CreateCompanyRequest request) {
-        CreateCompanyDTO dto = mapper.toDTO(request);
-        CompanyDetailDTO result = createUseCase.execute(dto);
-        return mapper.toResponse(result);
-    }
-}
-```
+Endpoint sem `@Override` cai no `default` gerado, que lança `MethodNotImplementedException` — sinal claro de rota ainda não implementada.
 
 ---
 
-### 5️⃣ Boot Module (scos-organization-boot)
+## 📁 Estrutura de Módulos
 
-**Responsabilidade**: **Inicializar** a aplicação e agregar todos os módulos.
+Monorepo Maven multi-módulo (raiz `flow`, `scos-bom` como parent):
 
 ```
-boot/
-├── src/main/java/
-│   └── ScosOrganizationApplication.java
+flow/                                       (artifactId: flow, packaging: pom)
+├── organization/                           (o produto desta fase)
+│   ├── flow-organization-domain/           regras de negócio, entidades JPA, repositórios
+│   ├── flow-organization-usecase/          orquestração de casos de uso
+│   ├── flow-organization-api/              delegates REST, DTOs gerados do OpenAPI
+│   ├── flow-organization-infrastructure/   filtros, enums de permissão, cross-cutting
+│   ├── flow-organization-boot/             composition root REST (ScosOrganizationApplication)
+│   ├── flow-organization-grpc-boot/        composition root gRPC (autenticação sistema-a-sistema)
+│   ├── flow-organization-grpc-proto/       contratos protobuf
+│   ├── flow-organization-resources/        changelogs Liquibase, seed de dados
+│   ├── flow-organization-shared/           ExceptionCodeError, mensagens PT/EN, value objects
+│   └── flow-security-starter/              lib de segurança reusável entre projetos SCOS
 │
-└── src/main/resources/
-    ├── application.yml
-    ├── application-dev.yml
-    ├── application-prod.yml
-    │
-    └── db/changelog/                # Liquibase Changelogs
-        ├── db.changelog-master.xml
-        ├── changelogs/
-        │   ├── 001-create-company-table.xml
-        │   ├── 002-create-branch-table.xml
-        │   ├── 003-create-business-user-table.xml
-        │   └── 004-create-indexes.xml
-        └── data/
-            └── seed-data.xml
+├── server-fat/                             composition root alternativo (fat-jar agregando organization via BOM)
+├── notification/                           módulo-esqueleto (0 classes) — reserva para Etapa 3 (Notificação Híbrida)
+├── geotemporal/                            módulo-esqueleto (0 classes) — reserva para Etapa 2 (Motor Geotemporal)
+└── infrastructure/                         módulo raiz de infraestrutura técnica compartilhada
 ```
+
+> ⚠️ Questão em aberto registrada no planejamento: qual módulo é o deployável real de produção (`server-fat` vs `flow-organization-boot` standalone) ainda não foi decidido — os dois coexistem hoje, nenhum foi removido.
 
 ---
 
-## 🧩 Conceitos de Domínio
+## 📖 Convenções do Projeto
 
-### Agregados Principais
+Convenções já em vigor no código, não reinventadas a cada story:
 
-#### 1. Company (Matriz/Filial)
-
-```
-Company
-├── Atributos
-│   ├── id: UUID
-│   ├── name: String
-│   ├── taxIdentifier: TaxIdentifier (CNPJ)
-│   ├── type: CompanyType (HEADQUARTERS | BRANCH)
-│   ├── status: CompanyStatus (ACTIVE | INACTIVE)
-│   ├── configuration: CompanyConfiguration
-│   └── branches: List<Branch>
-│
-└── Regras de Negócio
-    ├── CNPJ deve ser único
-    ├── Matriz pode ter múltiplas filiais
-    ├── Matriz não pode ser desativada com filiais ativas
-    └── Filiais precisam de matriz ativa
-```
-
-#### 2. Branch (Filial)
-
-```
-Branch
-├── Atributos
-│   ├── id: UUID
-│   ├── name: String
-│   ├── headquarters: Company
-│   ├── parentBranch: Branch (nullable)
-│   └── subBranches: List<Branch>
-│
-└── Regras de Negócio
-    ├── Máximo de 5 níveis de hierarquia
-    ├── Não pode haver referência circular
-    ├── Deve estar vinculada a uma matriz
-    └── Pode ter filiais subordinadas
-```
-
-#### 3. BusinessUser (Usuário)
-
-```
-BusinessUser
-├── Atributos
-│   ├── id: UUID
-│   ├── name: String
-│   ├── email: String (único)
-│   ├── externalId: String (Keycloak)
-│   ├── companies: Set<Company>
-│   ├── roles: Set<UserRole>
-│   └── permissions: UserPermissions
-│
-└── Regras de Negócio
-    ├── Email deve ser único
-    ├── Sincronizado com Keycloak
-    ├── Acesso a múltiplas empresas
-    └── Permissões por role
-```
-
-### Value Objects
-
-| Value Object    | Propósito         | Validações             |
-|-----------------|-------------------|------------------------|
-| `TaxIdentifier` | CNPJ validado     | 14 dígitos, algoritmo  |
-| `Address`       | Endereço completo | CEP, UF obrigatórios   |
-| `Contact`       | Dados de contato  | Email válido           |
-| `AuditInfo`     | Rastreabilidade   | Timestamps automáticos |
-
-### Enums
-
-```java
-// Tipo de empresa
-enum CompanyType {
-    HEADQUARTERS,  // Matriz
-    BRANCH         // Filial
-}
-
-// Status da empresa
-enum CompanyStatus {
-    ACTIVE,
-    INACTIVE,
-    PENDING_APPROVAL,
-    SUSPENDED
-}
-
-// Roles de usuário
-enum UserRole {
-    ADMIN,      // Administrador global
-    MANAGER,    // Gerente de empresa
-    OPERATOR,   // Operador
-    VIEWER      // Visualizador
-}
-```
+| Concern | Convenção |
+|---|---|
+| Nomenclatura de banco | `SCOS_<ENTIDADE>` / `PK_SCOS_<T>` / `FK_<COL>_SCOS_<T>` |
+| Permissão | `ACTION_RESOURCE` (ex.: `ENABLE_COMPANY`), 1:1 com `x-authorize` do OpenAPI |
+| Erro de domínio | `ScosException` + `ExceptionCodeError` (`SCOS_<MÓDULO>_<NNN>`) — **nunca** `RuntimeException` cru |
+| Resposta HTTP | RFC 9457 `ProblemDetail`, tratamento central via `ExceptionsHandler` |
+| Transação | `@Transactional(rollbackFor = ScosException.class)` em todo Use Case de escrita |
+| Auditoria | `@Auditable` na entidade + listener Hibernate; tabela de histórico com trigger de bloqueio físico de `DELETE` |
+| Idempotência | `@JdempotentResource`/`@JdempotentRequestPayload` via Redis, já gerado a partir de `x-jdempotentrequestpayload`/`x-jdempotentresource` no YAML |
+| Tipos temporais | `Instant` ↔ `TIMESTAMPTZ` (instante), `LocalDate` ↔ `DATE` (calendário), `LocalTime` ↔ `TIME` (hora de parede) — `LocalDateTime` e `.now()` estático proibidos no domínio (Epic 0) |
+| Consulta hierárquica/recursiva | CTE `WITH RECURSIVE` no banco — nunca caminhada em memória Java nem estrutura denormalizada nova |
+| Vocabulário de enum | Sempre em inglês no código/schema; rótulo PT-BR só em mensagem ao usuário |
 
 ---
 
-## 🔄 Fluxo de Dados
+## 🛠️ Stack Tecnológica
 
-### Fluxo Completo: Criar Empresa
-
-```
-1. Cliente HTTP
-   POST /api/v1/companies
-   Body: { "name": "Acme", "taxIdentifier": "12345678000190" }
-   
-   ↓
-
-2. CompanyController (API Layer)
-   - Valida Request
-   - Mapeia → DTO
-   - Chama Use Case
-   
-   ↓
-
-3. CreateCompanyUseCase (Application Layer)
-   - Valida com Domain Service
-   - Converte DTO → Entity
-   - Persiste via Repository (Domain)
-   - Chama Ports (Infrastructure implementa)
-   
-   ↓
-
-4. CompanyDomainService (Domain Layer)
-   - Valida CNPJ duplicado
-   - CompanyRepository.existsByTaxIdentifier()
-   
-   ↓
-
-5. Persistência
-   - CompanyRepository.save() (Spring Data JPA)
-   
-   ↓
-
-6. Integrações (via Ports)
-   - IdentityProviderPort → KeycloakAdapter
-   - EventPublisherPort → KafkaEventPublisher
-   
-   ↓
-
-7. Eventos Assíncronos
-   - CompanyEventListener consome
-   - Envia email, auditoria
-```
-
-### Decisões Arquiteturais
-
-| Situação                          | Onde colocar         | Camada         |
-|-----------------------------------|----------------------|----------------|
-| Validação **uma entidade**        | Método na Entity     | Domain         |
-| Validação **múltiplas entidades** | Domain Service       | Domain         |
-| **Acesso a dados** do domínio     | Repository Interface | Domain         |
-| **Orquestração**                  | Use Case             | Application    |
-| **Integração externa**            | Port (interface)     | Application    |
-| **Implementação integração**      | Adapter              | Infrastructure |
+| Tecnologia | Versão / Uso |
+|---|---|
+| Java | 25 |
+| Spring Boot / Spring Framework | 4.x / 7 |
+| PostgreSQL | 18+ |
+| Redis | Cache, idempotência (jDempotent), denylist do Kill Switch |
+| Keycloak | Identity Provider — OAuth2/JWT resource server |
+| Liquibase | Migrations e controle de schema |
+| MapStruct | Mapeamento entidade ↔ DTO |
+| QueryDSL | Consultas dinâmicas type-safe |
+| gRPC / Protobuf | Autenticação e registro sistema-a-sistema |
+| JUnit 5 + Mockito + AssertJ | Testes unitários |
+| Testcontainers | Testes de integração com Postgres/Redis reais |
+| OpenAPI Generator | Geração de controllers/DTOs a partir do contrato (`etc/api/organization/*.yml`) |
+| Micrometer / OpenTelemetry | Observabilidade (Prometheus/Grafana provisionados em `etc/infra/`) |
 
 ---
 
-## 🛠️ Tecnologias
-
-### Core
-
-| Tecnologia      | Versão | Uso            |
-|-----------------|--------|----------------|
-| Java            | 25     | Linguagem base |
-| Spring Boot     | 4.x    | Framework      |
-| Spring Data JPA | 4.x    | Persistência   |
-| Hibernate       | 7.x    | ORM            |
-| PostgreSQL      | 18+    | Banco de dados |
-
-### Integrações
-
-| Tecnologia   | Uso                                      |
-|--------------|------------------------------------------|
-| Keycloak     | Autenticação/autorização                 |
-| Kafka        | Mensageria e eventos                     |
-| Liquibase    | Migrations e controle de versão do banco |
-| MapStruct    | Mapeamento                               |
-| Lombok       | Redução boilerplate                      |
-
-### Testes
-
-| Tecnologia     | Uso               |
-|----------------|-------------------|
-| JUnit 5        | Testes unitários  |
-| Mockito        | Mocks             |
-| Testcontainers | Testes integração |
-| REST Assured   | Testes API        |
-
----
-
-## ⚙️ Configuração
+## ⚙️ Como Rodar
 
 ### Pré-requisitos
 
-```
-- Java 25
-- Maven 3.9+
-- PostgreSQL 18+
-- Keycloak 26+
-- Kafka 3.x (opcional)
-```
+- Java 25, Maven 3.9+, Docker (para os serviços de apoio)
 
-### Variáveis de Ambiente
+### Subir dependências de infraestrutura
+
+Cada serviço tem seu próprio compose em `etc/infra/`:
 
 ```bash
-# Database
-DB_USERNAME=postgres
-DB_PASSWORD=postgres
-DB_URL=jdbc:postgresql://localhost:5432/scos_organization
-
-# Keycloak
-KEYCLOAK_SERVER_URL=http://localhost:8080
-KEYCLOAK_REALM=scos
-KEYCLOAK_CLIENT_ID=scos-organization
-KEYCLOAK_CLIENT_SECRET=your-secret
-
-# Kafka
-KAFKA_BOOTSTRAP_SERVERS=localhost:9092
+docker compose -f etc/infra/docker-compose-database.yml up -d
+docker compose -f etc/infra/docker-compose-redis.yml up -d
+docker compose -f etc/infra/docker-compose-keycloak.yml up -d
 ```
 
-### Executar o Projeto
+### Configuração
+
+Toda configuração de `flow-organization-boot` é externalizada via variável de ambiente (`application.yml` só referencia `${SCOS_*}`, sem valor hardcoded) — datasource, Redis/cache, Keycloak, jDempotent, privacidade/mascaramento, auditoria e o registry gRPC. Ver o arquivo `organization/flow-organization-boot/src/main/resources/application.yml` como fonte da verdade das variáveis exigidas antes de subir a aplicação.
+
+### Build e execução
 
 ```bash
-# 1. Compilar
+# Build completo do monorepo
 mvn clean install
 
-# 2. Rodar migrations (Liquibase)
-mvn liquibase:update
-
-# 3. Iniciar aplicação
-mvn spring-boot:run -pl scos-organization-boot
-
-# Ou via JAR
-java -jar scos-organization-boot/target/scos-organization-boot-1.0.0.jar
-```
-
-### Perfis de Ambiente
-
-```bash
-# Desenvolvimento
-mvn spring-boot:run -Dspring.profiles.active=dev
-
-# Produção
-java -jar app.jar --spring.profiles.active=prod
-```
-
-### Configuração application.yml (exemplo)
-
-```yaml
-spring:
-  application:
-    name: scos-organization
-  
-  datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/scos_organization}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
-    driver-class-name: org.postgresql.Driver
-  
-  jpa:
-    hibernate:
-      ddl-auto: none  # Liquibase gerencia o schema
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
-        default_schema: public
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-
-  liquibase:
-    enabled: true
-    change-log: classpath:db/changelog/db.changelog-master.xml
-    default-schema: public
-    drop-first: false  # CUIDADO: true apaga o banco antes de aplicar
-
-  kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-
-keycloak:
-  server-url: ${KEYCLOAK_SERVER_URL:http://localhost:8080}
-  realm: ${KEYCLOAK_REALM:scos}
-  client-id: ${KEYCLOAK_CLIENT_ID:scos-organization}
-  client-secret: ${KEYCLOAK_CLIENT_SECRET}
-
-logging:
-  level:
-    br.com.sawcunha.scos: DEBUG
-    org.hibernate.SQL: DEBUG
-    liquibase: INFO
-```
-
-### Exemplo de Changelog Liquibase
-
-**db.changelog-master.xml**
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
-
-    <include file="db/changelog/changelogs/001-create-company-table.xml"/>
-    <include file="db/changelog/changelogs/002-create-branch-table.xml"/>
-    <include file="db/changelog/changelogs/003-create-business-user-table.xml"/>
-    <include file="db/changelog/changelogs/004-create-indexes.xml"/>
-    
-    <!-- Dados iniciais (apenas em dev) -->
-    <include file="db/changelog/data/seed-data.xml" context="dev"/>
-</databaseChangeLog>
-```
-
-**001-create-company-table.xml**
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
-
-    <changeSet id="001-create-company-table" author="scos-team">
-        <createTable tableName="companies">
-            <column name="id" type="uuid">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="name" type="varchar(200)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="trade_name" type="varchar(200)"/>
-            <column name="tax_identifier" type="varchar(14)">
-                <constraints nullable="false" unique="true"/>
-            </column>
-            <column name="type" type="varchar(20)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="status" type="varchar(20)">
-                <constraints nullable="false"/>
-            </column>
-            
-            <!-- Address (Embeddable) -->
-            <column name="street" type="varchar(200)"/>
-            <column name="number" type="varchar(20)"/>
-            <column name="complement" type="varchar(100)"/>
-            <column name="neighborhood" type="varchar(100)"/>
-            <column name="city" type="varchar(100)"/>
-            <column name="state" type="varchar(2)"/>
-            <column name="zip_code" type="varchar(10)"/>
-            <column name="country" type="varchar(50)"/>
-            
-            <!-- Configuration (Embeddable) -->
-            <column name="timezone" type="varchar(50)"/>
-            <column name="default_language" type="varchar(10)"/>
-
-            
-            <!-- Audit Info (Embeddable) -->
-            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
-                <constraints nullable="false"/>
-            </column>
-            <column name="updated_at" type="timestamp"/>
-            <column name="created_by" type="varchar(100)"/>
-            <column name="updated_by" type="varchar(100)"/>
-        </createTable>
-        
-        <addNotNullConstraint tableName="companies" columnName="created_at"/>
-    </changeSet>
-</databaseChangeLog>
+# Rodar só o módulo REST
+mvn spring-boot:run -pl organization/flow-organization-boot
 ```
 
 ---
 
-## 📚 Exemplos de Uso
-
-### 1. Criar Matriz
+## ✅ Testes
 
 ```bash
-POST /api/v1/companies
-Content-Type: application/json
-Authorization: Bearer {token}
-
-{
-  "name": "Acme Corporation",
-  "tradeName": "Acme",
-  "taxIdentifier": "12345678000190",
-  "type": "HEADQUARTERS",
-  "address": {
-    "street": "Av. Paulista",
-    "number": "1000",
-    "city": "São Paulo",
-    "state": "SP",
-    "zipCode": "01310-100",
-    "country": "Brasil"
-  },
-  "configuration": {
-    "timezone": "America/Sao_Paulo",
-    "defaultLanguage": "pt-BR"
-  }
-}
+mvn test    # unitários (JUnit 5 + Mockito + AssertJ)
+mvn verify  # inclui integração com Testcontainers (Postgres + Redis reais)
 ```
 
-**Resposta**: `201 Created`
-```json
-{
-  "id": "123e4567-e89b-12d3-a456-426614174000",
-  "name": "Acme Corporation",
-  "type": "HEADQUARTERS",
-  "status": "ACTIVE",
-  "createdAt": "2024-02-15T10:30:00Z"
-}
-```
-
-### 2. Criar Filial
-
-```bash
-POST /api/v1/branches
-
-{
-  "name": "Acme Filial Rio",
-  "headquartersId": "123e4567-e89b-12d3-a456-426614174000",
-  "taxIdentifier": "98765432000190",
-  "address": { ... }
-}
-```
-
-### 3. Atribuir Usuário a Empresa
-
-```bash
-PUT /api/v1/users/{userId}/companies/{companyId}
-```
-
-### 4. Buscar Hierarquia de Filiais
-
-```bash
-GET /api/v1/branches/{branchId}/hierarchy
-```
-
-**Resposta**:
-```json
-{
-  "headquartersId": "...",
-  "branches": [
-    {
-      "id": "...",
-      "name": "Filial A",
-      "level": 1,
-      "subBranches": [
-        {
-          "id": "...",
-          "name": "Sub-Filial A1",
-          "level": 2
-        }
-      ]
-    }
-  ]
-}
-```
+- Testes unitários vivem junto de cada módulo (`domain`, `usecase`), mockando as dependências.
+- Testes de integração full-stack (`*ControllerTest`) vivem em `flow-organization-boot`, estendendo `ScosOrganizationTestUtil` (Testcontainers singleton).
+- `PermissionsConsistencyTest` (`flow-organization-infrastructure`) garante que toda permissão em `x-authorize` do contrato OpenAPI tem constante correspondente em `ScosOrganizationPermission` — evita endpoint com `403` permanente por permissão nunca cadastrada.
 
 ---
 
-## 📖 Convenções de Código
+## 🗺️ Roadmap
 
-### Nomenclatura
-
-```java
-// Entities: Substantivo singular
-Company, Branch, BusinessUser
-
-// Repositories: Entity + Repository
-CompanyRepository, BranchRepository
-
-// Domain Services: Entity + DomainService
-CompanyDomainService, BranchHierarchyService
-
-// Use Cases: Action + Entity + UseCase
-CreateCompanyUseCase, UpdateCompanyUseCase
-
-// DTOs: Action + Entity + DTO
-CreateCompanyDTO, CompanyDetailDTO
-
-// Events: Entity + Action + Event
-CompanyCreatedEvent, BranchActivatedEvent
-
-// Ports: Purpose + Port
-IdentityProviderPort, NotificationPort
-
-// Adapters: Technology + Adapter
-KeycloakAdapter, KafkaEventPublisher
-```
-
-### Pacotes
+Ordem de dependência entre épicos (do planejamento BMAD):
 
 ```
-br.com.sawcunha.scos.organization
-├── domain.model.company
-├── domain.repository
-├── domain.service
-├── application.usecase.company
-├── application.dto.company
-├── application.port
-├── infrastructure.adapter.keycloak
-├── infrastructure.messaging
-└── api.controller
+Epic 0 (Fundação Técnica) ─┬─→ Epic 1 (Estrutura Organizacional) ─→ Epic 2 (Funcionário) ─→ Epic 3 (Login + Aprovação) ─→ Epic 4 (Acesso de Sistema)
+                            │                                                                        │
+                            └────────────────────────────────────────────────────────────────────────┴─→ Epic 5 (Governança de Turno) ─→ Epic 6 (Kill Switch)
 ```
 
----
-
-## 🎯 Benefícios da Arquitetura
-
-### ✅ Testabilidade
-
-```
-- Domain: Testável sem infraestrutura
-- Application: Testável com mocks de Ports
-- Adapters: Testáveis isoladamente
-- API: Testes de contrato
-```
-
-### ✅ Manutenibilidade
-
-```
-- Mudanças isoladas em camadas
-- Regras de negócio centralizadas
-- Baixo acoplamento
-- Ports permitem trocar implementações
-```
-
-### ✅ Escalabilidade
-
-```
-- Evolução para microsserviços
-- Eventos assíncronos
-- Stateless
-- Escala horizontal
-```
-
-### ✅ Independência
-
-```
-- Trocar Keycloak: Apenas KeycloakAdapter
-- Trocar Kafka: Apenas Messaging
-- Trocar PostgreSQL: Apenas config
-- Domain permanece intocado
-```
-
----
-
-## 📊 Diagrama de Arquitetura
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                    API Layer                            │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐               │
-│  │ Company  │  │  Branch  │  │   User   │               │
-│  │Controller│  │Controller│  │Controller│               │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘               │
-└───────┼─────────────┼─────────────┼─────────────────────┘
-        │             │             │
-        ↓             ↓             ↓
-┌─────────────────────────────────────────────────────────┐
-│                Application Layer                        │
-│  ┌────────────┐  ┌────────────┐  ┌────────────┐         │
-│  │  Use Cases │  │    DTOs    │  │   Mappers  │         │
-│  └────────────┘  └────────────┘  └────────────┘         │
-│                                                         │
-│  🔌 PORTS (Interfaces)                                  │
-│  ┌─────────────────┐  ┌──────────────┐                  │
-│  │IdentityProvider │  │EventPublisher│                  │
-│  │      Port       │  │     Port     │                  │
-│  └────────┬────────┘  └──────┬───────┘                  │
-└───────────┼────────────────┼────────────────────────────┘
-            │                │
-            ↓                ↓
-┌─────────────────────────────────────────────────────────┐
-│              Infrastructure Layer                       │
-│  🔌 ADAPTERS (Implementações)                           │
-│  ┌─────────────┐  ┌──────────────┐                      │
-│  │  Keycloak   │  │    Kafka     │                      │
-│  │   Adapter   │  │EventPublisher│                      │
-│  └─────────────┘  └──────────────┘                      │
-│                                                         │
-│  ⚙️ Configurações Spring                                │
-└─────────────────────────────────────────────────────────┘
-            ↓
-┌─────────────────────────────────────────────────────────┐
-│                  Domain Layer                           │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐               │
-│  │Entities  │  │Services  │  │Events    │               │
-│  └──────────┘  └──────────┘  └──────────┘               │
-│                                                         │
-│  📁 REPOSITORY INTERFACES                               │
-│  (Spring Data JPA implementa automaticamente)           │
-│  ┌────────────────────────────────────────┐             │
-│  │  CompanyRepository, BranchRepository   │             │
-│  └────────────────────────────────────────┘             │
-└─────────────────────────────────────────────────────────┘
-```
-
----
-
-## 📝 Resumo da Arquitetura
-
-### Responsabilidades por Camada
-
-| Camada             | Contém                                                                  | NÃO Contém                                |
-|--------------------|-------------------------------------------------------------------------|-------------------------------------------|
-| **Domain**         | Entities, Value Objects, Repository Interfaces, Domain Services, Events | Implementações técnicas, Configs          |
-| **Application**    | Use Cases, DTOs, Mappers, **Port Interfaces**, Validators               | Implementações de Ports, Regras complexas |
-| **Infrastructure** | **Adapters (implementam Ports)**, Configs Spring, Messaging             | Repositories, Regras de negócio           |
-| **API**            | Controllers, Request/Response DTOs, Exception Handlers                  | Lógica de negócio, Orquestração           |
-
-### Implementação de Interfaces
-
-```
-┌─────────────────────────────────────────────────────┐
-│         QUEM IMPLEMENTA O QUÊ?                      │
-├─────────────────────────────────────────────────────┤
-│                                                     │
-│  Repository Interfaces (Domain)                     │
-│  └─→ Implementado por: Spring Data JPA (automático) │
-│                                                     │
-│  Port Interfaces (Application)                      │
-│  └─→ Implementado por: Adapters (Infrastructure)    │
-│                                                     │
-└─────────────────────────────────────────────────────┘
-```
+Etapas 2 (Motor Geotemporal) e 3 (Motor de Notificação Híbrida) do produto ficam fora desta quebra em épicos — entram em rodada própria quando a fase chegar.
 
 ---
 
 ## 📝 Licença
 
-Este projeto está licenciado sob a **Apache License 2.0** - veja o arquivo [LICENSE](LICENSE) para detalhes.
+Este projeto está licenciado sob a **Apache License 2.0** — veja o arquivo [LICENSE](LICENSE) para detalhes.
 
 ```
 Copyright 2026 SawCunha Open System
@@ -1274,27 +315,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
-
----
-
-## 👥 Contribuindo
-
-Contribuições são bem-vindas! Por favor:
-
-1. Fork o projeto
-2. Crie uma branch (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
----
-
-## 📞 Contato
-
-**SCOS Team** - SawCunha Open System
-
-- Website: [www.sacunhaos.com.br](https://www.sacunhaos.com.br)
-
----
-
-**Construído com ❤️ seguindo princípios de Clean Architecture, Hexagonal Architecture (Ports & Adapters) e DDD**

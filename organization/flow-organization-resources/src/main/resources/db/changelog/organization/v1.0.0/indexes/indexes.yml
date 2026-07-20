@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - include:
+      file: login.yml
+      relativeToChangelogFile: true
+  - include:
+      file: status_history.yml
+      relativeToChangelogFile: true
+  - include:
+      file: type_catalog.yml
+      relativeToChangelogFile: true
+  - include:
+      file: outbox.yml
+      relativeToChangelogFile: true
+  - include:
+      file: fiscal.yml
+      relativeToChangelogFile: true
+  - include:
+      file: position_history.yml
+      relativeToChangelogFile: true
+  - include:
+      file: login_approval_request.yml
+      relativeToChangelogFile: true

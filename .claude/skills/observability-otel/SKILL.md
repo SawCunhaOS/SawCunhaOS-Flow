@@ -7,13 +7,13 @@ description: >
   Micrometer, Prometheus, Grafana/Tempo/Loki, distributed tracing, correlation
   IDs, custom metrics, spans, sampling, or wants to make a service observable or
   review its instrumentation — even if they don't name the tool. Targets the
-  current stable Spring Boot 4.0.x (the new spring-boot-starter-opentelemetry),
+  current stable Spring Boot 4.X.X (the new spring-boot-starter-opentelemetry),
   Micrometer, Java 25. Follows the SCOS conventions (services as
   specification+Bean; the foundation already provides request-logging filters and
   GELF/Logstash structured logging).
 ---
 
-# Observability with Micrometer + OpenTelemetry (Spring Boot 4.0.x)
+# Observability with Micrometer + OpenTelemetry (Spring Boot 4.X.X)
 
 This skill instruments and reviews the three pillars — metrics, traces, logs — for
 SCOS services. The model to internalize: Micrometer is the instrumentation API

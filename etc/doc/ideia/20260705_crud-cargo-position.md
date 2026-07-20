@@ -21,7 +21,7 @@
 ## 1️⃣ Visão
 
 ### Problema
-A entidade de domínio `Position` (`scos-organization-domain`) já existe com os métodos `activate()`/`deactivate()` e o `PositionRepository` já tem `existsByCode`, `existsByCodeAndNotId`, `existsByDepartmentId`. Porém, diferente do Departamento (que já tem `dto/`, `service/`, `specification/` e todos os Use Cases), o Position **não tem** camada de serviço de domínio, Use Cases, nem `PositionDelegate` — a pasta `delegate/position/` está vazia e não existe `usecase/corporate/position/`. A permissão `ScosOrganizationPermission` já contém todos os valores necessários (`GET/CREATE/UPDATE/ENABLE/DISABLE_POSITION`).
+A entidade de domínio `Position` (`flow-organization-domain`) já existe com os métodos `activate()`/`deactivate()` e o `PositionRepository` já tem `existsByCode`, `existsByCodeAndNotId`, `existsByDepartmentId`. Porém, diferente do Departamento (que já tem `dto/`, `service/`, `specification/` e todos os Use Cases), o Position **não tem** camada de serviço de domínio, Use Cases, nem `PositionDelegate` — a pasta `delegate/position/` está vazia e não existe `usecase/corporate/position/`. A permissão `ScosOrganizationPermission` já contém todos os valores necessários (`GET/CREATE/UPDATE/ENABLE/DISABLE_POSITION`).
 
 Aparentemente essa camada existiu em algum momento (task 5.7 da change `adequacao-rest-nivel2-organization`, de 2026-06-10, está marcada `[x]` como concluída — "Adicionar métodos enable/disable no PositionController e criar ActivatePositionUseCase/InactivatePositionUseCase"), mas não está mais presente no código — provavelmente removida durante o refactor de entidades JPA/Liquibase v2 (changes `adequacao-liquibase-domain-model-v2` e `atualizacao-entidades-jpa-liquibase-v2`, ambas de 2026-07-01).
 
@@ -63,14 +63,14 @@ Critério de sucesso: os 6 endpoints funcionam de acordo com as regras do Docume
 
 ### Componentes Afetados
 ```
-scos-organization-domain/.../corporate/position/
+flow-organization-domain/.../corporate/position/
 ├── dto/PositionInput.java              (novo)
 ├── dto/PositionOutput.java             (novo, com Department aninhado)
 ├── service/PositionMapper.java         (novo)
 ├── service/PositionServiceBean.java    (novo)
 └── specification/PositionService.java  (novo)
 
-scos-organization-usecase/.../usecase/corporate/position/
+flow-organization-usecase/.../usecase/corporate/position/
 ├── CreatePositionUseCase(+Bean).java   (novo)
 ├── UpdatePositionUseCase(+Bean).java   (novo)
 ├── FindPositionUseCase(+Bean).java     (novo)
@@ -78,7 +78,7 @@ scos-organization-usecase/.../usecase/corporate/position/
 ├── EnablePositionUseCase(+Bean).java   (novo)
 └── DisablePositionUseCase(+Bean).java  (novo)
 
-scos-organization-api/.../delegate/position/
+flow-organization-api/.../delegate/position/
 └── PositionDelegate.java               (novo, implements PositionApiDelegate)
 ```
 
@@ -133,7 +133,7 @@ Ver árvore da Seção 3.
 - `etc/doc/usecase/02-departamento-cargo.md` (Seção 3 — Cargo)
 - `etc/api/organization/ScosOrganization_Department-Position.yml`
 - `etc/doc/usecase/07-mensagens-erro-pt-en.md`
-- Padrão de referência: `scos-organization-domain/.../corporate/department/*`, `scos-organization-usecase/.../corporate/department/*`, `DepartmentDelegate.java`
+- Padrão de referência: `flow-organization-domain/.../corporate/department/*`, `flow-organization-usecase/.../corporate/department/*`, `DepartmentDelegate.java`
 - Padrão de arquitetura: `etc/architecture/api-development-guidelines.md`
 
 ---

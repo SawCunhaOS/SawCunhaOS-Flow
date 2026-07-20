@@ -65,18 +65,18 @@ Hoje `SCOS_RESOURCE.CODE` é **único global** (`UK_CODE_SCOS_RESOURCE`). Conseq
 
 ### Componentes Afetados
 ```
-scos-organization-boot
+flow-organization-boot
 ├── db/.../tables/scos_resource.yml      : UK CODE → (CODE, SYSTEM_ID)
 ├── db/.../view/vw_login_context.sql     : +system_id/system_code; índice único +system
 └── db/.../view/vw_authority_response.sql: +system_id/system_code; índice/where por sistema
 
-scos-organization-domain
+flow-organization-domain
 └── access/authority/... (AuthorityResponseService / repo) : filtrar por systemCode
 
-scos-organization-usecase
+flow-organization-usecase
 └── access/authority/validate/ValidateAuthorityUseCase(+Bean): execute(login, systemCode)
 
-grpc/scos-organization-grpc-boot
+grpc/flow-organization-grpc-boot
 └── delegate/ValidateAuthorityServiceImpl : obter systemCode do SecurityContext e repassar
 
 ⚠️ DEPENDÊNCIA — permission-metadata-registry-enrichment (não arquivada):
@@ -117,13 +117,13 @@ AuthorityResponse.permissions = só as permissões de alice no sistema X
 ### Arquivos
 
 **Modificados**:
-- `scos-organization-boot/.../tables/scos_resource.yml` — UK `(CODE, SYSTEM_ID)`.
-- `scos-organization-boot/.../view/vw_login_context.sql` — +`system_id`/`system_code`; índice único +system.
-- `scos-organization-boot/.../view/vw_authority_response.sql` — +`system`; where/índice por sistema.
-- `scos-organization-usecase/.../authority/validate/ValidateAuthorityUseCase(+Bean)` — `execute(login, systemCode)`.
-- `scos-organization-domain/.../access/authority/...` (service/repo) — filtro por `systemCode`.
+- `flow-organization-boot/.../tables/scos_resource.yml` — UK `(CODE, SYSTEM_ID)`.
+- `flow-organization-boot/.../view/vw_login_context.sql` — +`system_id`/`system_code`; índice único +system.
+- `flow-organization-boot/.../view/vw_authority_response.sql` — +`system`; where/índice por sistema.
+- `flow-organization-usecase/.../authority/validate/ValidateAuthorityUseCase(+Bean)` — `execute(login, systemCode)`.
+- `flow-organization-domain/.../access/authority/...` (service/repo) — filtro por `systemCode`.
 - `grpc/.../delegate/ValidateAuthorityServiceImpl.java` — ler `systemCode` do `SecurityContext`.
-- **[dependência]** `scos-organization-domain/.../resource/internal/ResourceRepository.java` — `ON CONFLICT (CODE, SYSTEM_ID)` (altera a change `permission-metadata-registry-enrichment`).
+- **[dependência]** `flow-organization-domain/.../resource/internal/ResourceRepository.java` — `ON CONFLICT (CODE, SYSTEM_ID)` (altera a change `permission-metadata-registry-enrichment`).
 
 ### Tarefas
 - [ ] **T-01**: `scos_resource.yml` — UK `(CODE, SYSTEM_ID)`.
@@ -144,7 +144,7 @@ AuthorityResponse.permissions = só as permissões de alice no sistema X
 ---
 
 ## 📎 Referências
-- `scos-organization-boot/.../view/vw_login_context.sql` e `vw_authority_response.sql` (fonte das permissões)
+- `flow-organization-boot/.../view/vw_login_context.sql` e `vw_authority_response.sql` (fonte das permissões)
 - `grpc/.../interceptor/TokenAuthorizationInterceptor.java` (principal = systemCode)
 - Change relacionada (a ser ajustada): `openspec/changes/permission-metadata-registry-enrichment/` (upsert `ON CONFLICT`)
 - Spec existente: `openspec/specs/schema-permissions-multisistema/spec.md`

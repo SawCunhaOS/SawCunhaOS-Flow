@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260718-Samuel.Cunha-002
+      author: Samuel.Cunha
+      comment: "Adiciona MANAGER_ID em SCOS_DEPARTMENT (Etapa 1 — fallback nível 2 da cadeia de aprovação, AD-5 da spine). Arquivo separado de scos_department.yml porque a FK para SCOS_EMPLOYEE só pode ser criada depois que a tabela existir (Layer 4)."
+      changes:
+        - addColumn:
+            tableName: SCOS_DEPARTMENT
+            schemaName: scos
+            columns:
+              - column:
+                  name: MANAGER_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: FK_MANAGER_ID_SCOS_DEPARTMENT
+                    references: scos.SCOS_EMPLOYEE(EMPLOYEE_ID)
+        - createIndex:
+            tableName: SCOS_DEPARTMENT
+            schemaName: scos
+            indexName: IDX_MANAGER_ID_SCOS_DEPARTMENT
+            columns:
+              - column:
+                  name: MANAGER_ID
+      rollback:
+        - dropColumn:
+            tableName: SCOS_DEPARTMENT
+            schemaName: scos
+            columnName: MANAGER_ID

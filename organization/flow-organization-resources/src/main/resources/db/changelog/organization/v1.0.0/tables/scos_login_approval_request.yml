@@ -1,0 +1,107 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260718-Samuel.Cunha-001
+      author: Samuel.Cunha
+      comment: "Criação da tabela SCOS_LOGIN_APPROVAL_REQUEST (Etapa 1 — cadeia de aprovação de acesso, AD-4 da spine)"
+      changes:
+        - createTable:
+            tableName: SCOS_LOGIN_APPROVAL_REQUEST
+            schemaName: scos
+            columns:
+              - column:
+                  name: LOGIN_APPROVAL_REQUEST_ID
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_SCOS_LOGIN_APPROVAL_REQUEST
+                    nullable: false
+              - column:
+                  name: LOGIN_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_LOGIN_ID_SCOS_LOGIN_APPROVAL_REQUEST
+                    references: scos.SCOS_LOGIN(LOGIN_ID)
+              - column:
+                  name: REQUESTED_BY_LOGIN_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: FK_REQUESTED_BY_LOGIN_ID_SCOS_LOGIN_APPROVAL_REQUEST
+                    references: scos.SCOS_LOGIN(LOGIN_ID)
+              - column:
+                  name: DECIDED_BY_LOGIN_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: FK_DECIDED_BY_LOGIN_ID_SCOS_LOGIN_APPROVAL_REQUEST
+                    references: scos.SCOS_LOGIN(LOGIN_ID)
+              - column:
+                  name: CURRENT_LEVEL
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ESCALATION_POLICY
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: STATUS
+                  type: varchar(20)
+                  defaultValue: PENDING
+                  constraints:
+                    nullable: false
+              - column:
+                  name: IS_EXCEPTION_SELF_APPROVAL
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: SLA_DEADLINE
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: SUPERVISOR_NOTIFIED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: MANAGER_ESCALATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: SYSTEM_GROUP_ESCALATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: DECIDED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: true
+              - column:
+                  name: CREATED_AT
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: NOW()
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
+              - column:
+                  name: USER_AT
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropTable:
+            tableName: SCOS_LOGIN_APPROVAL_REQUEST
+            schemaName: scos
+            cascadeConstraints: true

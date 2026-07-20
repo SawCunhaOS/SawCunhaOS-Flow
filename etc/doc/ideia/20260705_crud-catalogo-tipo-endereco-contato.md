@@ -28,10 +28,10 @@ O contrato OpenAPI do catálogo de referência `AddressType`/`ContactType` já f
 
 Hoje existe apenas a entidade JPA e o repositório vazio:
 ```
-scos-organization-domain/.../corporate/catalog/internal/AddressType.java
-scos-organization-domain/.../corporate/catalog/internal/AddressTypeRepository.java   (sem métodos custom)
-scos-organization-domain/.../corporate/catalog/internal/ContactType.java
-scos-organization-domain/.../corporate/catalog/internal/ContactTypeRepository.java   (sem métodos custom)
+flow-organization-domain/.../corporate/catalog/internal/AddressType.java
+flow-organization-domain/.../corporate/catalog/internal/AddressTypeRepository.java   (sem métodos custom)
+flow-organization-domain/.../corporate/catalog/internal/ContactType.java
+flow-organization-domain/.../corporate/catalog/internal/ContactTypeRepository.java   (sem métodos custom)
 ```
 Não existe `dto/`, `service/`, `specification/` no domain, nenhum Use Case, nenhum `Delegate` (`delegate/` não tem pasta pra catálogo), e `ScosOrganizationPermission` não tem nenhuma entrada `*_ADDRESS_TYPE`/`*_CONTACT_TYPE`. Os 12 endpoints do contrato (UC-081 a UC-092, doc `05-catalogo-motivos.md`) não funcionam.
 
@@ -69,7 +69,7 @@ Implementar os 12 endpoints (6 por entidade: `GET` lista paginada, `POST`, `GET 
 
 ### Componentes Afetados
 ```
-scos-organization-domain
+flow-organization-domain
 ├── corporate/catalog/dto/AddressTypeInput.java, AddressTypeOutput.java: adição
 ├── corporate/catalog/dto/ContactTypeInput.java, ContactTypeOutput.java: adição
 ├── corporate/catalog/internal/AddressTypeRepository.java: modificação (existsByCode/existsByCodeAndNotId via QueryDSL default methods)
@@ -79,17 +79,17 @@ scos-organization-domain
 ├── corporate/catalog/specification/AddressTypeService.java: adição
 └── corporate/catalog/specification/ContactTypeService.java: adição
 
-scos-organization-usecase
+flow-organization-usecase
 └── application/usecase/corporate/catalog/
     ├── addresstype/ (Create/Update/Find/FindAll/Enable/DisableAddressTypeUseCase + Bean, AddressTypeApiMapper): adição
     └── contacttype/ (idem, ContactType): adição
 
-scos-organization-api
+flow-organization-api
 └── delegate/catalog/
     ├── AddressTypeDelegate.java implements AddressTypeApiDelegate: adição
     └── ContactTypeDelegate.java implements ContactTypeApiDelegate: adição
 
-scos-organization-infrastructure
+flow-organization-infrastructure
 └── enumaration/ScosOrganizationPermission.java: modificação (+12 entradas)
 ```
 

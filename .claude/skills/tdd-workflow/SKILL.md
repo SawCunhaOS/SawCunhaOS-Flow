@@ -9,12 +9,12 @@ description: >
   refactor a test suite — even if they don't say "TDD". Also trigger when the
   user asks "how should I test this", mentions JUnit 5, Mockito, AssertJ, test
   doubles, or wants help deciding what to mock. Targets JUnit 5 (Jupiter),
-  AssertJ, Mockito on the current stable Spring Boot 4.0.x / Java 25. For
+  AssertJ, Mockito on the current stable Spring Boot 4.X.X / Java 25. For
   integration tests with real databases or message brokers, prefer the
   testcontainers-integration skill.
 ---
 
-# TDD Workflow (JUnit 5 / Java 25 / Spring Boot 4.0.x)
+# TDD Workflow (JUnit 5 / Java 25 / Spring Boot 4.X.X)
 
 This skill drives development through tests. Spring Boot 4 removed JUnit 4, so
 everything here is the JUnit Jupiter programming model — the SCOS BOM brings

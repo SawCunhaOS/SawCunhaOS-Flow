@@ -28,10 +28,10 @@ O contrato OpenAPI dos 4 catálogos de motivo já foi fechado no change `histori
 
 Hoje existe apenas a entidade JPA e o repositório vazio para as 4 entidades:
 ```
-scos-organization-domain/.../access/status/internal/ReasonActivate.java   (+ Repository sem métodos custom)
-scos-organization-domain/.../access/status/internal/ReasonInactivate.java (+ Repository sem métodos custom)
-scos-organization-domain/.../access/status/internal/ReasonDisable.java    (+ Repository sem métodos custom)
-scos-organization-domain/.../access/status/internal/ReasonEnable.java     (+ Repository sem métodos custom)
+flow-organization-domain/.../access/status/internal/ReasonActivate.java   (+ Repository sem métodos custom)
+flow-organization-domain/.../access/status/internal/ReasonInactivate.java (+ Repository sem métodos custom)
+flow-organization-domain/.../access/status/internal/ReasonDisable.java    (+ Repository sem métodos custom)
+flow-organization-domain/.../access/status/internal/ReasonEnable.java     (+ Repository sem métodos custom)
 ```
 Não existe `dto/`, `service/`, `specification/`, nenhum Use Case, nenhum `Delegate`, e `ScosOrganizationPermission` não tem nenhuma entrada `*_REASON_*`. Os 24 endpoints do contrato (UC-113 a UC-136, doc `05-catalogo-motivos.md`) não funcionam.
 
@@ -74,27 +74,27 @@ Implementar os 24 endpoints (6 por catálogo × 4 catálogos) seguindo o mesmo p
 
 ### Componentes Afetados
 ```
-scos-organization-domain
+flow-organization-domain
 ├── access/status/dto/Reason{Activate,Inactivate,Disable,Enable}Input.java, Output.java: adição (8 classes)
 ├── access/status/internal/Reason{Activate,Inactivate,Disable,Enable}Repository.java: modificação (existsByCode/existsByCodeAndNotId)
 ├── access/status/service/Reason{Activate,Inactivate,Disable,Enable}Mapper.java, ServiceBean.java: adição (8 classes)
 └── access/status/specification/Reason{Activate,Inactivate,Disable,Enable}Service.java: adição (4 interfaces)
 
-scos-organization-usecase
+flow-organization-usecase
 └── application/usecase/access/status/
     ├── reasonactivate/ (Create/Update/Find/FindAll/Enable/DisableReasonActivateUseCase + Bean, ApiMapper): adição
     ├── reasoninactivate/ (idem): adição
     ├── reasondisable/ (idem): adição
     └── reasonenable/ (idem): adição
 
-scos-organization-api
+flow-organization-api
 └── delegate/reason/
     ├── ReasonActivateDelegate.java implements ReasonActivateApiDelegate
     ├── ReasonInactivateDelegate.java implements ReasonInactivateApiDelegate
     ├── ReasonDisableDelegate.java implements ReasonDisableApiDelegate
     └── ReasonEnableDelegate.java implements ReasonEnableApiDelegate
 
-scos-organization-infrastructure
+flow-organization-infrastructure
 └── enumaration/ScosOrganizationPermission.java: modificação (+20 entradas)
 ```
 

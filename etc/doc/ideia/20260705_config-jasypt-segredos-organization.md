@@ -1,4 +1,4 @@
-# Externalização e Cifra de Segredos (Jasypt) em scos-organization-boot/grpc-boot
+# Externalização e Cifra de Segredos (Jasypt) em flow-organization-boot/grpc-boot
 
 **Data**: 2026-07-05
 **Status**: 🔄 Em Análise
@@ -23,7 +23,7 @@
 ## 1️⃣ Visão
 
 ### Problema
-`scos-organization-boot` e `scos-organization-grpc-boot` têm 5 segredos hardcoded em texto plano nos arquivos de config versionados: `scos.datasource.password`, `scos.audit.datasource.password`, `scos.cache.password` (todos `scos#2026`), `scos.registry.key-access` (`ABLABLABLA`, valor claramente fake) e `scos.privacy.crypto.secret` (`ASDASDASDA`, idem). Isso foi tolerável enquanto só existia 1 ambiente de dev compartilhado. Com o modelo confirmado de **deploy separado por cliente** (on-premise/whitelabel, ver [[config-build-imagem-e-properties-docker]]), isso vira 2 problemas reais:
+`flow-organization-boot` e `flow-organization-grpc-boot` têm 5 segredos hardcoded em texto plano nos arquivos de config versionados: `scos.datasource.password`, `scos.audit.datasource.password`, `scos.cache.password` (todos `scos#2026`), `scos.registry.key-access` (`ABLABLABLA`, valor claramente fake) e `scos.privacy.crypto.secret` (`ASDASDASDA`, idem). Isso foi tolerável enquanto só existia 1 ambiente de dev compartilhado. Com o modelo confirmado de **deploy separado por cliente** (on-premise/whitelabel, ver [[config-build-imagem-e-properties-docker]]), isso vira 2 problemas reais:
 
 1. **Cada cliente precisa da sua própria credencial** — não dá pra todo cliente usar a mesma senha de banco/Redis/registry
 2. `scos.privacy.crypto.secret` é a chave que cifra dado sensível (PII) em repouso — se toda instalação usar a mesma chave hardcoded no jar/imagem, um vazamento em qualquer cliente compromete a cifra de **todos os outros clientes** também. Não é só má prática, é risco de segurança concreto num produto multi-cliente
@@ -45,7 +45,7 @@ A skill `spring-security-scos` já documenta o padrão SCOS esperado: segredo se
 ## 2️⃣ Requisitos
 
 ### Funcionais
-- [ ] **RF-01**: Adicionar dependência `com.github.ulisesbocchio:jasypt-spring-boot-starter` (sem version — já gerenciada em `scos-bom`) no `pom.xml` de `scos-organization-boot` e `scos-organization-grpc-boot`
+- [ ] **RF-01**: Adicionar dependência `com.github.ulisesbocchio:jasypt-spring-boot-starter` (sem version — já gerenciada em `scos-bom`) no `pom.xml` de `flow-organization-boot` e `flow-organization-grpc-boot`
 - [ ] **RF-02**: `scos.datasource.password` e `scos.audit.datasource.password` viram `${SCOS_DB_PASSWORD:scos#2026}` (mesma env var reaproveitada entre principal/auditoria, mesma instância física — mesmo padrão de reaproveitamento já usado pra `SCOS_DB_HOST` na outra ideia)
 - [ ] **RF-03**: `scos.cache.password` vira `${SCOS_CACHE_PASSWORD:scos#2026}`
 - [ ] **RF-04**: `scos.registry.key-access` (`bootstrap.yml`, só `boot`) vira `${SCOS_REGISTRY_KEY_ACCESS:ABLABLABLA}` — default mantém o valor fake de hoje só pra não quebrar dev local; qualquer deploy real **precisa** sobrescrever
@@ -64,20 +64,20 @@ A skill `spring-security-scos` já documenta o padrão SCOS esperado: segredo se
 
 ### Componentes Afetados
 ```
-scos-organization-boot/pom.xml
+flow-organization-boot/pom.xml
 └── adiciona dependency com.github.ulisesbocchio:jasypt-spring-boot-starter
 
-scos-organization-boot/src/main/resources/application.yml
+flow-organization-boot/src/main/resources/application.yml
 └── datasource.password, audit.datasource.password, cache.password,
     privacy.crypto.secret: texto plano → ${VAR:valor-de-dev-atual}
 
-scos-organization-boot/src/main/resources/bootstrap.yml
+flow-organization-boot/src/main/resources/bootstrap.yml
 └── registry.key-access: texto plano → ${VAR:valor-de-dev-atual}
 
-grpc/scos-organization-grpc-boot/pom.xml
+grpc/flow-organization-grpc-boot/pom.xml
 └── adiciona dependency com.github.ulisesbocchio:jasypt-spring-boot-starter
 
-grpc/scos-organization-grpc-boot/src/main/resources/application.yml
+grpc/flow-organization-grpc-boot/src/main/resources/application.yml
 └── mesmos placeholders que o boot (sem registry, que só existe no boot)
 ```
 
@@ -115,11 +115,11 @@ Deploy real (cliente X)
 ### Arquivos
 
 **Modificados**:
-- `scos-organization-boot/pom.xml` — adiciona `jasypt-spring-boot-starter`
-- `scos-organization-boot/src/main/resources/application.yml` — segredos viram placeholder
-- `scos-organization-boot/src/main/resources/bootstrap.yml` — `registry.key-access` vira placeholder
-- `grpc/scos-organization-grpc-boot/pom.xml` — adiciona `jasypt-spring-boot-starter`
-- `grpc/scos-organization-grpc-boot/src/main/resources/application.yml` — segredos viram placeholder
+- `flow-organization-boot/pom.xml` — adiciona `jasypt-spring-boot-starter`
+- `flow-organization-boot/src/main/resources/application.yml` — segredos viram placeholder
+- `flow-organization-boot/src/main/resources/bootstrap.yml` — `registry.key-access` vira placeholder
+- `grpc/flow-organization-grpc-boot/pom.xml` — adiciona `jasypt-spring-boot-starter`
+- `grpc/flow-organization-grpc-boot/src/main/resources/application.yml` — segredos viram placeholder
 
 ### Tarefas
 - [ ] **T-01**: Adicionar `jasypt-spring-boot-starter` no pom do `boot`

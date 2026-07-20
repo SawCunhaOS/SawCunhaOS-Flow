@@ -1,6 +1,6 @@
 # DDD Building Blocks — canonical Java examples
 
-Spring Boot 4.0.x / Java 25. Examples use records for value objects, JSpecify
+Spring Boot 4.X.X / Java 25. Examples use records for value objects, JSpecify
 `@NonNull`/`@Nullable` where nullability matters, and keep the domain free of
 Spring/JPA imports.
 

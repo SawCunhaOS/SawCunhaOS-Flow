@@ -1,6 +1,6 @@
 # OpenTelemetry setup, signals & review checklist
 
-Spring Boot 4.0.x, Micrometer, OTLP. The protocol (OTLP) is what matters — you
+Spring Boot 4.X.X, Micrometer, OTLP. The protocol (OTLP) is what matters — you
 can point at any OTel-capable backend (Grafana Tempo/Mimir/Loki, etc.).
 
 ## Dependency

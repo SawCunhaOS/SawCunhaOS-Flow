@@ -59,11 +59,11 @@ Implementar o CRUD completo de Natureza Jurídica conforme UC-093 a UC-097 (`01-
 
 ### Componentes Afetados
 ```
-scos-organization-domain
+flow-organization-domain
 ├── company/internal/LegalNatureRepository.java ....... adição
 └── company/internal/CompanyRepository.java ........... modificação (existsByLegalNatureId)
 
-scos-organization-usecase
+flow-organization-usecase
 └── application/usecase/corporate/company/fiscal/legalnature/ . adição
     ├── CreateLegalNatureUseCase (+ Bean)
     ├── UpdateLegalNatureUseCase (+ Bean)
@@ -72,13 +72,13 @@ scos-organization-usecase
     ├── DeleteLegalNatureUseCase (+ Bean)
     └── LegalNatureApiMapper
 
-scos-organization-api
+flow-organization-api
 └── api/delegate/company/LegalNatureDelegate.java ..... adição (implements LegalNatureApiDelegate)
 
-scos-organization-infrastructure
+flow-organization-infrastructure
 └── enumaration/ScosOrganizationPermission.java ....... modificação (+GET/CREATE/UPDATE/DELETE_LEGAL_NATURE)
 
-scos-organization-shared
+flow-organization-shared
 └── scos_message_organization[_en].properties ......... modificação (SCOS_LEGAL_NATURE_001/002/003)
 ```
 

@@ -57,7 +57,7 @@ Por delegate, replicar a matriz do `DepartmentControllerTest` conforme o **shape
 
 ### Componentes Afetados
 ```
-scos-organization-boot (src/test)
+flow-organization-boot (src/test)
 ├── api/catalog/AddressTypeControllerTest.java     : adição
 ├── api/catalog/ContactTypeControllerTest.java     : adição
 ├── api/position/PositionControllerTest.java       : adição
@@ -118,10 +118,10 @@ MockMvc → filtro JWT (WireMock/JWKS) → @PreAuthorize (GrpcMock authority)
 ---
 
 ## 📎 Referências
-- Exemplar: `scos-organization-boot/src/test/.../api/department/DepartmentControllerTest.java`
+- Exemplar: `flow-organization-boot/src/test/.../api/department/DepartmentControllerTest.java`
 - Infra base: `.../infrastructure/ScosOrganizationTestUtil.java`, `ScosJwtTestSupport.java`, `ScosOrganizationWiremockUtil.java`
 - Contrato de erro: `ExceptionCodeError.java` (famílias `SCOS_*_00N`)
-- Seed: `scos-organization-boot/src/test/resources/postgresql/setsup_database.sql`
+- Seed: `flow-organization-boot/src/test/resources/postgresql/setsup_database.sql`
 - Ideia relacionada (fora de escopo): `20260705_suite-testes-k6-ambiente-integracao.md`
 
 ---

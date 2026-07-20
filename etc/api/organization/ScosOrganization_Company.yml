@@ -910,6 +910,9 @@ components:
       name: name
       in: query
       required: false
+      description: >-
+        Filtro por nome da empresa. Correspondência exata - não faz busca parcial,
+        não normaliza acentuação e é sensível a maiúsculas/minúsculas
       schema:
         type: string
   schemas:
@@ -1024,10 +1027,14 @@ components:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+          maxLength: 250
+          x-size-message: SCOS_VALIDATION_008
         nameTreatment:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+          maxLength: 100
+          x-size-message: SCOS_VALIDATION_008
         taxIdentifier:
           type: string
           x-required-message: SCOS_VALIDATION_003
@@ -1036,7 +1043,9 @@ components:
           x-is-cnpj: true
           minLength: 14
           maxLength: 14
+          x-size-message: SCOS_VALIDATION_010
           pattern: '^[A-Z0-9]{12}[0-9]{2}$'
+          x-pattern-message: SCOS_VALIDATION_010
           description: >-
             CNPJ sem máscara, 14 caracteres. Segue o padrão CNPJ Alfa (IN RFB nº 2.229/2024, vigente a partir de julho/2026):
             os 12 primeiros caracteres são alfanuméricos (0-9, A-Z), os 2 últimos são os dígitos verificadores, sempre numéricos
@@ -1048,6 +1057,8 @@ components:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+          maxLength: 100
+          x-size-message: SCOS_VALIDATION_008
         observation:
           type: string
         parentCompanyId:
@@ -1070,33 +1081,30 @@ components:
         stateRegistration:
           type: string
           nullable: true
+          maxLength: 20
+          x-size-message: SCOS_VALIDATION_008
           description: Inscrição estadual. Aceita o valor "ISENTO"
         municipalRegistration:
           type: string
           nullable: true
+          maxLength: 20
+          x-size-message: SCOS_VALIDATION_008
     UpdateCompanyRequest:
-      required: [name, nameTreatment, taxIdentifier, foundationDate, sectorOfActivity]
+      required: [name, nameTreatment, foundationDate, sectorOfActivity]
       type: object
       properties:
         name:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+          maxLength: 250
+          x-size-message: SCOS_VALIDATION_008
         nameTreatment:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
-        taxIdentifier:
-          type: string
-          x-required-message: SCOS_VALIDATION_003
-          x-empty-message: SCOS_VALIDATION_001
-          x-is-cnpj: true
-          minLength: 14
-          maxLength: 14
-          pattern: '^[A-Z0-9]{12}[0-9]{2}$'
-          description: >-
-            CNPJ sem máscara, 14 caracteres. Segue o padrão CNPJ Alfa (IN RFB nº 2.229/2024, vigente a partir de julho/2026):
-            os 12 primeiros caracteres são alfanuméricos (0-9, A-Z), os 2 últimos são os dígitos verificadores, sempre numéricos
+          maxLength: 100
+          x-size-message: SCOS_VALIDATION_008
         foundationDate:
           type: string
           format: date
@@ -1105,6 +1113,8 @@ components:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+          maxLength: 100
+          x-size-message: SCOS_VALIDATION_008
         observation:
           type: string
         legalNatureId:
@@ -1118,10 +1128,14 @@ components:
         stateRegistration:
           type: string
           nullable: true
+          maxLength: 20
+          x-size-message: SCOS_VALIDATION_008
           description: Inscrição estadual. Aceita o valor "ISENTO"
         municipalRegistration:
           type: string
           nullable: true
+          maxLength: 20
+          x-size-message: SCOS_VALIDATION_008
     CompanyContact:
       type: object
       properties:
@@ -1165,15 +1179,23 @@ components:
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
+          maxLength: 50
+          x-size-message: SCOS_VALIDATION_008
         email:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
+          maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
+          pattern: '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
+          x-pattern-message: SCOS_VALIDATION_005
         responsiblePerson:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+          maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
     UpdateCompanyContactRequest:
       required: [contactTypeId, phone, email, responsiblePerson]
       type: object
@@ -1186,14 +1208,22 @@ components:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+          maxLength: 50
+          x-size-message: SCOS_VALIDATION_008
         email:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+          maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
+          pattern: '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
+          x-pattern-message: SCOS_VALIDATION_005
         responsiblePerson:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+          maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
     CompanyAddresses:
       type: object
       properties:
@@ -1204,7 +1234,7 @@ components:
           type: integer
           format: int64
         number:
-          type: number
+          type: string
         complement:
           type: string
     CompanyAddress:
@@ -1220,7 +1250,7 @@ components:
           type: integer
           format: int64
         number:
-          type: number
+          type: string
         complement:
           type: string
         latitude:
@@ -1254,8 +1284,12 @@ components:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
+          description: >-
+            Número do endereço. Alfanumérico - aceita valores como "S/N", "123A" ou "45-B"
         complement:
           type: string
+          maxLength: 250
+          x-size-message: SCOS_VALIDATION_008
         latitude:
           type: number
           x-required-message: SCOS_VALIDATION_003
@@ -1278,8 +1312,12 @@ components:
         number:
           type: string
           x-required-message: SCOS_VALIDATION_003
+          description: >-
+            Número do endereço. Alfanumérico - aceita valores como "S/N", "123A" ou "45-B"
         complement:
           type: string
+          maxLength: 250
+          x-size-message: SCOS_VALIDATION_008
         latitude:
           type: number
           x-required-message: SCOS_VALIDATION_003
@@ -1319,12 +1357,14 @@ components:
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
-          maxLength: 30
+          maxLength: 10
+          x-size-message: SCOS_VALIDATION_008
         description:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
           maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
     UpdateLegalNatureRequest:
       required: [code, description]
       type: object
@@ -1333,12 +1373,14 @@ components:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
-          maxLength: 30
+          maxLength: 10
+          x-size-message: SCOS_VALIDATION_008
         description:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
           maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
     Cnae:
       type: object
       properties:
@@ -1372,12 +1414,14 @@ components:
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
           x-jdempotentrequestpayload: true
-          maxLength: 30
+          maxLength: 10
+          x-size-message: SCOS_VALIDATION_008
         description:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
           maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
     UpdateCnaeRequest:
       required: [code, description]
       type: object
@@ -1386,12 +1430,14 @@ components:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
-          maxLength: 30
+          maxLength: 10
+          x-size-message: SCOS_VALIDATION_008
         description:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
           maxLength: 255
+          x-size-message: SCOS_VALIDATION_008
     CompanyCnaeSecondary:
       type: object
       properties:

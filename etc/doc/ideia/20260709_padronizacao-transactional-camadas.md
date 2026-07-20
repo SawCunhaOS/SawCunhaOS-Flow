@@ -68,10 +68,10 @@ Uma convenção única e documentada, aplicada em todo o módulo:
 
 ### Componentes Afetados
 ```
-scos-organization-usecase
+flow-organization-usecase
 └── application/usecase/**/*UseCaseBean: modificação (adicionar @Transactional) — ~71 beans
 
-scos-organization-domain
+flow-organization-domain
 └── domain/**/*ServiceBean: modificação (padronizar @Transactional) — 15 beans
     ├── COM anotação (revisar): AddressType, Cnae, ContactType, LegalNature, Resource, ScosSystem
     └── SEM anotação (adicionar): AuthorityResponse, Configuration, Department,
@@ -121,8 +121,8 @@ Delegate → @Transactional(rollbackFor=ScosException) UseCaseBean   ← anotaç
 - Nenhum arquivo de código. (Opcional) `docs`/skill de convenção transacional.
 
 **Modificados**:
-- `scos-organization-usecase/.../**/*UseCaseBean.java` — adicionar `@Transactional` no método público (write/read conforme tabela). ~71 beans.
-- `scos-organization-domain/.../**/*ServiceBean.java` — padronizar `@Transactional`; garantir helpers privados sem anotação. 15 beans.
+- `flow-organization-usecase/.../**/*UseCaseBean.java` — adicionar `@Transactional` no método público (write/read conforme tabela). ~71 beans.
+- `flow-organization-domain/.../**/*ServiceBean.java` — padronizar `@Transactional`; garantir helpers privados sem anotação. 15 beans.
 
 ### Tarefas
 - [ ] **T-01**: Escrever a convenção (esta tabela) na skill `scos-conventions` — fonte única da verdade — e referenciar esta ideia. (Decidido: skill + ideia.)
