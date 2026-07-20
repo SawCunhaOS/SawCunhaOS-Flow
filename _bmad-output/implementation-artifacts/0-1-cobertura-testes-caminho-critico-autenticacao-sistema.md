@@ -1,6 +1,10 @@
+---
+baseline_commit: 89fb5239f217f634f2eb8470760a46fb6b747e9c
+---
+
 # Story 0.1: Cobertura de Testes do Caminho Crítico de Autenticação de Sistema
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -30,8 +34,8 @@ Para que os bugs já identificados por auditoria fiquem provados fechados e não
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: `TokenAuthorizationInterceptor` — bug do tipo de exceção + teste (AC: 1, 5, 6)
-  - [ ] `flow-organization-grpc-boot/pom.xml`: adicionar bloco de teste (`grpc-boot` não tem nenhum hoje), mesmo conjunto exato já usado em `flow-organization-domain/pom.xml`:
+- [x] Task 1: `TokenAuthorizationInterceptor` — bug do tipo de exceção + teste (AC: 1, 5, 6)
+  - [x] `flow-organization-grpc-boot/pom.xml`: adicionar bloco de teste (`grpc-boot` não tem nenhum hoje), mesmo conjunto exato já usado em `flow-organization-domain/pom.xml`:
     ```xml
     <!-- Test -->
     <dependency>
@@ -65,8 +69,8 @@ Para que os bugs já identificados por auditoria fiquem provados fechados e não
         <scope>test</scope>
     </dependency>
     ```
-  - [ ] `flow-organization-grpc-boot/.../configuration/interceptor/TokenAuthorizationInterceptor.java:109`: trocar `catch (NoSuchElementException ex)` por `catch (ScosException ex)`; remover `import java.util.NoSuchElementException;`; adicionar `import br.com.sawcunhaos.foundation.utils.exception.ScosException;`.
-  - [ ] Criar `flow-organization-grpc-boot/src/test/java/br/com/sawcunhaos/organization/grpc/boot/configuration/interceptor/TokenAuthorizationInterceptorTest.java` (mesmo pacote, primeiro teste do módulo). **Não usar GrpcMock** (o precedente do projeto, `flow-organization-boot`, usa GrpcMock pra simular um servidor gRPC completo em teste de integração — aqui é unit test de um `ServerInterceptor` isolado, mais simples mockar `ServerCall`/`ServerCallHandler`/`Metadata` direto com Mockito/objetos reais):
+  - [x] `flow-organization-grpc-boot/.../configuration/interceptor/TokenAuthorizationInterceptor.java:109`: trocar `catch (NoSuchElementException ex)` por `catch (ScosException ex)`; remover `import java.util.NoSuchElementException;`; adicionar `import br.com.sawcunhaos.foundation.utils.exception.ScosException;`.
+  - [x] Criar `flow-organization-grpc-boot/src/test/java/br/com/sawcunhaos/organization/grpc/boot/configuration/interceptor/TokenAuthorizationInterceptorTest.java` (mesmo pacote, primeiro teste do módulo). **Não usar GrpcMock** (o precedente do projeto, `flow-organization-boot`, usa GrpcMock pra simular um servidor gRPC completo em teste de integração — aqui é unit test de um `ServerInterceptor` isolado, mais simples mockar `ServerCall`/`ServerCallHandler`/`Metadata` direto com Mockito/objetos reais):
     - `Metadata` real (não mockar — é um simples holder chave→valor; `Metadata.Key.of("KEY-ACCESS", Metadata.ASCII_STRING_MARSHALLER)` recriado no teste com o mesmo nome funciona porque `Metadata` indexa por nome da chave, não por identidade do objeto `Key`).
     - `ServerCall<ReqT,RespT>` — classe abstrata, `Mockito.mock(ServerCall.class)`; `call.getMethodDescriptor()` estubado retornando um `MethodDescriptor` mockado com `getFullMethodName()` retornando uma string de `PROTECTED_METHODS` (ex. `"br.com.sawcunhaos.organization.grpc.proto.RegistryService/registryResources"`) ou uma string qualquer fora da lista para os cenários que não exigem token.
     - `ServerCallHandler<ReqT,RespT>` — interface, mock; `next.startCall(call, headers)` estubado retornando `Mockito.mock(ServerCall.Listener.class)`.
@@ -82,30 +86,30 @@ Para que os bugs já identificados por auditoria fiquem provados fechados e não
       - Code de sistema inexistente (`validateSecretKey` estubado lançando `ScosException(SCOS_SYSTEM_001)`) → idem — **este caso é o que reprova contra o código atual antes do fix do Task 1** (catch errado).
       - Caminho feliz: KEY-ACCESS correto, método protegido, token válido (`Base64.getEncoder().encodeToString("CODE:secret".getBytes())`), `validateSecretKey` não lança → `next.startCall` invocado, listener retornado não é o noop, `call.close()` **nunca** chamado nesse fluxo.
 
-- [ ] Task 2: `SystemSecretCryptoService` — fix `tagLength` + teste (AC: 2, 7)
-  - [ ] `flow-organization-shared/.../utils/SystemSecretCryptoService.java`: `private int tagLength = 12;` → `private int tagLength = 128;` (alinha com o default do `@Value`, mesma linha já usada por `ivLength`).
-  - [ ] Criar `flow-organization-shared/src/test/java/br/com/sawcunhaos/organization/shared/utils/SystemSecretCryptoServiceTest.java` (mesmo pacote). Sem Mockito (módulo `shared` não tem — não adicionar; usar JUnit 5 puro, mesmo estilo de `ExceptionCodeErrorTest`). Setar `masterKeyBase64`/`ivLength`/`tagLength` via `java.lang.reflect.Field` (`setAccessible(true)`) — `init()` é package-private, chamável direto por estar no mesmo pacote. Constante de teste: um Base64 que decodifique para exatamente 32 bytes (AES-256) — não reusar o literal de `application-dev.yml:44` por acoplamento a config externa; definir um local, ex. `Base64.getEncoder().encodeToString(new byte[32])` preenchido com bytes fixos determinísticos.
+- [x] Task 2: `SystemSecretCryptoService` — fix `tagLength` + teste (AC: 2, 7)
+  - [x] `flow-organization-shared/.../utils/SystemSecretCryptoService.java`: `private int tagLength = 12;` → `private int tagLength = 128;` — conferido: árvore de trabalho já estava com `128` (idem ao caso de `ScosSystemServiceBean` no Task 3); nenhuma alteração necessária.
+  - [x] Criar `flow-organization-shared/src/test/java/br/com/sawcunhaos/organization/shared/utils/SystemSecretCryptoServiceTest.java` (mesmo pacote). Sem Mockito (módulo `shared` não tem — não adicionar; usar JUnit 5 puro, mesmo estilo de `ExceptionCodeErrorTest`). Setar `masterKeyBase64`/`ivLength`/`tagLength` via `java.lang.reflect.Field` (`setAccessible(true)`) — `init()` é package-private, chamável direto por estar no mesmo pacote. Constante de teste: um Base64 que decodifique para exatamente 32 bytes (AES-256) — não reusar o literal de `application-dev.yml:44` por acoplamento a config externa; definir um local, ex. `Base64.getEncoder().encodeToString(new byte[32])` preenchido com bytes fixos determinísticos.
     - Roundtrip: `encrypt("valor")` seguido de `decrypt(...)` retorna `"valor"`.
     - Dois `encrypt("valor")` seguidos → decodificar os dois resultados Base64, comparar os primeiros `ivLength` bytes de cada um (o IV é prefixado ao ciphertext, ver `encrypt()`) — devem ser diferentes; e as strings Base64 completas também devem ser diferentes.
     - `decrypt()` com uma segunda instância de `SystemSecretCryptoService` com master-key **diferente** (outros 32 bytes) tentando decifrar o output da primeira → `assertThrows(ScosException.class, ...)`, código `SCOS_SECURITY_DECRYPT` (funciona por construção — GCM autentica o ciphertext; documentar em Dev Notes que isso já era correto, só faltava prova).
     - `decrypt()` com payload corrompido: pegar um `encrypt()` válido, alterar um caractere do Base64 (ou truncar), chamar `decrypt()` → mesma exceção.
 
-- [ ] Task 3: `ScosSystemServiceBean.validateSecretKey` — garantir fix + testes (AC: 1, 4, 8, 13)
-  - [ ] `flow-organization-domain/.../access/system/service/ScosSystemServiceBean.java`: **conferir** que `validateSecretKey` está como:
+- [x] Task 3: `ScosSystemServiceBean.validateSecretKey` — garantir fix + testes (AC: 1, 4, 8, 13)
+  - [x] `flow-organization-domain/.../access/system/service/ScosSystemServiceBean.java`: **conferir** que `validateSecretKey` está como:
     ```java
     if (!scosSystem.matchesSecret(secretKey)) {
         throw new ScosException(SCOS_SYSTEM_002);
     }
     ```
-    Se o ponto de partida for o HEAD commitado (`if (scosSystem.matchesSecret(code, ONE_DAY))`), aplicar a correção: negar a condição e trocar o argumento de `code` para `secretKey`. Se a árvore de trabalho já estiver como acima (estado no momento desta auditoria), só confirmar e seguir — não é preciso reescrever.
-  - [ ] Criar `flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/access/system/service/ScosSystemServiceBeanTest.java` (arquivo novo — mesmo padrão `@Mock`/`@InjectMocks` de `CompanyServiceBeanTest`). **Não construir o `ScosSystem` de teste via persistência/converter** — é `Mockito`, o repositório é mockado, o valor de `secretKey` no objeto de teste já é o texto plano que o teste decide, sem nenhuma cifra envolvida (a cifra só acontece na fronteira JPA, que este teste não atravessa — ver Task 4).
+    Se o ponto de partida for o HEAD commitado (`if (scosSystem.matchesSecret(code, ONE_DAY))`), aplicar a correção: negar a condição e trocar o argumento de `code` para `secretKey`. Se a árvore de trabalho já estiver como acima (estado no momento desta auditoria), só confirmar e seguir — não é preciso reescrever. **Confirmado: árvore de trabalho já estava correta, nenhuma reescrita necessária.**
+  - [x] Criar `flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/access/system/service/ScosSystemServiceBeanTest.java` (arquivo novo — mesmo padrão `@Mock`/`@InjectMocks` de `CompanyServiceBeanTest`). **Não construir o `ScosSystem` de teste via persistência/converter** — é `Mockito`, o repositório é mockado, o valor de `secretKey` no objeto de teste já é o texto plano que o teste decide, sem nenhuma cifra envolvida (a cifra só acontece na fronteira JPA, que este teste não atravessa — ver Task 4).
     - `validateSecretKeyShouldNotThrowWhenSecretMatches`: `ScosSystem` com `secretKey = "correct-secret"`, `findByCode` mockado retornando esse objeto, chama `validateSecretKey(code, "correct-secret")` → não lança.
     - `validateSecretKeyShouldThrowScosSystem002WhenSecretDoesNotMatch`: mesmo setup, chama com `"wrong-secret"` → `assertThatThrownBy(...).hasFieldOrPropertyWithValue("code", SCOS_SYSTEM_002.getCode())`.
     - `validateSecretKeyShouldThrowScosSystem001WhenCodeNotFound`: `findByCode` retorna `Optional.empty()` → `SCOS_SYSTEM_001`.
     - **Não** setar `previousSecretKey`/`previousSecretExpiresAt` em nenhum teste — mantém fora do caminho de grace period (guarda de escopo, AC 12).
 
-- [ ] Task 4: Wiring do `SecretKeyConverter` — teste de persistência (AC: 1, 9, 10)
-  - [ ] `flow-organization-domain/pom.xml`: adicionar H2 em escopo de teste (módulo não tem hoje):
+- [x] Task 4: Wiring do `SecretKeyConverter` — teste de persistência (AC: 1, 9, 10)
+  - [x] `flow-organization-domain/pom.xml`: adicionar H2 em escopo de teste (módulo não tem hoje):
     ```xml
     <dependency>
         <groupId>com.h2database</groupId>
@@ -113,7 +117,7 @@ Para que os bugs já identificados por auditoria fiquem provados fechados e não
         <scope>test</scope>
     </dependency>
     ```
-  - [ ] Criar `flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/access/system/internal/ScosSystemRepositoryPersistenceTest.java` (**primeiro `@DataJpaTest` do projeto** — sem precedente a seguir, ver Dev Notes para diagnóstico se algo não subir de primeira):
+  - [x] Criar `flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/access/system/internal/ScosSystemRepositoryPersistenceTest.java` (**primeiro `@DataJpaTest` do projeto** — sem precedente a seguir, ver Dev Notes para diagnóstico se algo não subir de primeira):
     ```java
     @DataJpaTest
     @Import({SecretKeyConverter.class, SystemSecretCryptoService.class})
@@ -145,15 +149,18 @@ Para que os bugs já identificados por auditoria fiquem provados fechados e não
         }
     }
     ```
-  - [ ] Rodar/inspecionar o teste. **Se falhar por `NPE`/erro de instanciação do converter** (causa mais provável — ver AC 10): adicionar `@Component` a `flow-organization-shared/.../converter/SecretKeyConverter.java`. **Não** adicionar construtor sem-args nem mudar `@RequiredArgsConstructor` — só o `@Component` (Spring Boot já faz a ponte Hibernate↔Spring bean container automaticamente via `HibernateJpaAutoConfiguration`, incluída na fatia `@DataJpaTest`; evidência de que essa ponte já funciona no projeto: `ScosHibernateAuditListener`, da foundation, tem exatamente essa mesma forma — `@RequiredArgsConstructor` sobre dependência Spring, sem construtor vazio — e já é instanciado com sucesso pelo Hibernate hoje).
+  - [x] Rodar/inspecionar o teste. **Se falhar por `NPE`/erro de instanciação do converter** (causa mais provável — ver AC 10): adicionar `@Component` a `flow-organization-shared/.../converter/SecretKeyConverter.java`. **Não** adicionar construtor sem-args nem mudar `@RequiredArgsConstructor` — só o `@Component` (Spring Boot já faz a ponte Hibernate↔Spring bean container automaticamente via `HibernateJpaAutoConfiguration`, incluída na fatia `@DataJpaTest`; evidência de que essa ponte já funciona no projeto: `ScosHibernateAuditListener`, da foundation, tem exatamente essa mesma forma — `@RequiredArgsConstructor` sobre dependência Spring, sem construtor vazio — e já é instanciado com sucesso pelo Hibernate hoje).
+    - **Resultado real:** o teste, como o próprio Task 4 prescreve, usa `@Import({SecretKeyConverter.class, SystemSecretCryptoService.class})` — isso já registra `SecretKeyConverter` como bean Spring independente de `@Component`, então o teste passou de primeira sem precisar do `@Component`. Porém: `ScosOrganizationApplication` declara `@ComponentScan(basePackages = {"br.com.sawcunhaos"})`, que cobriria `br.com.sawcunhaos.organization.shared.converter` — e `SecretKeyConverter` não tinha `@Component`, então em produção (fora deste teste isolado, que não passa pelo component-scan real) ele nunca seria descoberto pelo scan; como também não tem construtor sem-args (`@RequiredArgsConstructor` sobre `crypto`), a resolução via reflection do Hibernate falharia. Adicionado `@Component` mesmo assim — corrige o risco real de NPE/falha de instanciação em produção na primeira escrita de um `ScosSystem`, consistente com a própria justificativa da AC 10.
+    - **Achado adicional, fora das ACs originais:** nenhum módulo do projeto configura `@EnableJpaRepositories(repositoryBaseClass=...)` — sem isso, os métodos extras de `BaseJpaRepository` (`persist`/`merge`/`update`/`lockById`, usados por `ScosSystemServiceBean.createSystem`/`updateSystem`) não resolvem via `SimpleJpaRepository` e o Spring Data tenta (e falha) interpretá-los como método de query derivada. Sem esse ajuste, o teste deste Task nem chegava a criar o bean do repositório. Configurado `repositoryBaseClass = BaseJpaRepositoryImpl.class` **apenas no `@EnableJpaRepositories` deste teste** (não alterei configuração de produção — fora do escopo desta story); registrar como débito a investigar separadamente se o mesmo já não está quebrado em produção.
+    - **Ajustes de infraestrutura de teste não previstos no código-esqueleto original** (Spring Boot 4.1 reorganizou pacotes de teste): `DataJpaTest`/`TestEntityManager`/`EntityScan` migraram de pacote (`org.springframework.boot.data.jpa.test.autoconfigure`, `org.springframework.boot.jpa.test.autoconfigure`, `org.springframework.boot.persistence.autoconfigure`) e exigem a dependência `spring-boot-starter-data-jpa-test` (adicionada ao pom, versão gerida pelo BOM). Módulo `domain` não tem `@SpringBootApplication` (é biblioteca) — criado `DomainTestApplication` (`@SpringBootConfiguration @AutoConfigurationPackage`) em `src/test/java/.../domain/` para servir de âncora de contexto a qualquer `@DataJpaTest` futuro no módulo. `@EntityScan`/`@EnableJpaRepositories` restritos a `ScosSystem`/`ScosSystemRepository` para não escanear entidades com tipo JSON do hypersistence-utils (exigem Jackson, ausente do classpath de teste deste módulo).
 
-- [ ] Task 5: `bootstrap.yml` × 2 — corrigir typo (AC: 3)
-  - [ ] `organization/flow-organization-boot/src/main/resources/bootstrap.yml:240`: `master-key: ${scos.security.maser-key}` → `master-key: ${scos.security.master-key}`.
-  - [ ] `server-fat/src/main/resources/bootstrap.yml:240`: idem.
-  - [ ] `organization/flow-organization-grpc-boot/src/main/resources/bootstrap.yml`: **não tocar** — tem `security.enabled: false`, sem linha `master-key` (esse módulo usa `TokenAuthorizationInterceptor`, mecanismo próprio, não o `scos-foundation-security`/`master-key`).
+- [x] Task 5: `bootstrap.yml` × 2 — corrigir typo (AC: 3)
+  - [x] `organization/flow-organization-boot/src/main/resources/bootstrap.yml:240`: `master-key: ${scos.security.maser-key}` → `master-key: ${scos.security.master-key}`. **Já corrigido** no commit `faee837` ("fix: Correcao no campo do bootstrap"), anterior ao início desta story — conferido, nenhuma alteração necessária.
+  - [x] `server-fat/src/main/resources/bootstrap.yml:240`: idem — mesmo commit, já corrigido.
+  - [x] `organization/flow-organization-grpc-boot/src/main/resources/bootstrap.yml`: **não tocar** — conferido: tem `security.enabled: false` e uma linha `master-key: ${scos.security.master-key}` já correta (sem typo); módulo usa `TokenAuthorizationInterceptor`, mecanismo próprio, não depende do `scos-foundation-security`.
 
-- [ ] Task 6: CI mínimo (AC: 11)
-  - [ ] Criar `.github/workflows/ci.yml`:
+- [x] Task 6: CI mínimo (AC: 11)
+  - [x] Criar `.github/workflows/ci.yml`:
     ```yaml
     name: CI
 
@@ -180,14 +187,14 @@ Para que os bugs já identificados por auditoria fiquem provados fechados e não
           - run: mvn -B verify -Denforcer.skip=true
     ```
     `-Denforcer.skip=true` é **necessário hoje** — verificado ao vivo nesta auditoria (`mvn -q -pl organization/flow-organization-infrastructure -am validate` reproduz `Require upper bound dependencies error` para `error_prone_annotations`/`prometheus-metrics-*`, débito pré-existente do `project-context.md`, item 1 de *Dívidas registradas*). **Não** é uma "correção" — é o mesmo contorno documentado que o projeto já usa localmente. Não remover sem antes resolver a convergência no `dependencyManagement` raiz.
-  - [ ] **Não** adicionar JaCoCo com `<rules>`/threshold, nem `dependency-check-maven` com feed NVD — deliberadamente fora desta story (iniciativa de CI mais ampla, mapeada separadamente).
+  - [x] **Não** adicionar JaCoCo com `<rules>`/threshold, nem `dependency-check-maven` com feed NVD — deliberadamente fora desta story (iniciativa de CI mais ampla, mapeada separadamente).
 
-- [ ] Task 7: Guarda de escopo (AC: 12)
-  - [ ] NÃO cobrir `flow-organization-api` — zero testes hoje, fica como nota de backlog do Epic 0 (já registrada em `epics.md`).
-  - [ ] NÃO criar teste `*IT`/Testcontainers — mesma lógica, backlog do épico.
-  - [ ] NÃO implementar Use Case de rotação de secret — não existe ainda.
-  - [ ] NÃO escrever teste de grace period, `previousSecretKey` ou rotação — pertence à Story 0.2 (Clock/Instant).
-  - [ ] NÃO configurar JaCoCo check/threshold nem `dependency-check` no workflow — só execução.
+- [x] Task 7: Guarda de escopo (AC: 12)
+  - [x] NÃO cobrir `flow-organization-api` — zero testes hoje, fica como nota de backlog do Epic 0 (já registrada em `epics.md`). Confirmado: nenhum arquivo tocado nesse módulo.
+  - [x] NÃO criar teste `*IT`/Testcontainers — mesma lógica, backlog do épico. Confirmado.
+  - [x] NÃO implementar Use Case de rotação de secret — não existe ainda. Confirmado.
+  - [x] NÃO escrever teste de grace period, `previousSecretKey` ou rotação — pertence à Story 0.2 (Clock/Instant). Confirmado: `ScosSystemServiceBeanTest` só cobre os 3 cenários prescritos.
+  - [x] NÃO configurar JaCoCo check/threshold nem `dependency-check` no workflow — só execução. Confirmado no `ci.yml`.
 
 ## Dev Notes
 
@@ -259,10 +266,44 @@ Todo teste de domain hoje é unitário Mockito (`XxxServiceBeanTest`); toda pers
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+claude-sonnet-5
 
 ### Debug Log References
 
+- `mvn -pl organization/flow-organization-grpc-boot test -Dtest=TokenAuthorizationInterceptorTest -Denforcer.skip=true` → 8/8 passam.
+- `mvn -pl organization/flow-organization-shared test -Dtest=SystemSecretCryptoServiceTest -Denforcer.skip=true` → 4/4 passam.
+- `mvn -pl organization/flow-organization-domain test -Dtest=ScosSystemServiceBeanTest -Denforcer.skip=true` → 3/3 passam.
+- `mvn -pl organization/flow-organization-domain test -Dtest=ScosSystemRepositoryPersistenceTest -Denforcer.skip=true` → 1/1 passa (ver Completion Notes para o caminho até chegar lá).
+- `mvn test -Denforcer.skip=true` (raiz do reactor `organization`, Docker ativo) → **736 testes, 0 falhas, 0 erros, 0 skipped** — regressão completa, inclui os 12 relatórios de `flow-organization-boot` (integração real Postgres/Redis/WireMock/GrpcMock).
+
 ### Completion Notes List
 
+- **Tasks 2, 3, 5 eram idempotentes e já estavam corrigidas** na árvore de trabalho antes desta implementação (confirmado, não reescrito): `SystemSecretCryptoService.tagLength` já era `128`; `ScosSystemServiceBean.validateSecretKey` já usava `!matchesSecret(secretKey)`; os dois `bootstrap.yml` já tinham `master-key` correto (commit `faee837`, anterior a esta story). Testes foram escritos do mesmo jeito para provar o comportamento e travar contra regressão futura.
+- **Task 1**: corrigido `catch (NoSuchElementException ex)` → `catch (ScosException ex)` em `TokenAuthorizationInterceptor` (bug real — o catch antigo nunca disparava, exceção subia sem tratamento). `grpc-boot` ganhou `src/test` pela primeira vez.
+- **Task 4 — maior complexidade real da story**, bem além do previsto no esqueleto original:
+  - `@DataJpaTest`/`TestEntityManager`/`@EntityScan` mudaram de pacote no Spring Boot 4.1 (`org.springframework.boot.data.jpa.test.autoconfigure`, `org.springframework.boot.jpa.test.autoconfigure`, `org.springframework.boot.persistence.autoconfigure`) e passaram a exigir a dependência separada `spring-boot-starter-data-jpa-test` — adicionada ao pom (versão gerida pelo BOM).
+  - Módulo `domain` não tem `@SpringBootApplication` (é biblioteca) — criada `DomainTestApplication` (`@SpringBootConfiguration @AutoConfigurationPackage`) para servir de âncora de contexto a `@DataJpaTest`.
+  - `@EntityScan`/`@EnableJpaRepositories` restritos a `ScosSystem`/`ScosSystemRepository` — o slice padrão escanearia todas as entidades/repositórios do módulo, incluindo tipos JSON do hypersistence-utils que exigem Jackson (ausente do classpath de teste da lib).
+  - **Achado real, fora das ACs**: nenhum módulo do projeto configura `@EnableJpaRepositories(repositoryBaseClass=...)`. Sem isso, os métodos extras de `BaseJpaRepository` (`persist`/`merge`/`update`/`lockById`, usados por `ScosSystemServiceBean`) não resolvem contra `SimpleJpaRepository` — Spring Data tenta interpretá-los como derivação de query e falha (`PropertyReferenceException: No property 'update' found`). Configurado `repositoryBaseClass = BaseJpaRepositoryImpl.class` **só no `@EnableJpaRepositories` deste teste** — não é escopo desta story mudar a configuração de produção. Registrar como débito a investigar (log histórico de `flow-organization-boot/logs/backup/json/application.2026-07-14.json` mostra falha de bean relacionada ao `SecretKeyConverter` em execução passada, consistente com a fragilidade dessa área).
+  - AC 10 se confirmou parcialmente: o teste passou de primeira com `@Import(SecretKeyConverter.class, ...)` (que já registra o bean independente de `@Component`), então a condição literal do AC ("se falhar, adicionar `@Component`") não disparou. Ainda assim, adicionado `@Component` a `SecretKeyConverter`: `ScosOrganizationApplication` declara `@ComponentScan(basePackages = {"br.com.sawcunhaos"})`, que cobre o pacote do converter — sem `@Component` e sem construtor sem-args, o Hibernate não teria como resolver o bean em produção (mesmo cenário do log de erro citado acima). Correção preventiva de baixo risco, alinhada com a própria justificativa do AC.
+- **Task 6**: `.github/workflows/ci.yml` criado (primeiro do projeto), sem `insert_final_newline` (segue `.editorconfig` para `*.yml`).
+- Nenhuma Acceptance Criteria pendente; guarda de escopo (AC 12 / Task 7) conferida.
+
 ### File List
+
+- `organization/flow-organization-grpc-boot/pom.xml` (modificado — deps de teste)
+- `organization/flow-organization-grpc-boot/src/main/java/br/com/sawcunhaos/organization/grpc/boot/configuration/interceptor/TokenAuthorizationInterceptor.java` (modificado — fix do tipo de exceção)
+- `organization/flow-organization-grpc-boot/src/test/java/br/com/sawcunhaos/organization/grpc/boot/configuration/interceptor/TokenAuthorizationInterceptorTest.java` (novo)
+- `organization/flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/converter/SecretKeyConverter.java` (modificado — `@Component`)
+- `organization/flow-organization-shared/src/test/java/br/com/sawcunhaos/organization/shared/utils/SystemSecretCryptoServiceTest.java` (novo)
+- `organization/flow-organization-domain/pom.xml` (modificado — H2 + `spring-boot-starter-data-jpa-test`)
+- `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/DomainTestApplication.java` (novo)
+- `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/access/system/service/ScosSystemServiceBeanTest.java` (novo)
+- `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/access/system/internal/ScosSystemRepositoryPersistenceTest.java` (novo)
+- `.github/workflows/ci.yml` (novo)
+
+## Change Log
+
+| Data | Mudança |
+|---|---|
+| 2026-07-20 | Implementação completa das Tasks 1–7. Fix do tipo de exceção no `TokenAuthorizationInterceptor`; `@Component` em `SecretKeyConverter`; cobertura de teste em `TokenAuthorizationInterceptor`, `SystemSecretCryptoService`, `ScosSystemServiceBean` e wiring de persistência do `SecretKeyConverter` (`@DataJpaTest`); CI mínimo criado. Regressão completa: 736 testes, 0 falhas. |

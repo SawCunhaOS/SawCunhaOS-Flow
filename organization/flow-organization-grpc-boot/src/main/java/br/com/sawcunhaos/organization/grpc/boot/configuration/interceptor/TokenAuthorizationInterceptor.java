@@ -13,6 +13,7 @@
 
 package br.com.sawcunhaos.organization.grpc.boot.configuration.interceptor;
 
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.system.specification.ScosSystemService;
 import br.com.sawcunhaos.organization.grpc.boot.configuration.properties.ScosGRPCProperties;
 import io.grpc.ForwardingServerCallListener;
@@ -35,7 +36,6 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Base64;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 @Slf4j
@@ -106,7 +106,7 @@ public class TokenAuthorizationInterceptor implements ServerInterceptor {
 
         try {
             scosSystemService.validateSecretKey(parts[0], parts[1]);
-        } catch (NoSuchElementException ex) {
+        } catch (ScosException ex) {
             log.error("Sistema informado nao existe: {}", parts[0]);
             call.close(Status.UNAUTHENTICATED.withDescription("Sistema informado nao existe"), new Metadata());
             return noopListener();

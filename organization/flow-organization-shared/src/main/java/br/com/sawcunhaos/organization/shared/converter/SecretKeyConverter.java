@@ -17,7 +17,9 @@ import br.com.sawcunhaos.organization.shared.utils.SystemSecretCryptoService;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @Converter
 @RequiredArgsConstructor
 public class SecretKeyConverter implements AttributeConverter<String, String> {
