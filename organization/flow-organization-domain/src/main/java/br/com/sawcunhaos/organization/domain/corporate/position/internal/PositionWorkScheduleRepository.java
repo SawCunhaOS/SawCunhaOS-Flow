@@ -18,6 +18,24 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.StreamSupport;
+
 @Repository
 public interface PositionWorkScheduleRepository extends BaseJpaRepository<PositionWorkSchedule, Long>, JpaSpecificationExecutor<PositionWorkSchedule>, QuerydslPredicateExecutor<PositionWorkSchedule> {
+
+    QPositionWorkSchedule positionWorkSchedule = QPositionWorkSchedule.positionWorkSchedule;
+
+    Optional<PositionWorkSchedule> findByPositionIdAndDayOfWeek(Long positionId, DayOfWeek dayOfWeek);
+
+    boolean existsByPositionIdAndDayOfWeek(Long positionId, DayOfWeek dayOfWeek);
+
+    default List<PositionWorkSchedule> findAllByPositionId(Long positionId) {
+        Iterable<PositionWorkSchedule> found = findAll(
+                positionWorkSchedule.position.id.eq(positionId),
+                positionWorkSchedule.dayOfWeek.asc()
+        );
+        return StreamSupport.stream(found.spliterator(), false).toList();
+    }
 }

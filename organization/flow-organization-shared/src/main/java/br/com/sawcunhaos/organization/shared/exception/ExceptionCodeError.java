@@ -67,6 +67,14 @@ public enum ExceptionCodeError implements ExceptionCode {
     /** Position já está inativa — impossível inativar novamente. HTTP 422. */
     SCOS_POSITION_005("SCOS_POSITION_005", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
 
+    // Position Work Schedule
+    /** Não existe horário cadastrado para este cargo neste dia da semana. HTTP 404. */
+    SCOS_POSITION_WORK_SCHEDULE_001("SCOS_POSITION_WORK_SCHEDULE_001", 404, "SCOS_TITLE_NOT_FOUND"),
+    /** Já existe um horário cadastrado para este cargo neste dia da semana. HTTP 409. */
+    SCOS_POSITION_WORK_SCHEDULE_002("SCOS_POSITION_WORK_SCHEDULE_002", 409, "SCOS_TITLE_CONFLICT"),
+    /** Ordem cronológica inválida: startTime < lunchStart < lunchEnd < endTime. HTTP 422. */
+    SCOS_POSITION_WORK_SCHEDULE_003("SCOS_POSITION_WORK_SCHEDULE_003", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+
     // Company
     SCOS_COMPANY_001("SCOS_COMPANY_001", 404, "SCOS_TITLE_NOT_FOUND"),
     SCOS_COMPANY_002("SCOS_COMPANY_002", 409, "SCOS_TITLE_CONFLICT"),

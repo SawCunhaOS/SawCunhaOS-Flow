@@ -19,7 +19,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -69,6 +71,9 @@ public class PositionControllerTest extends ScosOrganizationTestUtil {
     private static final String CODE_ALREADY_INACTIVE = "SCOS_POSITION_005";
     private static final String CODE_DEPARTMENT_NOT_FOUND = "SCOS_DEPARTMENT_001";
     private static final String CODE_DEPARTMENT_INACTIVE = "SCOS_DEPARTMENT_006";
+    private static final String CODE_WORK_SCHEDULE_NOT_FOUND = "SCOS_POSITION_WORK_SCHEDULE_001";
+    private static final String CODE_WORK_SCHEDULE_CONFLICT = "SCOS_POSITION_WORK_SCHEDULE_002";
+    private static final String CODE_WORK_SCHEDULE_INVALID_ORDER = "SCOS_POSITION_WORK_SCHEDULE_003";
     private static final String CODE_VALIDATION = "SCOS-001";
     private static final String CODE_ACCESS_DENIED = "SCOS-004";
 
@@ -582,6 +587,212 @@ public class PositionControllerTest extends ScosOrganizationTestUtil {
     }
 
     // =====================================================================================
+    // POST/GET/PUT/DELETE /v1/positions/{positionId}/work-schedule (UC-144..147)
+    // =====================================================================================
+
+    @Test
+    @DisplayName("work-schedule — ciclo completo: POST cria, GET lista/mostra, PUT atualiza, DELETE remove")
+    void workSchedule_fullLifecycle() throws Exception {
+        String createResponse = mockMvc.perform(post(POSITIONS_URI + "/{positionId}/work-schedule", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(workScheduleBody("TUESDAY", "08:00:00", "12:00:00", "13:00:00", "17:00:00")))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.id").exists())
+                .andReturn().getResponse().getContentAsString();
+        assertThat(((Number) JsonPath.read(createResponse, "$.data.id")).longValue()).isPositive();
+
+        mockMvc.perform(get(POSITIONS_URI + "/{positionId}/work-schedule", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.dayOfWeek == 'TUESDAY')]").exists())
+                .andExpect(jsonPath("$[?(@.dayOfWeek == 'TUESDAY')].startTime").value("08:00:00"));
+
+        mockMvc.perform(put(POSITIONS_URI + "/{positionId}/work-schedule/{dayOfWeek}", SEEDED_ID, "TUESDAY")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(workScheduleUpdateBody("09:00:00", "12:00:00", "13:00:00", "18:00:00")))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get(POSITIONS_URI + "/{positionId}/work-schedule", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.dayOfWeek == 'TUESDAY')].startTime").value("09:00:00"))
+                .andExpect(jsonPath("$[?(@.dayOfWeek == 'TUESDAY')].endTime").value("18:00:00"));
+
+        mockMvc.perform(delete(POSITIONS_URI + "/{positionId}/work-schedule/{dayOfWeek}", SEEDED_ID, "TUESDAY")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get(POSITIONS_URI + "/{positionId}/work-schedule", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.dayOfWeek == 'TUESDAY')]").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("POST work-schedule — ordem cronológica inválida retorna 422 SCOS_POSITION_WORK_SCHEDULE_003")
+    void createWorkSchedule_invalidOrder_returns422() throws Exception {
+        mockMvc.perform(post(POSITIONS_URI + "/{positionId}/work-schedule", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(workScheduleBody("WEDNESDAY", "08:00:00", "13:30:00", "13:00:00", "17:00:00")))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_WORK_SCHEDULE_INVALID_ORDER));
+    }
+
+    @Test
+    @DisplayName("POST work-schedule — par (positionId, dayOfWeek) duplicado retorna 409 SCOS_POSITION_WORK_SCHEDULE_002")
+    void createWorkSchedule_duplicatePair_returns409() throws Exception {
+        mockMvc.perform(post(POSITIONS_URI + "/{positionId}/work-schedule", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(workScheduleBody("THURSDAY", "08:00:00", "12:00:00", "13:00:00", "17:00:00")))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post(POSITIONS_URI + "/{positionId}/work-schedule", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(workScheduleBody("THURSDAY", "09:00:00", "12:00:00", "13:00:00", "17:00:00")))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.status").value(409))
+                .andExpect(jsonPath("$.code").value(CODE_WORK_SCHEDULE_CONFLICT));
+    }
+
+    @Test
+    @DisplayName("POST work-schedule — positionId inexistente retorna 404 SCOS_POSITION_001")
+    void createWorkSchedule_positionNotFound_returns404() throws Exception {
+        mockMvc.perform(post(POSITIONS_URI + "/{positionId}/work-schedule", NONEXISTENT_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(workScheduleBody("FRIDAY", "08:00:00", "12:00:00", "13:00:00", "17:00:00")))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("POST work-schedule — sem token retorna 401")
+    void createWorkSchedule_withoutToken_returns401() throws Exception {
+        mockMvc.perform(post(POSITIONS_URI + "/{positionId}/work-schedule", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, null, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(workScheduleBody("SATURDAY", "08:00:00", "12:00:00", "13:00:00", "17:00:00")))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("POST work-schedule — sem permissão retorna 403")
+    void createWorkSchedule_withoutPermission_returns403() throws Exception {
+        stubValidateAuthorityWithoutPermissions();
+
+        mockMvc.perform(post(POSITIONS_URI + "/{positionId}/work-schedule", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(workScheduleBody("SUNDAY", "08:00:00", "12:00:00", "13:00:00", "17:00:00")))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
+    }
+
+    @Test
+    @DisplayName("GET work-schedule — positionId inexistente retorna 404 SCOS_POSITION_001")
+    void getAllWorkSchedule_positionNotFound_returns404() throws Exception {
+        mockMvc.perform(get(POSITIONS_URI + "/{positionId}/work-schedule", NONEXISTENT_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("GET work-schedule — sem token retorna 401")
+    void getAllWorkSchedule_withoutToken_returns401() throws Exception {
+        mockMvc.perform(get(POSITIONS_URI + "/{positionId}/work-schedule", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, null, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("GET work-schedule — sem permissão retorna 403")
+    void getAllWorkSchedule_withoutPermission_returns403() throws Exception {
+        stubValidateAuthorityWithoutPermissions();
+
+        mockMvc.perform(get(POSITIONS_URI + "/{positionId}/work-schedule", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
+    }
+
+    @Test
+    @DisplayName("PUT work-schedule — par (positionId, dayOfWeek) inexistente retorna 404 SCOS_POSITION_WORK_SCHEDULE_001")
+    void updateWorkSchedule_pairNotFound_returns404() throws Exception {
+        mockMvc.perform(put(POSITIONS_URI + "/{positionId}/work-schedule/{dayOfWeek}", SEEDED_ID, "MONDAY")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(workScheduleUpdateBody("08:00:00", "12:00:00", "13:00:00", "17:00:00")))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_WORK_SCHEDULE_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("PUT work-schedule — sem token retorna 401")
+    void updateWorkSchedule_withoutToken_returns401() throws Exception {
+        mockMvc.perform(put(POSITIONS_URI + "/{positionId}/work-schedule/{dayOfWeek}", SEEDED_ID, "MONDAY")
+                        .headers(httpHeaders(LANGUAGE_PT, null, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(workScheduleUpdateBody("08:00:00", "12:00:00", "13:00:00", "17:00:00")))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("PUT work-schedule — sem permissão retorna 403")
+    void updateWorkSchedule_withoutPermission_returns403() throws Exception {
+        stubValidateAuthorityWithoutPermissions();
+
+        mockMvc.perform(put(POSITIONS_URI + "/{positionId}/work-schedule/{dayOfWeek}", SEEDED_ID, "MONDAY")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(workScheduleUpdateBody("08:00:00", "12:00:00", "13:00:00", "17:00:00")))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
+    }
+
+    @Test
+    @DisplayName("DELETE work-schedule — par (positionId, dayOfWeek) inexistente retorna 404 SCOS_POSITION_WORK_SCHEDULE_001")
+    void deleteWorkSchedule_pairNotFound_returns404() throws Exception {
+        mockMvc.perform(delete(POSITIONS_URI + "/{positionId}/work-schedule/{dayOfWeek}", SEEDED_ID, "MONDAY")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_WORK_SCHEDULE_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("DELETE work-schedule — sem token retorna 401")
+    void deleteWorkSchedule_withoutToken_returns401() throws Exception {
+        mockMvc.perform(delete(POSITIONS_URI + "/{positionId}/work-schedule/{dayOfWeek}", SEEDED_ID, "MONDAY")
+                        .headers(httpHeaders(LANGUAGE_PT, null, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("DELETE work-schedule — sem permissão retorna 403")
+    void deleteWorkSchedule_withoutPermission_returns403() throws Exception {
+        stubValidateAuthorityWithoutPermissions();
+
+        mockMvc.perform(delete(POSITIONS_URI + "/{positionId}/work-schedule/{dayOfWeek}", SEEDED_ID, "MONDAY")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
+    }
+
+    // =====================================================================================
     // Helpers
     // =====================================================================================
 
@@ -603,6 +814,29 @@ public class PositionControllerTest extends ScosOrganizationTestUtil {
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         return ((Number) JsonPath.read(response, "$.data.id")).longValue();
+    }
+
+    private static String workScheduleBody(String dayOfWeek, String startTime, String lunchStart, String lunchEnd, String endTime) {
+        return """
+                {
+                  "dayOfWeek": "%s",
+                  "startTime": "%s",
+                  "lunchStart": "%s",
+                  "lunchEnd": "%s",
+                  "endTime": "%s"
+                }
+                """.formatted(dayOfWeek, startTime, lunchStart, lunchEnd, endTime);
+    }
+
+    private static String workScheduleUpdateBody(String startTime, String lunchStart, String lunchEnd, String endTime) {
+        return """
+                {
+                  "startTime": "%s",
+                  "lunchStart": "%s",
+                  "lunchEnd": "%s",
+                  "endTime": "%s"
+                }
+                """.formatted(startTime, lunchStart, lunchEnd, endTime);
     }
 
     private void disable(long id) throws Exception {

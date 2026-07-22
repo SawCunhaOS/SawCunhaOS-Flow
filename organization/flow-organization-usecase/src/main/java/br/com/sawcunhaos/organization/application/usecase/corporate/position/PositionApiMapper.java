@@ -13,10 +13,13 @@
 
 package br.com.sawcunhaos.organization.application.usecase.corporate.position;
 
+import br.com.sawcunhaos.organization.api.dto.DayOfWeek;
 import br.com.sawcunhaos.organization.api.dto.Department;
 import br.com.sawcunhaos.organization.api.dto.Position;
+import br.com.sawcunhaos.organization.api.dto.PositionWorkSchedule;
 import br.com.sawcunhaos.organization.domain.corporate.department.dto.DepartmentOutput;
 import br.com.sawcunhaos.organization.domain.corporate.position.dto.PositionOutput;
+import br.com.sawcunhaos.organization.domain.corporate.position.dto.PositionWorkScheduleOutput;
 
 final class PositionApiMapper {
 
@@ -31,6 +34,16 @@ final class PositionApiMapper {
                 .active(positionOutput.active())
                 .isTrustPosition(positionOutput.isTrustPosition())
                 .department(toApiDepartment(positionOutput.department()))
+                .build();
+    }
+
+    static PositionWorkSchedule toApiPositionWorkSchedule(PositionWorkScheduleOutput output) {
+        return PositionWorkSchedule.builder()
+                .dayOfWeek(DayOfWeek.valueOf(output.dayOfWeek().name()))
+                .startTime(output.startTime())
+                .lunchStart(output.lunchStart())
+                .lunchEnd(output.lunchEnd())
+                .endTime(output.endTime())
                 .build();
     }
 
