@@ -1,6 +1,10 @@
+---
+baseline_commit: 4fe2d3799dd9ff2bc015c3a24ea66422d1fef1f9
+---
+
 # Story 1.4: Departamento e Cargo (Verificação)
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -20,25 +24,25 @@ Para organizar a estrutura interna da empresa.
 
 ## Tasks / Subtasks
 
-- [ ] Task 0: Rodar e confirmar a suíte de regressão existente (AC: 1, 2, 3)
-  - [ ] Rodar `DepartmentServiceBeanTest`, `PositionServiceBeanTest`, `EmployeePositionQueryServiceBeanTest` (módulo `flow-organization-domain`) e `DepartmentControllerTest`, `PositionControllerTest` (módulo `flow-organization-boot`) — todos devem passar sem alteração, confirmando que as 3 guardas já funcionam (ver mapeamento exato em Dev Notes).
-  - [ ] Se algum desses testes falhar hoje, **parar e reportar** — isso indica uma regressão real introduzida por outra story (ex.: Story 1.1/1.2/1.3 mexendo em `Company`, não em `Department`/`Position` — não deveria haver interferência, mas confirmar).
-  - [ ] Registrar no Completion Notes List quais testes comprovam cada AC (não é preciso recriá-los).
+- [x] Task 0: Rodar e confirmar a suíte de regressão existente (AC: 1, 2, 3)
+  - [x] Rodar `DepartmentServiceBeanTest`, `PositionServiceBeanTest`, `EmployeePositionQueryServiceBeanTest` (módulo `flow-organization-domain`) e `DepartmentControllerTest`, `PositionControllerTest` (módulo `flow-organization-boot`) — todos devem passar sem alteração, confirmando que as 3 guardas já funcionam (ver mapeamento exato em Dev Notes).
+  - [x] Se algum desses testes falhar hoje, **parar e reportar** — isso indica uma regressão real introduzida por outra story (ex.: Story 1.1/1.2/1.3 mexendo em `Company`, não em `Department`/`Position` — não deveria haver interferência, mas confirmar).
+  - [x] Registrar no Completion Notes List quais testes comprovam cada AC (não é preciso recriá-los).
 
-- [ ] Task 1: Fechar o gap de integração — Cargo com Departamento inativo (AC: 1, 5)
-  - [ ] Em `PositionControllerTest.java` (`flow-organization-boot/src/test/java/.../position/`), adicionar:
+- [x] Task 1: Fechar o gap de integração — Cargo com Departamento inativo (AC: 1, 5)
+  - [x] Em `PositionControllerTest.java` (`flow-organization-boot/src/test/java/.../position/`), adicionar:
     - Constante `private static final String DEPARTMENTS_URI = "/api/v1/departments";` (não existe hoje neste arquivo — `DepartmentControllerTest` tem a sua própria, escopo de classe diferente, não importável).
     - Constantes `private static final String CODE_DEPARTMENT_INACTIVE = "SCOS_DEPARTMENT_006";` e `private static final String DETAIL_DEPARTMENT_INACTIVE = "Não é possível associar o cargo a um departamento inativo.";` (texto exato — conferir `scos_message_organization.properties:22` antes de colar, ver Dev Notes).
     - Helper privado `createDepartment(String code, String description)` (POST `/api/v1/departments`, mesmo shape de `departmentBody` em `DepartmentControllerTest`, devolve o id gerado) e `disableDepartment(long id)` (PUT `/api/v1/departments/{id}/disable`) — **duplicar localmente**, não importar de `DepartmentControllerTest` (convenção do projeto: cada `*ControllerTest` é autocontido, sem helpers compartilhados entre classes de teste — ver `ScosOrganizationTestUtil`, que não expõe nada de Department/Position).
-  - [ ] Adicionar teste `create_departmentInactive_returns422`: cria um Departamento novo (`createDepartment(...)`), desativa (`disableDepartment(...)`), tenta `POST /v1/positions` com esse `departmentId` → `422`, `code = SCOS_DEPARTMENT_006`, `detail = DETAIL_DEPARTMENT_INACTIVE`.
-  - [ ] Adicionar teste `update_departmentInactive_returns422`: cria uma Position válida no Departamento seed ativo (`create(...)`, já existente), cria+desativa um **segundo** Departamento, tenta `PUT /v1/positions/{id}` movendo a Position pro Departamento inativo → `422`, `code = SCOS_DEPARTMENT_006`.
-  - [ ] Mesmo padrão dos testes vizinhos já existentes no arquivo (`create_departmentNotFound_returns404`, linha ~225) — só troca o cenário (Departamento existe mas inativo, em vez de inexistente).
+  - [x] Adicionar teste `create_departmentInactive_returns422`: cria um Departamento novo (`createDepartment(...)`), desativa (`disableDepartment(...)`), tenta `POST /v1/positions` com esse `departmentId` → `422`, `code = SCOS_DEPARTMENT_006`, `detail = DETAIL_DEPARTMENT_INACTIVE`.
+  - [x] Adicionar teste `update_departmentInactive_returns422`: cria uma Position válida no Departamento seed ativo (`create(...)`, já existente), cria+desativa um **segundo** Departamento, tenta `PUT /v1/positions/{id}` movendo a Position pro Departamento inativo → `422`, `code = SCOS_DEPARTMENT_006`.
+  - [x] Mesmo padrão dos testes vizinhos já existentes no arquivo (`create_departmentNotFound_returns404`, linha ~225) — só troca o cenário (Departamento existe mas inativo, em vez de inexistente).
 
-- [ ] Task 2: Guarda de escopo — confirmar zero código de produção novo (AC: 4)
-  - [ ] **Não** alterar `DepartmentServiceBean.java`, `PositionServiceBean.java`, `EmployeePositionQueryServiceBean.java`, `Department.java`, `Position.java` — as 3 guardas já estão implementadas e corretas.
-  - [ ] **Não** alterar `ExceptionCodeError.java` nem `scos_message_organization[_en].properties` — `SCOS_DEPARTMENT_003`/`006`/`SCOS_POSITION_003` já existem com throw site funcionando (diferente da Story 1.3, que precisou reservar código novo).
-  - [ ] **Não** alterar `etc/api/organization/*.yml`, nenhum Use Case, Delegate ou permissão nova — os endpoints já existem e já funcionam.
-  - [ ] Único artefato tocado nesta story: `PositionControllerTest.java` (Task 1).
+- [x] Task 2: Guarda de escopo — confirmar zero código de produção novo (AC: 4)
+  - [x] **Não** alterar `DepartmentServiceBean.java`, `PositionServiceBean.java`, `EmployeePositionQueryServiceBean.java`, `Department.java`, `Position.java` — as 3 guardas já estão implementadas e corretas.
+  - [x] **Não** alterar `ExceptionCodeError.java` nem `scos_message_organization[_en].properties` — `SCOS_DEPARTMENT_003`/`006`/`SCOS_POSITION_003` já existem com throw site funcionando (diferente da Story 1.3, que precisou reservar código novo).
+  - [x] **Não** alterar `etc/api/organization/*.yml`, nenhum Use Case, Delegate ou permissão nova — os endpoints já existem e já funcionam.
+  - [x] Único artefato tocado nesta story: `PositionControllerTest.java` (Task 1).
 
 ## Dev Notes
 
@@ -99,10 +103,28 @@ Para organizar a estrutura interna da empresa.
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Sonnet 5 (claude-sonnet-5)
 
 ### Debug Log References
 
+- `mvn -pl flow-organization-domain test -Dtest=DepartmentServiceBeanTest,PositionServiceBeanTest,EmployeePositionQueryServiceBeanTest -Denforcer.skip=true` → 38/38 (18+18+2), confirma as 3 guardas (AC 1/2/3) sem alteração.
+- `mvn -pl flow-organization-boot test -Dtest=DepartmentControllerTest,PositionControllerTest -Denforcer.skip=true` → 71/71 (37+34) antes de qualquer edição — baseline confirmado, nenhuma regressão pré-existente de outra story.
+- `mvn -pl flow-organization-boot test -Dtest=PositionControllerTest -Denforcer.skip=true` → 36/36 (34 pré-existentes + 2 novos: `create_departmentInactive_returns422`, `update_departmentInactive_returns422`).
+- `mvn -pl flow-organization-boot test -Denforcer.skip=true` → 370/370, sem regressão na suíte de integração completa.
+- `-Denforcer.skip=true` usado só para contornar o enforcer pré-existente já quebrado (ver *Build quebrado* no `project-context.md`) — nenhuma mudança de dependência nesta story.
+
 ### Completion Notes List
 
+- Story de verificação pura confirmada: as 3 guardas do FR-3 (`SCOS_DEPARTMENT_003`/`006`, `SCOS_POSITION_003`) já estavam implementadas e corretas em `DepartmentServiceBean`/`PositionServiceBean`/`EmployeePositionQueryServiceBean` — Task 0 rodou a suíte existente e confirmou os 3 AC sem qualquer alteração de código de produção.
+- Mapeamento AC → teste confirmado (ver tabela nas Dev Notes): AC 1 (create/update com Departamento inativo) só tinha cobertura unitária (`PositionServiceBeanTest.createShouldThrowWhenDepartmentIsInactive`/`updateShouldRevalidateDepartmentEvenWhenUnchanged`); ACs 2/3 já tinham unit + integração full-stack. Único gap real: AC 1 sem integração full-stack — fechado na Task 1.
+- 2 testes de integração novos em `PositionControllerTest`: `create_departmentInactive_returns422` (POST com `departmentId` de Departamento recém-criado e desativado) e `update_departmentInactive_returns422` (PUT movendo Position existente pro Departamento inativo) — ambos `422 SCOS_DEPARTMENT_006` (detail confirmado literal contra `scos_message_organization.properties:22`).
+- Helpers `createDepartment`/`disableDepartment`/`departmentBody` duplicados localmente em `PositionControllerTest` (não importados de `DepartmentControllerTest`) — convenção deliberada do projeto, cada `*ControllerTest` é autocontido.
+- Guarda de escopo (Task 2) confirmada via `git status`: **único arquivo tocado** em toda a story é `PositionControllerTest.java` — zero linha de produção criada ou alterada, exatamente como o AC 4 exige.
+
 ### File List
+
+- `organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/position/PositionControllerTest.java` (modificado — 2 testes novos + 2 helpers + 3 constantes)
+
+## Change Log
+
+- 2026-07-22: Story de verificação — confirmadas as 3 guardas do FR-3 (Departamento/Cargo) já implementadas, sem código de produção novo. Fechado o único gap de teste real (AC 1 sem integração full-stack): 2 cenários novos em `PositionControllerTest`. 1 arquivo modificado, 0 regressão (38 unit + 370 boot). Status → review.

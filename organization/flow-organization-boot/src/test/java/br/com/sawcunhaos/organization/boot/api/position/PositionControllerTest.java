@@ -43,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PositionControllerTest extends ScosOrganizationTestUtil {
 
     private static final String POSITIONS_URI = "/api/v1/positions";
+    private static final String DEPARTMENTS_URI = "/api/v1/departments";
     private static final long SEEDED_ID = 1L;
     private static final String SEEDED_CODE = "ADMIN_SISTEMA";
     private static final long SEEDED_DEPARTMENT_ID = 1L;
@@ -55,6 +56,7 @@ public class PositionControllerTest extends ScosOrganizationTestUtil {
     private static final String DETAIL_ALREADY_ACTIVE = "O cargo informado já está ativo.";
     private static final String DETAIL_ALREADY_INACTIVE = "O cargo informado já está inativo.";
     private static final String DETAIL_DEPARTMENT_NOT_FOUND = "O departamento informado não existe.";
+    private static final String DETAIL_DEPARTMENT_INACTIVE = "Não é possível associar o cargo a um departamento inativo.";
 
     private static final String TITLE_NOT_FOUND = "Recurso não encontrado";
     private static final String TITLE_CONFLICT = "Conflito de dados";
@@ -66,6 +68,7 @@ public class PositionControllerTest extends ScosOrganizationTestUtil {
     private static final String CODE_ALREADY_ACTIVE = "SCOS_POSITION_004";
     private static final String CODE_ALREADY_INACTIVE = "SCOS_POSITION_005";
     private static final String CODE_DEPARTMENT_NOT_FOUND = "SCOS_DEPARTMENT_001";
+    private static final String CODE_DEPARTMENT_INACTIVE = "SCOS_DEPARTMENT_006";
     private static final String CODE_VALIDATION = "SCOS-001";
     private static final String CODE_ACCESS_DENIED = "SCOS-004";
 
@@ -235,6 +238,22 @@ public class PositionControllerTest extends ScosOrganizationTestUtil {
     }
 
     @Test
+    @DisplayName("POST /v1/positions — departmentId inativo retorna 422 SCOS_DEPARTMENT_006")
+    void create_departmentInactive_returns422() throws Exception {
+        long departmentId = createDepartment("DEP_INAT01", "Departamento para inativar (create)");
+        disableDepartment(departmentId);
+
+        mockMvc.perform(post(POSITIONS_URI)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body("DEP_INAT_P1", "Cargo em departamento inativo", departmentId)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_DEPARTMENT_INACTIVE))
+                .andExpect(jsonPath("$.detail").value(DETAIL_DEPARTMENT_INACTIVE));
+    }
+
+    @Test
     @DisplayName("POST /v1/positions — sem code retorna 400 de validação")
     void create_missingCode_returns400() throws Exception {
         String body = """
@@ -371,6 +390,23 @@ public class PositionControllerTest extends ScosOrganizationTestUtil {
                 .andExpect(jsonPath("$.status").value(404))
                 .andExpect(jsonPath("$.code").value(CODE_NOT_FOUND))
                 .andExpect(jsonPath("$.detail").value(DETAIL_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/positions/{id} — mover para departmentId inativo retorna 422 SCOS_DEPARTMENT_006")
+    void update_departmentInactive_returns422() throws Exception {
+        long id = create("UPD_DEPINAT1", "Cargo a mover", SEEDED_DEPARTMENT_ID);
+        long inactiveDepartmentId = createDepartment("DEP_INAT02", "Departamento para inativar (update)");
+        disableDepartment(inactiveDepartmentId);
+
+        mockMvc.perform(put(POSITIONS_URI + "/{id}", id)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body("UPD_DEPINAT1", "Cargo a mover", inactiveDepartmentId)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_DEPARTMENT_INACTIVE))
+                .andExpect(jsonPath("$.detail").value(DETAIL_DEPARTMENT_INACTIVE));
     }
 
     @Test
@@ -571,6 +607,35 @@ public class PositionControllerTest extends ScosOrganizationTestUtil {
 
     private void disable(long id) throws Exception {
         mockMvc.perform(put(POSITIONS_URI + "/{id}/disable", id)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isNoContent());
+    }
+
+    private static String departmentBody(String code, String description) {
+        return """
+                {
+                  "code": "%s",
+                  "description": "%s"
+                }
+                """.formatted(code, description);
+    }
+
+    /** Cria um departamento via API e devolve o id gerado. Duplicado de propósito — ver Dev Notes. */
+    private long createDepartment(String code, String description) throws Exception {
+        String response = mockMvc.perform(post(DEPARTMENTS_URI)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(departmentBody(code, description)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        return ((Number) JsonPath.read(response, "$.data.id")).longValue();
+    }
+
+    private void disableDepartment(long id) throws Exception {
+        mockMvc.perform(put(DEPARTMENTS_URI + "/{id}/disable", id)
                         .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
                 .andExpect(status().isNoContent());
     }
