@@ -50,8 +50,8 @@ public class CompanyControllerTest extends ScosOrganizationTestUtil {
     private static final String CNPJ_REASON_NOTFOUND = "55555666000106";
     private static final String CNPJ_PARENT_NOTFOUND = "66666777000106";
     private static final String CNPJ_IDEMPOTENT = "77777888000106";
-    private static final String CNPJ_UPDATE = "88888999000106";
-    private static final String CNPJ_DUP_A = "99999000000104";
+    private static final String CNPJ_SECOND_ACTIVE = "88888999000106";
+    private static final String CNPJ_FILIAL_ACTIVE_UNDER_SEEDED = "99999000000104";
     private static final String CNPJ_DUP_B = "12121212000106";
     private static final String CNPJ_NO_TOKEN = "34343434000106";
     private static final String CNPJ_NO_PERMISSION = "56565656000106";
@@ -61,11 +61,15 @@ public class CompanyControllerTest extends ScosOrganizationTestUtil {
     private static final long REASON_EMPLOYEE = 2L;
     private static final long REASON_COMPANY_INACTIVE = 5L;
     private static final long REASON_DISABLE_UNDER_AUDIT = 1L;
+    private static final long REASON_INACTIVATE_COMPANY_CLOSED = 1L;
 
     private static final String CODE_COMPANY_NOT_FOUND = "SCOS_COMPANY_001";
     private static final String CODE_COMPANY_CONFLICT = "SCOS_COMPANY_002";
+    private static final String CODE_LAST_ACTIVE_MATRIX = "SCOS_COMPANY_005";
+    private static final String CODE_ONLY_ACTIVE_COMPANY = "SCOS_COMPANY_006";
     private static final String CODE_REASON_INACTIVE = "SCOS_COMPANY_008";
     private static final String CODE_REASON_INCOMPATIBLE = "SCOS_COMPANY_009";
+    private static final String CODE_ACTIVE_DESCENDANT = "SCOS_COMPANY_018";
     private static final String CODE_REASON_NOT_FOUND = "SCOS_REASON_ACTIVATE_001";
     private static final String CODE_VALIDATION = "SCOS-001";
     private static final String CODE_ACCESS_DENIED = "SCOS-004";
@@ -301,6 +305,10 @@ public class CompanyControllerTest extends ScosOrganizationTestUtil {
     @Test
     @DisplayName("PUT /v1/companies/{id}/block — bloqueia e o trigger sincroniza STATUS=DISABLED (204 + GET)")
     void block_seededActive_returns204AndSyncsStatusViaTrigger() throws Exception {
+        // Story 1.3 (SCOS_COMPANY_006): precisa de uma 2ª empresa ACTIVE, senão SEEDED_ID
+        // seria a única ativa do sistema e o block seria rejeitado antes de chegar ao trigger.
+        create(CNPJ_SECOND_ACTIVE, REASON_COMPANY_ACTIVE);
+
         mockMvc.perform(put(COMPANIES_URI + "/{id}/block", SEEDED_ID)
                         .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -311,6 +319,48 @@ public class CompanyControllerTest extends ScosOrganizationTestUtil {
                         .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.status").value("DISABLED"));
+    }
+
+    // =====================================================================================
+    // PUT /v1/companies/{id}/block e /disable (UC-006) — guardas de integridade (Story 1.3)
+    // =====================================================================================
+
+    @Test
+    @DisplayName("PUT /v1/companies/{id}/block — única Empresa ativa do sistema retorna 422 SCOS_COMPANY_006")
+    void block_onlyActiveCompanyInSystem_returns422() throws Exception {
+        mockMvc.perform(put(COMPANIES_URI + "/{id}/block", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_DISABLE_UNDER_AUDIT, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_ONLY_ACTIVE_COMPANY));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/companies/{id}/disable — última Empresa matriz ativa do sistema retorna 422 SCOS_COMPANY_005")
+    void inactivate_lastActiveMatrixInSystem_returns422() throws Exception {
+        mockMvc.perform(put(COMPANIES_URI + "/{id}/disable", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_INACTIVATE_COMPANY_CLOSED, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_LAST_ACTIVE_MATRIX));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/companies/{id}/block — filial ativa em qualquer nível retorna 422 SCOS_COMPANY_018")
+    void block_withActiveDescendant_returns422() throws Exception {
+        create(CNPJ_FILIAL_ACTIVE_UNDER_SEEDED, REASON_COMPANY_ACTIVE, SEEDED_ID);
+
+        mockMvc.perform(put(COMPANIES_URI + "/{id}/block", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_DISABLE_UNDER_AUDIT, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_ACTIVE_DESCENDANT));
     }
 
     // =====================================================================================
@@ -332,12 +382,12 @@ public class CompanyControllerTest extends ScosOrganizationTestUtil {
     }
 
     private static String statusTransitionBody(long reasonId, String observation) {
+        String observationField = observation == null ? "" : "  \"observation\": \"" + observation + "\",\n";
         return """
                 {
-                  "reasonId": %d,
-                  "observation": "%s"
+                %s  "reasonId": %d
                 }
-                """.formatted(reasonId, observation);
+                """.formatted(observationField, reasonId);
     }
 
     private static String updateBody(String taxIdentifier, String name) {
@@ -353,10 +403,14 @@ public class CompanyControllerTest extends ScosOrganizationTestUtil {
     }
 
     private long create(String taxIdentifier, long reasonActivateId) throws Exception {
+        return create(taxIdentifier, reasonActivateId, null);
+    }
+
+    private long create(String taxIdentifier, long reasonActivateId, Long parentCompanyId) throws Exception {
         String response = mockMvc.perform(post(COMPANIES_URI)
                         .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(createBody(taxIdentifier, reasonActivateId, null)))
+                        .content(createBody(taxIdentifier, reasonActivateId, parentCompanyId)))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         return ((Number) JsonPath.read(response, "$.data.id")).longValue();

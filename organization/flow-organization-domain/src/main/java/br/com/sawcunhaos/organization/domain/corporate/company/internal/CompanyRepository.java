@@ -140,4 +140,46 @@ public interface CompanyRepository extends BaseJpaRepository<Company, Long>, Jpa
         return wouldCreateCycleFlag(companyId, candidateParentCompanyId) == 1;
     }
 
+    /**
+     * Verifica se existe outra Empresa matriz (parentCompany nulo) ativa, excluindo a própria.
+     *
+     * @param companyId empresa a ser excluída da checagem
+     * @return true se existe outra matriz ACTIVE, false caso contrário
+     */
+    default boolean existsOtherActiveMatrix(Long companyId) {
+        return exists(
+                company.parentCompany.isNull()
+                        .and(company.status.eq(StatusCompany.ACTIVE))
+                        .and(company.id.ne(companyId))
+        );
+    }
+
+    /**
+     * Desce a árvore de {@code PARENT_COMPANY_ID} a partir de {@code companyId} via CTE recursiva
+     * (AD-7) e verifica se algum descendente (qualquer nível) está {@code ACTIVE}.
+     *
+     * @return {@code 1} se existe descendente ativo, {@code 0} caso contrário.
+     */
+    @Query(value = """
+            WITH RECURSIVE descendants AS (
+                SELECT COMPANY_ID, STATUS
+                FROM scos.SCOS_COMPANY
+                WHERE PARENT_COMPANY_ID = :companyId
+                UNION ALL
+                SELECT c.COMPANY_ID, c.STATUS
+                FROM scos.SCOS_COMPANY c
+                INNER JOIN descendants d ON c.PARENT_COMPANY_ID = d.COMPANY_ID
+            )
+            SELECT CASE WHEN EXISTS (SELECT 1 FROM descendants WHERE STATUS = 'ACTIVE') THEN 1 ELSE 0 END
+            """, nativeQuery = true)
+    int hasActiveDescendantFlag(@Param("companyId") Long companyId);
+
+    /**
+     * Verifica se a Empresa {@code companyId} tem alguma filial {@code ACTIVE} em qualquer nível
+     * da sua subárvore (filha direta ou descendente indireto).
+     */
+    default boolean hasActiveDescendant(Long companyId) {
+        return hasActiveDescendantFlag(companyId) == 1;
+    }
+
 }

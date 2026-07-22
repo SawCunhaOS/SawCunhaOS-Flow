@@ -97,6 +97,8 @@ public enum ExceptionCodeError implements ExceptionCode {
     SCOS_COMPANY_016("SCOS_COMPANY_016", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
     /** Motivo de desbloqueio informado é incompatível com a entidade Empresa. HTTP 422. */
     SCOS_COMPANY_017("SCOS_COMPANY_017", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Não é possível desativar/bloquear a empresa: existe filial ativa em algum nível da subárvore. HTTP 422. */
+    SCOS_COMPANY_018("SCOS_COMPANY_018", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
 
     // Employee
     SCOS_EMPLOYEE_001("SCOS_EMPLOYEE_001", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),

@@ -1,6 +1,10 @@
+---
+baseline_commit: abaef10db144e2f2767f57a1f06e0f32998498aa
+---
+
 # Story 1.3: Guardas de Integridade ao Desativar Empresa
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -23,12 +27,12 @@ Para que a operação nunca deixe o ISP sem empresa raiz ativa nem crie filial �
 
 ## Tasks / Subtasks
 
-- [ ] Task 0: Pré-requisito — confirmar Story 1.2 concluída (AC: 7)
-  - [ ] Antes de iniciar, confirmar que `CompanyServiceBean.inactivate(...)`/`disable(...)` já existem no código (Story 1.2 `done`). Se não existirem, **parar e reportar bloqueio** — não implementar os métodos da Story 1.2 como parte desta story.
-  - [ ] Confirmar a numeração final de `SCOS_COMPANY_0XX` que a Story 1.2 reservou (esperado `012`–`017`); se a Story 1.2 usou números diferentes, ajustar o código novo desta story (Task 3) para o primeiro número livre acima do maior já usado — não colidir.
+- [x] Task 0: Pré-requisito — confirmar Story 1.2 concluída (AC: 7)
+  - [x] Antes de iniciar, confirmar que `CompanyServiceBean.inactivate(...)`/`disable(...)` já existem no código (Story 1.2 `done`). Se não existirem, **parar e reportar bloqueio** — não implementar os métodos da Story 1.2 como parte desta story.
+  - [x] Confirmar a numeração final de `SCOS_COMPANY_0XX` que a Story 1.2 reservou (esperado `012`–`017`); se a Story 1.2 usou números diferentes, ajustar o código novo desta story (Task 3) para o primeiro número livre acima do maior já usado — não colidir.
 
-- [ ] Task 1: `CompanyRepository` — CTE recursiva descendente (AC: 5, 6)
-  - [ ] Adicionar em `CompanyRepository` (`flow-organization-domain/.../corporate/company/internal/CompanyRepository.java`) um método nativo `@Query` com `WITH RECURSIVE` que desce a árvore a partir de `companyId` (via `PARENT_COMPANY_ID`) e verifica se algum descendente (qualquer nível) tem `STATUS = 'ACTIVE'`:
+- [x] Task 1: `CompanyRepository` — CTE recursiva descendente (AC: 5, 6)
+  - [x] Adicionar em `CompanyRepository` (`flow-organization-domain/.../corporate/company/internal/CompanyRepository.java`) um método nativo `@Query` com `WITH RECURSIVE` que desce a árvore a partir de `companyId` (via `PARENT_COMPANY_ID`) e verifica se algum descendente (qualquer nível) tem `STATUS = 'ACTIVE'`:
     ```java
     @Query(value = """
             WITH RECURSIVE descendants AS (
@@ -48,11 +52,11 @@ Para que a operação nunca deixe o ISP sem empresa raiz ativa nem crie filial �
         return hasActiveDescendantFlag(companyId) == 1;
     }
     ```
-  - [ ] Mesmo padrão de `int` + `default boolean` wrapper da Story 1.1 (`wouldCreateCycle`) — não usar `EXISTS(...)` cru como retorno de `@Query(nativeQuery=true)` (frágil entre driver/Hibernate, ver Dev Notes da Story 1.1).
-  - [ ] Import de `@Query`/`@Param` (`org.springframework.data.jpa.repository.Query`, `org.springframework.data.repository.query.Param`) — não existem ainda neste arquivo, adicionar.
+  - [x] Mesmo padrão de `int` + `default boolean` wrapper da Story 1.1 (`wouldCreateCycle`) — não usar `EXISTS(...)` cru como retorno de `@Query(nativeQuery=true)` (frágil entre driver/Hibernate, ver Dev Notes da Story 1.1).
+  - [x] Import de `@Query`/`@Param` (`org.springframework.data.jpa.repository.Query`, `org.springframework.data.repository.query.Param`) — não existem ainda neste arquivo, adicionar.
 
-- [ ] Task 2: `CompanyRepository` — checagem de "outra matriz ativa" (AC: 1, 2)
-  - [ ] Adicionar, **via QueryDSL comum** (não nativo — não é recursivo, é uma existência flat sobre `parentCompany IS NULL`), mesmo estilo de `existsByStatus` já existente no arquivo:
+- [x] Task 2: `CompanyRepository` — checagem de "outra matriz ativa" (AC: 1, 2)
+  - [x] Adicionar, **via QueryDSL comum** (não nativo — não é recursivo, é uma existência flat sobre `parentCompany IS NULL`), mesmo estilo de `existsByStatus` já existente no arquivo:
     ```java
     /**
      * Verifica se existe outra Empresa matriz (parentCompany nulo) ativa, excluindo a própria.
@@ -68,28 +72,28 @@ Para que a operação nunca deixe o ISP sem empresa raiz ativa nem crie filial �
         );
     }
     ```
-  - [ ] **Não** implementar isso como CTE nativa — só a checagem de subárvore (Task 1) precisa de recursão (AD-7 é específico para "filial ativa em qualquer nível", não para a checagem de matriz).
-  - [ ] Para a guarda de "única empresa ativa do sistema" (AC 3, 4) **não criar método novo** — reaproveitar `companyRepository.existsByStatus(companyId, StatusCompany.ACTIVE)`, já implementado (linha ~84) e com exatamente essa semântica ("existe alguma empresa com o status informado, excluindo a própria").
+  - [x] **Não** implementar isso como CTE nativa — só a checagem de subárvore (Task 1) precisa de recursão (AD-7 é específico para "filial ativa em qualquer nível", não para a checagem de matriz).
+  - [x] Para a guarda de "única empresa ativa do sistema" (AC 3, 4) **não criar método novo** — reaproveitar `companyRepository.existsByStatus(companyId, StatusCompany.ACTIVE)`, já implementado (linha ~84) e com exatamente essa semântica ("existe alguma empresa com o status informado, excluindo a própria").
 
-- [ ] Task 3: Código de erro novo — filial ativa em subárvore (AC: 5)
-  - [ ] `flow-organization-shared/.../exception/ExceptionCodeError.java`: adicionar, após o range reservado pela Story 1.2 (`SCOS_COMPANY_017`), uma constante nova:
+- [x] Task 3: Código de erro novo — filial ativa em subárvore (AC: 5)
+  - [x] `flow-organization-shared/.../exception/ExceptionCodeError.java`: adicionar, após o range reservado pela Story 1.2 (`SCOS_COMPANY_017`), uma constante nova:
     ```java
     /** Não é possível desativar/bloquear a empresa: existe filial ativa em algum nível da subárvore. HTTP 422. */
     SCOS_COMPANY_018("SCOS_COMPANY_018", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
     ```
-  - [ ] `scos_message_organization.properties` (após a última linha de `SCOS_COMPANY_0XX`):
+  - [x] `scos_message_organization.properties` (após a última linha de `SCOS_COMPANY_0XX`):
     ```properties
     SCOS_COMPANY_018=Não é possível desativar ou bloquear a empresa, pois existe uma filial ativa em algum nível da hierarquia.
     ```
-  - [ ] `scos_message_organization_en.properties`:
+  - [x] `scos_message_organization_en.properties`:
     ```properties
     SCOS_COMPANY_018=It is not possible to inactivate or block the company because there is an active subsidiary at some level of the hierarchy.
     ```
-  - [ ] **`SCOS_COMPANY_005`/`006` já existem no enum e nas mensagens PT/EN** (reservados desde a Story 1.2 — sem throw site até hoje). **Não recriar, não duplicar** — só usar. Confirmar em `ExceptionCodeError.java:76,78` e `scos_message_organization[_en].properties:34-35`.
-  - [ ] **Não reaproveitar `SCOS_COMPANY_003`** para a guarda de subárvore — apesar de reservado e sem throw site, sua mensagem ("colaboradores/employees vinculados") é semanticamente sobre Funcionário, não sobre filial. Não há FR nesta Etapa que aponte throw site para ele; pertence a outra story/decisão futura, fora de escopo aqui.
+  - [x] **`SCOS_COMPANY_005`/`006` já existem no enum e nas mensagens PT/EN** (reservados desde a Story 1.2 — sem throw site até hoje). **Não recriar, não duplicar** — só usar. Confirmar em `ExceptionCodeError.java:76,78` e `scos_message_organization[_en].properties:34-35`.
+  - [x] **Não reaproveitar `SCOS_COMPANY_003`** para a guarda de subárvore — apesar de reservado e sem throw site, sua mensagem ("colaboradores/employees vinculados") é semanticamente sobre Funcionário, não sobre filial. Não há FR nesta Etapa que aponte throw site para ele; pertence a outra story/decisão futura, fora de escopo aqui.
 
-- [ ] Task 4: Guardas em `CompanyServiceBean` (AC: 1, 2, 3, 4, 5, 6, 7)
-  - [ ] Dentro do método `inactivate(@NonNull Long id, @NonNull Long reasonInactivateId, String observation)` (criado pela Story 1.2), inserir as duas guardas **antes** de `validateReasonInactivate(...)` e antes de `company.inactivate(...)`:
+- [x] Task 4: Guardas em `CompanyServiceBean` (AC: 1, 2, 3, 4, 5, 6, 7)
+  - [x] Dentro do método `inactivate(@NonNull Long id, @NonNull Long reasonInactivateId, String observation)` (criado pela Story 1.2), inserir as duas guardas **antes** de `validateReasonInactivate(...)` e antes de `company.inactivate(...)`:
     ```java
     @Override
     @Transactional(rollbackFor = ScosException.class)
@@ -107,7 +111,7 @@ Para que a operação nunca deixe o ISP sem empresa raiz ativa nem crie filial �
         companyStatusHistoryRepository.merge(history);
     }
     ```
-  - [ ] Dentro do método `disable(@NonNull Long id, @NonNull Long reasonDisableId, String observation)` (rota `block`, criado pela Story 1.2), inserir as duas guardas antes de `validateReasonDisable(...)` e antes de `company.disable(...)`:
+  - [x] Dentro do método `disable(@NonNull Long id, @NonNull Long reasonDisableId, String observation)` (rota `block`, criado pela Story 1.2), inserir as duas guardas antes de `validateReasonDisable(...)` e antes de `company.disable(...)`:
     ```java
     Company company = findCompanyById(id);
     assertNotOnlyActiveCompany(company);
@@ -115,7 +119,7 @@ Para que a operação nunca deixe o ISP sem empresa raiz ativa nem crie filial �
     validateReasonDisable(reasonDisableId);
     // ... resto igual ao padrão da Story 1.2
     ```
-  - [ ] Adicionar 3 helpers privados:
+  - [x] Adicionar 3 helpers privados:
     ```java
     private void assertNotLastActiveMatrix(Company company) {
         if (company.isMatrix() && company.isActive() && !companyRepository.existsOtherActiveMatrix(company.getId())) {
@@ -135,32 +139,32 @@ Para que a operação nunca deixe o ISP sem empresa raiz ativa nem crie filial �
         }
     }
     ```
-  - [ ] `Company.isMatrix()`/`isActive()` já existem na entidade (`Company.java:123-129`) — reaproveitar, não recriar.
-  - [ ] **Ordem intencional:** guardas estruturais desta story (005/006/018) rodam **antes** da validação de motivo (012–017, Story 1.2) — falha rápido na regra mais fundamental primeiro. Ordem relativa entre `assertNot...` e `assertNoActiveDescendant` entre si é livre (checagens independentes).
-  - [ ] `assertNoActiveDescendant` roda para **ambos** `inactivate` e `disable` — não depende do status atual da empresa sendo transicionada, só dos descendentes.
-  - [ ] `assertNotLastActiveMatrix` só bloqueia quando a própria empresa é matriz (`isMatrix()`) e está `ACTIVE` hoje — se já está `DISABLED`, inativá-la não remove nenhuma matriz ativa do conjunto (guarda não se aplica).
-  - [ ] `assertNotOnlyActiveCompany` não precisa checar `company.isActive()` explicitamente — `disable()`/`block` só é alcançável a partir de `ACTIVE` (guard `SCOS_COMPANY_007` em `Company.disable()` já impede origem diferente); a própria empresa sempre conta como a "ativa" candidata a ficar sozinha.
+  - [x] `Company.isMatrix()`/`isActive()` já existem na entidade (`Company.java:123-129`) — reaproveitar, não recriar.
+  - [x] **Ordem intencional:** guardas estruturais desta story (005/006/018) rodam **antes** da validação de motivo (012–017, Story 1.2) — falha rápido na regra mais fundamental primeiro. Ordem relativa entre `assertNot...` e `assertNoActiveDescendant` entre si é livre (checagens independentes).
+  - [x] `assertNoActiveDescendant` roda para **ambos** `inactivate` e `disable` — não depende do status atual da empresa sendo transicionada, só dos descendentes.
+  - [x] `assertNotLastActiveMatrix` só bloqueia quando a própria empresa é matriz (`isMatrix()`) e está `ACTIVE` hoje — se já está `DISABLED`, inativá-la não remove nenhuma matriz ativa do conjunto (guarda não se aplica).
+  - [x] `assertNotOnlyActiveCompany` não precisa checar `company.isActive()` explicitamente — `disable()`/`block` só é alcançável a partir de `ACTIVE` (guard `SCOS_COMPANY_007` em `Company.disable()` já impede origem diferente); a própria empresa sempre conta como a "ativa" candidata a ficar sozinha.
 
-- [ ] Task 5: Testes unitários (AC: 1, 2, 3, 4, 5, 6)
-  - [ ] `CompanyServiceBeanTest.java` — para `inactivate`: (a) matriz `ACTIVE` única → mock `existsOtherActiveMatrix` retorna `false` → `assertThatThrownBy(...).hasFieldOrPropertyWithValue("code", SCOS_COMPANY_005.getCode())`; (b) matriz `ACTIVE` com outra matriz ativa → mock retorna `true` → sem throw dessa guarda (seguir até o resto do fluxo); (c) filial (não-matriz) `ACTIVE` sem outra matriz ativa → guarda 005 não dispara (`isMatrix()` falso); (d) `hasActiveDescendant` mockado `true` → throw `SCOS_COMPANY_018`; (e) `hasActiveDescendant` `false` e nenhuma outra guarda → `verify(companyStatusHistoryRepository).merge(...)`.
-  - [ ] Idem para `disable` (block): (a) `existsByStatus(id, ACTIVE)` mockado `false` → throw `SCOS_COMPANY_006`; (b) mockado `true` → sem throw dessa guarda; (c)/(d) mesma cobertura de `hasActiveDescendant` de cima.
-  - [ ] Mesmo padrão `@Mock`/`@InjectMocks`/`assertThatThrownBy(...).hasFieldOrPropertyWithValue(...)` já usado no arquivo (ver testes de `create`, Story 1.1).
+- [x] Task 5: Testes unitários (AC: 1, 2, 3, 4, 5, 6)
+  - [x] `CompanyServiceBeanTest.java` — para `inactivate`: (a) matriz `ACTIVE` única → mock `existsOtherActiveMatrix` retorna `false` → `assertThatThrownBy(...).hasFieldOrPropertyWithValue("code", SCOS_COMPANY_005.getCode())`; (b) matriz `ACTIVE` com outra matriz ativa → mock retorna `true` → sem throw dessa guarda (seguir até o resto do fluxo); (c) filial (não-matriz) `ACTIVE` sem outra matriz ativa → guarda 005 não dispara (`isMatrix()` falso); (d) `hasActiveDescendant` mockado `true` → throw `SCOS_COMPANY_018`; (e) `hasActiveDescendant` `false` e nenhuma outra guarda → `verify(companyStatusHistoryRepository).merge(...)`.
+  - [x] Idem para `disable` (block): (a) `existsByStatus(id, ACTIVE)` mockado `false` → throw `SCOS_COMPANY_006`; (b) mockado `true` → sem throw dessa guarda; (c)/(d) mesma cobertura de `hasActiveDescendant` de cima.
+  - [x] Mesmo padrão `@Mock`/`@InjectMocks`/`assertThatThrownBy(...).hasFieldOrPropertyWithValue(...)` já usado no arquivo (ver testes de `create`, Story 1.1).
 
-- [ ] Task 6: Teste de integração da CTE recursiva (AC: 5, 6)
-  - [ ] Nova classe em `flow-organization-boot/src/test/java/.../company/`, mesmo padrão da Story 1.1 (Task 3): estende `ScosOrganizationTestUtil`, **sem MockMvc**, autowira `CompanyRepository` direto. Monta hierarquia de 3 níveis via `companyRepository.merge(...)` (matriz `ACTIVE` → filial nível 1 `INACTIVE` → filial nível 2 `ACTIVE`) e prova que `hasActiveDescendant(matrizId)` retorna `true` (descendente indireto ativo é encontrado) e que uma matriz sem nenhum descendente ativo retorna `false`.
-  - [ ] Manter sufixo `*ControllerTest` mesmo sem chamada HTTP — convenção deliberada do projeto (mesma justificativa da Story 1.1).
+- [x] Task 6: Teste de integração da CTE recursiva (AC: 5, 6)
+  - [x] Nova classe em `flow-organization-boot/src/test/java/.../company/`, mesmo padrão da Story 1.1 (Task 3): estende `ScosOrganizationTestUtil`, **sem MockMvc**, autowira `CompanyRepository` direto. Monta hierarquia de 3 níveis via `companyRepository.merge(...)` (matriz `ACTIVE` → filial nível 1 `INACTIVE` → filial nível 2 `ACTIVE`) e prova que `hasActiveDescendant(matrizId)` retorna `true` (descendente indireto ativo é encontrado) e que uma matriz sem nenhum descendente ativo retorna `false`.
+  - [x] Manter sufixo `*ControllerTest` mesmo sem chamada HTTP — convenção deliberada do projeto (mesma justificativa da Story 1.1).
 
-- [ ] Task 7: Ajustar teste de integração da Story 1.2 quebrado por `SCOS_COMPANY_006` (AC: 3, 8)
-  - [ ] Em `CompanyControllerTest.java` (`flow-organization-boot`), localizar o teste que a Story 1.2 (Task 5) cria para o caminho feliz de `PUT /v1/companies/{id}/block` usando `SEEDED_ID` (única Empresa seed `ACTIVE`). Ajustar: **criar uma segunda Empresa `ACTIVE`** via `POST /v1/companies` (CNPJ dedicado, ex. `CNPJ_SECOND_ACTIVE`) antes do `block`, garantindo que `SEEDED_ID` deixa de ser a única ativa — só então o `block` de `SEEDED_ID` deve suceder (`204`) e o teste original (prova que o trigger sincroniza `DISABLED`) continua válido.
-  - [ ] Adicionar cenário novo: `block` de `SEEDED_ID` **sem** criar outra empresa antes → `422` com `code = SCOS_COMPANY_006`.
-  - [ ] Adicionar cenário novo para `SCOS_COMPANY_005`: como só existe uma matriz seed (`SEEDED_ID`, matriz), tentar `PUT /disable` (`inactivate`) diretamente nela sem criar outra matriz → `422` `SCOS_COMPANY_005`. Se a Story 1.2 já cobriu esse caminho de outra forma, ajustar/mesclar em vez de duplicar.
-  - [ ] Adicionar cenário para `SCOS_COMPANY_018`: criar filial `ACTIVE` sob `SEEDED_ID` (`POST` com `parentCompanyId=SEEDED_ID`), então tentar `block`/`disable` em `SEEDED_ID` → `422` `SCOS_COMPANY_018`.
+- [x] Task 7: Ajustar teste de integração da Story 1.2 quebrado por `SCOS_COMPANY_006` (AC: 3, 8)
+  - [x] Em `CompanyControllerTest.java` (`flow-organization-boot`), localizar o teste que a Story 1.2 (Task 5) cria para o caminho feliz de `PUT /v1/companies/{id}/block` usando `SEEDED_ID` (única Empresa seed `ACTIVE`). Ajustar: **criar uma segunda Empresa `ACTIVE`** via `POST /v1/companies` (CNPJ dedicado, ex. `CNPJ_SECOND_ACTIVE`) antes do `block`, garantindo que `SEEDED_ID` deixa de ser a única ativa — só então o `block` de `SEEDED_ID` deve suceder (`204`) e o teste original (prova que o trigger sincroniza `DISABLED`) continua válido.
+  - [x] Adicionar cenário novo: `block` de `SEEDED_ID` **sem** criar outra empresa antes → `422` com `code = SCOS_COMPANY_006`.
+  - [x] Adicionar cenário novo para `SCOS_COMPANY_005`: como só existe uma matriz seed (`SEEDED_ID`, matriz), tentar `PUT /disable` (`inactivate`) diretamente nela sem criar outra matriz → `422` `SCOS_COMPANY_005`. Se a Story 1.2 já cobriu esse caminho de outra forma, ajustar/mesclar em vez de duplicar.
+  - [x] Adicionar cenário para `SCOS_COMPANY_018`: criar filial `ACTIVE` sob `SEEDED_ID` (`POST` com `parentCompanyId=SEEDED_ID`), então tentar `block`/`disable` em `SEEDED_ID` → `422` `SCOS_COMPANY_018`.
 
-- [ ] Task 8: Guarda de escopo (AC: 7)
-  - [ ] **Não** alterar `etc/api/organization/ScosOrganization_Company.yml` — os 4 endpoints e o `$ref` genérico de `4XX` já cobrem os códigos novos, sem necessidade de documentar cada código individualmente (mesmo padrão de `SCOS_COMPANY_007`).
-  - [ ] **Não** criar Use Case novo nem alterar `CompanyDelegate` — as guardas vivem inteiramente em `CompanyServiceBean` (camada `domain`), a Story 1.2 já resolve o mapeamento rota→Use Case→`CompanyService`.
-  - [ ] **Não** adicionar permissão nova em `ScosOrganizationPermission` — `DISABLE_COMPANY`/`BLOCK_COMPANY` já existem e já cobrem essas rotas.
-  - [ ] **Não** implementar os 4 métodos de transição da Story 1.2 do zero — se ao abrir esta story eles não existirem, é sinal de que a Story 1.2 não foi concluída (ver Task 0).
+- [x] Task 8: Guarda de escopo (AC: 7)
+  - [x] **Não** alterar `etc/api/organization/ScosOrganization_Company.yml` — os 4 endpoints e o `$ref` genérico de `4XX` já cobrem os códigos novos, sem necessidade de documentar cada código individualmente (mesmo padrão de `SCOS_COMPANY_007`).
+  - [x] **Não** criar Use Case novo nem alterar `CompanyDelegate` — as guardas vivem inteiramente em `CompanyServiceBean` (camada `domain`), a Story 1.2 já resolve o mapeamento rota→Use Case→`CompanyService`.
+  - [x] **Não** adicionar permissão nova em `ScosOrganizationPermission` — `DISABLE_COMPANY`/`BLOCK_COMPANY` já existem e já cobrem essas rotas.
+  - [x] **Não** implementar os 4 métodos de transição da Story 1.2 do zero — se ao abrir esta story eles não existirem, é sinal de que a Story 1.2 não foi concluída (ver Task 0).
 
 ## Dev Notes
 
@@ -247,10 +251,39 @@ default boolean hasActiveDescendant(Long companyId) {
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Sonnet 5 (claude-sonnet-5)
 
 ### Debug Log References
 
+- Task 0: confirmado Story 1.2 `done` no código-fonte (`activate`/`inactivate`/`disable`/`enable` já existiam em `CompanyServiceBean`) e numeração `SCOS_COMPANY_012..017` conforme esperado — nenhum ajuste de numeração necessário, `018` livre.
+- Achado durante Task 5: build falhou com "cannot find symbol SCOS_COMPANY_018" e uma cascata de erros não relacionados (Q-classes de outras entidades) ao rodar `mvn -pl flow-organization-domain clean test` isolado — causa raiz: `flow-organization-shared` tinha sido só `compile`d, não `install`ado, então o classpath do `domain` ainda apontava pro jar antigo do `shared` (sem o código novo) no `~/.m2`. Corrigido com `mvn -pl flow-organization-shared install -DskipTests`. Lição: após editar um módulo upstream (`shared`), rodar `install` (não só `compile`) antes de testar módulos downstream isoladamente.
+- `mvn -pl flow-organization-domain clean test -Dtest=CompanyServiceBeanTest -Denforcer.skip=true` → 44/44 (37 pré-existentes + 7 novos: 4 guardas de `inactivate` + 3 de `disable`).
+- `mvn -pl flow-organization-boot test -Dtest=CompanyControllerTest,CompanyActiveDescendantGuardControllerTest,CompanyCycleGuardControllerTest -Denforcer.skip=true` → 20 + 2 + 2 = 24/24 (teste de `block` da Story 1.2 corrigido criando 2ª empresa ativa antes; 3 cenários novos de 005/006/018; CTE descendente provada contra Postgres real).
+- `mvn -pl flow-organization-domain,flow-organization-usecase,flow-organization-infrastructure test -Denforcer.skip=true` → 214+186+3 = 403/403, sem regressão (inclui `PermissionsConsistencyTest`, inalterado).
+- `mvn -pl flow-organization-boot test -Denforcer.skip=true` → 368/368, sem regressão na suíte de integração completa.
+- `-Denforcer.skip=true` usado só para contornar o enforcer pré-existente já quebrado (ver *Build quebrado* no `project-context.md`) — nenhuma mudança de dependência nesta story.
+
 ### Completion Notes List
 
+- Guarda de "última matriz ativa" (`SCOS_COMPANY_005`) e "única empresa ativa" (`SCOS_COMPANY_006`) implementadas dentro de `inactivate`/`disable` (métodos já criados pela Story 1.2) — códigos e mensagens PT/EN já existiam desde a Story 1.2 (reservados), só criado o throw site.
+- Guarda de "filial ativa em qualquer nível da subárvore" (`SCOS_COMPANY_018`, código novo) usa CTE recursiva **descendente** (`hasActiveDescendant`), tecnicamente análoga a `wouldCreateCycle` (Story 1.1, que sobe) mas SQL distinto — mesma convenção `int` + `default boolean` wrapper.
+- Guarda de "outra matriz ativa" (`existsOtherActiveMatrix`) resolvida com QueryDSL comum (`exists(...)`), não recursiva — só a checagem de subárvore precisa de `WITH RECURSIVE` (AD-7).
+- Ordem das guardas em `inactivate`/`disable`: estruturais desta story (005/006/018) rodam **antes** da validação de motivo (012–017, Story 1.2) — falha rápido na regra mais fundamental.
+- Regressão conhecida e esperada corrigida (Task 7): o teste de `block` da Story 1.2 usava a única Empresa seed (`SEEDED_ID`) — com `SCOS_COMPANY_006` isso passou a ser rejeitado; corrigido criando uma 2ª empresa `ACTIVE` antes do `block`. 3 cenários novos de integração adicionados (`005`, `006`, `018`), reaproveitando `SEEDED_ID` e helpers já existentes no arquivo.
+- Reaproveitadas 2 constantes de CNPJ que estavam declaradas mas sem uso no arquivo (`CNPJ_UPDATE`→`CNPJ_SECOND_ACTIVE`, `CNPJ_DUP_A`→`CNPJ_FILIAL_ACTIVE_UNDER_SEEDED`) em vez de inventar CNPJs novos sem checksum verificado.
+- Guarda de escopo (Task 8) confirmada via `git status`: zero mudança em YAML, Use Case, `CompanyDelegate` ou `ScosOrganizationPermission` — só `domain`/`shared` + 2 arquivos de teste em `boot`.
+
 ### File List
+
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/internal/CompanyRepository.java` (modificado — `existsOtherActiveMatrix`, `hasActiveDescendantFlag`/`hasActiveDescendant`)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/service/CompanyServiceBean.java` (modificado — 3 guardas + 2 pontos de chamada em `inactivate`/`disable`)
+- `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/corporate/company/service/CompanyServiceBeanTest.java` (modificado — 7 testes novos + stubs ajustados em 6 testes existentes da Story 1.2)
+- `organization/flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/exception/ExceptionCodeError.java` (modificado — `SCOS_COMPANY_018`)
+- `organization/flow-organization-shared/src/main/resources/scos_message_organization.properties` (modificado — mensagem PT de `018`)
+- `organization/flow-organization-shared/src/main/resources/scos_message_organization_en.properties` (modificado — mensagem EN de `018`)
+- `organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/company/CompanyActiveDescendantGuardControllerTest.java` (novo — integração da CTE descendente)
+- `organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/company/CompanyControllerTest.java` (modificado — teste de `block` corrigido + 3 cenários novos de 005/006/018)
+
+## Change Log
+
+- 2026-07-22: Implementadas guardas de integridade estrutural de Empresa (última matriz ativa, única empresa ativa, filial ativa em subárvore via CTE recursiva descendente) dentro de `inactivate`/`disable` (Story 1.2); 8 arquivos (7 modificados, 1 novo); 9 testes novos (7 unit + 2 integração) + 3 cenários novos de integração + 1 teste corrigido (regressão conhecida e esperada), 0 regressão (403 domain/usecase/infra + 368 boot). Status → review.

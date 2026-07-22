@@ -59,6 +59,8 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_002;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_004;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_005;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_006;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_008;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_009;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_010;
@@ -69,6 +71,7 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_015;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_016;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_017;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_018;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_CONFIGURATION_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LEGAL_NATURE_001;
 
@@ -250,6 +253,8 @@ class CompanyServiceBean implements CompanyService {
 
     /**
      * @throws ScosException SCOS_COMPANY_001 (404) se o {@code id} não existir.
+     * @throws ScosException SCOS_COMPANY_005 (422) se for a última Empresa matriz ativa do sistema.
+     * @throws ScosException SCOS_COMPANY_018 (422) se existir filial ativa em algum nível da subárvore.
      * @throws ScosException SCOS_COMPANY_007 (422) se a Empresa já estiver {@code INACTIVE}.
      * @throws ScosException SCOS_COMPANY_012/013 (422) para motivo de inativação inativo/incompatível.
      * @throws ScosException SCOS_REASON_INACTIVATE_001 (404) se o motivo não existir.
@@ -259,6 +264,8 @@ class CompanyServiceBean implements CompanyService {
     public void inactivate(@NonNull Long id, @NonNull Long reasonInactivateId, String observation) {
         log.info("Inactivate Company: {}", id);
         Company company = findCompanyById(id);
+        assertNotLastActiveMatrix(company);
+        assertNoActiveDescendant(company);
         validateReasonInactivate(reasonInactivateId);
         String user = scosUserAuthentication.findUserAuthentication();
 
@@ -270,6 +277,8 @@ class CompanyServiceBean implements CompanyService {
 
     /**
      * @throws ScosException SCOS_COMPANY_001 (404) se o {@code id} não existir.
+     * @throws ScosException SCOS_COMPANY_006 (422) se for a única Empresa ativa do sistema.
+     * @throws ScosException SCOS_COMPANY_018 (422) se existir filial ativa em algum nível da subárvore.
      * @throws ScosException SCOS_COMPANY_007 (422) se a Empresa não estiver {@code ACTIVE}.
      * @throws ScosException SCOS_COMPANY_014/015 (422) para motivo de bloqueio inativo/incompatível.
      * @throws ScosException SCOS_REASON_DISABLE_001 (404) se o motivo não existir.
@@ -279,6 +288,8 @@ class CompanyServiceBean implements CompanyService {
     public void disable(@NonNull Long id, @NonNull Long reasonDisableId, String observation) {
         log.info("Disable (block) Company: {}", id);
         Company company = findCompanyById(id);
+        assertNotOnlyActiveCompany(company);
+        assertNoActiveDescendant(company);
         validateReasonDisable(reasonDisableId);
         String user = scosUserAuthentication.findUserAuthentication();
 
@@ -321,6 +332,24 @@ class CompanyServiceBean implements CompanyService {
         }
         if (reasonActivate.entityType() != EntityType.COMPANY) {
             throw new ScosException(SCOS_COMPANY_009);
+        }
+    }
+
+    private void assertNotLastActiveMatrix(Company company) {
+        if (company.isMatrix() && company.isActive() && !companyRepository.existsOtherActiveMatrix(company.getId())) {
+            throw new ScosException(SCOS_COMPANY_005);
+        }
+    }
+
+    private void assertNotOnlyActiveCompany(Company company) {
+        if (!companyRepository.existsByStatus(company.getId(), StatusCompany.ACTIVE)) {
+            throw new ScosException(SCOS_COMPANY_006);
+        }
+    }
+
+    private void assertNoActiveDescendant(Company company) {
+        if (companyRepository.hasActiveDescendant(company.getId())) {
+            throw new ScosException(SCOS_COMPANY_018);
         }
     }
 
