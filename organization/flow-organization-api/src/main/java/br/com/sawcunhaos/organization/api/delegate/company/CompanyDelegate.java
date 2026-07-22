@@ -14,6 +14,7 @@
 package br.com.sawcunhaos.organization.api.delegate.company;
 
 import br.com.sawcunhaos.organization.api.controller.CompanyApiDelegate;
+import br.com.sawcunhaos.organization.api.dto.CompanyStatusTransitionRequest;
 import br.com.sawcunhaos.organization.api.dto.Create;
 import br.com.sawcunhaos.organization.api.dto.CreateCompanyRequest;
 import br.com.sawcunhaos.organization.api.dto.CreateResponse;
@@ -22,9 +23,13 @@ import br.com.sawcunhaos.organization.api.dto.GetCompanyResponse;
 import br.com.sawcunhaos.organization.api.dto.PaginationFilter;
 import br.com.sawcunhaos.organization.api.dto.StatusCompany;
 import br.com.sawcunhaos.organization.api.dto.UpdateCompanyRequest;
+import br.com.sawcunhaos.organization.application.usecase.corporate.company.ActivateCompanyUseCase;
+import br.com.sawcunhaos.organization.application.usecase.corporate.company.BlockCompanyUseCase;
 import br.com.sawcunhaos.organization.application.usecase.corporate.company.CreateCompanyUseCase;
 import br.com.sawcunhaos.organization.application.usecase.corporate.company.FindAllCompanyUseCase;
 import br.com.sawcunhaos.organization.application.usecase.corporate.company.FindCompanyUseCase;
+import br.com.sawcunhaos.organization.application.usecase.corporate.company.InactivateCompanyUseCase;
+import br.com.sawcunhaos.organization.application.usecase.corporate.company.UnblockCompanyUseCase;
 import br.com.sawcunhaos.organization.application.usecase.corporate.company.UpdateCompanyUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,8 +40,9 @@ import java.util.UUID;
 
 /**
  * Implementação de {@link CompanyApiDelegate} — expõe o CRUD cadastral de {@code /v1/companies}
- * (UC-001..005), delegando a validação de negócio aos respectivos Use Cases. As rotas de transição
- * de status (enable/disable/block/unblock) e sub-recursos permanecem com o comportamento default.
+ * (UC-001..005) e as 4 transições de status (UC-006: enable/disable/block/unblock), delegando a
+ * validação de negócio aos respectivos Use Cases. Sub-recursos (ex.: status-history) permanecem
+ * com o comportamento default.
  */
 @Component
 @RequiredArgsConstructor
@@ -47,6 +53,10 @@ public class CompanyDelegate implements CompanyApiDelegate {
     private final FindAllCompanyUseCase findAllCompanyUseCase;
     private final CreateCompanyUseCase createCompanyUseCase;
     private final UpdateCompanyUseCase updateCompanyUseCase;
+    private final ActivateCompanyUseCase activateCompanyUseCase;
+    private final InactivateCompanyUseCase inactivateCompanyUseCase;
+    private final BlockCompanyUseCase blockCompanyUseCase;
+    private final UnblockCompanyUseCase unblockCompanyUseCase;
 
     @Override
     public CreateResponse createCompany(CreateCompanyRequest createCompanyRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
@@ -74,6 +84,30 @@ public class CompanyDelegate implements CompanyApiDelegate {
     @Override
     public Void updateCompany(Long id, UpdateCompanyRequest updateCompanyRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
         updateCompanyUseCase.execute(id, updateCompanyRequest);
+        return null;
+    }
+
+    @Override
+    public Void activateCompany(Long id, CompanyStatusTransitionRequest companyStatusTransitionRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        activateCompanyUseCase.execute(id, companyStatusTransitionRequest);
+        return null;
+    }
+
+    @Override
+    public Void inactivateCompany(Long id, CompanyStatusTransitionRequest companyStatusTransitionRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        inactivateCompanyUseCase.execute(id, companyStatusTransitionRequest);
+        return null;
+    }
+
+    @Override
+    public Void blockCompany(Long id, CompanyStatusTransitionRequest companyStatusTransitionRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        blockCompanyUseCase.execute(id, companyStatusTransitionRequest);
+        return null;
+    }
+
+    @Override
+    public Void unblockCompany(Long id, CompanyStatusTransitionRequest companyStatusTransitionRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        unblockCompanyUseCase.execute(id, companyStatusTransitionRequest);
         return null;
     }
 }

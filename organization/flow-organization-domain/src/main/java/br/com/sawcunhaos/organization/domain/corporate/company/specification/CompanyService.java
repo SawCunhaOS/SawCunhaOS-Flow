@@ -55,4 +55,16 @@ public interface CompanyService {
      */
     void assertNoCycle(@NonNull Long companyId, @NonNull Long candidateParentCompanyId);
 
+    /** Ativa uma Empresa INACTIVE, gravando o motivo em SCOS_COMPANY_STATUS_HISTORY (status sincronizado por trigger). */
+    void activate(@NonNull Long id, @NonNull Long reasonActivateId, String observation);
+
+    /** Inativa uma Empresa ACTIVE/DISABLED, gravando o motivo (status sincronizado por trigger). */
+    void inactivate(@NonNull Long id, @NonNull Long reasonInactivateId, String observation);
+
+    /** Bloqueia uma Empresa ACTIVE (rota "block", corresponde ao método de domínio "disable"). */
+    void disable(@NonNull Long id, @NonNull Long reasonDisableId, String observation);
+
+    /** Desbloqueia uma Empresa DISABLED (rota "unblock", corresponde ao método de domínio "enable"). */
+    void enable(@NonNull Long id, @NonNull Long reasonEnableId, String observation);
+
 }

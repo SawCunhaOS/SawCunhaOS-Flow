@@ -17,11 +17,17 @@ import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
 import br.com.sawcunhaos.foundation.utils.valueobjects.Cnpj;
 import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonActivateOutput;
+import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonDisableOutput;
+import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonEnableOutput;
+import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonInactivateOutput;
 import br.com.sawcunhaos.organization.domain.access.status.internal.CompanyStatusHistory;
 import br.com.sawcunhaos.organization.domain.access.status.internal.CompanyStatusHistoryRepository;
 import br.com.sawcunhaos.organization.domain.access.status.internal.EntityType;
 import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonActivate;
 import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonActivateService;
+import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonDisableService;
+import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonEnableService;
+import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonInactivateService;
 import br.com.sawcunhaos.organization.domain.configuration.internal.ConfigurationKey;
 import br.com.sawcunhaos.organization.domain.configuration.internal.OrganizationConfiguration;
 import br.com.sawcunhaos.organization.domain.configuration.internal.OrganizationConfigurationRepository;
@@ -57,6 +63,12 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_009;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_010;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_011;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_012;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_013;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_014;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_015;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_016;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_017;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_CONFIGURATION_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LEGAL_NATURE_001;
 
@@ -76,6 +88,9 @@ class CompanyServiceBean implements CompanyService {
     private final CnaeRepository cnaeRepository;
     private final OrganizationConfigurationRepository organizationConfigurationRepository;
     private final ReasonActivateService reasonActivateService;
+    private final ReasonInactivateService reasonInactivateService;
+    private final ReasonDisableService reasonDisableService;
+    private final ReasonEnableService reasonEnableService;
     private final ScosUserAuthentication scosUserAuthentication;
     private final CompanyMapper companyMapper;
 
@@ -213,6 +228,86 @@ class CompanyServiceBean implements CompanyService {
         }
     }
 
+    /**
+     * @throws ScosException SCOS_COMPANY_001 (404) se o {@code id} não existir.
+     * @throws ScosException SCOS_COMPANY_007 (422) se a Empresa não estiver {@code INACTIVE}.
+     * @throws ScosException SCOS_COMPANY_008/009 (422) para motivo de ativação inativo/incompatível.
+     * @throws ScosException SCOS_REASON_ACTIVATE_001 (404) se o motivo não existir.
+     */
+    @Override
+    @Transactional(rollbackFor = ScosException.class)
+    public void activate(@NonNull Long id, @NonNull Long reasonActivateId, String observation) {
+        log.info("Activate Company: {}", id);
+        Company company = findCompanyById(id);
+        validateReasonActivate(reasonActivateId);
+        String user = scosUserAuthentication.findUserAuthentication();
+
+        CompanyStatusHistory history = company.activate(reasonActivateId);
+        history.setObservation(observation);
+        history.setUserAt(user);
+        companyStatusHistoryRepository.merge(history);
+    }
+
+    /**
+     * @throws ScosException SCOS_COMPANY_001 (404) se o {@code id} não existir.
+     * @throws ScosException SCOS_COMPANY_007 (422) se a Empresa já estiver {@code INACTIVE}.
+     * @throws ScosException SCOS_COMPANY_012/013 (422) para motivo de inativação inativo/incompatível.
+     * @throws ScosException SCOS_REASON_INACTIVATE_001 (404) se o motivo não existir.
+     */
+    @Override
+    @Transactional(rollbackFor = ScosException.class)
+    public void inactivate(@NonNull Long id, @NonNull Long reasonInactivateId, String observation) {
+        log.info("Inactivate Company: {}", id);
+        Company company = findCompanyById(id);
+        validateReasonInactivate(reasonInactivateId);
+        String user = scosUserAuthentication.findUserAuthentication();
+
+        CompanyStatusHistory history = company.inactivate(reasonInactivateId);
+        history.setObservation(observation);
+        history.setUserAt(user);
+        companyStatusHistoryRepository.merge(history);
+    }
+
+    /**
+     * @throws ScosException SCOS_COMPANY_001 (404) se o {@code id} não existir.
+     * @throws ScosException SCOS_COMPANY_007 (422) se a Empresa não estiver {@code ACTIVE}.
+     * @throws ScosException SCOS_COMPANY_014/015 (422) para motivo de bloqueio inativo/incompatível.
+     * @throws ScosException SCOS_REASON_DISABLE_001 (404) se o motivo não existir.
+     */
+    @Override
+    @Transactional(rollbackFor = ScosException.class)
+    public void disable(@NonNull Long id, @NonNull Long reasonDisableId, String observation) {
+        log.info("Disable (block) Company: {}", id);
+        Company company = findCompanyById(id);
+        validateReasonDisable(reasonDisableId);
+        String user = scosUserAuthentication.findUserAuthentication();
+
+        CompanyStatusHistory history = company.disable(reasonDisableId);
+        history.setObservation(observation);
+        history.setUserAt(user);
+        companyStatusHistoryRepository.merge(history);
+    }
+
+    /**
+     * @throws ScosException SCOS_COMPANY_001 (404) se o {@code id} não existir.
+     * @throws ScosException SCOS_COMPANY_007 (422) se a Empresa não estiver {@code DISABLED}.
+     * @throws ScosException SCOS_COMPANY_016/017 (422) para motivo de desbloqueio inativo/incompatível.
+     * @throws ScosException SCOS_REASON_ENABLE_001 (404) se o motivo não existir.
+     */
+    @Override
+    @Transactional(rollbackFor = ScosException.class)
+    public void enable(@NonNull Long id, @NonNull Long reasonEnableId, String observation) {
+        log.info("Enable (unblock) Company: {}", id);
+        Company company = findCompanyById(id);
+        validateReasonEnable(reasonEnableId);
+        String user = scosUserAuthentication.findUserAuthentication();
+
+        CompanyStatusHistory history = company.enable(reasonEnableId);
+        history.setObservation(observation);
+        history.setUserAt(user);
+        companyStatusHistoryRepository.merge(history);
+    }
+
     private Company findCompanyById(@NonNull Long companyId) {
         return companyRepository.findById(companyId).orElseThrow(
                 () -> new ScosException(SCOS_COMPANY_001)
@@ -226,6 +321,36 @@ class CompanyServiceBean implements CompanyService {
         }
         if (reasonActivate.entityType() != EntityType.COMPANY) {
             throw new ScosException(SCOS_COMPANY_009);
+        }
+    }
+
+    private void validateReasonInactivate(Long reasonInactivateId) {
+        ReasonInactivateOutput reason = reasonInactivateService.findById(reasonInactivateId);
+        if (!reason.active()) {
+            throw new ScosException(SCOS_COMPANY_012);
+        }
+        if (reason.entityType() != EntityType.COMPANY) {
+            throw new ScosException(SCOS_COMPANY_013);
+        }
+    }
+
+    private void validateReasonDisable(Long reasonDisableId) {
+        ReasonDisableOutput reason = reasonDisableService.findById(reasonDisableId);
+        if (!reason.active()) {
+            throw new ScosException(SCOS_COMPANY_014);
+        }
+        if (reason.entityType() != EntityType.COMPANY) {
+            throw new ScosException(SCOS_COMPANY_015);
+        }
+    }
+
+    private void validateReasonEnable(Long reasonEnableId) {
+        ReasonEnableOutput reason = reasonEnableService.findById(reasonEnableId);
+        if (!reason.active()) {
+            throw new ScosException(SCOS_COMPANY_016);
+        }
+        if (reason.entityType() != EntityType.COMPANY) {
+            throw new ScosException(SCOS_COMPANY_017);
         }
     }
 

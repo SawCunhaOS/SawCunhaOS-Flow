@@ -60,6 +60,7 @@ public class CompanyControllerTest extends ScosOrganizationTestUtil {
     private static final long REASON_COMPANY_ACTIVE = 1L;
     private static final long REASON_EMPLOYEE = 2L;
     private static final long REASON_COMPANY_INACTIVE = 5L;
+    private static final long REASON_DISABLE_UNDER_AUDIT = 1L;
 
     private static final String CODE_COMPANY_NOT_FOUND = "SCOS_COMPANY_001";
     private static final String CODE_COMPANY_CONFLICT = "SCOS_COMPANY_002";
@@ -294,6 +295,25 @@ public class CompanyControllerTest extends ScosOrganizationTestUtil {
     }
 
     // =====================================================================================
+    // PUT /v1/companies/{id}/block (UC-006) — prova end-to-end do trg_sync_company_status
+    // =====================================================================================
+
+    @Test
+    @DisplayName("PUT /v1/companies/{id}/block — bloqueia e o trigger sincroniza STATUS=DISABLED (204 + GET)")
+    void block_seededActive_returns204AndSyncsStatusViaTrigger() throws Exception {
+        mockMvc.perform(put(COMPANIES_URI + "/{id}/block", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_DISABLE_UNDER_AUDIT, "Suspensa em auditoria")))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get(COMPANIES_URI + "/{id}", SEEDED_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.status").value("DISABLED"));
+    }
+
+    // =====================================================================================
     // Helpers
     // =====================================================================================
 
@@ -309,6 +329,15 @@ public class CompanyControllerTest extends ScosOrganizationTestUtil {
                 %s  "reasonActivateId": %d
                 }
                 """.formatted(taxIdentifier, parent, reasonActivateId);
+    }
+
+    private static String statusTransitionBody(long reasonId, String observation) {
+        return """
+                {
+                  "reasonId": %d,
+                  "observation": "%s"
+                }
+                """.formatted(reasonId, observation);
     }
 
     private static String updateBody(String taxIdentifier, String name) {

@@ -1,6 +1,10 @@
+---
+baseline_commit: 4f7cc485a817d32b9edcb5bbd15ca6c115b80932
+---
+
 # Story 1.2: Ciclo de Vida Completo de Empresa
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -27,8 +31,8 @@ Para que toda mudança de status tenha justificativa e rastro auditável.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Códigos de erro novos — motivo inativo/incompatível para `inactivate`/`disable`/`enable` (AC: 7, 8)
-  - [ ] `flow-organization-shared/.../exception/ExceptionCodeError.java`: adicionar, logo após `SCOS_COMPANY_011` (linha ~87), 6 constantes novas (422, `SCOS_TITLE_BUSINESS_RULE_VIOLATION`):
+- [x] Task 1: Códigos de erro novos — motivo inativo/incompatível para `inactivate`/`disable`/`enable` (AC: 7, 8)
+  - [x] `flow-organization-shared/.../exception/ExceptionCodeError.java`: adicionar, logo após `SCOS_COMPANY_011` (linha ~87), 6 constantes novas (422, `SCOS_TITLE_BUSINESS_RULE_VIOLATION`):
     ```java
     /** Motivo de inativação informado está inativo. HTTP 422. */
     SCOS_COMPANY_012("SCOS_COMPANY_012", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
@@ -43,7 +47,7 @@ Para que toda mudança de status tenha justificativa e rastro auditável.
     /** Motivo de desbloqueio informado é incompatível com a entidade Empresa. HTTP 422. */
     SCOS_COMPANY_017("SCOS_COMPANY_017", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
     ```
-  - [ ] `flow-organization-shared/src/main/resources/scos_message_organization.properties` (após linha 40, `SCOS_COMPANY_011`):
+  - [x] `flow-organization-shared/src/main/resources/scos_message_organization.properties` (após linha 40, `SCOS_COMPANY_011`):
     ```properties
     SCOS_COMPANY_012=O motivo de inativação informado está inativo.
     SCOS_COMPANY_013=O motivo de inativação informado é incompatível com a entidade Empresa.
@@ -52,10 +56,10 @@ Para que toda mudança de status tenha justificativa e rastro auditável.
     SCOS_COMPANY_016=O motivo de desbloqueio informado está inativo.
     SCOS_COMPANY_017=O motivo de desbloqueio informado é incompatível com a entidade Empresa.
     ```
-  - [ ] `flow-organization-shared/src/main/resources/scos_message_organization_en.properties` (mesmas 6 chaves, texto em inglês, mesmo padrão de `SCOS_COMPANY_008`/`009` já existentes).
+  - [x] `flow-organization-shared/src/main/resources/scos_message_organization_en.properties` (mesmas 6 chaves, texto em inglês, mesmo padrão de `SCOS_COMPANY_008`/`009` já existentes).
 
-- [ ] Task 2: `CompanyService` (specification) — 4 métodos novos (AC: 1, 2, 3, 4, 5, 9, 10)
-  - [ ] `flow-organization-domain/.../corporate/company/specification/CompanyService.java`: adicionar à interface:
+- [x] Task 2: `CompanyService` (specification) — 4 métodos novos (AC: 1, 2, 3, 4, 5, 9, 10)
+  - [x] `flow-organization-domain/.../corporate/company/specification/CompanyService.java`: adicionar à interface:
     ```java
     /** Ativa uma Empresa INACTIVE, gravando o motivo em SCOS_COMPANY_STATUS_HISTORY (status sincronizado por trigger). */
     void activate(@NonNull Long id, @NonNull Long reasonActivateId, String observation);
@@ -71,9 +75,9 @@ Para que toda mudança de status tenha justificativa e rastro auditável.
     ```
     `observation` sem `@NonNull` — campo opcional no request (`CompanyStatusTransitionRequest.observation`, sem `@NotNull` no DTO gerado).
 
-- [ ] Task 3: `CompanyServiceBean` — implementação (AC: 1, 2, 3, 4, 5, 7, 8, 9, 10)
-  - [ ] Injetar 3 novas dependências (`@RequiredArgsConstructor`, mesma convenção): `ReasonInactivateService reasonInactivateService`, `ReasonDisableService reasonDisableService`, `ReasonEnableService reasonEnableService` (`ReasonActivateService` já injetado, reaproveitar).
-  - [ ] Implementar os 4 métodos, mesmo formato para todos (exemplo `activate`):
+- [x] Task 3: `CompanyServiceBean` — implementação (AC: 1, 2, 3, 4, 5, 7, 8, 9, 10)
+  - [x] Injetar 3 novas dependências (`@RequiredArgsConstructor`, mesma convenção): `ReasonInactivateService reasonInactivateService`, `ReasonDisableService reasonDisableService`, `ReasonEnableService reasonEnableService` (`ReasonActivateService` já injetado, reaproveitar).
+  - [x] Implementar os 4 métodos, mesmo formato para todos (exemplo `activate`):
     ```java
     @Override
     @Transactional(rollbackFor = ScosException.class)
@@ -91,7 +95,7 @@ Para que toda mudança de status tenha justificativa e rastro auditável.
     ```
     Repetir para `inactivate`/`disable`/`enable`, trocando: método de domínio chamado (`company.inactivate(...)`/`company.disable(...)`/`company.enable(...)`), e o helper de validação de motivo (Task abaixo).
     **CRÍTICO — não fazer:** nenhum dos 4 métodos chama `company.setStatus(...)` nem `companyRepository.update(company)`. O `trg_sync_company_status` (`AFTER INSERT ON SCOS_COMPANY_STATUS_HISTORY`) já sincroniza `STATUS`/`UPDATED_AT` no banco a partir da linha de histórico — ver Dev Notes.
-  - [ ] Criar 3 helpers privados espelhando `validateReasonActivate(Long)` já existente (linha ~194), só trocando o service e os códigos:
+  - [x] Criar 3 helpers privados espelhando `validateReasonActivate(Long)` já existente (linha ~194), só trocando o service e os códigos:
     ```java
     private void validateReasonInactivate(Long reasonInactivateId) {
         ReasonInactivateOutput reason = reasonInactivateService.findById(reasonInactivateId);
@@ -105,8 +109,8 @@ Para que toda mudança de status tenha justificativa e rastro auditável.
     ```
     Análogo para `validateReasonDisable` (`SCOS_COMPANY_014`/`015`) e `validateReasonEnable` (`SCOS_COMPANY_016`/`017`). **Não** validar existência do motivo manualmente — `Reason*Service.findById` já lança 404 próprio se não existir (AC 9).
 
-- [ ] Task 4: 4 Use Cases + `CompanyDelegate` (AC: 11)
-  - [ ] Criar, em `flow-organization-usecase/.../usecase/corporate/company/`, 4 pares interface+Bean (mesmo padrão de `UpdateCompanyUseCase(Bean)`, que recebe o DTO gerado da API direto — não criar um Input próprio):
+- [x] Task 4: 4 Use Cases + `CompanyDelegate` (AC: 11)
+  - [x] Criar, em `flow-organization-usecase/.../usecase/corporate/company/`, 4 pares interface+Bean (mesmo padrão de `UpdateCompanyUseCase(Bean)`, que recebe o DTO gerado da API direto — não criar um Input próprio):
     ```java
     public interface ActivateCompanyUseCase {
         void execute(@NonNull Long id, @NonNull CompanyStatusTransitionRequest request);
@@ -124,7 +128,7 @@ Para que toda mudança de status tenha justificativa e rastro auditável.
     }
     ```
     Repetir para `InactivateCompanyUseCase(Bean)` (chama `companyService.inactivate(...)`), `BlockCompanyUseCase(Bean)` (chama `companyService.disable(...)` — **não** `block`, esse método não existe), `UnblockCompanyUseCase(Bean)` (chama `companyService.enable(...)` — **não** `unblock`).
-  - [ ] `flow-organization-api/.../delegate/company/CompanyDelegate.java`: injetar os 4 Use Cases novos e sobrescrever os 4 métodos de `CompanyApiDelegate`:
+  - [x] `flow-organization-api/.../delegate/company/CompanyDelegate.java`: injetar os 4 Use Cases novos e sobrescrever os 4 métodos de `CompanyApiDelegate`:
     ```java
     @Override
     public Void activateCompany(Long id, CompanyStatusTransitionRequest companyStatusTransitionRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
@@ -133,23 +137,23 @@ Para que toda mudança de status tenha justificativa e rastro auditável.
     }
     ```
     Mesmo formato para `inactivateCompany`/`blockCompany`/`unblockCompany`, mesmo padrão de `updateCompany` já existente no arquivo (delegate fino, `return null` → `204`).
-  - [ ] **Não** mexer no YAML nem em `ScosOrganizationPermission` — `x-authorize`/permissões já existem (AC 12).
+  - [x] **Não** mexer no YAML nem em `ScosOrganizationPermission` — `x-authorize`/permissões já existem (AC 12).
 
-- [ ] Task 5: Testes (AC: todas)
-  - [ ] `CompanyServiceBeanTest.java` — acrescentar `@Mock ReasonInactivateService`/`ReasonDisableService`/`ReasonEnableService` (mesmo padrão `@Mock`/`@InjectMocks` já usado no arquivo). Para cada uma das 4 transições (`activate`/`inactivate`/`disable`/`enable`):
+- [x] Task 5: Testes (AC: todas)
+  - [x] `CompanyServiceBeanTest.java` — acrescentar `@Mock ReasonInactivateService`/`ReasonDisableService`/`ReasonEnableService` (mesmo padrão `@Mock`/`@InjectMocks` já usado no arquivo). Para cada uma das 4 transições (`activate`/`inactivate`/`disable`/`enable`):
     - caminho feliz: `findById` mockado retornando a Company no status de origem correto; motivo mockado `active=true`+`entityType=COMPANY`; chama o método; `verify(companyStatusHistoryRepository).merge(...)` capturando o argumento e conferindo `status`/`reasonXxx.id()`/`observation`/`userAt`; **`verify(companyRepository, never()).update(any())`** (prova que o Java não tenta setar status manualmente).
     - transição inválida (status de origem errado): `assertThatThrownBy(...).hasFieldOrPropertyWithValue("code", SCOS_COMPANY_007.getCode())`.
     - motivo inativo: `assertThatThrownBy(...)` com o código dedicado da transição (`012`/`014`/`016`; `activate` já tem teste com `008` de outra story anterior — conferir se já existe, senão criar).
     - motivo incompatível (`entityType != COMPANY`): idem, código `013`/`015`/`017` (`activate` já tem `009`).
-  - [ ] Criar 4 arquivos de teste de Use Case (`flow-organization-usecase/src/test/.../usecase/corporate/company/`) — `ActivateCompanyUseCaseBeanTest.java` etc., mesmo padrão BDD (`then(...).should()`/`willThrow(...).given(...)`) de `EnableDepartmentUseCaseBeanTest`: 1 teste "delega corretamente com os 3 argumentos (id, reasonId, observation)" + 1 teste "propaga `ScosException`".
-  - [ ] `CompanyControllerTest.java` (`flow-organization-boot`) — acrescentar **um** cenário de integração real provando que o trigger sincroniza de fato: `PUT /v1/companies/{id}/block` no caminho feliz (empresa seed `ACTIVE`, `reasonId=1` de `SCOS_REASON_DISABLE`) → `204`, seguido de `GET /v1/companies/{id}` confirmando `status: DISABLED` na resposta (prova end-to-end que `trg_sync_company_status` funciona, não só que o histórico foi inserido). Reaproveitar `SEEDED_ID`/estrutura de request já existentes no arquivo.
+  - [x] Criar 4 arquivos de teste de Use Case (`flow-organization-usecase/src/test/.../usecase/corporate/company/`) — `ActivateCompanyUseCaseBeanTest.java` etc., mesmo padrão BDD (`then(...).should()`/`willThrow(...).given(...)`) de `EnableDepartmentUseCaseBeanTest`: 1 teste "delega corretamente com os 3 argumentos (id, reasonId, observation)" + 1 teste "propaga `ScosException`".
+  - [x] `CompanyControllerTest.java` (`flow-organization-boot`) — acrescentar **um** cenário de integração real provando que o trigger sincroniza de fato: `PUT /v1/companies/{id}/block` no caminho feliz (empresa seed `ACTIVE`, `reasonId=1` de `SCOS_REASON_DISABLE`) → `204`, seguido de `GET /v1/companies/{id}` confirmando `status: DISABLED` na resposta (prova end-to-end que `trg_sync_company_status` funciona, não só que o histórico foi inserido). Reaproveitar `SEEDED_ID`/estrutura de request já existentes no arquivo.
 
-- [ ] Task 6: Guarda de escopo (AC: 12)
-  - [ ] NÃO alterar `etc/api/organization/ScosOrganization_Company.yml`.
-  - [ ] NÃO implementar `GET /v1/companies/{id}/status-history` (UC-138).
-  - [ ] NÃO tocar `SCOS_COMPANY_005`/`006` nem qualquer lógica de "última matriz ativa"/"única empresa ativa" — Story 1.3.
-  - [ ] NÃO criar/alterar CRUD de `ReasonActivate`/`ReasonInactivate`/`ReasonDisable`/`ReasonEnable`.
-  - [ ] NÃO adicionar permissão nova em `ScosOrganizationPermission` — as 4 já existem.
+- [x] Task 6: Guarda de escopo (AC: 12)
+  - [x] NÃO alterar `etc/api/organization/ScosOrganization_Company.yml`.
+  - [x] NÃO implementar `GET /v1/companies/{id}/status-history` (UC-138).
+  - [x] NÃO tocar `SCOS_COMPANY_005`/`006` nem qualquer lógica de "última matriz ativa"/"única empresa ativa" — Story 1.3.
+  - [x] NÃO criar/alterar CRUD de `ReasonActivate`/`ReasonInactivate`/`ReasonDisable`/`ReasonEnable`.
+  - [x] NÃO adicionar permissão nova em `ScosOrganizationPermission` — as 4 já existem.
 
 ## Dev Notes
 
@@ -236,10 +240,50 @@ Se o dev agent mapear por nome (ex.: `BlockCompanyUseCase` → `companyService.b
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Sonnet 5 (claude-sonnet-5)
 
 ### Debug Log References
 
+- `mvn -pl flow-organization-domain clean test -Dtest=CompanyServiceBeanTest -Denforcer.skip=true` → 37/37 (16 pré-existentes + 21 já contavam de Story 1.1 + 16 novos de activate/inactivate/disable/enable — 4 transições × 4 cenários).
+- Corrigido `verify(companyRepository, never()).update(any())` → `update(any(Company.class))`: `any()` sem tipo era ambíguo entre `JpaSpecificationExecutor.update(UpdateSpecification<T>)` e `BaseJpaRepository.update(S)` (Spring Data JPA expôs o overload novo nesta versão).
+- `mvn -pl flow-organization-usecase test -Dtest=ActivateCompanyUseCaseBeanTest,InactivateCompanyUseCaseBeanTest,BlockCompanyUseCaseBeanTest,UnblockCompanyUseCaseBeanTest -Denforcer.skip=true` → 8/8.
+- `mvn -pl flow-organization-domain,flow-organization-usecase,flow-organization-infrastructure test -Denforcer.skip=true` → 207 + 186 + 3 = 396/396, sem regressão (inclui `PermissionsConsistencyTest`, inalterado).
+- `mvn -pl flow-organization-boot test -Dtest=CompanyControllerTest -Denforcer.skip=true` → 17/17 (16 pré-existentes + 1 novo `block`→`GET` provando `trg_sync_company_status` fim-a-fim).
+- `mvn -pl flow-organization-boot test -Denforcer.skip=true` → 363/363, sem regressão na suíte de integração completa.
+- `-Denforcer.skip=true` usado só para contornar o enforcer pré-existente já quebrado (ver *Build quebrado* no `project-context.md`) — nenhuma mudança de dependência nesta story.
+
 ### Completion Notes List
 
+- 6 códigos de erro novos (`SCOS_COMPANY_012`..`017`) com mensagens PT/EN dedicadas por transição — evita reaproveitar `008`/`009` (texto hardcoded para "ativação", ver Dev Notes) com mensagem semanticamente errada.
+- 4 métodos novos em `CompanyService`/`CompanyServiceBean` (`activate`/`inactivate`/`disable`/`enable`) seguindo o padrão de `create()`: acham a Company, validam o motivo (404 se não existe, 422 se inativo/incompatível), delegam o guard de transição de status ao método de domínio já implementado em `Company.java` (que lança `SCOS_COMPANY_007` se a origem for inválida), e persistem só o `CompanyStatusHistory` — **nenhum método chama `company.setStatus(...)` nem `companyRepository.update(company)`**, propagação de status é 100% via `trg_sync_company_status` (confirmado end-to-end no teste de integração).
+- 4 pares Use Case+Bean novos (`ActivateCompanyUseCase(Bean)`, `InactivateCompanyUseCase(Bean)`, `BlockCompanyUseCase(Bean)`, `UnblockCompanyUseCase(Bean)`) em `usecase/corporate/company/`, recebendo `CompanyStatusTransitionRequest` gerado da API direto (sem DTO próprio) — mapeamento rota→domínio respeitado à risca: `BlockCompanyUseCase`→`companyService.disable(...)`, `UnblockCompanyUseCase`→`companyService.enable(...)` (não `block`/`unblock`, que não existem no `CompanyService`).
+- `CompanyDelegate` ganhou os 4 `@Override` (antes cadiam no `default` gerado que lança `MethodNotImplementedException`), delegate fino, `return null` → 204.
+- Guarda de escopo (Task 6) confirmada via `git status`: zero mudança em `etc/api/organization/*.yml`, Liquibase, ou `ScosOrganizationPermission` — só `domain`/`usecase`/`api`/`shared` + 2 arquivos de teste em `boot`/`domain`.
+- Teste de integração novo em `CompanyControllerTest` prova de ponta a ponta que `trg_sync_company_status` sincroniza `SCOS_COMPANY.STATUS` a partir do INSERT em `SCOS_COMPANY_STATUS_HISTORY` (não só que o histórico foi gravado).
+
 ### File List
+
+- `organization/flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/exception/ExceptionCodeError.java` (modificado — `SCOS_COMPANY_012..017`)
+- `organization/flow-organization-shared/src/main/resources/scos_message_organization.properties` (modificado — 6 mensagens PT novas)
+- `organization/flow-organization-shared/src/main/resources/scos_message_organization_en.properties` (modificado — 6 mensagens EN novas)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/specification/CompanyService.java` (modificado — `activate`/`inactivate`/`disable`/`enable`)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/service/CompanyServiceBean.java` (modificado — implementação + 3 helpers de validação de motivo)
+- `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/corporate/company/service/CompanyServiceBeanTest.java` (modificado — 16 testes novos das 4 transições)
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/company/ActivateCompanyUseCase.java` (novo)
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/company/ActivateCompanyUseCaseBean.java` (novo)
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/company/InactivateCompanyUseCase.java` (novo)
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/company/InactivateCompanyUseCaseBean.java` (novo)
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/company/BlockCompanyUseCase.java` (novo)
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/company/BlockCompanyUseCaseBean.java` (novo)
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/company/UnblockCompanyUseCase.java` (novo)
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/company/UnblockCompanyUseCaseBean.java` (novo)
+- `organization/flow-organization-usecase/src/test/java/br/com/sawcunhaos/organization/application/usecase/corporate/company/ActivateCompanyUseCaseBeanTest.java` (novo)
+- `organization/flow-organization-usecase/src/test/java/br/com/sawcunhaos/organization/application/usecase/corporate/company/InactivateCompanyUseCaseBeanTest.java` (novo)
+- `organization/flow-organization-usecase/src/test/java/br/com/sawcunhaos/organization/application/usecase/corporate/company/BlockCompanyUseCaseBeanTest.java` (novo)
+- `organization/flow-organization-usecase/src/test/java/br/com/sawcunhaos/organization/application/usecase/corporate/company/UnblockCompanyUseCaseBeanTest.java` (novo)
+- `organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/company/CompanyDelegate.java` (modificado — 4 `@Override` novos)
+- `organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/company/CompanyControllerTest.java` (modificado — cenário de integração `block`+`GET` provando o trigger)
+
+## Change Log
+
+- 2026-07-22: Implementado ciclo de vida completo de Empresa (activate/inactivate/block/unblock) via 4 Use Cases + Service + 6 códigos de erro novos; 20 arquivos (8 modificados, 12 novos); 25 testes novos (16 domain + 8 usecase + 1 integração), 0 regressão (396 domain/usecase/infra + 363 boot). Status → review.

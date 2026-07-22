@@ -85,6 +85,18 @@ public enum ExceptionCodeError implements ExceptionCode {
     SCOS_COMPANY_010("SCOS_COMPANY_010", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
     /** Profundidade da hierarquia de empresas excede COMPANY_HIERARCHY_MAX_DEPTH. HTTP 422. */
     SCOS_COMPANY_011("SCOS_COMPANY_011", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de inativação informado está inativo. HTTP 422. */
+    SCOS_COMPANY_012("SCOS_COMPANY_012", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de inativação informado é incompatível com a entidade Empresa. HTTP 422. */
+    SCOS_COMPANY_013("SCOS_COMPANY_013", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de bloqueio informado está inativo. HTTP 422. */
+    SCOS_COMPANY_014("SCOS_COMPANY_014", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de bloqueio informado é incompatível com a entidade Empresa. HTTP 422. */
+    SCOS_COMPANY_015("SCOS_COMPANY_015", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de desbloqueio informado está inativo. HTTP 422. */
+    SCOS_COMPANY_016("SCOS_COMPANY_016", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de desbloqueio informado é incompatível com a entidade Empresa. HTTP 422. */
+    SCOS_COMPANY_017("SCOS_COMPANY_017", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
 
     // Employee
     SCOS_EMPLOYEE_001("SCOS_EMPLOYEE_001", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),

@@ -16,10 +16,16 @@ package br.com.sawcunhaos.organization.domain.corporate.company.service;
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
 import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonActivateOutput;
+import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonDisableOutput;
+import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonEnableOutput;
+import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonInactivateOutput;
 import br.com.sawcunhaos.organization.domain.access.status.internal.CompanyStatusHistory;
 import br.com.sawcunhaos.organization.domain.access.status.internal.CompanyStatusHistoryRepository;
 import br.com.sawcunhaos.organization.domain.access.status.internal.EntityType;
 import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonActivateService;
+import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonDisableService;
+import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonEnableService;
+import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonInactivateService;
 import br.com.sawcunhaos.organization.domain.configuration.internal.ConfigurationKey;
 import br.com.sawcunhaos.organization.domain.configuration.internal.OrganizationConfiguration;
 import br.com.sawcunhaos.organization.domain.configuration.internal.OrganizationConfigurationRepository;
@@ -33,6 +39,7 @@ import br.com.sawcunhaos.organization.domain.corporate.company.internal.StatusCo
 import com.querydsl.core.types.Predicate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -49,10 +56,17 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_002;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_004;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_007;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_008;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_009;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_010;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_011;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_012;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_013;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_014;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_015;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_016;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_017;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LEGAL_NATURE_001;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -86,6 +100,12 @@ class CompanyServiceBeanTest {
     @Mock
     private ReasonActivateService reasonActivateService;
     @Mock
+    private ReasonInactivateService reasonInactivateService;
+    @Mock
+    private ReasonDisableService reasonDisableService;
+    @Mock
+    private ReasonEnableService reasonEnableService;
+    @Mock
     private ScosUserAuthentication scosUserAuthentication;
     @Mock
     private CompanyMapper companyMapper;
@@ -105,6 +125,18 @@ class CompanyServiceBeanTest {
 
     private ReasonActivateOutput reason(boolean active, EntityType entityType) {
         return ReasonActivateOutput.builder().id(10L).code("ABERTURA").active(active).entityType(entityType).build();
+    }
+
+    private ReasonInactivateOutput reasonInactivate(boolean active, EntityType entityType) {
+        return ReasonInactivateOutput.builder().id(20L).code("ENCERRAMENTO").active(active).entityType(entityType).build();
+    }
+
+    private ReasonDisableOutput reasonDisable(boolean active, EntityType entityType) {
+        return ReasonDisableOutput.builder().id(30L).code("AUDITORIA").active(active).entityType(entityType).build();
+    }
+
+    private ReasonEnableOutput reasonEnable(boolean active, EntityType entityType) {
+        return ReasonEnableOutput.builder().id(40L).code("LIBERACAO").active(active).entityType(entityType).build();
     }
 
     // ---- create: unicidade (409) ----
@@ -353,5 +385,229 @@ class CompanyServiceBeanTest {
 
         assertThatCode(() -> companyServiceBean.assertNoCycle(1L, 99L))
                 .doesNotThrowAnyException();
+    }
+
+    // ---- activate (UC-006, PUT /enable) ----
+
+    @Test
+    void activateShouldPersistHistoryAndNotUpdateCompanyWhenValid() {
+        Company company = Company.builder().id(1L).status(StatusCompany.INACTIVE).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonActivateService.findById(10L)).thenReturn(reason(true, EntityType.COMPANY));
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn("tester");
+
+        companyServiceBean.activate(1L, 10L, "Reaberta após regularização");
+
+        ArgumentCaptor<CompanyStatusHistory> captor = ArgumentCaptor.forClass(CompanyStatusHistory.class);
+        verify(companyStatusHistoryRepository).merge(captor.capture());
+        CompanyStatusHistory history = captor.getValue();
+        assertThat(history.getStatus()).isEqualTo(StatusCompany.ACTIVE);
+        assertThat(history.getReasonActivate().getId()).isEqualTo(10L);
+        assertThat(history.getObservation()).isEqualTo("Reaberta após regularização");
+        assertThat(history.getUserAt()).isEqualTo("tester");
+        verify(companyRepository, never()).update(any(Company.class));
+    }
+
+    @Test
+    void activateShouldThrowWhenCompanyIsNotInactive() {
+        Company company = Company.builder().id(1L).status(StatusCompany.ACTIVE).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonActivateService.findById(10L)).thenReturn(reason(true, EntityType.COMPANY));
+
+        assertThatThrownBy(() -> companyServiceBean.activate(1L, 10L, null))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_COMPANY_007.getCode());
+
+        verify(companyStatusHistoryRepository, never()).merge(any());
+    }
+
+    @Test
+    void activateShouldThrowWhenReasonIsInactive() {
+        Company company = Company.builder().id(1L).status(StatusCompany.INACTIVE).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonActivateService.findById(10L)).thenReturn(reason(false, EntityType.COMPANY));
+
+        assertThatThrownBy(() -> companyServiceBean.activate(1L, 10L, null))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_COMPANY_008.getCode());
+    }
+
+    @Test
+    void activateShouldThrowWhenReasonEntityTypeIsIncompatible() {
+        Company company = Company.builder().id(1L).status(StatusCompany.INACTIVE).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonActivateService.findById(10L)).thenReturn(reason(true, EntityType.EMPLOYEE));
+
+        assertThatThrownBy(() -> companyServiceBean.activate(1L, 10L, null))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_COMPANY_009.getCode());
+    }
+
+    // ---- inactivate (UC-006, PUT /disable) ----
+
+    @Test
+    void inactivateShouldPersistHistoryAndNotUpdateCompanyWhenValid() {
+        Company company = Company.builder().id(1L).status(StatusCompany.ACTIVE).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonInactivateService.findById(20L)).thenReturn(reasonInactivate(true, EntityType.COMPANY));
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn("tester");
+
+        companyServiceBean.inactivate(1L, 20L, "Encerramento definitivo");
+
+        ArgumentCaptor<CompanyStatusHistory> captor = ArgumentCaptor.forClass(CompanyStatusHistory.class);
+        verify(companyStatusHistoryRepository).merge(captor.capture());
+        CompanyStatusHistory history = captor.getValue();
+        assertThat(history.getStatus()).isEqualTo(StatusCompany.INACTIVE);
+        assertThat(history.getReasonInactivate().getId()).isEqualTo(20L);
+        assertThat(history.getObservation()).isEqualTo("Encerramento definitivo");
+        assertThat(history.getUserAt()).isEqualTo("tester");
+        verify(companyRepository, never()).update(any(Company.class));
+    }
+
+    @Test
+    void inactivateShouldThrowWhenCompanyIsAlreadyInactive() {
+        Company company = Company.builder().id(1L).status(StatusCompany.INACTIVE).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonInactivateService.findById(20L)).thenReturn(reasonInactivate(true, EntityType.COMPANY));
+
+        assertThatThrownBy(() -> companyServiceBean.inactivate(1L, 20L, null))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_COMPANY_007.getCode());
+
+        verify(companyStatusHistoryRepository, never()).merge(any());
+    }
+
+    @Test
+    void inactivateShouldThrowWhenReasonIsInactive() {
+        Company company = Company.builder().id(1L).status(StatusCompany.ACTIVE).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonInactivateService.findById(20L)).thenReturn(reasonInactivate(false, EntityType.COMPANY));
+
+        assertThatThrownBy(() -> companyServiceBean.inactivate(1L, 20L, null))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_COMPANY_012.getCode());
+    }
+
+    @Test
+    void inactivateShouldThrowWhenReasonEntityTypeIsIncompatible() {
+        Company company = Company.builder().id(1L).status(StatusCompany.ACTIVE).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonInactivateService.findById(20L)).thenReturn(reasonInactivate(true, EntityType.EMPLOYEE));
+
+        assertThatThrownBy(() -> companyServiceBean.inactivate(1L, 20L, null))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_COMPANY_013.getCode());
+    }
+
+    // ---- disable / block (UC-006, PUT /block) ----
+
+    @Test
+    void disableShouldPersistHistoryAndNotUpdateCompanyWhenValid() {
+        Company company = Company.builder().id(1L).status(StatusCompany.ACTIVE).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonDisableService.findById(30L)).thenReturn(reasonDisable(true, EntityType.COMPANY));
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn("tester");
+
+        companyServiceBean.disable(1L, 30L, "Suspensa em auditoria");
+
+        ArgumentCaptor<CompanyStatusHistory> captor = ArgumentCaptor.forClass(CompanyStatusHistory.class);
+        verify(companyStatusHistoryRepository).merge(captor.capture());
+        CompanyStatusHistory history = captor.getValue();
+        assertThat(history.getStatus()).isEqualTo(StatusCompany.DISABLED);
+        assertThat(history.getReasonDisable().getId()).isEqualTo(30L);
+        assertThat(history.getObservation()).isEqualTo("Suspensa em auditoria");
+        assertThat(history.getUserAt()).isEqualTo("tester");
+        verify(companyRepository, never()).update(any(Company.class));
+    }
+
+    @Test
+    void disableShouldThrowWhenCompanyIsNotActive() {
+        Company company = Company.builder().id(1L).status(StatusCompany.INACTIVE).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonDisableService.findById(30L)).thenReturn(reasonDisable(true, EntityType.COMPANY));
+
+        assertThatThrownBy(() -> companyServiceBean.disable(1L, 30L, null))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_COMPANY_007.getCode());
+
+        verify(companyStatusHistoryRepository, never()).merge(any());
+    }
+
+    @Test
+    void disableShouldThrowWhenReasonIsInactive() {
+        Company company = Company.builder().id(1L).status(StatusCompany.ACTIVE).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonDisableService.findById(30L)).thenReturn(reasonDisable(false, EntityType.COMPANY));
+
+        assertThatThrownBy(() -> companyServiceBean.disable(1L, 30L, null))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_COMPANY_014.getCode());
+    }
+
+    @Test
+    void disableShouldThrowWhenReasonEntityTypeIsIncompatible() {
+        Company company = Company.builder().id(1L).status(StatusCompany.ACTIVE).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonDisableService.findById(30L)).thenReturn(reasonDisable(true, EntityType.EMPLOYEE));
+
+        assertThatThrownBy(() -> companyServiceBean.disable(1L, 30L, null))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_COMPANY_015.getCode());
+    }
+
+    // ---- enable / unblock (UC-006, PUT /unblock) ----
+
+    @Test
+    void enableShouldPersistHistoryAndNotUpdateCompanyWhenValid() {
+        Company company = Company.builder().id(1L).status(StatusCompany.DISABLED).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonEnableService.findById(40L)).thenReturn(reasonEnable(true, EntityType.COMPANY));
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn("tester");
+
+        companyServiceBean.enable(1L, 40L, "Auditoria concluída");
+
+        ArgumentCaptor<CompanyStatusHistory> captor = ArgumentCaptor.forClass(CompanyStatusHistory.class);
+        verify(companyStatusHistoryRepository).merge(captor.capture());
+        CompanyStatusHistory history = captor.getValue();
+        assertThat(history.getStatus()).isEqualTo(StatusCompany.ACTIVE);
+        assertThat(history.getReasonEnable().getId()).isEqualTo(40L);
+        assertThat(history.getObservation()).isEqualTo("Auditoria concluída");
+        assertThat(history.getUserAt()).isEqualTo("tester");
+        verify(companyRepository, never()).update(any(Company.class));
+    }
+
+    @Test
+    void enableShouldThrowWhenCompanyIsNotDisabled() {
+        Company company = Company.builder().id(1L).status(StatusCompany.ACTIVE).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonEnableService.findById(40L)).thenReturn(reasonEnable(true, EntityType.COMPANY));
+
+        assertThatThrownBy(() -> companyServiceBean.enable(1L, 40L, null))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_COMPANY_007.getCode());
+
+        verify(companyStatusHistoryRepository, never()).merge(any());
+    }
+
+    @Test
+    void enableShouldThrowWhenReasonIsInactive() {
+        Company company = Company.builder().id(1L).status(StatusCompany.DISABLED).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonEnableService.findById(40L)).thenReturn(reasonEnable(false, EntityType.COMPANY));
+
+        assertThatThrownBy(() -> companyServiceBean.enable(1L, 40L, null))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_COMPANY_016.getCode());
+    }
+
+    @Test
+    void enableShouldThrowWhenReasonEntityTypeIsIncompatible() {
+        Company company = Company.builder().id(1L).status(StatusCompany.DISABLED).build();
+        when(companyRepository.findById(1L)).thenReturn(Optional.of(company));
+        when(reasonEnableService.findById(40L)).thenReturn(reasonEnable(true, EntityType.EMPLOYEE));
+
+        assertThatThrownBy(() -> companyServiceBean.enable(1L, 40L, null))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_COMPANY_017.getCode());
     }
 }
