@@ -1,6 +1,10 @@
+---
+baseline_commit: 4198db07a7de628f9b16924123a2dcd8cc356701
+---
+
 # Story 1.1: Bloquear Ciclo na Hierarquia de Empresa
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -19,19 +23,19 @@ Para que a árvore Empresa/Filial nunca fique estruturalmente inválida.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Query nativa recursiva no repositório (AC: 1, 2, 3)
-  - [ ] Adicionar em `CompanyRepository` (`flow-organization-domain/.../corporate/company/internal/CompanyRepository.java`) um método nativo `@Query` com `WITH RECURSIVE` que sobe a cadeia de `PARENT_COMPANY_ID` a partir de `candidateParentCompanyId` e verifica se `companyId` aparece nela (ver SQL exato em Dev Notes).
-  - [ ] Expor como `default boolean wouldCreateCycle(Long companyId, Long candidateParentCompanyId)`, convertendo o `int` (0/1) da query nativa — não vincular boolean/EXISTS direto ao retorno do `@Query` (ver Dev Notes, risco de mapeamento nativo).
-- [ ] Task 2: Guard no domain service (AC: 1, 2, 4)
-  - [ ] Adicionar `void assertNoCycle(@NonNull Long companyId, @NonNull Long candidateParentCompanyId)` à interface `CompanyService` (specification), com Javadoc explicando que é guarda antecipada sem call site nesta Etapa.
-  - [ ] Implementar em `CompanyServiceBean`: chama `companyRepository.wouldCreateCycle(...)`; se `true`, lança `new ScosException(SCOS_COMPANY_004)` (código e mensagens PT/EN já existem — nada novo a adicionar no bundle).
-- [ ] Task 3: Testes (AC: 1, 2, 3, 4)
-  - [ ] Unitário: acrescentar métodos em `CompanyServiceBeanTest.java` (mesmo padrão Given/When/Then já usado ali) — mocka `companyRepository.wouldCreateCycle` retornando `true`/`false`, assere throw com `SCOS_COMPANY_004.getCode()` / ausência de throw.
-  - [ ] Integração (query real): nova classe em `flow-organization-boot/src/test/java/.../` estendendo `ScosOrganizationTestUtil`, mas **sem usar MockMvc** — autowira `CompanyRepository` direto e monta uma hierarquia de 3+ níveis via `companyRepository.merge(...)` para provar que a CTE detecta o ciclo indireto e aceita o caso sem ciclo. Manter sufixo `*ControllerTest` mesmo sem chamada HTTP (ver Dev Notes — é convenção deliberada do projeto, não erro).
-  - [ ] Rodar (ou inspecionar) `CompanyServiceBeanTest.updateShouldPersistWhenValidAndNotTouchParent` para confirmar que nada nesta story o quebra — não é pra alterar esse teste.
-- [ ] Task 4: Não expandir escopo (AC: 4)
-  - [ ] NÃO alterar `etc/api/organization/ScosOrganization_Company.yml` (nem `UpdateCompanyRequest`, nem endpoint novo).
-  - [ ] NÃO criar Delegate/Use Case de edição de hierarquia — decisão confirmada com o PM em 2026-07-18: este guard fica pronto e sem uso até a Etapa que abrir edição de `parentCompanyId`.
+- [x] Task 1: Query nativa recursiva no repositório (AC: 1, 2, 3)
+  - [x] Adicionar em `CompanyRepository` (`flow-organization-domain/.../corporate/company/internal/CompanyRepository.java`) um método nativo `@Query` com `WITH RECURSIVE` que sobe a cadeia de `PARENT_COMPANY_ID` a partir de `candidateParentCompanyId` e verifica se `companyId` aparece nela (ver SQL exato em Dev Notes).
+  - [x] Expor como `default boolean wouldCreateCycle(Long companyId, Long candidateParentCompanyId)`, convertendo o `int` (0/1) da query nativa — não vincular boolean/EXISTS direto ao retorno do `@Query` (ver Dev Notes, risco de mapeamento nativo).
+- [x] Task 2: Guard no domain service (AC: 1, 2, 4)
+  - [x] Adicionar `void assertNoCycle(@NonNull Long companyId, @NonNull Long candidateParentCompanyId)` à interface `CompanyService` (specification), com Javadoc explicando que é guarda antecipada sem call site nesta Etapa.
+  - [x] Implementar em `CompanyServiceBean`: chama `companyRepository.wouldCreateCycle(...)`; se `true`, lança `new ScosException(SCOS_COMPANY_004)` (código e mensagens PT/EN já existem — nada novo a adicionar no bundle).
+- [x] Task 3: Testes (AC: 1, 2, 3, 4)
+  - [x] Unitário: acrescentar métodos em `CompanyServiceBeanTest.java` (mesmo padrão Given/When/Then já usado ali) — mocka `companyRepository.wouldCreateCycle` retornando `true`/`false`, assere throw com `SCOS_COMPANY_004.getCode()` / ausência de throw.
+  - [x] Integração (query real): nova classe em `flow-organization-boot/src/test/java/.../` estendendo `ScosOrganizationTestUtil`, mas **sem usar MockMvc** — autowira `CompanyRepository` direto e monta uma hierarquia de 3+ níveis via `companyRepository.merge(...)` para provar que a CTE detecta o ciclo indireto e aceita o caso sem ciclo. Manter sufixo `*ControllerTest` mesmo sem chamada HTTP (ver Dev Notes — é convenção deliberada do projeto, não erro).
+  - [x] Rodar (ou inspecionar) `CompanyServiceBeanTest.updateShouldPersistWhenValidAndNotTouchParent` para confirmar que nada nesta story o quebra — não é pra alterar esse teste.
+- [x] Task 4: Não expandir escopo (AC: 4)
+  - [x] NÃO alterar `etc/api/organization/ScosOrganization_Company.yml` (nem `UpdateCompanyRequest`, nem endpoint novo).
+  - [x] NÃO criar Delegate/Use Case de edição de hierarquia — decisão confirmada com o PM em 2026-07-18: este guard fica pronto e sem uso até a Etapa que abrir edição de `parentCompanyId`.
 
 ## Dev Notes
 
@@ -118,10 +122,32 @@ default boolean wouldCreateCycle(Long companyId, Long candidateParentCompanyId) 
 
 ### Agent Model Used
 
-{{agent_model_name_version}}
+Claude Sonnet 5 (claude-sonnet-5)
 
 ### Debug Log References
 
+- `mvn -pl flow-organization-domain clean test -Dtest=CompanyServiceBeanTest -Denforcer.skip=true` → 21/21 (inclui os 2 novos testes de `assertNoCycle`).
+- `mvn -pl flow-organization-domain test -Denforcer.skip=true` → 191/191, sem regressão (inclui `updateShouldPersistWhenValidAndNotTouchParent`, inalterado).
+- `mvn -pl flow-organization-boot test -Dtest=CompanyCycleGuardControllerTest -Denforcer.skip=true` → 2/2, CTE `WITH RECURSIVE` confirmada no log do Hibernate contra Postgres real.
+- `mvn -pl flow-organization-boot test -Denforcer.skip=true` → 362/362, sem regressão na suíte de integração completa.
+- `-Denforcer.skip=true` usado só para contornar o enforcer pré-existente já quebrado (ver *Build quebrado* no `project-context.md`) — nenhuma mudança de dependência nesta story.
+
 ### Completion Notes List
 
+- Guard de ciclo implementado como peça reutilizável (`CompanyRepository.wouldCreateCycle` + `CompanyService.assertNoCycle`), sem call site — conforme decisão do PM (2026-07-18) documentada nas Dev Notes. Nenhum endpoint, Use Case, Delegate ou campo YAML foi criado/alterado (Task 4 confirmada via `git diff --stat`: só `flow-organization-domain` + 1 teste novo em `flow-organization-boot`).
+- Query nativa (`WITH RECURSIVE`) segue exatamente o precedente do projeto (`ResourceRepository.upsert`): `@Query(nativeQuery=true)` retornando `int` + `default boolean` wrapper, evitando mapear `EXISTS`/boolean nativo direto.
+- `SCOS_COMPANY_004` e as mensagens PT/EN já existiam (reservados) — nada adicionado ao bundle de exceções.
+- Teste de integração novo (`CompanyCycleGuardControllerTest`) autowira `CompanyRepository` direto, sem MockMvc — não há endpoint para chamar. Mantido o sufixo `*ControllerTest` por convenção do projeto.
+- Regressão confirmada: `CompanyServiceBeanTest.updateShouldPersistWhenValidAndNotTouchParent` passa sem alteração — `parentCompanyId` continua imutável na atualização.
+
 ### File List
+
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/internal/CompanyRepository.java` (modificado — `wouldCreateCycleFlag`/`wouldCreateCycle`)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/specification/CompanyService.java` (modificado — `assertNoCycle`)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/service/CompanyServiceBean.java` (modificado — implementação de `assertNoCycle`)
+- `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/corporate/company/service/CompanyServiceBeanTest.java` (modificado — testes unitários de `assertNoCycle`)
+- `organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/company/CompanyCycleGuardControllerTest.java` (novo — teste de integração da CTE recursiva)
+
+## Change Log
+
+- 2026-07-22: Implementado guard de ciclo (`assertNoCycle`/`wouldCreateCycle`) via CTE recursiva; 5 arquivos (4 modificados, 1 novo); 23 testes novos/verificados, 0 regressão (191 domain + 362 boot). Status → review.

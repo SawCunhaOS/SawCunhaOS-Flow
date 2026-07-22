@@ -13,6 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.company.specification;
 
+import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.CompanyInput;
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.CompanyOutput;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.StatusCompany;
@@ -43,5 +44,15 @@ public interface CompanyService {
 
     /** Resolve o fuso horário efetivo, subindo a cadeia de {@code parentCompany} até achar o primeiro não nulo (D2). */
     ZoneId resolveEffectiveZoneId(@NonNull Long companyId);
+
+    /**
+     * Guarda antecipada (AD-7): garante que atribuir {@code candidateParentCompanyId} como pai de
+     * {@code companyId} não fecha um ciclo (direto ou indireto) na hierarquia de empresas. Hoje não
+     * há nenhum call site — {@code parentCompanyId} é imutável após a criação — mas o guard fica
+     * pronto para a Etapa futura que abrir edição de hierarquia.
+     *
+     * @throws ScosException SCOS_COMPANY_004 se a atribuição fechar um ciclo.
+     */
+    void assertNoCycle(@NonNull Long companyId, @NonNull Long candidateParentCompanyId);
 
 }

@@ -17,7 +17,9 @@ import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -103,6 +105,39 @@ public interface CompanyRepository extends BaseJpaRepository<Company, Long>, Jpa
      */
     default boolean existsByLegalNatureId(Long legalNatureId) {
         return exists(company.legalNature.id.eq(legalNatureId));
+    }
+
+    /**
+     * Sobe a cadeia de {@code PARENT_COMPANY_ID} a partir de {@code candidateParentCompanyId} via
+     * CTE recursiva (AD-7) e verifica se {@code companyId} aparece nela — nesse caso, atribuir
+     * {@code candidateParentCompanyId} como pai de {@code companyId} fecharia um ciclo.
+     *
+     * @return {@code 1} se fecharia ciclo, {@code 0} caso contrário.
+     */
+    @Query(value = """
+            WITH RECURSIVE ancestors AS (
+                SELECT COMPANY_ID, PARENT_COMPANY_ID
+                FROM scos.SCOS_COMPANY
+                WHERE COMPANY_ID = :candidateParentCompanyId
+                UNION ALL
+                SELECT c.COMPANY_ID, c.PARENT_COMPANY_ID
+                FROM scos.SCOS_COMPANY c
+                INNER JOIN ancestors a ON c.COMPANY_ID = a.PARENT_COMPANY_ID
+            )
+            SELECT CASE WHEN EXISTS (SELECT 1 FROM ancestors WHERE COMPANY_ID = :companyId) THEN 1 ELSE 0 END
+            """, nativeQuery = true)
+    int wouldCreateCycleFlag(@Param("companyId") Long companyId, @Param("candidateParentCompanyId") Long candidateParentCompanyId);
+
+    /**
+     * Verifica se atribuir {@code candidateParentCompanyId} como pai de {@code companyId} fecharia
+     * um ciclo (direto ou indireto) na hierarquia de empresas.
+     *
+     * @param companyId               empresa que receberia o novo pai
+     * @param candidateParentCompanyId candidato a pai
+     * @return {@code true} se fecharia ciclo, {@code false} caso contrário
+     */
+    default boolean wouldCreateCycle(Long companyId, Long candidateParentCompanyId) {
+        return wouldCreateCycleFlag(companyId, candidateParentCompanyId) == 1;
     }
 
 }

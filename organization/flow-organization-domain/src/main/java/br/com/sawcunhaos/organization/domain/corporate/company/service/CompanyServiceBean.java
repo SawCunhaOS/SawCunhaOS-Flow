@@ -52,6 +52,7 @@ import java.time.ZoneId;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_CNAE_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_002;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_004;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_008;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_009;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_010;
@@ -198,6 +199,18 @@ class CompanyServiceBean implements CompanyService {
             current = current.getParentCompany();
         }
         return Company.DEFAULT_TIME_ZONE;
+    }
+
+    /**
+     * @throws ScosException SCOS_COMPANY_004 (422) se atribuir {@code candidateParentCompanyId} como
+     *                        pai de {@code companyId} fechar um ciclo (direto ou indireto).
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public void assertNoCycle(@NonNull Long companyId, @NonNull Long candidateParentCompanyId) {
+        if (companyRepository.wouldCreateCycle(companyId, candidateParentCompanyId)) {
+            throw new ScosException(SCOS_COMPANY_004);
+        }
     }
 
     private Company findCompanyById(@NonNull Long companyId) {

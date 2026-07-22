@@ -48,12 +48,14 @@ import java.util.Optional;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_CNAE_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_002;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_004;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_008;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_009;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_010;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_011;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LEGAL_NATURE_001;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -332,5 +334,24 @@ class CompanyServiceBeanTest {
         when(companyRepository.findById(1L)).thenReturn(Optional.of(child));
 
         assertThat(companyServiceBean.resolveEffectiveZoneId(1L)).isEqualTo(Company.DEFAULT_TIME_ZONE);
+    }
+
+    // ---- assertNoCycle (AD-7) ----
+
+    @Test
+    void assertNoCycleShouldThrowWhenWouldCreateCycle() {
+        when(companyRepository.wouldCreateCycle(3L, 1L)).thenReturn(true);
+
+        assertThatThrownBy(() -> companyServiceBean.assertNoCycle(3L, 1L))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_COMPANY_004.getCode());
+    }
+
+    @Test
+    void assertNoCycleShouldNotThrowWhenNoCycle() {
+        when(companyRepository.wouldCreateCycle(1L, 99L)).thenReturn(false);
+
+        assertThatCode(() -> companyServiceBean.assertNoCycle(1L, 99L))
+                .doesNotThrowAnyException();
     }
 }
