@@ -35,6 +35,7 @@ import br.com.sawcunhaos.organization.domain.corporate.company.internal.Company;
 import br.com.sawcunhaos.organization.domain.corporate.company.specification.CompanyService;
 import br.com.sawcunhaos.organization.domain.corporate.employee.dto.EmployeeInput;
 import br.com.sawcunhaos.organization.domain.corporate.employee.dto.EmployeeOutput;
+import br.com.sawcunhaos.organization.domain.corporate.employee.dto.RehireEmployeeInput;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.Employee;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeePositionHistory;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeePositionHistoryRepository;
@@ -78,6 +79,9 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_018;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_019;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_020;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_021;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_022;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_023;
 
 /**
  * Implementação de {@link EmployeeService} — regras de negócio da admissão do Funcionário que
@@ -253,6 +257,77 @@ class EmployeeServiceBean implements EmployeeService {
         history.setObservation(observation);
         history.setUserAt(user);
         employeeStatusHistoryRepository.merge(history);
+    }
+
+    /**
+     * @throws ScosException SCOS_EMPLOYEE_021 (404) se não houver Funcionário INACTIVE com esse {@code taxIdentifier}.
+     * @throws ScosException SCOS_COMPANY_001 / SCOS_POSITION_001 / SCOS_REASON_ACTIVATE_001 / SCOS_EMPLOYEE_004 (404) se alguma FK não existir.
+     * @throws ScosException SCOS_EMPLOYEE_022 (404) se {@code reasonPositionChangeId} não existir.
+     * @throws ScosException SCOS_EMPLOYEE_005/006/007/008/009/023 (422) para as regras de estado dos vínculos/motivos.
+     */
+    @Override
+    @Transactional(rollbackFor = ScosException.class)
+    public EmployeeOutput rehire(@NonNull RehireEmployeeInput input) {
+        log.info("Rehire Employee: {}", input.taxIdentifier());
+
+        Employee employee = employeeQueryRepository.findByTaxIdentifierAndStatus(input.taxIdentifier(), StatusEmployee.INACTIVE)
+                .orElseThrow(() -> new ScosException(SCOS_EMPLOYEE_021));
+
+        Company company = findActiveCompanyOrThrow(input.companyId());
+        Position position = findActivePositionOrThrow(input.positionId());
+        Employee supervisor = resolveActiveSupervisor(input.supervisorId());
+        validateReasonActivate(input.reasonActivateId());
+        ReasonPositionChange reasonPositionChange = findActiveReasonPositionChangeOrThrow(input.reasonPositionChangeId());
+
+        String user = scosUserAuthentication.findUserAuthentication();
+        LocalDate effectiveDate = input.dateOfRehire() != null ? input.dateOfRehire() : LocalDate.now(clock);
+
+        // guarda de estado SCOS_EMPLOYEE_001 dentro de activate() é estruturalmente inalcançável aqui —
+        // a busca acima já filtra status=INACTIVE; mantido por ser o único ponto de mutação de status do domínio.
+        EmployeeStatusHistory history = employee.activate(input.reasonActivateId());
+        history.setObservation(input.observation());
+        history.setUserAt(user);
+        employeeStatusHistoryRepository.merge(history);
+
+        // activate() não muta o status em memória (só o trigger sincroniza SCOS_EMPLOYEE.STATUS a partir do histórico) —
+        // setar aqui é necessário para o Employee em memória (usado por toEmployeeOutput nesta mesma chamada) refletir ACTIVE.
+        employee.setStatus(StatusEmployee.ACTIVE);
+        employee.setCompany(company);
+        employee.setPosition(position);
+        employee.setSupervisor(supervisor);
+        employee.setContractType(input.contractType());
+        employee.setProbationEndDate(input.probationEndDate());
+        if (input.dateOfRehire() != null) {
+            employee.setDateOfHiring(input.dateOfRehire());
+        }
+        employee = employeeQueryRepository.merge(employee);
+
+        employeePositionHistoryRepository.merge(
+                EmployeePositionHistory.builder()
+                        .employee(employee)
+                        .position(position)
+                        .startDate(effectiveDate)
+                        .reasonPositionChange(reasonPositionChange)
+                        .userAt(user)
+                        .build()
+        ); // trg_close_previous_position fecha a linha aberta anterior; trg_sync_employee_position mantém SCOS_EMPLOYEE.POSITION_ID sincronizado (redundante com o setPosition acima, inofensivo)
+
+        return toEmployeeOutput(employee);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public EmployeeOutput findById(@NonNull Long id) {
+        return toEmployeeOutput(findEmployeeById(id));
+    }
+
+    private ReasonPositionChange findActiveReasonPositionChangeOrThrow(Long reasonPositionChangeId) {
+        ReasonPositionChange reason = reasonPositionChangeRepository.findById(reasonPositionChangeId)
+                .orElseThrow(() -> new ScosException(SCOS_EMPLOYEE_022));
+        if (!reason.isActive()) {
+            throw new ScosException(SCOS_EMPLOYEE_023);
+        }
+        return reason;
     }
 
     private Employee findEmployeeById(@NonNull Long employeeId) {

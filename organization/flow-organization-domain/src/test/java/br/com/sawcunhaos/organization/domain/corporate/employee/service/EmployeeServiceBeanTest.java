@@ -15,6 +15,8 @@ package br.com.sawcunhaos.organization.domain.corporate.employee.service;
 
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
+import br.com.sawcunhaos.foundation.utils.valueobjects.Cpf;
+import br.com.sawcunhaos.foundation.utils.valueobjects.Email;
 import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonActivateOutput;
 import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonDisableOutput;
 import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonEnableOutput;
@@ -33,6 +35,7 @@ import br.com.sawcunhaos.organization.domain.corporate.company.internal.Company;
 import br.com.sawcunhaos.organization.domain.corporate.company.specification.CompanyService;
 import br.com.sawcunhaos.organization.domain.corporate.employee.dto.EmployeeInput;
 import br.com.sawcunhaos.organization.domain.corporate.employee.dto.EmployeeOutput;
+import br.com.sawcunhaos.organization.domain.corporate.employee.dto.RehireEmployeeInput;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.Employee;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeeContractType;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeePositionHistory;
@@ -683,5 +686,239 @@ class EmployeeServiceBeanTest {
 
     private ReasonEnableOutput reasonEnable(boolean active, EntityType entityType) {
         return ReasonEnableOutput.builder().id(40L).code("AUDIT_CLEARED").active(active).entityType(entityType).build();
+    }
+
+    // ---- rehire (UC-041) ----
+
+    private RehireEmployeeInput.RehireEmployeeInputBuilder validRehireInput() {
+        return RehireEmployeeInput.builder()
+                .taxIdentifier(VALID_CPF)
+                .companyId(1L)
+                .positionId(1L)
+                .contractType(EmployeeContractType.CLT)
+                .reasonActivateId(10L)
+                .reasonPositionChangeId(50L);
+    }
+
+    private void stubRehireHappyPathCollaborators(Employee inactiveEmployee) {
+        when(employeeQueryRepository.findByTaxIdentifierAndStatus(VALID_CPF, StatusEmployee.INACTIVE)).thenReturn(Optional.of(inactiveEmployee));
+        when(companyService.findCompanyById(1L)).thenReturn(activeCompany());
+        when(positionService.findPositionById(1L)).thenReturn(activePosition());
+        when(reasonActivateService.findById(10L)).thenReturn(reasonActivate(true, EntityType.EMPLOYEE));
+        when(reasonPositionChangeRepository.findById(50L)).thenReturn(Optional.of(ReasonPositionChange.builder().id(50L).code("REINSTATEMENT").active(true).build()));
+        when(employeeQueryRepository.merge(any(Employee.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn("tester");
+    }
+
+    @Test
+    void rehireShouldReassignFieldsAndPersistHistoriesWhenDateOfRehireInformed() {
+        Employee previousSupervisor = Employee.builder().id(77L).status(StatusEmployee.ACTIVE).build();
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.INACTIVE).supervisor(previousSupervisor)
+                .taxIdentifier(new Cpf(VALID_CPF)).email(new Email(VALID_EMAIL)).build();
+        stubRehireHappyPathCollaborators(employee);
+        when(employeeQueryRepository.findById(88L)).thenReturn(Optional.of(Employee.builder().id(88L).status(StatusEmployee.ACTIVE).build()));
+
+        EmployeeOutput result = employeeServiceBean.rehire(validRehireInput()
+                .supervisorId(88L)
+                .probationEndDate(LocalDate.of(2027, 2, 1))
+                .dateOfRehire(LocalDate.of(2026, 9, 1))
+                .observation("Retorno de licença")
+                .build());
+
+        assertThat(result.status()).isEqualTo(StatusEmployee.ACTIVE);
+        assertThat(result.companyId()).isEqualTo(1L);
+        assertThat(result.positionId()).isEqualTo(1L);
+        assertThat(result.supervisorId()).isEqualTo(88L);
+        assertThat(employee.getContractType()).isEqualTo(EmployeeContractType.CLT);
+        assertThat(employee.getProbationEndDate()).isEqualTo(LocalDate.of(2027, 2, 1));
+        assertThat(employee.getDateOfHiring()).isEqualTo(LocalDate.of(2026, 9, 1));
+
+        ArgumentCaptor<EmployeeStatusHistory> statusHistoryCaptor = ArgumentCaptor.forClass(EmployeeStatusHistory.class);
+        verify(employeeStatusHistoryRepository).merge(statusHistoryCaptor.capture());
+        assertThat(statusHistoryCaptor.getValue().getStatus()).isEqualTo(StatusEmployee.ACTIVE);
+        assertThat(statusHistoryCaptor.getValue().getReasonActivate().getId()).isEqualTo(10L);
+        assertThat(statusHistoryCaptor.getValue().getObservation()).isEqualTo("Retorno de licença");
+
+        ArgumentCaptor<EmployeePositionHistory> positionHistoryCaptor = ArgumentCaptor.forClass(EmployeePositionHistory.class);
+        verify(employeePositionHistoryRepository).merge(positionHistoryCaptor.capture());
+        assertThat(positionHistoryCaptor.getValue().getStartDate()).isEqualTo(LocalDate.of(2026, 9, 1));
+        assertThat(positionHistoryCaptor.getValue().getReasonPositionChange().getId()).isEqualTo(50L);
+    }
+
+    @Test
+    void rehireShouldUseClockNowAsStartDateAndKeepOriginalHiringDateWhenDateOfRehireOmitted() {
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.INACTIVE).dateOfHiring(LocalDate.of(2020, 1, 1))
+                .taxIdentifier(new Cpf(VALID_CPF)).email(new Email(VALID_EMAIL)).build();
+        stubRehireHappyPathCollaborators(employee);
+
+        employeeServiceBean.rehire(validRehireInput().build());
+
+        assertThat(employee.getDateOfHiring()).isEqualTo(LocalDate.of(2020, 1, 1));
+        ArgumentCaptor<EmployeePositionHistory> positionHistoryCaptor = ArgumentCaptor.forClass(EmployeePositionHistory.class);
+        verify(employeePositionHistoryRepository).merge(positionHistoryCaptor.capture());
+        assertThat(positionHistoryCaptor.getValue().getStartDate()).isEqualTo(LocalDate.of(2026, 8, 5)); // Clock.fixed do setUp
+    }
+
+    @Test
+    void rehireShouldSetSupervisorNullWhenOmittedEvenIfEmployeeHadOneBefore() {
+        Employee previousSupervisor = Employee.builder().id(77L).status(StatusEmployee.ACTIVE).build();
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.INACTIVE).supervisor(previousSupervisor)
+                .taxIdentifier(new Cpf(VALID_CPF)).email(new Email(VALID_EMAIL)).build();
+        stubRehireHappyPathCollaborators(employee);
+
+        EmployeeOutput result = employeeServiceBean.rehire(validRehireInput().build());
+
+        assertThat(result.supervisorId()).isNull();
+        assertThat(employee.getSupervisor()).isNull();
+    }
+
+    @Test
+    void rehireShouldThrowWhenNoInactiveEmployeeFoundForTaxIdentifier() {
+        // cobre os 3 casos do AC 6 com o mesmo código: CPF nunca cadastrado, ou pertence a um Funcionário ACTIVE, ou a um DISABLED —
+        // em todos, employeeQueryRepository.findByTaxIdentifierAndStatus(cpf, INACTIVE) retorna vazio.
+        when(employeeQueryRepository.findByTaxIdentifierAndStatus(VALID_CPF, StatusEmployee.INACTIVE)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> employeeServiceBean.rehire(validRehireInput().build()))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_021.getCode());
+
+        verify(employeeStatusHistoryRepository, never()).merge(any());
+    }
+
+    @Test
+    void rehireShouldPropagateWhenCompanyDoesNotExist() {
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.INACTIVE).build();
+        when(employeeQueryRepository.findByTaxIdentifierAndStatus(VALID_CPF, StatusEmployee.INACTIVE)).thenReturn(Optional.of(employee));
+        when(companyService.findCompanyById(1L)).thenThrow(new ScosException(br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_001));
+
+        assertThatThrownBy(() -> employeeServiceBean.rehire(validRehireInput().build()))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_COMPANY_001.getCode());
+    }
+
+    @Test
+    void rehireShouldThrowWhenCompanyIsNotActive() {
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.INACTIVE).build();
+        when(employeeQueryRepository.findByTaxIdentifierAndStatus(VALID_CPF, StatusEmployee.INACTIVE)).thenReturn(Optional.of(employee));
+        when(companyService.findCompanyById(1L)).thenReturn(Company.builder().id(1L).status(br.com.sawcunhaos.organization.domain.corporate.company.internal.StatusCompany.INACTIVE).build());
+
+        assertThatThrownBy(() -> employeeServiceBean.rehire(validRehireInput().build()))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_EMPLOYEE_005.getCode());
+    }
+
+    @Test
+    void rehireShouldThrowWhenPositionIsInactive() {
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.INACTIVE).build();
+        when(employeeQueryRepository.findByTaxIdentifierAndStatus(VALID_CPF, StatusEmployee.INACTIVE)).thenReturn(Optional.of(employee));
+        when(companyService.findCompanyById(1L)).thenReturn(activeCompany());
+        when(positionService.findPositionById(1L)).thenReturn(Position.builder().id(1L).active(false).build());
+
+        assertThatThrownBy(() -> employeeServiceBean.rehire(validRehireInput().build()))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_EMPLOYEE_006.getCode());
+    }
+
+    @Test
+    void rehireShouldThrowWhenSupervisorDoesNotExist() {
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.INACTIVE).build();
+        when(employeeQueryRepository.findByTaxIdentifierAndStatus(VALID_CPF, StatusEmployee.INACTIVE)).thenReturn(Optional.of(employee));
+        when(companyService.findCompanyById(1L)).thenReturn(activeCompany());
+        when(positionService.findPositionById(1L)).thenReturn(activePosition());
+        when(employeeQueryRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> employeeServiceBean.rehire(validRehireInput().supervisorId(99L).build()))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_EMPLOYEE_004.getCode());
+    }
+
+    @Test
+    void rehireShouldThrowWhenSupervisorIsNotActive() {
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.INACTIVE).build();
+        when(employeeQueryRepository.findByTaxIdentifierAndStatus(VALID_CPF, StatusEmployee.INACTIVE)).thenReturn(Optional.of(employee));
+        when(companyService.findCompanyById(1L)).thenReturn(activeCompany());
+        when(positionService.findPositionById(1L)).thenReturn(activePosition());
+        when(employeeQueryRepository.findById(99L)).thenReturn(Optional.of(Employee.builder().id(99L).status(StatusEmployee.INACTIVE).build()));
+
+        assertThatThrownBy(() -> employeeServiceBean.rehire(validRehireInput().supervisorId(99L).build()))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_EMPLOYEE_007.getCode());
+    }
+
+    @Test
+    void rehireShouldThrowWhenReasonActivateIsInactive() {
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.INACTIVE).build();
+        when(employeeQueryRepository.findByTaxIdentifierAndStatus(VALID_CPF, StatusEmployee.INACTIVE)).thenReturn(Optional.of(employee));
+        when(companyService.findCompanyById(1L)).thenReturn(activeCompany());
+        when(positionService.findPositionById(1L)).thenReturn(activePosition());
+        when(reasonActivateService.findById(10L)).thenReturn(reasonActivate(false, EntityType.EMPLOYEE));
+
+        assertThatThrownBy(() -> employeeServiceBean.rehire(validRehireInput().build()))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_EMPLOYEE_008.getCode());
+    }
+
+    @Test
+    void rehireShouldThrowWhenReasonActivateEntityTypeIsIncompatible() {
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.INACTIVE).build();
+        when(employeeQueryRepository.findByTaxIdentifierAndStatus(VALID_CPF, StatusEmployee.INACTIVE)).thenReturn(Optional.of(employee));
+        when(companyService.findCompanyById(1L)).thenReturn(activeCompany());
+        when(positionService.findPositionById(1L)).thenReturn(activePosition());
+        when(reasonActivateService.findById(10L)).thenReturn(reasonActivate(true, EntityType.COMPANY));
+
+        assertThatThrownBy(() -> employeeServiceBean.rehire(validRehireInput().build()))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_EMPLOYEE_009.getCode());
+    }
+
+    @Test
+    void rehireShouldThrowWhenReasonPositionChangeDoesNotExist() {
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.INACTIVE).build();
+        when(employeeQueryRepository.findByTaxIdentifierAndStatus(VALID_CPF, StatusEmployee.INACTIVE)).thenReturn(Optional.of(employee));
+        when(companyService.findCompanyById(1L)).thenReturn(activeCompany());
+        when(positionService.findPositionById(1L)).thenReturn(activePosition());
+        when(reasonActivateService.findById(10L)).thenReturn(reasonActivate(true, EntityType.EMPLOYEE));
+        when(reasonPositionChangeRepository.findById(50L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> employeeServiceBean.rehire(validRehireInput().build()))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_022.getCode());
+    }
+
+    @Test
+    void rehireShouldThrowWhenReasonPositionChangeIsInactive() {
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.INACTIVE).build();
+        when(employeeQueryRepository.findByTaxIdentifierAndStatus(VALID_CPF, StatusEmployee.INACTIVE)).thenReturn(Optional.of(employee));
+        when(companyService.findCompanyById(1L)).thenReturn(activeCompany());
+        when(positionService.findPositionById(1L)).thenReturn(activePosition());
+        when(reasonActivateService.findById(10L)).thenReturn(reasonActivate(true, EntityType.EMPLOYEE));
+        when(reasonPositionChangeRepository.findById(50L)).thenReturn(Optional.of(ReasonPositionChange.builder().id(50L).active(false).build()));
+
+        assertThatThrownBy(() -> employeeServiceBean.rehire(validRehireInput().build()))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_023.getCode());
+    }
+
+    // ---- findById ----
+
+    @Test
+    void findByIdShouldReturnEmployeeOutputWhenExists() {
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.ACTIVE)
+                .taxIdentifier(new Cpf(VALID_CPF)).email(new Email(VALID_EMAIL))
+                .company(activeCompany()).position(activePosition()).build();
+        when(employeeQueryRepository.findById(1L)).thenReturn(Optional.of(employee));
+
+        EmployeeOutput result = employeeServiceBean.findById(1L);
+
+        assertThat(result.id()).isEqualTo(1L);
+    }
+
+    @Test
+    void findByIdShouldThrowWhenEmployeeNotFound() {
+        when(employeeQueryRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> employeeServiceBean.findById(1L))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_014.getCode());
     }
 }

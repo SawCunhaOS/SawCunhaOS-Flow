@@ -148,6 +148,12 @@ public enum ExceptionCodeError implements ExceptionCode {
     SCOS_EMPLOYEE_019("SCOS_EMPLOYEE_019", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
     /** Motivo de desbloqueio incompatível com a entidade Funcionário. HTTP 422. */
     SCOS_EMPLOYEE_020("SCOS_EMPLOYEE_020", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Nenhum Funcionário INACTIVE encontrado para o CPF informado (nunca existiu, ou pertence a ACTIVE/DISABLED). HTTP 404. */
+    SCOS_EMPLOYEE_021("SCOS_EMPLOYEE_021", 404, "SCOS_TITLE_NOT_FOUND"),
+    /** Motivo de mudança de cargo (reasonPositionChangeId) informado não encontrado. HTTP 404. */
+    SCOS_EMPLOYEE_022("SCOS_EMPLOYEE_022", 404, "SCOS_TITLE_NOT_FOUND"),
+    /** Motivo de mudança de cargo informado está inativo. HTTP 422. */
+    SCOS_EMPLOYEE_023("SCOS_EMPLOYEE_023", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
 
     // User / Login
     SCOS_USER_001("SCOS_USER_001", 502, "SCOS_TITLE_EXTERNAL_INTEGRATION_FAILURE"),

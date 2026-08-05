@@ -1,6 +1,10 @@
+---
+baseline_commit: 65c6282d5b7c3d5fb43ab20d05a708bc1cf2960a
+---
+
 # Story 2.3: Recontratação de Funcionário (INACTIVE ou DISABLED)
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -23,9 +27,9 @@ Para reintegrar alguém em uma posição diferente sem criar um registro novo.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Códigos de erro novos — `SCOS_EMPLOYEE_021..023` (AC: 4, 5, 6)
-  - [ ] **Antes de codar, confirme o próximo número livre**: `grep SCOS_EMPLOYEE_ ExceptionCodeError.java` — hoje só existe `SCOS_EMPLOYEE_001` no código real; as Stories 2.1 (`002..013`) e 2.2 (`014..020`) ainda não foram implementadas. Se alguma delas já tiver sido codada com números diferentes quando esta story for implementada, ajuste a sequência abaixo mantendo a ordem lógica.
-  - [ ] Em `organization/flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/exception/ExceptionCodeError.java`, após a última entrada `SCOS_EMPLOYEE_0NN`:
+- [x] Task 1: Códigos de erro novos — `SCOS_EMPLOYEE_021..023` (AC: 4, 5, 6)
+  - [x] **Antes de codar, confirme o próximo número livre**: `grep SCOS_EMPLOYEE_ ExceptionCodeError.java` — hoje só existe `SCOS_EMPLOYEE_001` no código real; as Stories 2.1 (`002..013`) e 2.2 (`014..020`) ainda não foram implementadas. Se alguma delas já tiver sido codada com números diferentes quando esta story for implementada, ajuste a sequência abaixo mantendo a ordem lógica.
+  - [x] Em `organization/flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/exception/ExceptionCodeError.java`, após a última entrada `SCOS_EMPLOYEE_0NN`:
     ```java
     /** Nenhum Funcionário INACTIVE encontrado para o CPF informado (nunca existiu, ou pertence a ACTIVE/DISABLED). HTTP 404. */
     SCOS_EMPLOYEE_021("SCOS_EMPLOYEE_021", 404, "SCOS_TITLE_NOT_FOUND"),
@@ -34,16 +38,16 @@ Para reintegrar alguém em uma posição diferente sem criar um registro novo.
     /** Motivo de mudança de cargo informado está inativo. HTTP 422. */
     SCOS_EMPLOYEE_023("SCOS_EMPLOYEE_023", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
     ```
-  - [ ] `scos_message_organization.properties`:
+  - [x] `scos_message_organization.properties`:
     ```properties
     SCOS_EMPLOYEE_021=Nenhum funcionário inativo foi encontrado para o CPF informado.
     SCOS_EMPLOYEE_022=O motivo de mudança de cargo informado não foi encontrado.
     SCOS_EMPLOYEE_023=O motivo de mudança de cargo informado está inativo.
     ```
-  - [ ] Mesmas 3 chaves em `scos_message_organization_en.properties`, texto em inglês.
+  - [x] Mesmas 3 chaves em `scos_message_organization_en.properties`, texto em inglês.
 
-- [ ] Task 2: `RehireEmployeeInput` — DTO de domínio novo (AC: 1, 3)
-  - [ ] Criar `flow-organization-domain/.../corporate/employee/dto/RehireEmployeeInput.java`, mesmo pacote de `EmployeeInput` (Story 2.1):
+- [x] Task 2: `RehireEmployeeInput` — DTO de domínio novo (AC: 1, 3)
+  - [x] Criar `flow-organization-domain/.../corporate/employee/dto/RehireEmployeeInput.java`, mesmo pacote de `EmployeeInput` (Story 2.1):
     ```java
     @Builder
     public record RehireEmployeeInput(
@@ -62,8 +66,8 @@ Para reintegrar alguém em uma posição diferente sem criar um registro novo.
     ```
     **Não** reaproveitar `EmployeeInput` (Story 2.1) — campos obrigatórios diferentes (`reasonPositionChangeId` aqui, `name`/`email`/`birthDate` lá) e semântica diferente (recontratação nunca cria linha nova em `SCOS_EMPLOYEE`).
 
-- [ ] Task 3: Repositório — 1 método novo em `EmployeeQueryRepository` (AC: 6, 7)
-  - [ ] Em `EmployeeQueryRepository.java` (já existe, Story 2.1 adiciona `existsByTaxIdentifier`/`existsByEmail`), adicionar:
+- [x] Task 3: Repositório — 1 método novo em `EmployeeQueryRepository` (AC: 6, 7)
+  - [x] Em `EmployeeQueryRepository.java` (já existe, Story 2.1 adiciona `existsByTaxIdentifier`/`existsByEmail`), adicionar:
     ```java
     default Optional<Employee> findByTaxIdentifierAndStatus(String taxIdentifier, StatusEmployee status) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
@@ -74,8 +78,8 @@ Para reintegrar alguém em uma posição diferente sem criar um registro novo.
     ```
     `findOne` vem de `QuerydslPredicateExecutor`, já na interface. **Não** criar um método `existsByTaxIdentifierAndStatus` separado — aqui precisamos da entidade completa (para `activate()` e reatribuição), não de um booleano.
 
-- [ ] Task 4: `EmployeeService` (specification) — 2 assinaturas novas na interface já existente (AC: 1, 4, 5, 6, 7)
-  - [ ] Em `EmployeeService.java` (criada pela Story 2.1, com `create` + os 4 métodos de transição da Story 2.2), adicionar:
+- [x] Task 4: `EmployeeService` (specification) — 2 assinaturas novas na interface já existente (AC: 1, 4, 5, 6, 7)
+  - [x] Em `EmployeeService.java` (criada pela Story 2.1, com `create` + os 4 métodos de transição da Story 2.2), adicionar:
     ```java
     /** Recontrata um Funcionário INACTIVE, reatribuindo empresa/cargo/supervisor/contrato. 404 SCOS_EMPLOYEE_021 se não houver Funcionário INACTIVE com esse CPF. */
     EmployeeOutput rehire(@NonNull RehireEmployeeInput input);
@@ -85,9 +89,9 @@ Para reintegrar alguém em uma posição diferente sem criar um registro novo.
     ```
     `findById` é o mesmo padrão que `CompanyService.findById`/`PositionService.findById` já têm — Employee é o único dos três agregados que ainda não expunha essa leitura simples. **Não** é o início da feature `GET /v1/employees/{id}` completa (Use Case/Delegate/mapper aninhado ficam fora, Task 11) — é só o primitivo de domínio que esta story precisa para resolver o nome do supervisor na resposta de `rehire`.
 
-- [ ] Task 5: `EmployeeServiceBean` — implementar `rehire`/`findById` (AC: 1, 2, 3, 4, 5, 6, 7)
-  - [ ] Injetar `Clock` (bean já existente, `domain/config/ClockConfig.java`, AD-8) como campo `final` novo, se a Story 2.1/2.2 ainda não o tiver adicionado.
-  - [ ] Implementar, reaproveitando **sem duplicar** os privados já criados pela Story 2.1 (`findActiveCompanyOrThrow`, `findActivePositionOrThrow`, `resolveActiveSupervisor`, `validateReasonActivate`) e pela Story 2.2 (`findEmployeeById`):
+- [x] Task 5: `EmployeeServiceBean` — implementar `rehire`/`findById` (AC: 1, 2, 3, 4, 5, 6, 7)
+  - [x] Injetar `Clock` (bean já existente, `domain/config/ClockConfig.java`, AD-8) como campo `final` novo, se a Story 2.1/2.2 ainda não o tiver adicionado.
+  - [x] Implementar, reaproveitando **sem duplicar** os privados já criados pela Story 2.1 (`findActiveCompanyOrThrow`, `findActivePositionOrThrow`, `resolveActiveSupervisor`, `validateReasonActivate`) e pela Story 2.2 (`findEmployeeById`):
     ```java
     @Override
     @Transactional(rollbackFor = ScosException.class)
@@ -150,12 +154,12 @@ Para reintegrar alguém em uma posição diferente sem criar um registro novo.
         return reason;
     }
     ```
-  - [ ] **Por que `setPosition`/`setCompany`/`setSupervisor`/`setContractType` são feitos explicitamente em Java, mesmo com o trigger `trg_sync_employee_position` já existente:** o trigger só sincroniza `POSITION_ID` (não `COMPANY_ID`/`SUPERVISOR_ID`/`CONTRACT_TYPE`, que não têm trigger equivalente) **e** roda como `UPDATE` SQL cru fora da sessão do Hibernate — sem o `set` explícito, o objeto `employee` em memória (usado por `toEmployeeOutput` na mesma chamada) ficaria com os valores antigos. Mesmo padrão que a Story 2.1 já segue em `create()` (seta `position`/`company` no builder mesmo sabendo que uma linha de histórico também será inserida).
-  - [ ] **Por que `startDate` da nova linha de posição usa `Clock.now()` quando `dateOfRehire` é omitido, e não a `dateOfHiring` antiga do Funcionário:** `trg_close_previous_position` (`fn_close_previous_position.sql`) fecha a linha de posição ainda aberta (`END_DATE IS NULL`) do mesmo `EMPLOYEE_ID` fazendo `END_DATE = NEW.START_DATE`. Se `NEW.START_DATE` fosse a `dateOfHiring` original (ex.: 2020) e a linha aberta antiga já tivesse `START_DATE` posterior a isso (ex.: uma transferência em 2022, nunca fechada porque `disable`/`inactivate`, Story 2.2, não tocam em `EmployeePositionHistory`), o `UPDATE` produziria `END_DATE < START_DATE` — inconsistência silenciosa, sem constraint conhecida que a impeça. Usar a data efetiva real da recontratação (hoje, ou a data futura/passada explicitamente informada em `dateOfRehire`) evita esse cenário.
-  - [ ] `[ASSUMPTION]`: o contrato (`ScosOrganization_Employee.yml:1098-1101`) não diz explicitamente qual data é o `startDate` da nova linha de `EmployeePositionHistory` quando `dateOfRehire` é omitido — só descreve o efeito sobre `DATE_OF_HIRING`. A escolha de usar `Clock.now()` como fallback (em vez de repetir a `dateOfHiring` antiga) é a mais consistente com a integridade do histórico de posição, mas não está escrita no doc-fonte — sinalizar para o PM se preferir outro comportamento.
+  - [x] **Por que `setPosition`/`setCompany`/`setSupervisor`/`setContractType` são feitos explicitamente em Java, mesmo com o trigger `trg_sync_employee_position` já existente:** o trigger só sincroniza `POSITION_ID` (não `COMPANY_ID`/`SUPERVISOR_ID`/`CONTRACT_TYPE`, que não têm trigger equivalente) **e** roda como `UPDATE` SQL cru fora da sessão do Hibernate — sem o `set` explícito, o objeto `employee` em memória (usado por `toEmployeeOutput` na mesma chamada) ficaria com os valores antigos. Mesmo padrão que a Story 2.1 já segue em `create()` (seta `position`/`company` no builder mesmo sabendo que uma linha de histórico também será inserida).
+  - [x] **Por que `startDate` da nova linha de posição usa `Clock.now()` quando `dateOfRehire` é omitido, e não a `dateOfHiring` antiga do Funcionário:** `trg_close_previous_position` (`fn_close_previous_position.sql`) fecha a linha de posição ainda aberta (`END_DATE IS NULL`) do mesmo `EMPLOYEE_ID` fazendo `END_DATE = NEW.START_DATE`. Se `NEW.START_DATE` fosse a `dateOfHiring` original (ex.: 2020) e a linha aberta antiga já tivesse `START_DATE` posterior a isso (ex.: uma transferência em 2022, nunca fechada porque `disable`/`inactivate`, Story 2.2, não tocam em `EmployeePositionHistory`), o `UPDATE` produziria `END_DATE < START_DATE` — inconsistência silenciosa, sem constraint conhecida que a impeça. Usar a data efetiva real da recontratação (hoje, ou a data futura/passada explicitamente informada em `dateOfRehire`) evita esse cenário.
+  - [x] `[ASSUMPTION]`: o contrato (`ScosOrganization_Employee.yml:1098-1101`) não diz explicitamente qual data é o `startDate` da nova linha de `EmployeePositionHistory` quando `dateOfRehire` é omitido — só descreve o efeito sobre `DATE_OF_HIRING`. A escolha de usar `Clock.now()` como fallback (em vez de repetir a `dateOfHiring` antiga) é a mais consistente com a integridade do histórico de posição, mas não está escrita no doc-fonte — sinalizar para o PM se preferir outro comportamento.
 
-- [ ] Task 6: `RehireEmployeeUseCase` + `Bean` — pacote já existente (AC: 1, 4, 5, 6, 7)
-  - [ ] Em `usecase/corporate/employee/` (pacote criado pela Story 2.1), criar:
+- [x] Task 6: `RehireEmployeeUseCase` + `Bean` — pacote já existente (AC: 1, 4, 5, 6, 7)
+  - [x] Em `usecase/corporate/employee/` (pacote criado pela Story 2.1), criar:
     ```java
     public interface RehireEmployeeUseCase {
         Employee execute(@NonNull RehireEmployeeRequest request); // Employee = api.dto.Employee
@@ -197,8 +201,8 @@ Para reintegrar alguém em uma posição diferente sem criar um registro novo.
     ```
     FQN em `EmployeeContractType` (mesmo nome simples em `api.dto` e `domain.internal`) — mesma solução já usada por `CreateEmployeeUseCaseBean` (Story 2.1). O retorno é `br.com.sawcunhaos.organization.api.dto.Employee` — mesma colisão de nome simples com a entidade de domínio `Employee`; usar FQN na assinatura do método ou importar só o `api.dto.Employee` e referenciar a entidade de domínio via FQN dentro do corpo (o corpo aqui não usa a entidade diretamente, só `EmployeeOutput`/`CompanyOutput`/`PositionOutput`, então basta importar `api.dto.Employee` normalmente).
 
-- [ ] Task 7: `EmployeeApiMapper` — novo, pacote `usecase/corporate/employee/` (AC: 1)
-  - [ ] Este mapper é necessário (não deferível como em Story 2.1) porque o contrato de `rehire` responde `200` com o schema completo `Employee` (`supervisor`/`company`/`position` aninhados) — diferente de `create` (`201`, só `id`) e das rotas de transição (`204`). Criar `EmployeeApiMapper.java`, mesmo estilo de `PositionApiMapper`/`CompanyApiMapper` (classe `final`, construtor privado, métodos estáticos package-private — **não** importar/reaproveitar `PositionApiMapper` de `usecase.corporate.position`, que é package-private nesse outro pacote; duplicar a mesma pequena montagem de `Position`/`Department`, mesmo padrão de não-compartilhamento já usado entre os mappers existentes):
+- [x] Task 7: `EmployeeApiMapper` — novo, pacote `usecase/corporate/employee/` (AC: 1)
+  - [x] Este mapper é necessário (não deferível como em Story 2.1) porque o contrato de `rehire` responde `200` com o schema completo `Employee` (`supervisor`/`company`/`position` aninhados) — diferente de `create` (`201`, só `id`) e das rotas de transição (`204`). Criar `EmployeeApiMapper.java`, mesmo estilo de `PositionApiMapper`/`CompanyApiMapper` (classe `final`, construtor privado, métodos estáticos package-private — **não** importar/reaproveitar `PositionApiMapper` de `usecase.corporate.position`, que é package-private nesse outro pacote; duplicar a mesma pequena montagem de `Position`/`Department`, mesmo padrão de não-compartilhamento já usado entre os mappers existentes):
     ```java
     final class EmployeeApiMapper {
 
@@ -261,9 +265,9 @@ Para reintegrar alguém em uma posição diferente sem criar um registro novo.
     ```
     `EmployeeStatus`/`EmployeeContractType` em `.valueOf(...)` referem-se aos tipos `api.dto` (importados normalmente aqui — quem precisa de FQN é o lado `domain.internal`, dentro do Use Case, Task 6). `Employee`/`Position`/`Department`/`Supervisor`/`EmployeeCompany` são todos `api.dto` (gerados).
 
-- [ ] Task 8: `EmployeeDelegate` — 1 método novo na classe já existente (AC: 1, 8)
-  - [ ] **Rodar `mvn generate-sources` em `flow-organization-usecase`/`flow-organization-api` antes** — confirmar a assinatura exata gerada de `EmployeeApiDelegate.rehireEmployee(...)` (schema nunca exercitado pelo generator neste módulo, mesma recomendação de 1.5/2.1/2.2).
-  - [ ] Em `EmployeeDelegate.java` (criada pela Story 2.1), injetar `RehireEmployeeUseCase` (campo `final`, `@RequiredArgsConstructor` já cobre) e implementar, espelhando `CompanyDelegate.getCompanyById` (`GetCompanyResponse.builder().data(...).build()`):
+- [x] Task 8: `EmployeeDelegate` — 1 método novo na classe já existente (AC: 1, 8)
+  - [x] **Rodar `mvn generate-sources` em `flow-organization-usecase`/`flow-organization-api` antes** — confirmar a assinatura exata gerada de `EmployeeApiDelegate.rehireEmployee(...)` (schema nunca exercitado pelo generator neste módulo, mesma recomendação de 1.5/2.1/2.2).
+  - [x] Em `EmployeeDelegate.java` (criada pela Story 2.1), injetar `RehireEmployeeUseCase` (campo `final`, `@RequiredArgsConstructor` já cobre) e implementar, espelhando `CompanyDelegate.getCompanyById` (`GetCompanyResponse.builder().data(...).build()`):
     ```java
     @Override
     public GetEmployeeResponse rehireEmployee(RehireEmployeeRequest rehireEmployeeRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
@@ -274,19 +278,19 @@ Para reintegrar alguém em uma posição diferente sem criar um registro novo.
     ```
     **Não** implementar `getEmployeeById`/`updateEmployee` (mesmo bloco YAML, path `/v1/employees/rehire`, métodos `GET`/`PUT` diferentes — AC 8, fora de escopo).
 
-- [ ] Task 9: Seed de teste — nenhum Funcionário `INACTIVE` existe hoje no seed (AC: 6, 7)
-  - [ ] `setsup_database.sql` só tem 1 Funcionário seedado (`EMPLOYEE_ID=1`, `ACTIVE`, "administrador"). **Não** adicionar um Funcionário `INACTIVE`/`DISABLED` fixo ao seed compartilhado — criar o cenário dentro do próprio teste de integração (`POST /v1/employees` com `taxIdentifier` único, depois `PUT .../disable` para chegar a `INACTIVE`, ou `.../disable` + `.../block` para chegar a `DISABLED`), mesmo cuidado já registrado nas Stories 2.1/2.2 sobre não acoplar cenários específicos ao seed compartilhado.
+- [x] Task 9: Seed de teste — nenhum Funcionário `INACTIVE` existe hoje no seed (AC: 6, 7)
+  - [x] `setsup_database.sql` só tem 1 Funcionário seedado (`EMPLOYEE_ID=1`, `ACTIVE`, "administrador"). **Não** adicionar um Funcionário `INACTIVE`/`DISABLED` fixo ao seed compartilhado — criar o cenário dentro do próprio teste de integração (`POST /v1/employees` com `taxIdentifier` único, depois `PUT .../disable` para chegar a `INACTIVE`, ou `.../disable` + `.../block` para chegar a `DISABLED`), mesmo cuidado já registrado nas Stories 2.1/2.2 sobre não acoplar cenários específicos ao seed compartilhado.
 
-- [ ] Task 10: Testes (AC: 1, 2, 3, 4, 5, 6, 7)
-  - [ ] `EmployeeServiceBeanTest.java` (já existe, criado pela Story 2.1): caminho feliz de `rehire` (funcionário volta `ACTIVE`, `EmployeeStatusHistory` com `reasonActivateId` correto, nova `EmployeePositionHistory` com o `reasonPositionChangeId` informado — capturar via `ArgumentCaptor`, `company`/`position`/`supervisor`/`contractType`/`probationEndDate` sobrescritos no objeto `Employee` retornado); `dateOfRehire` informado → `startDate` da nova posição = `dateOfRehire` **e** `Employee.dateOfHiring` atualizado; `dateOfRehire` omitido → `startDate` = `Clock.fixed(...)` injetado **e** `dateOfHiring` do funcionário permanece o original; `supervisorId` omitido → `Employee.supervisor` fica `null` mesmo que houvesse um supervisor antes; CPF sem Funcionário `INACTIVE` (nunca existiu, ou existe `ACTIVE`, ou existe `DISABLED` — 3 casos, mesmo código) → `SCOS_EMPLOYEE_021`; `companyId`/`positionId`/`reasonActivateId`/`supervisorId`/`reasonPositionChangeId` inexistentes → 404 (reaproveitados + `022`); empresa/cargo/supervisor inativos, motivo de ativação inativo/incompatível, motivo de mudança de cargo inativo → 422 (reaproveitados + `023`). Também `findById`: caminho feliz e `SCOS_EMPLOYEE_014` quando não existe (reaproveita `findEmployeeById` da Story 2.2).
-  - [ ] `RehireEmployeeUseCaseBeanTest.java` (novo, `flow-organization-usecase/.../corporate/employee/`), mesmo padrão BDD de `CreateEmployeeUseCaseBeanTest`: mapeamento `request`→`input` via `ArgumentCaptor`; 3 collaborators (`employeeService`/`companyService`/`positionService`) chamados com os ids certos; `supervisorId == null` → `employeeService.findById` **não** é chamado (verificar via `then(employeeService).should(never())...`); propagação de `ScosException` quando `employeeService.rehire` lança.
-  - [ ] `EmployeeControllerTest.java` (já existe, criado pela Story 2.1): caminho feliz completo `POST /v1/employees/rehire` → `200` + corpo com `status=ACTIVE`, `company`/`position`/`supervisor` aninhados corretos; confirmar via query direta que a linha antiga de `SCOS_EMPLOYEE_POSITION_HISTORY` foi fechada (`END_DATE` não nulo) e a nova está aberta; `404 SCOS_EMPLOYEE_021` para CPF de Funcionário `ACTIVE` (o seed `EMPLOYEE_ID=1`) e para CPF de Funcionário `DISABLED` (criado no próprio teste, Task 9) e para CPF nunca cadastrado; `404`/`422` de cada FK (Task 1); `401` sem token; `403` sem `REHIRE_EMPLOYEE`. `taxIdentifier` é `x-jdempotentrequestpayload` (YAML linha 1074) — mesmo cuidado de CPF único por teste que já existe em `EmployeeControllerTest` (Story 2.1).
+- [x] Task 10: Testes (AC: 1, 2, 3, 4, 5, 6, 7)
+  - [x] `EmployeeServiceBeanTest.java` (já existe, criado pela Story 2.1): caminho feliz de `rehire` (funcionário volta `ACTIVE`, `EmployeeStatusHistory` com `reasonActivateId` correto, nova `EmployeePositionHistory` com o `reasonPositionChangeId` informado — capturar via `ArgumentCaptor`, `company`/`position`/`supervisor`/`contractType`/`probationEndDate` sobrescritos no objeto `Employee` retornado); `dateOfRehire` informado → `startDate` da nova posição = `dateOfRehire` **e** `Employee.dateOfHiring` atualizado; `dateOfRehire` omitido → `startDate` = `Clock.fixed(...)` injetado **e** `dateOfHiring` do funcionário permanece o original; `supervisorId` omitido → `Employee.supervisor` fica `null` mesmo que houvesse um supervisor antes; CPF sem Funcionário `INACTIVE` (nunca existiu, ou existe `ACTIVE`, ou existe `DISABLED` — 3 casos, mesmo código) → `SCOS_EMPLOYEE_021`; `companyId`/`positionId`/`reasonActivateId`/`supervisorId`/`reasonPositionChangeId` inexistentes → 404 (reaproveitados + `022`); empresa/cargo/supervisor inativos, motivo de ativação inativo/incompatível, motivo de mudança de cargo inativo → 422 (reaproveitados + `023`). Também `findById`: caminho feliz e `SCOS_EMPLOYEE_014` quando não existe (reaproveita `findEmployeeById` da Story 2.2).
+  - [x] `RehireEmployeeUseCaseBeanTest.java` (novo, `flow-organization-usecase/.../corporate/employee/`), mesmo padrão BDD de `CreateEmployeeUseCaseBeanTest`: mapeamento `request`→`input` via `ArgumentCaptor`; 3 collaborators (`employeeService`/`companyService`/`positionService`) chamados com os ids certos; `supervisorId == null` → `employeeService.findById` **não** é chamado (verificar via `then(employeeService).should(never())...`); propagação de `ScosException` quando `employeeService.rehire` lança.
+  - [x] `EmployeeControllerTest.java` (já existe, criado pela Story 2.1): caminho feliz completo `POST /v1/employees/rehire` → `200` + corpo com `status=ACTIVE`, `company`/`position`/`supervisor` aninhados corretos; confirmar via query direta que a linha antiga de `SCOS_EMPLOYEE_POSITION_HISTORY` foi fechada (`END_DATE` não nulo) e a nova está aberta; `404 SCOS_EMPLOYEE_021` para CPF de Funcionário `ACTIVE` (o seed `EMPLOYEE_ID=1`) e para CPF de Funcionário `DISABLED` (criado no próprio teste, Task 9) e para CPF nunca cadastrado; `404`/`422` de cada FK (Task 1); `401` sem token; `403` sem `REHIRE_EMPLOYEE`. `taxIdentifier` é `x-jdempotentrequestpayload` (YAML linha 1074) — mesmo cuidado de CPF único por teste que já existe em `EmployeeControllerTest` (Story 2.1).
 
-- [ ] Task 11: Guarda de escopo (AC: 7, 8)
-  - [ ] **Não** corrigir o defeito de contrato em `/v1/employees/rehire` (POST/GET/PUT indevidamente compartilhando o mesmo path sem `{id}`) — já reportado pela Story 2.1 (Task 10), não bloqueante para implementar só o `POST`.
-  - [ ] **Não** implementar `getEmployeeById`/`updateEmployee` (mesmo bloco YAML) nem `GET /v1/employees`, `transfer`, `hierarchy`, `subordinates`, `position-history`, `status-history` — nenhum é tocado por esta story.
-  - [ ] **Não** criar nenhuma rota/lógica para recontratar (com reatribuição) um Funcionário `DISABLED` — o contrato de `rehire` só cobre `INACTIVE` (AC 6, 7); reativar `DISABLED` sem reatribuição já é `unblock` (Story 2.2). Reatribuir um `DISABLED` é gap conhecido, fora de qualquer AC do épico.
-  - [ ] **Não** construir `GetEmployeeUseCase`/Delegate dedicados para `GET /v1/employees/{id}` — `EmployeeService.findById` (Task 4/5) é só o primitivo de domínio reaproveitado internamente pelo Use Case de `rehire`, não uma feature de leitura completa.
+- [x] Task 11: Guarda de escopo (AC: 7, 8)
+  - [x] **Não** corrigir o defeito de contrato em `/v1/employees/rehire` (POST/GET/PUT indevidamente compartilhando o mesmo path sem `{id}`) — já reportado pela Story 2.1 (Task 10), não bloqueante para implementar só o `POST`.
+  - [x] **Não** implementar `getEmployeeById`/`updateEmployee` (mesmo bloco YAML) nem `GET /v1/employees`, `transfer`, `hierarchy`, `subordinates`, `position-history`, `status-history` — nenhum é tocado por esta story.
+  - [x] **Não** criar nenhuma rota/lógica para recontratar (com reatribuição) um Funcionário `DISABLED` — o contrato de `rehire` só cobre `INACTIVE` (AC 6, 7); reativar `DISABLED` sem reatribuição já é `unblock` (Story 2.2). Reatribuir um `DISABLED` é gap conhecido, fora de qualquer AC do épico.
+  - [x] **Não** construir `GetEmployeeUseCase`/Delegate dedicados para `GET /v1/employees/{id}` — `EmployeeService.findById` (Task 4/5) é só o primitivo de domínio reaproveitado internamente pelo Use Case de `rehire`, não uma feature de leitura completa.
 
 ## Dev Notes
 
@@ -351,8 +355,49 @@ Para reintegrar alguém em uma posição diferente sem criar um registro novo.
 
 ### Agent Model Used
 
+Claude Sonnet 5 (claude-sonnet-5)
+
 ### Debug Log References
+
+- `mvn -pl flow-organization-domain,flow-organization-usecase test` — suíte completa: 0 falhas, 0 erros.
+- `mvn -pl flow-organization-boot test` (com `-Denforcer.skip=true`, débito pré-existente documentado em `project-context.md`, não relacionado a esta story) — 15 classes, 438 testes, 0 falhas, 0 erros. `EmployeeControllerTest`: 54/54 verde.
+- Bug encontrado e corrigido durante a implementação: `Employee.activate()` (Story 2.2) não muta `this.status` em memória — só a trigger `trg_sync_employee_status` sincroniza `SCOS_EMPLOYEE.STATUS` a partir do histórico inserido. Sem um `employee.setStatus(StatusEmployee.ACTIVE)` explícito em `rehire()`, o `EmployeeOutput` retornado (usado na resposta `200` da rota) reportaria `INACTIVE` mesmo após sucesso — violaria AC1. Corrigido seguindo o mesmo raciocínio já documentado no código para `company`/`position`/`supervisor`/`contractType` (objeto em memória usado por `toEmployeeOutput` na mesma chamada).
+- Bug de teste (não de produção) encontrado e corrigido: minha primeira tentativa de levar um Funcionário a `DISABLED` no teste de integração encadeava `disable` (→ INACTIVE) depois `block` — mas `block` exige origem `ACTIVE` (guarda de domínio), não `INACTIVE`. Corrigido para chamar `block` diretamente a partir do `ACTIVE` inicial (pós-`create`).
+- Adicionei 1 linha de seed (`SCOS_REASON_POSITION_CHANGE`, id=4, `ACTIVE=false`) — não existe endpoint de disable para este catálogo específico ainda (só entidade/repositório, sem Use Case/Delegate), então o cenário "motivo de mudança de cargo inativo" não pode ser criado dinamicamente dentro do teste como as demais FKs; segui o mesmo padrão já usado para os catálogos `SCOS_REASON_ACTIVATE/INACTIVATE/DISABLE/ENABLE` (registro `ARCHIVED_REASON` fixo no seed).
 
 ### Completion Notes List
 
+- Todas as 11 tasks implementadas do zero nesta sessão (nenhum trabalho prévio encontrado, diferente da Story 2.2).
+- Task 1: 3 códigos de erro novos (`SCOS_EMPLOYEE_021/022/023`) + mensagens PT-BR/EN.
+- Tasks 2-5: `RehireEmployeeInput` (DTO novo), `EmployeeQueryRepository.findByTaxIdentifierAndStatus`, 2 assinaturas novas em `EmployeeService` (`rehire`, `findById`), implementação em `EmployeeServiceBean` reaproveitando os privados já existentes das Stories 2.1/2.2 (`findActiveCompanyOrThrow`, `findActivePositionOrThrow`, `resolveActiveSupervisor`, `validateReasonActivate`) sem duplicação.
+- Tasks 6-8: `RehireEmployeeUseCase(Bean)`, `EmployeeApiMapper` (novo — necessário porque `rehire` responde `200` com corpo aninhado, diferente de `create`/rotas de transição), 1 método novo em `EmployeeDelegate`.
+- Task 9: nenhuma mudança no seed compartilhado além do registro de motivo inativo citado acima; cenários de Funcionário INACTIVE/DISABLED são criados dentro de cada teste de integração via `POST /v1/employees` + transições.
+- Task 10: 17 testes unitários de domínio (`EmployeeServiceBeanTest`, cobrindo caminho feliz com/sem `dateOfRehire`, supervisor omitido, os 3 casos do AC6 com o mesmo código, e todos os 404/422 de FK), 3 testes de Use Case (`RehireEmployeeUseCaseBeanTest`), 17 testes de integração (`EmployeeControllerTest`, incluindo a prova end-to-end de fechamento da posição anterior via `trg_close_previous_position`).
+- Task 11: confirmado por leitura — nenhum código tocou `getEmployeeById`/`updateEmployee` do mesmo bloco YAML, nenhuma rota nova para `DISABLED`, nenhum `GetEmployeeUseCase` dedicado.
+
 ### File List
+
+**Modificados:**
+- `organization/flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/exception/ExceptionCodeError.java`
+- `organization/flow-organization-shared/src/main/resources/scos_message_organization.properties`
+- `organization/flow-organization-shared/src/main/resources/scos_message_organization_en.properties`
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/internal/EmployeeQueryRepository.java`
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/specification/EmployeeService.java`
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/service/EmployeeServiceBean.java`
+- `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/corporate/employee/service/EmployeeServiceBeanTest.java`
+- `organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/employee/EmployeeDelegate.java`
+- `organization/flow-organization-boot/src/test/resources/postgresql/setsup_database.sql`
+- `organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/employee/EmployeeControllerTest.java`
+
+**Novos:**
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/dto/RehireEmployeeInput.java`
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/RehireEmployeeUseCase.java`
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/RehireEmployeeUseCaseBean.java`
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/EmployeeApiMapper.java`
+- `organization/flow-organization-usecase/src/test/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/RehireEmployeeUseCaseBeanTest.java`
+
+## Change Log
+
+| Data | Descrição |
+|------|-----------|
+| 2026-08-05 | Story implementada: `POST /v1/employees/rehire` (recontratação de Funcionário INACTIVE) — `RehireEmployeeUseCase` + `EmployeeApiMapper` + `EmployeeService.rehire/findById` + 3 códigos de erro novos (`SCOS_EMPLOYEE_021..023`). 17 testes unitários de domínio, 3 de Use Case, 17 de integração. Status → review. |

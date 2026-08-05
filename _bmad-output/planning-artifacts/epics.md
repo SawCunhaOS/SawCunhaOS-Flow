@@ -154,6 +154,11 @@ Desligar ou bloquear um colaborador mata a sessão dele em menos de 1 segundo, m
 **FRs covered:** FR-13, FR-14
 **Depende de:** Epic 2 (Funcionário) e Epic 3 (Login).
 
+### Epic 7: Completude de API — Empresa e Funcionário
+Débito técnico transversal, não mapeado a FR do PRD: fecha o buraco entre contrato OpenAPI, plano (épicos/stories) e código para os agregados Company e Employee — endpoints que já estão publicados no YAML (e em alguns casos até têm entidade/repositório prontos) mas nunca ganharam Use Case/Delegate **nem** apareceram em nenhuma story, incluindo dois já em produção declarada `done` (Epic 1). Achado em auditoria de cobertura de API feita após a Story 2.5 (que fechou o mesmo tipo de buraco para leitura de Funcionário).
+**FRs covered:** Nenhuma — débito técnico de completude de API (achado de auditoria, mesmo padrão do Epic 0).
+**Depende de:** Epic 1 e Epic 2 (ambos já concluídos/em andamento — este épico só adiciona cobertura sobre agregados que já existem, não cria nada novo em termos de domínio).
+
 ---
 
 ## Epic 0: Fundação Técnica — Tipos Temporais e Relógio Injetável
@@ -521,6 +526,30 @@ Para registrar o afastamento sem perder o vínculo.
 **When** esta story é implementada
 **Then** o gatilho e o cancelamento automático em 5 dias úteis ficam para a story final do Epic 3
 
+### Story 2.5: Consulta de Funcionário — Listagem e Detalhe
+
+Como Analista de RH,
+Eu quero listar Funcionários com paginação e filtros (empresa, cargo, status) e consultar o detalhe completo de um Funcionário,
+Para localizar rapidamente quem eu preciso gerenciar.
+
+**Acceptance Criteria:**
+
+**Given** um Funcionário existente
+**When** RH consulta `GET /v1/employees/{id}`
+**Then** o sistema retorna os dados completos, com Supervisor/Empresa/Cargo aninhados
+
+**Given** a listagem de Funcionários
+**When** RH informa filtros de empresa, cargo e/ou status (todos opcionais, combináveis)
+**Then** o sistema retorna só os Funcionários que atendem a todos os filtros informados, com paginação
+
+**Given** o contrato hoje aninha incorretamente `getEmployeeById`/`updateEmployee` sob o path `/v1/employees/rehire` (defeito já sinalizado pelas Stories 2.1/2.3, nunca corrigido)
+**When** esta story é implementada
+**Then** corrige o path para `/v1/employees/{id}` — sem implementar `updateEmployee` (fora de escopo)
+
+**Given** nenhum Use Case/Delegate de listagem/detalhe existe hoje para Employee (só o primitivo de domínio `EmployeeService.findById`, criado pela Story 2.3 para uso interno do `rehire`)
+**When** esta story é implementada
+**Then** cria os 2 Use Cases do zero, mesmo padrão de Company/Position (par completo/resumido no mapper, filtros opcionais via QueryDSL)
+
 ---
 
 ## Epic 3: Login do Funcionário com Aprovação
@@ -840,3 +869,125 @@ Para forçar reautenticação sempre que o acesso volta.
 **Given** um Funcionário reativado
 **When** isso acontece
 **Then** o status dos Logins vinculados não é revertido automaticamente — é ação separada, cada Login segue seu próprio fluxo de aprovação (Epic 3)
+
+---
+
+## Epic 7: Completude de API — Empresa e Funcionário
+
+Débito técnico transversal: fecha o buraco entre contrato OpenAPI, plano (épicos/stories) e código para os agregados Company e Employee. Achado em auditoria de cobertura de API após a Story 2.5 — cada operação abaixo já está publicada no YAML, mas nunca ganhou Use Case/Delegate nem apareceu em nenhuma story anterior, incluindo agregados de um épico já `done` (Epic 1).
+
+### Story 7.1: Consulta de Empresa — Histórico de Status, Hierarquia e Filiais
+
+Como Analista de RH,
+Eu quero consultar o histórico de status de uma Empresa, a árvore de hierarquia completa a partir dela, e a lista das filiais diretas,
+Para auditar transições passadas e entender a estrutura organizacional sem montar a árvore manualmente.
+
+**Acceptance Criteria:**
+
+**Given** uma Empresa existente **When** RH consulta `GET /v1/companies/{id}/status-history` **Then** retorna paginado, só leitura, populado exclusivamente pelas transições `enable`/`disable`/`block`/`unblock` já existentes (Story 1.2/1.3)
+
+**Given** uma Empresa existente **When** RH consulta `GET /v1/companies/{id}/hierarchy` **Then** retorna a árvore recursiva completa (matriz + filiais em todos os níveis)
+
+**Given** uma Empresa existente **When** RH consulta `GET /v1/companies/{id}/branches` **Then** retorna só as filiais de primeiro nível, paginadas, com filtro opcional de `status`
+
+**Given** nenhuma dessas 3 rotas tem Use Case/Delegate hoje (só o contrato publicado) **When** esta story é implementada **Then** cria os 3 do zero — nenhuma mudança de schema, Liquibase ou permissão (`GET_COMPANY_STATUS_HISTORY`/`GET_COMPANY` já existem)
+
+### Story 7.2: Contato e Endereço de Empresa
+
+Como Analista de RH,
+Eu quero cadastrar, consultar, atualizar e remover contatos e endereços de uma Empresa,
+Para manter os dados de contato dela completos e corretos.
+
+**Acceptance Criteria:**
+
+**Given** uma Empresa existente **When** RH gerencia contatos via `GET/POST /v1/companies/{companyId}/contacts` e `GET/PUT/DELETE /v1/companies/{companyId}/contacts/{id}` **Then** o CRUD completo funciona, respeitando as UKs compostas já existentes no schema (`PHONE`/`EMAIL`/`CONTACT_TYPE_ID` por `COMPANY_ID`)
+
+**Given** uma Empresa existente **When** RH gerencia endereços via `GET/POST /v1/companies/{companyId}/addresses` e `GET/PUT/DELETE /v1/companies/{companyId}/addresses/{id}` **Then** o CRUD completo funciona — o `addressId` referencia um endereço externo cuja integridade é garantida pela aplicação, não por FK de schema (mesmo padrão já usado pelo endereço do Funcionário admitido na Story 2.1)
+
+**Given** nenhuma dessas 2 famílias de rota (10 operações no total) tem Use Case/Delegate hoje **When** esta story é implementada **Then** cria as camadas do zero, reaproveitando os padrões de catálogo já existentes (`ContactType`/`AddressType`) para os tipos referenciados
+
+### Story 7.3: CNAE Secundário de Empresa
+
+Como Analista de RH,
+Eu quero listar, adicionar e remover CNAEs secundários de uma Empresa,
+Para registrar todas as atividades econômicas dela além da principal.
+
+**Acceptance Criteria:**
+
+**Given** uma Empresa existente **When** RH lista via `GET /v1/companies/{companyId}/cnaes-secondary`, adiciona via `POST` ou remove via `DELETE /v1/companies/{companyId}/cnaes-secondary/{cnaeId}` **Then** as 3 operações funcionam — sem `PUT`/update individual (não existe no contrato)
+
+**Given** nenhuma das 3 operações tem Use Case/Delegate hoje **When** esta story é implementada **Then** cria as camadas do zero, reaproveitando `Cnae` (CNAE principal, já implementado) como catálogo de referência
+
+### Story 7.4: Catálogo de Motivo de Mudança de Cargo
+
+Como Analista de RH,
+Eu quero cadastrar, consultar, atualizar, ativar e inativar motivos de mudança de cargo,
+Para que o catálogo usado por `rehire` (Story 2.3) deixe de depender de seed manual no banco.
+
+**Acceptance Criteria:**
+
+**Given** hoje só existem a entidade JPA `ReasonPositionChange` e o repositório (confirmado: a Story 2.3 precisou semear um registro inativo direto no banco de teste porque não existe API para desativar um motivo) **When** esta story é implementada **Then** cria as 6 operações do zero (`getAll`/`get`/`create`/`update`/`enable`/`disable`, path `/v1/reason-position-change`), mesmo padrão exato já usado pelos 4 catálogos irmãos já implementados (`ReasonActivate`/`ReasonInactivate`/`ReasonDisable`/`ReasonEnable`) — `ReasonPositionChange` não tem campo `entityType` (diferente dos 4 irmãos), só `active`
+
+**Given** os 3 registros seed já existentes (`NEW_HIRE`/`PROMOTION`/`TRANSFER`, todos `active=true`) e o registro `ARCHIVED_REASON` adicionado manualmente pela Story 2.3 para testes **When** esta story é implementada **Then** nenhum dado de seed muda — só a camada de aplicação é criada por cima do que já existe
+
+**Given** nenhuma permissão nova é necessária **When** esta story é implementada **Then** reaproveita `GET_REASON_POSITION_CHANGE`/`CREATE_REASON_POSITION_CHANGE`/`UPDATE_REASON_POSITION_CHANGE`/`ENABLE_REASON_POSITION_CHANGE`/`DISABLE_REASON_POSITION_CHANGE`, já cadastradas em `ScosOrganizationPermission`
+
+### Story 7.5: Consulta de Funcionário — Histórico de Status, Hierarquia, Subordinados e Histórico de Cargo
+
+Como Analista de RH,
+Eu quero consultar o histórico de status, a cadeia de supervisores, os subordinados diretos e o histórico de cargos de um Funcionário,
+Para auditar sua trajetória sem precisar reconstruir tudo manualmente no banco.
+
+**Acceptance Criteria:**
+
+**Given** um Funcionário existente **When** RH consulta `GET /v1/employees/{id}/status-history` **Then** retorna paginado, populado pelas transições `enable`/`disable`/`block`/`unblock`/`rehire` já existentes (Stories 2.2/2.3) — permissão `GET_EMPLOYEE_STATUS_HISTORY` já existe
+
+**Given** um Funcionário existente **When** RH consulta `GET /v1/employees/{id}/hierarchy` **Then** retorna a cadeia de supervisores em árvore ascendente
+
+**Given** um Funcionário existente **When** RH consulta `GET /v1/employees/{id}/subordinates` **Then** retorna, paginado, os Funcionários que reportam diretamente a ele
+
+**Given** um Funcionário existente **When** RH consulta `GET /v1/employees/{id}/position-history` **Then** retorna paginado, do mais recente para o mais antigo, o histórico já gravado por `create` (Story 2.1) e `rehire` (Story 2.3) via `EmployeePositionHistory` — a linha com `endDate` nulo é a atribuição vigente
+
+**Given** nenhuma dessas 4 rotas tem Use Case/Delegate hoje **When** esta story é implementada **Then** cria as 4 do zero — nenhuma mudança de schema, Liquibase ou permissão
+
+### Story 7.6: Transferência de Funcionário
+
+Como Analista de RH,
+Eu quero transferir um Funcionário para outra empresa, filial, cargo ou supervisor sem passar pelo fluxo de `rehire` (que exige `INACTIVE`),
+Para reorganizar um Funcionário `ACTIVE` sem precisar desativá-lo antes.
+
+**Acceptance Criteria:**
+
+**Given** um Funcionário `ACTIVE` **When** RH aciona `PATCH /v1/employees/{id}/transfer` informando nova empresa/cargo/supervisor **Then** os vínculos são atualizados **And** uma nova linha de `EmployeePositionHistory` é gravada quando o cargo muda, fechando a anterior (mesmo trigger `trg_close_previous_position` já usado por `rehire`, Story 2.3)
+
+**Given** a descrição do contrato menciona "Mudança de empresa dispara Saga Keycloak TYPE=UPDATE" **When** esta story é implementada **Then** o disparo da Saga/Outbox para o Keycloak **não** é implementado aqui — o mecanismo de Saga/Outbox em si só existe a partir do Epic 3 (Login), ainda não construído; mesmo padrão de guarda de escopo já usado pela Story 2.2 para o cascade de Login em `disable`/`block`
+
+**Given** nenhum Use Case/Delegate existe hoje para esta rota **When** esta story é implementada **Then** cria do zero, reaproveitando os privados já existentes em `EmployeeServiceBean` (`findActiveCompanyOrThrow`/`findActivePositionOrThrow`/`resolveActiveSupervisor`) — sem tocar em status, diferente de `rehire`
+
+### Story 7.7: Contato e Endereço de Funcionário
+
+Como Analista de RH,
+Eu quero cadastrar, consultar, atualizar e remover contatos e endereços de um Funcionário,
+Para manter os dados de contato dele completos e corretos, além dos já semeados na admissão.
+
+**Acceptance Criteria:**
+
+**Given** um Funcionário existente **When** RH gerencia contatos via `GET/POST /v1/employees/{employeeId}/contacts` e `GET/PUT/DELETE /v1/employees/{employeeId}/contacts/{id}` **Then** o CRUD completo funciona
+
+**Given** um Funcionário existente **When** RH gerencia endereços via `GET/POST /v1/employees/{employeeId}/addresses` e `GET/PUT/DELETE /v1/employees/{employeeId}/addresses/{id}` **Then** o CRUD completo funciona
+
+**Given** nenhuma dessas 2 famílias de rota tem Use Case/Delegate hoje **When** esta story é implementada **Then** cria as camadas do zero, mesmo padrão da Story 7.2 (Company Contact/Address) — considerar extrair um Use Case genérico só se a duplicação entre as duas stories ficar evidente na implementação, não decidir isso agora no plano
+
+### Story 7.8: Jornada de Trabalho Efetiva do Funcionário — API Completa
+
+Como Analista de RH,
+Eu quero consultar, criar, atualizar e remover a jornada de trabalho efetiva de um Funcionário, dia a dia,
+Para ajustar o horário dele depois da cópia inicial feita na admissão (Story 2.1), sem depender de acesso direto ao banco.
+
+**Acceptance Criteria:**
+
+**Given** a Story 2.1 já grava `EmployeeWorkSchedule` (cópia do template do Cargo na admissão), mas nenhuma rota própria existe para gerenciar esse registro depois **When** RH consulta `GET /v1/employees/{employeeId}/work-schedule` **Then** retorna array direto (sem paginação — teto real de 7 registros, um por dia da semana), sem inferir o template do Cargo como fallback para dia sem registro
+
+**Given** um Funcionário existente **When** RH cria via `POST` (dia da semana ainda sem registro) ou atualiza/remove via `PUT`/`DELETE /v1/employees/{employeeId}/work-schedule/{dayOfWeek}` **Then** as 3 operações funcionam, reaproveitando a mesma validação cronológica estrita já usada por `PositionWorkSchedule` (Story 1.5): `startTime < lunchStart < lunchEnd < endTime`
+
+**Given** nenhuma das 4 operações tem Use Case/Delegate hoje (só a entidade/repositório, escritos internamente pela Story 2.1) **When** esta story é implementada **Then** cria as 4 do zero — nenhuma mudança de schema, Liquibase ou permissão (`GET_EMPLOYEE_WORK_SCHEDULE`/`CREATE_EMPLOYEE_WORK_SCHEDULE`/`UPDATE_EMPLOYEE_WORK_SCHEDULE`/`DELETE_EMPLOYEE_WORK_SCHEDULE` já existem)

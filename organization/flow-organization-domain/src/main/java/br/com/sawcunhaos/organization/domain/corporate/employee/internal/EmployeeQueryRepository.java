@@ -62,4 +62,11 @@ public interface EmployeeQueryRepository extends BaseJpaRepository<Employee, Lon
         return exists(booleanBuilder.getValue());
     }
 
+    default Optional<Employee> findByTaxIdentifierAndStatus(String taxIdentifier, StatusEmployee status) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(qEmployee.taxIdentifier.cpf.eq(taxIdentifier))
+                .and(qEmployee.status.eq(status));
+        return findOne(booleanBuilder.getValue());
+    }
+
 }

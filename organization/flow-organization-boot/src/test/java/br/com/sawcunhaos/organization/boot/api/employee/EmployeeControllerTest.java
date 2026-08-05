@@ -16,6 +16,7 @@ package br.com.sawcunhaos.organization.boot.api.employee;
 import br.com.sawcunhaos.organization.boot.infrastructure.ScosOrganizationTestUtil;
 import br.com.sawcunhaos.organization.domain.access.status.internal.EmployeeStatusHistory;
 import br.com.sawcunhaos.organization.domain.access.status.internal.EmployeeStatusHistoryRepository;
+import br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeePositionHistory;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeePositionHistoryRepository;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeeQueryRepository;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeeWorkScheduleRepository;
@@ -47,8 +48,11 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
     private static final String EMPLOYEES_URI = "/api/v1/employees";
     private static final String POSITIONS_URI = "/api/v1/positions";
 
+    private static final String COMPANIES_URI = "/api/v1/companies";
+
     private static final long SEEDED_COMPANY_ID = 1L;
     private static final long SEEDED_POSITION_ID = 1L;
+    private static final long SEEDED_DEPARTMENT_ID = 1L;
     private static final long SEEDED_EMPLOYEE_ID = 1L;
     private static final long REASON_ACTIVATE_EMPLOYEE_NEW_HIRE = 2L;
     private static final long REASON_ACTIVATE_EMPLOYEE_INACTIVE = 6L;
@@ -62,6 +66,9 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
     private static final long REASON_ENABLE_EMPLOYEE_AUDIT_CLEARED = 2L;
     private static final long REASON_ENABLE_EMPLOYEE_INACTIVE = 5L;
     private static final long REASON_ENABLE_COMPANY_SCOPED = 1L;
+    private static final long REASON_ACTIVATE_EMPLOYEE_REINSTATEMENT = 3L;
+    private static final long REASON_POSITION_CHANGE_TRANSFER = 3L;
+    private static final long REASON_POSITION_CHANGE_INACTIVE = 4L;
     private static final long NONEXISTENT_ID = 999_999L;
 
     // CPFs válidos (DV correto) e distintos por cenário — evita colisão no cache de idempotência.
@@ -73,6 +80,27 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
     private static final String CPF_WRONG_EMAIL_DOMAIN = "32262626022";
     private static final String CPF_NO_TOKEN = "39036331005";
     private static final String CPF_NO_PERMISSION = "87606057745";
+
+    private static final String CPF_REHIRE_HAPPY_PATH = "10433218100";
+    private static final String CPF_REHIRE_STILL_ACTIVE = "96001338914";
+    private static final String CPF_REHIRE_DISABLED = "08386379499";
+    private static final String CPF_REHIRE_NEVER_REGISTERED = "02654235114";
+    private static final String CPF_REHIRE_COMPANY_NOT_FOUND = "16155940789";
+    private static final String CPF_REHIRE_POSITION_NOT_FOUND = "81618495950";
+    private static final String CPF_REHIRE_REASON_ACTIVATE_NOT_FOUND = "31034131656";
+    private static final String CPF_REHIRE_REASON_POSITION_CHANGE_NOT_FOUND = "47525534144";
+    private static final String CPF_REHIRE_SUPERVISOR_NOT_FOUND = "92832764851";
+    private static final String CPF_REHIRE_COMPANY_INACTIVE = "35030564160";
+    private static final String CPF_REHIRE_POSITION_INACTIVE = "39537672409";
+    private static final String CPF_REHIRE_SUPERVISOR_INACTIVE = "23884969692";
+    private static final String CPF_REHIRE_SUPERVISOR_INACTIVE_SUPERVISOR = "66392332154";
+    private static final String CPF_REHIRE_REASON_ACTIVATE_INACTIVE = "46881973659";
+    private static final String CPF_REHIRE_REASON_ACTIVATE_INCOMPATIBLE = "99356327254";
+    private static final String CPF_REHIRE_REASON_POSITION_CHANGE_INACTIVE = "95181756085";
+    private static final String CPF_REHIRE_NO_TOKEN = "48063581776";
+    private static final String CPF_REHIRE_NO_PERMISSION = "83970523214";
+
+    private static final String CNPJ_REHIRE_COMPANY_INACTIVE = "11122233000183";
 
     private static final String CODE_EMPLOYEE_TAX_IDENTIFIER_CONFLICT = "SCOS_EMPLOYEE_002";
     private static final String CODE_EMPLOYEE_EMAIL_CONFLICT = "SCOS_EMPLOYEE_003";
@@ -91,6 +119,15 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
     private static final String CODE_DISABLE_REASON_INCOMPATIBLE = "SCOS_EMPLOYEE_018";
     private static final String CODE_ENABLE_REASON_INACTIVE = "SCOS_EMPLOYEE_019";
     private static final String CODE_ENABLE_REASON_INCOMPATIBLE = "SCOS_EMPLOYEE_020";
+
+    private static final String CODE_REHIRE_NOT_FOUND = "SCOS_EMPLOYEE_021";
+    private static final String CODE_REASON_POSITION_CHANGE_NOT_FOUND = "SCOS_EMPLOYEE_022";
+    private static final String CODE_REASON_POSITION_CHANGE_INACTIVE = "SCOS_EMPLOYEE_023";
+    private static final String CODE_SUPERVISOR_NOT_FOUND = "SCOS_EMPLOYEE_004";
+    private static final String CODE_COMPANY_INACTIVE = "SCOS_EMPLOYEE_005";
+    private static final String CODE_POSITION_INACTIVE = "SCOS_EMPLOYEE_006";
+    private static final String CODE_SUPERVISOR_INACTIVE = "SCOS_EMPLOYEE_007";
+    private static final String CODE_REASON_ACTIVATE_NOT_FOUND = "SCOS_REASON_ACTIVATE_001";
 
     @Autowired
     private EmployeeQueryRepository employeeQueryRepository;
@@ -625,6 +662,292 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
     }
 
     // =====================================================================================
+    // POST /v1/employees/rehire (UC-041) — recontratação de Funcionário INACTIVE
+    // =====================================================================================
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — INACTIVE recontrata (200), reatribui vínculos e fecha a posição anterior")
+    void rehire_seededInactive_returns200AndClosesPreviousPositionHistory() throws Exception {
+        long employeeId = createEmployee(CPF_REHIRE_HAPPY_PATH, "rehire.happy@sawcunhaos.com.br");
+        transitionEmployee(employeeId, "disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_HAPPY_PATH, SEEDED_COMPANY_ID, SEEDED_POSITION_ID, null,
+                                REASON_ACTIVATE_EMPLOYEE_REINSTATEMENT, REASON_POSITION_CHANGE_TRANSFER)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.id").value(employeeId))
+                .andExpect(jsonPath("$.data.taxIdentifier").value(CPF_REHIRE_HAPPY_PATH))
+                .andExpect(jsonPath("$.data.status").value("ACTIVE"))
+                .andExpect(jsonPath("$.data.contractType").value("CLT"))
+                .andExpect(jsonPath("$.data.company.id").value(SEEDED_COMPANY_ID))
+                .andExpect(jsonPath("$.data.position.id").value(SEEDED_POSITION_ID))
+                .andExpect(jsonPath("$.data.supervisor").doesNotExist());
+
+        assertThat(employeeQueryRepository.findById(employeeId)).get().extracting("status").isEqualTo(StatusEmployee.ACTIVE);
+
+        Iterable<EmployeePositionHistory> positionHistories = employeePositionHistoryRepository.findAll();
+        // linha original (da criação) deve estar fechada pelo trigger trg_close_previous_position
+        assertThat(positionHistories).anyMatch(h -> h.getEmployee().getId().equals(employeeId) && h.getEndDate() != null);
+        // nova linha, aberta, com o reasonPositionChange informado no rehire
+        assertThat(positionHistories).anyMatch(h -> h.getEmployee().getId().equals(employeeId) && h.getEndDate() == null
+                && h.getReasonPositionChange().getId().equals(REASON_POSITION_CHANGE_TRANSFER));
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — CPF de Funcionário ACTIVE retorna 404 SCOS_EMPLOYEE_021")
+    void rehire_activeCpf_returns404() throws Exception {
+        createEmployee(CPF_REHIRE_STILL_ACTIVE, "rehire.active@sawcunhaos.com.br");
+
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_STILL_ACTIVE, SEEDED_COMPANY_ID, SEEDED_POSITION_ID, null,
+                                REASON_ACTIVATE_EMPLOYEE_REINSTATEMENT, REASON_POSITION_CHANGE_TRANSFER)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_REHIRE_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — CPF de Funcionário DISABLED retorna 404 SCOS_EMPLOYEE_021")
+    void rehire_disabledCpf_returns404() throws Exception {
+        long employeeId = createEmployee(CPF_REHIRE_DISABLED, "rehire.disabled@sawcunhaos.com.br");
+        transitionEmployee(employeeId, "block", REASON_DISABLE_EMPLOYEE_UNDER_AUDIT);
+
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_DISABLED, SEEDED_COMPANY_ID, SEEDED_POSITION_ID, null,
+                                REASON_ACTIVATE_EMPLOYEE_REINSTATEMENT, REASON_POSITION_CHANGE_TRANSFER)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_REHIRE_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — CPF nunca cadastrado retorna 404 SCOS_EMPLOYEE_021")
+    void rehire_neverRegisteredCpf_returns404() throws Exception {
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_NEVER_REGISTERED, SEEDED_COMPANY_ID, SEEDED_POSITION_ID, null,
+                                REASON_ACTIVATE_EMPLOYEE_REINSTATEMENT, REASON_POSITION_CHANGE_TRANSFER)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_REHIRE_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — companyId inexistente retorna 404 SCOS_COMPANY_001")
+    void rehire_companyNotFound_returns404() throws Exception {
+        long employeeId = createEmployee(CPF_REHIRE_COMPANY_NOT_FOUND, "rehire.companynotfound@sawcunhaos.com.br");
+        transitionEmployee(employeeId, "disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_COMPANY_NOT_FOUND, NONEXISTENT_ID, SEEDED_POSITION_ID, null,
+                                REASON_ACTIVATE_EMPLOYEE_REINSTATEMENT, REASON_POSITION_CHANGE_TRANSFER)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_COMPANY_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — positionId inexistente retorna 404 SCOS_POSITION_001")
+    void rehire_positionNotFound_returns404() throws Exception {
+        long employeeId = createEmployee(CPF_REHIRE_POSITION_NOT_FOUND, "rehire.positionnotfound@sawcunhaos.com.br");
+        transitionEmployee(employeeId, "disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_POSITION_NOT_FOUND, SEEDED_COMPANY_ID, NONEXISTENT_ID, null,
+                                REASON_ACTIVATE_EMPLOYEE_REINSTATEMENT, REASON_POSITION_CHANGE_TRANSFER)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_POSITION_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — reasonActivateId inexistente retorna 404 SCOS_REASON_ACTIVATE_001")
+    void rehire_reasonActivateNotFound_returns404() throws Exception {
+        long employeeId = createEmployee(CPF_REHIRE_REASON_ACTIVATE_NOT_FOUND, "rehire.reasonactivatenotfound@sawcunhaos.com.br");
+        transitionEmployee(employeeId, "disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_REASON_ACTIVATE_NOT_FOUND, SEEDED_COMPANY_ID, SEEDED_POSITION_ID, null,
+                                NONEXISTENT_ID, REASON_POSITION_CHANGE_TRANSFER)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_REASON_ACTIVATE_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — reasonPositionChangeId inexistente retorna 404 SCOS_EMPLOYEE_022")
+    void rehire_reasonPositionChangeNotFound_returns404() throws Exception {
+        long employeeId = createEmployee(CPF_REHIRE_REASON_POSITION_CHANGE_NOT_FOUND, "rehire.reasonposchangenotfound@sawcunhaos.com.br");
+        transitionEmployee(employeeId, "disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_REASON_POSITION_CHANGE_NOT_FOUND, SEEDED_COMPANY_ID, SEEDED_POSITION_ID, null,
+                                REASON_ACTIVATE_EMPLOYEE_REINSTATEMENT, NONEXISTENT_ID)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_REASON_POSITION_CHANGE_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — supervisorId inexistente retorna 404 SCOS_EMPLOYEE_004")
+    void rehire_supervisorNotFound_returns404() throws Exception {
+        long employeeId = createEmployee(CPF_REHIRE_SUPERVISOR_NOT_FOUND, "rehire.supervisornotfound@sawcunhaos.com.br");
+        transitionEmployee(employeeId, "disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_SUPERVISOR_NOT_FOUND, SEEDED_COMPANY_ID, SEEDED_POSITION_ID, NONEXISTENT_ID,
+                                REASON_ACTIVATE_EMPLOYEE_REINSTATEMENT, REASON_POSITION_CHANGE_TRANSFER)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_SUPERVISOR_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — companyId inativo retorna 422 SCOS_EMPLOYEE_005")
+    void rehire_companyInactive_returns422() throws Exception {
+        long employeeId = createEmployee(CPF_REHIRE_COMPANY_INACTIVE, "rehire.companyinactive@sawcunhaos.com.br");
+        transitionEmployee(employeeId, "disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+        long inactiveCompanyId = createCompany(CNPJ_REHIRE_COMPANY_INACTIVE);
+        disableCompany(inactiveCompanyId);
+
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_COMPANY_INACTIVE, inactiveCompanyId, SEEDED_POSITION_ID, null,
+                                REASON_ACTIVATE_EMPLOYEE_REINSTATEMENT, REASON_POSITION_CHANGE_TRANSFER)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_COMPANY_INACTIVE));
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — positionId inativo retorna 422 SCOS_EMPLOYEE_006")
+    void rehire_positionInactive_returns422() throws Exception {
+        long employeeId = createEmployee(CPF_REHIRE_POSITION_INACTIVE, "rehire.positioninactive@sawcunhaos.com.br");
+        transitionEmployee(employeeId, "disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+        long inactivePositionId = createPosition("REHIRE_POS_INAT");
+        disablePosition(inactivePositionId);
+
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_POSITION_INACTIVE, SEEDED_COMPANY_ID, inactivePositionId, null,
+                                REASON_ACTIVATE_EMPLOYEE_REINSTATEMENT, REASON_POSITION_CHANGE_TRANSFER)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_POSITION_INACTIVE));
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — supervisorId não ACTIVE retorna 422 SCOS_EMPLOYEE_007")
+    void rehire_supervisorInactive_returns422() throws Exception {
+        long employeeId = createEmployee(CPF_REHIRE_SUPERVISOR_INACTIVE, "rehire.supervisorinactive@sawcunhaos.com.br");
+        transitionEmployee(employeeId, "disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+        long supervisorId = createEmployee(CPF_REHIRE_SUPERVISOR_INACTIVE_SUPERVISOR, "rehire.supervisor@sawcunhaos.com.br");
+        transitionEmployee(supervisorId, "disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_SUPERVISOR_INACTIVE, SEEDED_COMPANY_ID, SEEDED_POSITION_ID, supervisorId,
+                                REASON_ACTIVATE_EMPLOYEE_REINSTATEMENT, REASON_POSITION_CHANGE_TRANSFER)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_SUPERVISOR_INACTIVE));
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — motivo de ativação inativo retorna 422 SCOS_EMPLOYEE_008")
+    void rehire_reasonActivateInactive_returns422() throws Exception {
+        long employeeId = createEmployee(CPF_REHIRE_REASON_ACTIVATE_INACTIVE, "rehire.reasonactivateinactive@sawcunhaos.com.br");
+        transitionEmployee(employeeId, "disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_REASON_ACTIVATE_INACTIVE, SEEDED_COMPANY_ID, SEEDED_POSITION_ID, null,
+                                REASON_ACTIVATE_EMPLOYEE_INACTIVE, REASON_POSITION_CHANGE_TRANSFER)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_ACTIVATE_REASON_INACTIVE));
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — motivo de ativação com entityType=COMPANY retorna 422 SCOS_EMPLOYEE_009")
+    void rehire_reasonActivateIncompatible_returns422() throws Exception {
+        long employeeId = createEmployee(CPF_REHIRE_REASON_ACTIVATE_INCOMPATIBLE, "rehire.reasonactivateincompatible@sawcunhaos.com.br");
+        transitionEmployee(employeeId, "disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_REASON_ACTIVATE_INCOMPATIBLE, SEEDED_COMPANY_ID, SEEDED_POSITION_ID, null,
+                                REASON_ACTIVATE_COMPANY_SCOPED, REASON_POSITION_CHANGE_TRANSFER)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_ACTIVATE_REASON_INCOMPATIBLE));
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — motivo de mudança de cargo inativo retorna 422 SCOS_EMPLOYEE_023")
+    void rehire_reasonPositionChangeInactive_returns422() throws Exception {
+        long employeeId = createEmployee(CPF_REHIRE_REASON_POSITION_CHANGE_INACTIVE, "rehire.reasonposchangeinactive@sawcunhaos.com.br");
+        transitionEmployee(employeeId, "disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_REASON_POSITION_CHANGE_INACTIVE, SEEDED_COMPANY_ID, SEEDED_POSITION_ID, null,
+                                REASON_ACTIVATE_EMPLOYEE_REINSTATEMENT, REASON_POSITION_CHANGE_INACTIVE)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_REASON_POSITION_CHANGE_INACTIVE));
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — sem token retorna 401")
+    void rehire_withoutToken_returns401() throws Exception {
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, null, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_NO_TOKEN, SEEDED_COMPANY_ID, SEEDED_POSITION_ID, null,
+                                REASON_ACTIVATE_EMPLOYEE_REINSTATEMENT, REASON_POSITION_CHANGE_TRANSFER)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("POST /v1/employees/rehire — sem permissão retorna 403")
+    void rehire_withoutPermission_returns403() throws Exception {
+        stubValidateAuthorityWithoutPermissions();
+
+        mockMvc.perform(post(EMPLOYEES_URI + "/rehire")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(rehireBody(CPF_REHIRE_NO_PERMISSION, SEEDED_COMPANY_ID, SEEDED_POSITION_ID, null,
+                                REASON_ACTIVATE_EMPLOYEE_REINSTATEMENT, REASON_POSITION_CHANGE_TRANSFER)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
+    }
+
+    // =====================================================================================
     // Helpers
     // =====================================================================================
 
@@ -660,10 +983,88 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
      * (Redis, {@code x-jdempotentrequestpayload}) de outra chamada igual feita por outro teste/precondição.
      */
     private void transition(String route, long reasonId) throws Exception {
-        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/" + route, SEEDED_EMPLOYEE_ID)
+        transitionEmployee(SEEDED_EMPLOYEE_ID, route, reasonId);
+    }
+
+    private void transitionEmployee(long employeeId, String route, long reasonId) throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/" + route, employeeId)
                         .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(statusTransitionBody(reasonId, "setup-" + route + "-" + System.nanoTime())))
+                        .content(statusTransitionBody(reasonId, "setup-" + route + "-" + employeeId + "-" + System.nanoTime())))
                 .andExpect(status().isNoContent());
+    }
+
+    private long createEmployee(String taxIdentifier, String email) throws Exception {
+        String response = mockMvc.perform(post(EMPLOYEES_URI)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createBody(taxIdentifier, email, SEEDED_COMPANY_ID, SEEDED_POSITION_ID, REASON_ACTIVATE_EMPLOYEE_NEW_HIRE)))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+        return ((Number) com.jayway.jsonpath.JsonPath.read(response, "$.data.id")).longValue();
+    }
+
+    private long createCompany(String taxIdentifier) throws Exception {
+        String response = mockMvc.perform(post(COMPANIES_URI)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Empresa Rehire Teste",
+                                  "nameTreatment": "Teste",
+                                  "taxIdentifier": "%s",
+                                  "foundationDate": "2020-01-01",
+                                  "sectorOfActivity": "Tecnologia da Informação",
+                                  "reasonActivateId": %d
+                                }
+                                """.formatted(taxIdentifier, REASON_ACTIVATE_COMPANY_SCOPED)))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+        return ((Number) com.jayway.jsonpath.JsonPath.read(response, "$.data.id")).longValue();
+    }
+
+    private void disableCompany(long companyId) throws Exception {
+        mockMvc.perform(put(COMPANIES_URI + "/{id}/disable", companyId)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_INACTIVATE_COMPANY_SCOPED, "setup-disable-company-" + companyId)))
+                .andExpect(status().isNoContent());
+    }
+
+    private long createPosition(String code) throws Exception {
+        String response = mockMvc.perform(post(POSITIONS_URI)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "code": "%s",
+                                  "description": "Cargo Rehire Teste",
+                                  "departmentId": %d
+                                }
+                                """.formatted(code, SEEDED_DEPARTMENT_ID)))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+        return ((Number) com.jayway.jsonpath.JsonPath.read(response, "$.data.id")).longValue();
+    }
+
+    private void disablePosition(long positionId) throws Exception {
+        mockMvc.perform(put(POSITIONS_URI + "/{id}/disable", positionId)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isNoContent());
+    }
+
+    private static String rehireBody(String taxIdentifier, long companyId, long positionId, Long supervisorId,
+                                      long reasonActivateId, long reasonPositionChangeId) {
+        String supervisorField = supervisorId == null ? "" : "  \"supervisorId\": " + supervisorId + ",\n";
+        return """
+                {
+                  "taxIdentifier": "%s",
+                  "companyId": %d,
+                  "positionId": %d,
+                %s  "contractType": "CLT",
+                  "reasonActivateId": %d,
+                  "reasonPositionChangeId": %d
+                }
+                """.formatted(taxIdentifier, companyId, positionId, supervisorField, reasonActivateId, reasonPositionChangeId);
     }
 }

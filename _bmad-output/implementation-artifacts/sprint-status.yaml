@@ -65,8 +65,9 @@ development_status:
   epic-2: in-progress
   2-1-admissao-funcionario-copia-jornada-trabalho: review
   2-2-ciclo-vida-funcionario: review
-  2-3-recontratacao-funcionario: ready-for-dev
+  2-3-recontratacao-funcionario: review
   2-4-licenca-ferias-colocar-funcionario-licenca: ready-for-dev
+  2-5-consulta-funcionario: ready-for-dev
   epic-2-retrospective: optional
 
   epic-3: backlog
@@ -93,3 +94,14 @@ development_status:
   6-1-invalidacao-sincrona-sessoes-kill-switch: backlog
   6-2-reativacao-nao-restaura-sessoes-antigas: backlog
   epic-6-retrospective: optional
+
+  epic-7: backlog
+  7-1-consulta-empresa-historico-hierarquia-filiais: backlog
+  7-2-contato-endereco-empresa: backlog
+  7-3-cnae-secundario-empresa: backlog
+  7-4-catalogo-motivo-mudanca-cargo: backlog
+  7-5-consulta-funcionario-historico-hierarquia-subordinados: backlog
+  7-6-transferencia-funcionario: backlog
+  7-7-contato-endereco-funcionario: backlog
+  7-8-jornada-trabalho-funcionario-api-completa: backlog
+  epic-7-retrospective: optional

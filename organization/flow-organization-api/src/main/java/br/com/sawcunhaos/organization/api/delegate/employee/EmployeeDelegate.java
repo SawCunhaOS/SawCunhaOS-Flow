@@ -18,10 +18,13 @@ import br.com.sawcunhaos.organization.api.dto.Create;
 import br.com.sawcunhaos.organization.api.dto.CreateEmployeeRequest;
 import br.com.sawcunhaos.organization.api.dto.CreateResponse;
 import br.com.sawcunhaos.organization.api.dto.EmployeeStatusTransitionRequest;
+import br.com.sawcunhaos.organization.api.dto.GetEmployeeResponse;
+import br.com.sawcunhaos.organization.api.dto.RehireEmployeeRequest;
 import br.com.sawcunhaos.organization.application.usecase.corporate.employee.ActivateEmployeeUseCase;
 import br.com.sawcunhaos.organization.application.usecase.corporate.employee.BlockEmployeeUseCase;
 import br.com.sawcunhaos.organization.application.usecase.corporate.employee.CreateEmployeeUseCase;
 import br.com.sawcunhaos.organization.application.usecase.corporate.employee.InactivateEmployeeUseCase;
+import br.com.sawcunhaos.organization.application.usecase.corporate.employee.RehireEmployeeUseCase;
 import br.com.sawcunhaos.organization.application.usecase.corporate.employee.UnblockEmployeeUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +43,7 @@ public class EmployeeDelegate implements EmployeeApiDelegate {
     private final InactivateEmployeeUseCase inactivateEmployeeUseCase;
     private final BlockEmployeeUseCase blockEmployeeUseCase;
     private final UnblockEmployeeUseCase unblockEmployeeUseCase;
+    private final RehireEmployeeUseCase rehireEmployeeUseCase;
 
     @Override
     public CreateResponse createEmployee(CreateEmployeeRequest createEmployeeRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
@@ -70,5 +74,12 @@ public class EmployeeDelegate implements EmployeeApiDelegate {
     public Void unblockEmployee(Long id, EmployeeStatusTransitionRequest employeeStatusTransitionRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
         unblockEmployeeUseCase.execute(id, employeeStatusTransitionRequest);
         return null;
+    }
+
+    @Override
+    public GetEmployeeResponse rehireEmployee(RehireEmployeeRequest rehireEmployeeRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        return GetEmployeeResponse.builder()
+                .data(rehireEmployeeUseCase.execute(rehireEmployeeRequest))
+                .build();
     }
 }

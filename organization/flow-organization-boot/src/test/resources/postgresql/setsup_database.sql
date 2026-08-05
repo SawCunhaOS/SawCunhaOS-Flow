@@ -254,6 +254,13 @@ VALUES
 ON CONFLICT DO NOTHING;
 -- REASON_POSITION_CHANGE_ID gerados: 1=NEW_HIRE, 2=PROMOTION, 3=TRANSFER
 
+-- Registro adicional INATIVO — usado no IT de "rehire com motivo de mudança de cargo inativo" (Story 2.3).
+-- Não existe endpoint de disable para este catálogo ainda (só entidade/repositório) — seed direto, mesmo padrão dos demais catálogos.
+-- REASON_POSITION_CHANGE_ID gerado: 4.
+INSERT INTO scos.SCOS_REASON_POSITION_CHANGE (CODE, DESCRIPTION, ACTIVE, UPDATED_AT, USER_AT)
+VALUES ('ARCHIVED_REASON', 'Motivo de mudança de cargo arquivado (inativo p/ testes)', false, NOW(), 'seed')
+ON CONFLICT DO NOTHING;
+
 -- ============================================================
 -- SCOS_COMPANY — matriz SawCunhaOS
 -- ============================================================

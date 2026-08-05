@@ -15,6 +15,7 @@ package br.com.sawcunhaos.organization.domain.corporate.employee.specification;
 
 import br.com.sawcunhaos.organization.domain.corporate.employee.dto.EmployeeInput;
 import br.com.sawcunhaos.organization.domain.corporate.employee.dto.EmployeeOutput;
+import br.com.sawcunhaos.organization.domain.corporate.employee.dto.RehireEmployeeInput;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -36,5 +37,11 @@ public interface EmployeeService {
 
     /** Desbloqueia um Funcionário DISABLED (rota "unblock", corresponde ao método de domínio "enable"). */
     void enable(@NonNull Long id, @NonNull Long reasonEnableId, String observation);
+
+    /** Recontrata um Funcionário INACTIVE, reatribuindo empresa/cargo/supervisor/contrato. 404 SCOS_EMPLOYEE_021 se não houver Funcionário INACTIVE com esse CPF. */
+    EmployeeOutput rehire(@NonNull RehireEmployeeInput input);
+
+    /** Busca o Funcionário pelo id, para composição por outro fluxo (ex.: nome do supervisor no mapeamento de rehire). 404 SCOS_EMPLOYEE_014 se não existir. */
+    EmployeeOutput findById(@NonNull Long id);
 
 }
