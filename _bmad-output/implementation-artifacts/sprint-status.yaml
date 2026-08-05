@@ -63,7 +63,7 @@ development_status:
   epic-1-retrospective: optional
 
   epic-2: in-progress
-  2-1-admissao-funcionario-copia-jornada-trabalho: ready-for-dev
+  2-1-admissao-funcionario-copia-jornada-trabalho: review
   2-2-ciclo-vida-funcionario: ready-for-dev
   2-3-recontratacao-funcionario: ready-for-dev
   2-4-licenca-ferias-colocar-funcionario-licenca: ready-for-dev

@@ -951,10 +951,12 @@ components:
       properties:
         name:
           type: string
+          maxLength: 250
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
         nameTreatment:
           type: string
+          maxLength: 100
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
         taxIdentifier:
@@ -965,6 +967,7 @@ components:
           x-is-cpf: true
         email:
           type: string
+          maxLength: 255
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
         birthDate:

@@ -16,6 +16,7 @@ package br.com.sawcunhaos.organization.domain.corporate.company.specification;
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.CompanyInput;
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.CompanyOutput;
+import br.com.sawcunhaos.organization.domain.corporate.company.internal.Company;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.StatusCompany;
 import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.Page;
@@ -38,6 +39,9 @@ public interface CompanyService {
 
     /** Busca uma empresa pelo id, com os dados completos. */
     CompanyOutput findById(@NonNull Long companyId);
+
+    /** Busca a entidade Company pelo id, para composição por outros agregados (ex.: Employee). */
+    Company findCompanyById(@NonNull Long companyId);
 
     /** Lista paginada de empresas, filtrando por {@code status} e/ou {@code name} quando informados. */
     Page<CompanyOutput> findAll(StatusCompany status, String name, @NonNull Pageable pageable);

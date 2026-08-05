@@ -50,4 +50,16 @@ public interface EmployeeQueryRepository extends BaseJpaRepository<Employee, Lon
         return exists(booleanBuilder.getValue());
     }
 
+    default boolean existsByTaxIdentifier(String taxIdentifier) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(qEmployee.taxIdentifier.cpf.eq(taxIdentifier));
+        return exists(booleanBuilder.getValue());
+    }
+
+    default boolean existsByEmail(String email) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        booleanBuilder.and(qEmployee.email.email.eq(email));
+        return exists(booleanBuilder.getValue());
+    }
+
 }

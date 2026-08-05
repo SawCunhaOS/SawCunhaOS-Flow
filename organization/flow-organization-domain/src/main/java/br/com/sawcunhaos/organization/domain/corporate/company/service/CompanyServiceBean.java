@@ -319,7 +319,8 @@ class CompanyServiceBean implements CompanyService {
         companyStatusHistoryRepository.merge(history);
     }
 
-    private Company findCompanyById(@NonNull Long companyId) {
+    @Override
+    public Company findCompanyById(@NonNull Long companyId) {
         return companyRepository.findById(companyId).orElseThrow(
                 () -> new ScosException(SCOS_COMPANY_001)
         );

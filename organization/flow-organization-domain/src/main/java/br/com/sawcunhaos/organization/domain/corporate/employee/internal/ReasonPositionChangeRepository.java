@@ -18,6 +18,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface ReasonPositionChangeRepository extends BaseJpaRepository<ReasonPositionChange, Long>, JpaSpecificationExecutor<ReasonPositionChange>, QuerydslPredicateExecutor<ReasonPositionChange> {
+
+    Optional<ReasonPositionChange> findByCode(String code);
 }

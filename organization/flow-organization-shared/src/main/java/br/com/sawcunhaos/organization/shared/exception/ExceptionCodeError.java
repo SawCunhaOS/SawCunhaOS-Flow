@@ -110,6 +110,30 @@ public enum ExceptionCodeError implements ExceptionCode {
 
     // Employee
     SCOS_EMPLOYEE_001("SCOS_EMPLOYEE_001", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** CPF já cadastrado em outro funcionário (qualquer status). HTTP 409. */
+    SCOS_EMPLOYEE_002("SCOS_EMPLOYEE_002", 409, "SCOS_TITLE_CONFLICT"),
+    /** E-mail já cadastrado em outro funcionário (qualquer status). HTTP 409. */
+    SCOS_EMPLOYEE_003("SCOS_EMPLOYEE_003", 409, "SCOS_TITLE_CONFLICT"),
+    /** Supervisor informado não corresponde a nenhum funcionário existente. HTTP 404. */
+    SCOS_EMPLOYEE_004("SCOS_EMPLOYEE_004", 404, "SCOS_TITLE_NOT_FOUND"),
+    /** Empresa informada não está ACTIVE. HTTP 422. */
+    SCOS_EMPLOYEE_005("SCOS_EMPLOYEE_005", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Cargo informado está inativo (active=false). HTTP 422. */
+    SCOS_EMPLOYEE_006("SCOS_EMPLOYEE_006", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Supervisor informado não está ACTIVE. HTTP 422. */
+    SCOS_EMPLOYEE_007("SCOS_EMPLOYEE_007", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de ativação informado está inativo. HTTP 422. */
+    SCOS_EMPLOYEE_008("SCOS_EMPLOYEE_008", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de ativação incompatível com a entidade Funcionário (entityType != EMPLOYEE). HTTP 422. */
+    SCOS_EMPLOYEE_009("SCOS_EMPLOYEE_009", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Domínio do e-mail não corresponde a EMPLOYEE_EMAIL_DOMAIN. HTTP 422. */
+    SCOS_EMPLOYEE_010("SCOS_EMPLOYEE_010", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Idade em dateOfHiring é menor que EMPLOYEE_MIN_AGE. HTTP 422. */
+    SCOS_EMPLOYEE_011("SCOS_EMPLOYEE_011", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Data de nascimento no futuro. HTTP 422. */
+    SCOS_EMPLOYEE_012("SCOS_EMPLOYEE_012", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Data de admissão anterior à data de nascimento. HTTP 422. */
+    SCOS_EMPLOYEE_013("SCOS_EMPLOYEE_013", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
 
     // User / Login
     SCOS_USER_001("SCOS_USER_001", 502, "SCOS_TITLE_EXTERNAL_INTEGRATION_FAILURE"),
