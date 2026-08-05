@@ -168,6 +168,12 @@ INSERT INTO scos.SCOS_REASON_ACTIVATE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE, U
 VALUES ('ARCHIVED_REASON', 'Motivo de ativação arquivado (inativo p/ testes)', 'COMPANY', false, NOW(), 'seed')
 ON CONFLICT DO NOTHING;
 
+-- Registro adicional INATIVO/EMPLOYEE — usado no IT de "enable com motivo inativo/incompatível" (Story 2.2).
+-- REASON_ACTIVATE_ID gerado: 6.
+INSERT INTO scos.SCOS_REASON_ACTIVATE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE, UPDATED_AT, USER_AT)
+VALUES ('ARCHIVED_REASON', 'Motivo de ativação arquivado (inativo p/ testes)', 'EMPLOYEE', false, NOW(), 'seed')
+ON CONFLICT DO NOTHING;
+
 -- ============================================================
 -- SCOS_REASON_INACTIVATE — motivos de encerramento definitivo
 -- ============================================================
@@ -183,6 +189,12 @@ ON CONFLICT DO NOTHING;
 -- REASON_INACTIVATE_ID gerado: 4.
 INSERT INTO scos.SCOS_REASON_INACTIVATE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE, UPDATED_AT, USER_AT)
 VALUES ('ARCHIVED_REASON', 'Motivo de inativação arquivado (inativo p/ testes)', 'COMPANY', false, NOW(), 'seed')
+ON CONFLICT DO NOTHING;
+
+-- Registro adicional INATIVO/EMPLOYEE — usado no IT de "disable com motivo inativo/incompatível" (Story 2.2).
+-- REASON_INACTIVATE_ID gerado: 5.
+INSERT INTO scos.SCOS_REASON_INACTIVATE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE, UPDATED_AT, USER_AT)
+VALUES ('ARCHIVED_REASON', 'Motivo de inativação arquivado (inativo p/ testes)', 'EMPLOYEE', false, NOW(), 'seed')
 ON CONFLICT DO NOTHING;
 
 -- ============================================================
@@ -202,6 +214,12 @@ INSERT INTO scos.SCOS_REASON_DISABLE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE, UP
 VALUES ('ARCHIVED_REASON', 'Motivo de bloqueio arquivado (inativo p/ testes)', 'COMPANY', false, NOW(), 'seed')
 ON CONFLICT DO NOTHING;
 
+-- Registro adicional INATIVO/EMPLOYEE — usado no IT de "block com motivo inativo/incompatível" (Story 2.2).
+-- REASON_DISABLE_ID gerado: 5.
+INSERT INTO scos.SCOS_REASON_DISABLE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE, UPDATED_AT, USER_AT)
+VALUES ('ARCHIVED_REASON', 'Motivo de bloqueio arquivado (inativo p/ testes)', 'EMPLOYEE', false, NOW(), 'seed')
+ON CONFLICT DO NOTHING;
+
 -- ============================================================
 -- SCOS_REASON_ENABLE — motivos de desbloqueio
 -- ============================================================
@@ -217,6 +235,12 @@ ON CONFLICT DO NOTHING;
 -- REASON_ENABLE_ID gerado: 4.
 INSERT INTO scos.SCOS_REASON_ENABLE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE, UPDATED_AT, USER_AT)
 VALUES ('ARCHIVED_REASON', 'Motivo de desbloqueio arquivado (inativo p/ testes)', 'COMPANY', false, NOW(), 'seed')
+ON CONFLICT DO NOTHING;
+
+-- Registro adicional INATIVO/EMPLOYEE — usado no IT de "unblock com motivo inativo/incompatível" (Story 2.2).
+-- REASON_ENABLE_ID gerado: 5.
+INSERT INTO scos.SCOS_REASON_ENABLE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE, UPDATED_AT, USER_AT)
+VALUES ('ARCHIVED_REASON', 'Motivo de desbloqueio arquivado (inativo p/ testes)', 'EMPLOYEE', false, NOW(), 'seed')
 ON CONFLICT DO NOTHING;
 
 -- ============================================================

@@ -18,11 +18,17 @@ import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
 import br.com.sawcunhaos.foundation.utils.valueobjects.Cpf;
 import br.com.sawcunhaos.foundation.utils.valueobjects.Email;
 import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonActivateOutput;
+import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonDisableOutput;
+import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonEnableOutput;
+import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonInactivateOutput;
 import br.com.sawcunhaos.organization.domain.access.status.internal.EntityType;
 import br.com.sawcunhaos.organization.domain.access.status.internal.EmployeeStatusHistory;
 import br.com.sawcunhaos.organization.domain.access.status.internal.EmployeeStatusHistoryRepository;
 import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonActivate;
 import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonActivateService;
+import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonDisableService;
+import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonEnableService;
+import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonInactivateService;
 import br.com.sawcunhaos.organization.domain.configuration.internal.ConfigurationKey;
 import br.com.sawcunhaos.organization.domain.configuration.internal.OrganizationConfigurationRepository;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.Company;
@@ -65,6 +71,13 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_011;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_012;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_013;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_014;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_015;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_016;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_017;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_018;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_019;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_020;
 
 /**
  * Implementação de {@link EmployeeService} — regras de negócio da admissão do Funcionário que
@@ -86,6 +99,9 @@ class EmployeeServiceBean implements EmployeeService {
     private final PositionService positionService;
     private final CompanyService companyService;
     private final ReasonActivateService reasonActivateService;
+    private final ReasonInactivateService reasonInactivateService;
+    private final ReasonDisableService reasonDisableService;
+    private final ReasonEnableService reasonEnableService;
     private final OrganizationConfigurationRepository organizationConfigurationRepository;
     private final Clock clock;
     private final ScosUserAuthentication scosUserAuthentication;
@@ -157,6 +173,122 @@ class EmployeeServiceBean implements EmployeeService {
         copyWorkScheduleFromPosition(employee, position.getId(), user);
 
         return toEmployeeOutput(employee);
+    }
+
+    /**
+     * @throws ScosException SCOS_EMPLOYEE_014 (404) se o {@code id} não existir.
+     * @throws ScosException SCOS_EMPLOYEE_001 (422) se o Funcionário não estiver {@code INACTIVE}.
+     * @throws ScosException SCOS_EMPLOYEE_008/009 (422) para motivo de ativação inativo/incompatível.
+     * @throws ScosException SCOS_REASON_ACTIVATE_001 (404) se o motivo não existir.
+     */
+    @Override
+    @Transactional(rollbackFor = ScosException.class)
+    public void activate(@NonNull Long id, @NonNull Long reasonActivateId, String observation) {
+        log.info("Activate Employee: {}", id);
+        Employee employee = findEmployeeById(id);
+        validateReasonActivate(reasonActivateId);
+        String user = scosUserAuthentication.findUserAuthentication();
+
+        EmployeeStatusHistory history = employee.activate(reasonActivateId);
+        history.setObservation(observation);
+        history.setUserAt(user);
+        employeeStatusHistoryRepository.merge(history);
+    }
+
+    /**
+     * @throws ScosException SCOS_EMPLOYEE_014 (404) se o {@code id} não existir.
+     * @throws ScosException SCOS_EMPLOYEE_001 (422) se o Funcionário já estiver {@code INACTIVE}.
+     * @throws ScosException SCOS_EMPLOYEE_015/016 (422) para motivo de inativação inativo/incompatível.
+     * @throws ScosException SCOS_REASON_INACTIVATE_001 (404) se o motivo não existir.
+     */
+    @Override
+    @Transactional(rollbackFor = ScosException.class)
+    public void inactivate(@NonNull Long id, @NonNull Long reasonInactivateId, String observation) {
+        log.info("Inactivate Employee: {}", id);
+        Employee employee = findEmployeeById(id);
+        validateReasonInactivate(reasonInactivateId);
+        String user = scosUserAuthentication.findUserAuthentication();
+
+        EmployeeStatusHistory history = employee.inactivate(reasonInactivateId);
+        history.setObservation(observation);
+        history.setUserAt(user);
+        employeeStatusHistoryRepository.merge(history);
+    }
+
+    /**
+     * @throws ScosException SCOS_EMPLOYEE_014 (404) se o {@code id} não existir.
+     * @throws ScosException SCOS_EMPLOYEE_001 (422) se o Funcionário não estiver {@code ACTIVE}.
+     * @throws ScosException SCOS_EMPLOYEE_017/018 (422) para motivo de bloqueio inativo/incompatível.
+     * @throws ScosException SCOS_REASON_DISABLE_001 (404) se o motivo não existir.
+     */
+    @Override
+    @Transactional(rollbackFor = ScosException.class)
+    public void disable(@NonNull Long id, @NonNull Long reasonDisableId, String observation) {
+        log.info("Disable (block) Employee: {}", id);
+        Employee employee = findEmployeeById(id);
+        validateReasonDisable(reasonDisableId);
+        String user = scosUserAuthentication.findUserAuthentication();
+
+        EmployeeStatusHistory history = employee.disable(reasonDisableId);
+        history.setObservation(observation);
+        history.setUserAt(user);
+        employeeStatusHistoryRepository.merge(history);
+    }
+
+    /**
+     * @throws ScosException SCOS_EMPLOYEE_014 (404) se o {@code id} não existir.
+     * @throws ScosException SCOS_EMPLOYEE_001 (422) se o Funcionário não estiver {@code DISABLED}.
+     * @throws ScosException SCOS_EMPLOYEE_019/020 (422) para motivo de desbloqueio inativo/incompatível.
+     * @throws ScosException SCOS_REASON_ENABLE_001 (404) se o motivo não existir.
+     */
+    @Override
+    @Transactional(rollbackFor = ScosException.class)
+    public void enable(@NonNull Long id, @NonNull Long reasonEnableId, String observation) {
+        log.info("Enable (unblock) Employee: {}", id);
+        Employee employee = findEmployeeById(id);
+        validateReasonEnable(reasonEnableId);
+        String user = scosUserAuthentication.findUserAuthentication();
+
+        EmployeeStatusHistory history = employee.enable(reasonEnableId);
+        history.setObservation(observation);
+        history.setUserAt(user);
+        employeeStatusHistoryRepository.merge(history);
+    }
+
+    private Employee findEmployeeById(@NonNull Long employeeId) {
+        return employeeQueryRepository.findById(employeeId).orElseThrow(
+                () -> new ScosException(SCOS_EMPLOYEE_014)
+        );
+    }
+
+    private void validateReasonInactivate(Long reasonInactivateId) {
+        ReasonInactivateOutput reason = reasonInactivateService.findById(reasonInactivateId);
+        if (!reason.active()) {
+            throw new ScosException(SCOS_EMPLOYEE_015);
+        }
+        if (reason.entityType() != EntityType.EMPLOYEE) {
+            throw new ScosException(SCOS_EMPLOYEE_016);
+        }
+    }
+
+    private void validateReasonDisable(Long reasonDisableId) {
+        ReasonDisableOutput reason = reasonDisableService.findById(reasonDisableId);
+        if (!reason.active()) {
+            throw new ScosException(SCOS_EMPLOYEE_017);
+        }
+        if (reason.entityType() != EntityType.EMPLOYEE) {
+            throw new ScosException(SCOS_EMPLOYEE_018);
+        }
+    }
+
+    private void validateReasonEnable(Long reasonEnableId) {
+        ReasonEnableOutput reason = reasonEnableService.findById(reasonEnableId);
+        if (!reason.active()) {
+            throw new ScosException(SCOS_EMPLOYEE_019);
+        }
+        if (reason.entityType() != EntityType.EMPLOYEE) {
+            throw new ScosException(SCOS_EMPLOYEE_020);
+        }
     }
 
     private void copyWorkScheduleFromPosition(Employee employee, Long positionId, String user) {

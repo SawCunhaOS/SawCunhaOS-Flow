@@ -17,7 +17,12 @@ import br.com.sawcunhaos.organization.api.controller.EmployeeApiDelegate;
 import br.com.sawcunhaos.organization.api.dto.Create;
 import br.com.sawcunhaos.organization.api.dto.CreateEmployeeRequest;
 import br.com.sawcunhaos.organization.api.dto.CreateResponse;
+import br.com.sawcunhaos.organization.api.dto.EmployeeStatusTransitionRequest;
+import br.com.sawcunhaos.organization.application.usecase.corporate.employee.ActivateEmployeeUseCase;
+import br.com.sawcunhaos.organization.application.usecase.corporate.employee.BlockEmployeeUseCase;
 import br.com.sawcunhaos.organization.application.usecase.corporate.employee.CreateEmployeeUseCase;
+import br.com.sawcunhaos.organization.application.usecase.corporate.employee.InactivateEmployeeUseCase;
+import br.com.sawcunhaos.organization.application.usecase.corporate.employee.UnblockEmployeeUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -31,11 +36,39 @@ import java.util.UUID;
 public class EmployeeDelegate implements EmployeeApiDelegate {
 
     private final CreateEmployeeUseCase createEmployeeUseCase;
+    private final ActivateEmployeeUseCase activateEmployeeUseCase;
+    private final InactivateEmployeeUseCase inactivateEmployeeUseCase;
+    private final BlockEmployeeUseCase blockEmployeeUseCase;
+    private final UnblockEmployeeUseCase unblockEmployeeUseCase;
 
     @Override
     public CreateResponse createEmployee(CreateEmployeeRequest createEmployeeRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
         return CreateResponse.builder()
                 .data(Create.builder().id(createEmployeeUseCase.execute(createEmployeeRequest)).build())
                 .build();
+    }
+
+    @Override
+    public Void activateEmployee(Long id, EmployeeStatusTransitionRequest employeeStatusTransitionRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        activateEmployeeUseCase.execute(id, employeeStatusTransitionRequest);
+        return null;
+    }
+
+    @Override
+    public Void inactivateEmployee(Long id, EmployeeStatusTransitionRequest employeeStatusTransitionRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        inactivateEmployeeUseCase.execute(id, employeeStatusTransitionRequest);
+        return null;
+    }
+
+    @Override
+    public Void blockEmployee(Long id, EmployeeStatusTransitionRequest employeeStatusTransitionRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        blockEmployeeUseCase.execute(id, employeeStatusTransitionRequest);
+        return null;
+    }
+
+    @Override
+    public Void unblockEmployee(Long id, EmployeeStatusTransitionRequest employeeStatusTransitionRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        unblockEmployeeUseCase.execute(id, employeeStatusTransitionRequest);
+        return null;
     }
 }

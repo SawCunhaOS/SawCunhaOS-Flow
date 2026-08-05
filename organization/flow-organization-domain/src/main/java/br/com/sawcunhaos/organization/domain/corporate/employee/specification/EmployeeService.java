@@ -25,4 +25,16 @@ public interface EmployeeService {
     /** Admite um Funcionário vinculado a Empresa/Cargo ativos, copiando a Jornada de Trabalho do Cargo. */
     EmployeeOutput create(@NonNull EmployeeInput employeeInput);
 
+    /** Ativa um Funcionário INACTIVE, gravando o motivo em SCOS_EMPLOYEE_STATUS_HISTORY (status sincronizado por trigger). */
+    void activate(@NonNull Long id, @NonNull Long reasonActivateId, String observation);
+
+    /** Inativa um Funcionário ACTIVE/DISABLED, gravando o motivo (status sincronizado por trigger). */
+    void inactivate(@NonNull Long id, @NonNull Long reasonInactivateId, String observation);
+
+    /** Bloqueia um Funcionário ACTIVE (rota "block", corresponde ao método de domínio "disable"). */
+    void disable(@NonNull Long id, @NonNull Long reasonDisableId, String observation);
+
+    /** Desbloqueia um Funcionário DISABLED (rota "unblock", corresponde ao método de domínio "enable"). */
+    void enable(@NonNull Long id, @NonNull Long reasonEnableId, String observation);
+
 }

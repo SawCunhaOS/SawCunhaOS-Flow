@@ -19,6 +19,7 @@ import br.com.sawcunhaos.organization.domain.access.status.internal.EmployeeStat
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeePositionHistoryRepository;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeeQueryRepository;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeeWorkScheduleRepository;
+import br.com.sawcunhaos.organization.domain.corporate.employee.internal.StatusEmployee;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.http.MediaType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,7 +49,19 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
 
     private static final long SEEDED_COMPANY_ID = 1L;
     private static final long SEEDED_POSITION_ID = 1L;
+    private static final long SEEDED_EMPLOYEE_ID = 1L;
     private static final long REASON_ACTIVATE_EMPLOYEE_NEW_HIRE = 2L;
+    private static final long REASON_ACTIVATE_EMPLOYEE_INACTIVE = 6L;
+    private static final long REASON_ACTIVATE_COMPANY_SCOPED = 1L;
+    private static final long REASON_INACTIVATE_EMPLOYEE_RESIGNATION = 2L;
+    private static final long REASON_INACTIVATE_EMPLOYEE_INACTIVE = 5L;
+    private static final long REASON_INACTIVATE_COMPANY_SCOPED = 1L;
+    private static final long REASON_DISABLE_EMPLOYEE_UNDER_AUDIT = 2L;
+    private static final long REASON_DISABLE_EMPLOYEE_INACTIVE = 5L;
+    private static final long REASON_DISABLE_COMPANY_SCOPED = 1L;
+    private static final long REASON_ENABLE_EMPLOYEE_AUDIT_CLEARED = 2L;
+    private static final long REASON_ENABLE_EMPLOYEE_INACTIVE = 5L;
+    private static final long REASON_ENABLE_COMPANY_SCOPED = 1L;
     private static final long NONEXISTENT_ID = 999_999L;
 
     // CPFs válidos (DV correto) e distintos por cenário — evita colisão no cache de idempotência.
@@ -66,6 +80,17 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
     private static final String CODE_COMPANY_NOT_FOUND = "SCOS_COMPANY_001";
     private static final String CODE_POSITION_NOT_FOUND = "SCOS_POSITION_001";
     private static final String CODE_ACCESS_DENIED = "SCOS-004";
+
+    private static final String CODE_EMPLOYEE_NOT_FOUND = "SCOS_EMPLOYEE_014";
+    private static final String CODE_STATUS_INCOMPATIBLE = "SCOS_EMPLOYEE_001";
+    private static final String CODE_ACTIVATE_REASON_INACTIVE = "SCOS_EMPLOYEE_008";
+    private static final String CODE_ACTIVATE_REASON_INCOMPATIBLE = "SCOS_EMPLOYEE_009";
+    private static final String CODE_INACTIVATE_REASON_INACTIVE = "SCOS_EMPLOYEE_015";
+    private static final String CODE_INACTIVATE_REASON_INCOMPATIBLE = "SCOS_EMPLOYEE_016";
+    private static final String CODE_DISABLE_REASON_INACTIVE = "SCOS_EMPLOYEE_017";
+    private static final String CODE_DISABLE_REASON_INCOMPATIBLE = "SCOS_EMPLOYEE_018";
+    private static final String CODE_ENABLE_REASON_INACTIVE = "SCOS_EMPLOYEE_019";
+    private static final String CODE_ENABLE_REASON_INCOMPATIBLE = "SCOS_EMPLOYEE_020";
 
     @Autowired
     private EmployeeQueryRepository employeeQueryRepository;
@@ -213,6 +238,396 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
                 .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
     }
 
+    // =====================================================================================
+    // PUT /v1/employees/{id}/enable (UC-039) — rota "enable" chama Employee.activate()
+    // =====================================================================================
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/enable — INACTIVE ativa e o trigger sincroniza STATUS=ACTIVE (204 + GET)")
+    void enable_seededInactive_returns204AndSyncsStatusViaTrigger() throws Exception {
+        transition("disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/enable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_ACTIVATE_EMPLOYEE_NEW_HIRE, "Retorno de licença")))
+                .andExpect(status().isNoContent());
+
+        assertThat(employeeQueryRepository.findById(SEEDED_EMPLOYEE_ID)).get()
+                .extracting("status").isEqualTo(StatusEmployee.ACTIVE);
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/enable — id inexistente retorna 404 SCOS_EMPLOYEE_014")
+    void enable_notFound_returns404() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/enable", NONEXISTENT_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_ACTIVATE_EMPLOYEE_NEW_HIRE, null)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_EMPLOYEE_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/enable — ACTIVE (não INACTIVE) retorna 422 SCOS_EMPLOYEE_001")
+    void enable_seededActive_returns422() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/enable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_ACTIVATE_EMPLOYEE_NEW_HIRE, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_STATUS_INCOMPATIBLE));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/enable — motivo de ativação inativo retorna 422 SCOS_EMPLOYEE_008")
+    void enable_reasonInactive_returns422() throws Exception {
+        transition("disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/enable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_ACTIVATE_EMPLOYEE_INACTIVE, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_ACTIVATE_REASON_INACTIVE));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/enable — motivo com entityType=COMPANY retorna 422 SCOS_EMPLOYEE_009")
+    void enable_reasonIncompatible_returns422() throws Exception {
+        transition("disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/enable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_ACTIVATE_COMPANY_SCOPED, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_ACTIVATE_REASON_INCOMPATIBLE));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/enable — sem token retorna 401")
+    void enable_withoutToken_returns401() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/enable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, null, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_ACTIVATE_EMPLOYEE_NEW_HIRE, null)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/enable — sem permissão retorna 403")
+    void enable_withoutPermission_returns403() throws Exception {
+        stubValidateAuthorityWithoutPermissions();
+
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/enable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_ACTIVATE_EMPLOYEE_NEW_HIRE, null)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
+    }
+
+    // =====================================================================================
+    // PUT /v1/employees/{id}/disable (UC-040) — rota "disable" chama Employee.inactivate()
+    // =====================================================================================
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/disable — ACTIVE inativa e o trigger sincroniza STATUS=INACTIVE (204 + GET)")
+    void disable_seededActive_returns204AndSyncsStatusViaTrigger() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/disable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_INACTIVATE_EMPLOYEE_RESIGNATION, "Desligamento")))
+                .andExpect(status().isNoContent());
+
+        assertThat(employeeQueryRepository.findById(SEEDED_EMPLOYEE_ID)).get()
+                .extracting("status").isEqualTo(StatusEmployee.INACTIVE);
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/disable — id inexistente retorna 404 SCOS_EMPLOYEE_014")
+    void disable_notFound_returns404() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/disable", NONEXISTENT_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_INACTIVATE_EMPLOYEE_RESIGNATION, null)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_EMPLOYEE_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/disable — já INACTIVE retorna 422 SCOS_EMPLOYEE_001")
+    void disable_seededInactive_returns422() throws Exception {
+        transition("disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/disable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_INACTIVATE_EMPLOYEE_RESIGNATION, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_STATUS_INCOMPATIBLE));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/disable — motivo de inativação inativo retorna 422 SCOS_EMPLOYEE_015")
+    void disable_reasonInactive_returns422() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/disable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_INACTIVATE_EMPLOYEE_INACTIVE, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_INACTIVATE_REASON_INACTIVE));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/disable — motivo com entityType=COMPANY retorna 422 SCOS_EMPLOYEE_016")
+    void disable_reasonIncompatible_returns422() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/disable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_INACTIVATE_COMPANY_SCOPED, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_INACTIVATE_REASON_INCOMPATIBLE));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/disable — sem token retorna 401")
+    void disable_withoutToken_returns401() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/disable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, null, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_INACTIVATE_EMPLOYEE_RESIGNATION, null)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/disable — sem permissão retorna 403")
+    void disable_withoutPermission_returns403() throws Exception {
+        stubValidateAuthorityWithoutPermissions();
+
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/disable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_INACTIVATE_EMPLOYEE_RESIGNATION, null)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
+    }
+
+    // =====================================================================================
+    // PUT /v1/employees/{id}/block (UC-043) — rota "block" chama Employee.disable()
+    // =====================================================================================
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/block — ACTIVE bloqueia e o trigger sincroniza STATUS=DISABLED (204 + GET)")
+    void block_seededActive_returns204AndSyncsStatusViaTrigger() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/block", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_DISABLE_EMPLOYEE_UNDER_AUDIT, "Suspensão em auditoria")))
+                .andExpect(status().isNoContent());
+
+        assertThat(employeeQueryRepository.findById(SEEDED_EMPLOYEE_ID)).get()
+                .extracting("status").isEqualTo(StatusEmployee.DISABLED);
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/block — id inexistente retorna 404 SCOS_EMPLOYEE_014")
+    void block_notFound_returns404() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/block", NONEXISTENT_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_DISABLE_EMPLOYEE_UNDER_AUDIT, null)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_EMPLOYEE_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/block — INACTIVE (não ACTIVE) retorna 422 SCOS_EMPLOYEE_001")
+    void block_seededInactive_returns422() throws Exception {
+        transition("disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/block", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_DISABLE_EMPLOYEE_UNDER_AUDIT, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_STATUS_INCOMPATIBLE));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/block — motivo de bloqueio inativo retorna 422 SCOS_EMPLOYEE_017")
+    void block_reasonInactive_returns422() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/block", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_DISABLE_EMPLOYEE_INACTIVE, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_DISABLE_REASON_INACTIVE));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/block — motivo com entityType=COMPANY retorna 422 SCOS_EMPLOYEE_018")
+    void block_reasonIncompatible_returns422() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/block", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_DISABLE_COMPANY_SCOPED, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_DISABLE_REASON_INCOMPATIBLE));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/block — sem token retorna 401")
+    void block_withoutToken_returns401() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/block", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, null, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_DISABLE_EMPLOYEE_UNDER_AUDIT, null)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/block — sem permissão retorna 403")
+    void block_withoutPermission_returns403() throws Exception {
+        stubValidateAuthorityWithoutPermissions();
+
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/block", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_DISABLE_EMPLOYEE_UNDER_AUDIT, null)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
+    }
+
+    // =====================================================================================
+    // PUT /v1/employees/{id}/unblock (UC-139) — rota "unblock" chama Employee.enable()
+    // =====================================================================================
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/unblock — DISABLED desbloqueia e o trigger sincroniza STATUS=ACTIVE (204 + GET)")
+    void unblock_seededDisabled_returns204AndSyncsStatusViaTrigger() throws Exception {
+        transition("block", REASON_DISABLE_EMPLOYEE_UNDER_AUDIT);
+
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/unblock", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_ENABLE_EMPLOYEE_AUDIT_CLEARED, "Auditoria concluída")))
+                .andExpect(status().isNoContent());
+
+        assertThat(employeeQueryRepository.findById(SEEDED_EMPLOYEE_ID)).get()
+                .extracting("status").isEqualTo(StatusEmployee.ACTIVE);
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/unblock — id inexistente retorna 404 SCOS_EMPLOYEE_014")
+    void unblock_notFound_returns404() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/unblock", NONEXISTENT_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_ENABLE_EMPLOYEE_AUDIT_CLEARED, null)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_EMPLOYEE_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/unblock — ACTIVE (não DISABLED) retorna 422 SCOS_EMPLOYEE_001")
+    void unblock_seededActive_returns422() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/unblock", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_ENABLE_EMPLOYEE_AUDIT_CLEARED, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_STATUS_INCOMPATIBLE));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/unblock — INACTIVE (não DISABLED) retorna 422 SCOS_EMPLOYEE_001")
+    void unblock_seededInactive_returns422() throws Exception {
+        transition("disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/unblock", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_ENABLE_EMPLOYEE_AUDIT_CLEARED, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_STATUS_INCOMPATIBLE));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/unblock — motivo de desbloqueio inativo retorna 422 SCOS_EMPLOYEE_019")
+    void unblock_reasonInactive_returns422() throws Exception {
+        transition("block", REASON_DISABLE_EMPLOYEE_UNDER_AUDIT);
+
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/unblock", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_ENABLE_EMPLOYEE_INACTIVE, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_ENABLE_REASON_INACTIVE));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/unblock — motivo com entityType=COMPANY retorna 422 SCOS_EMPLOYEE_020")
+    void unblock_reasonIncompatible_returns422() throws Exception {
+        transition("block", REASON_DISABLE_EMPLOYEE_UNDER_AUDIT);
+
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/unblock", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_ENABLE_COMPANY_SCOPED, null)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_ENABLE_REASON_INCOMPATIBLE));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/unblock — sem token retorna 401")
+    void unblock_withoutToken_returns401() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/unblock", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, null, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_ENABLE_EMPLOYEE_AUDIT_CLEARED, null)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/unblock — sem permissão retorna 403")
+    void unblock_withoutPermission_returns403() throws Exception {
+        stubValidateAuthorityWithoutPermissions();
+
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/unblock", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_ENABLE_EMPLOYEE_AUDIT_CLEARED, null)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
+    }
+
+    // =====================================================================================
+    // Helpers
+    // =====================================================================================
+
     private static String createBody(String taxIdentifier, String email, long companyId, long positionId, long reasonActivateId) {
         return """
                 {
@@ -228,5 +643,27 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
                   "reasonActivateId": %d
                 }
                 """.formatted(taxIdentifier, email, companyId, positionId, reasonActivateId);
+    }
+
+    private static String statusTransitionBody(long reasonId, String observation) {
+        String observationField = observation == null ? "" : "  \"observation\": \"" + observation + "\",\n";
+        return """
+                {
+                %s  "reasonId": %d
+                }
+                """.formatted(observationField, reasonId);
+    }
+
+    /**
+     * Aplica uma transição de status auxiliar (setup de precondição) no Funcionário seed, esperando 204.
+     * A {@code observation} carrega um nonce (timestamp) para não colidir com o cache de idempotência
+     * (Redis, {@code x-jdempotentrequestpayload}) de outra chamada igual feita por outro teste/precondição.
+     */
+    private void transition(String route, long reasonId) throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/" + route, SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(reasonId, "setup-" + route + "-" + System.nanoTime())))
+                .andExpect(status().isNoContent());
     }
 }

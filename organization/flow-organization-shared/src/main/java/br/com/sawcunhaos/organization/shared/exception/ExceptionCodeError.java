@@ -134,6 +134,20 @@ public enum ExceptionCodeError implements ExceptionCode {
     SCOS_EMPLOYEE_012("SCOS_EMPLOYEE_012", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
     /** Data de admissão anterior à data de nascimento. HTTP 422. */
     SCOS_EMPLOYEE_013("SCOS_EMPLOYEE_013", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Funcionário informado não encontrado. HTTP 404. */
+    SCOS_EMPLOYEE_014("SCOS_EMPLOYEE_014", 404, "SCOS_TITLE_NOT_FOUND"),
+    /** Motivo de inativação informado está inativo. HTTP 422. */
+    SCOS_EMPLOYEE_015("SCOS_EMPLOYEE_015", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de inativação incompatível com a entidade Funcionário (entityType != EMPLOYEE). HTTP 422. */
+    SCOS_EMPLOYEE_016("SCOS_EMPLOYEE_016", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de bloqueio informado está inativo. HTTP 422. */
+    SCOS_EMPLOYEE_017("SCOS_EMPLOYEE_017", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de bloqueio incompatível com a entidade Funcionário. HTTP 422. */
+    SCOS_EMPLOYEE_018("SCOS_EMPLOYEE_018", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de desbloqueio informado está inativo. HTTP 422. */
+    SCOS_EMPLOYEE_019("SCOS_EMPLOYEE_019", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Motivo de desbloqueio incompatível com a entidade Funcionário. HTTP 422. */
+    SCOS_EMPLOYEE_020("SCOS_EMPLOYEE_020", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
 
     // User / Login
     SCOS_USER_001("SCOS_USER_001", 502, "SCOS_TITLE_EXTERNAL_INTEGRATION_FAILURE"),

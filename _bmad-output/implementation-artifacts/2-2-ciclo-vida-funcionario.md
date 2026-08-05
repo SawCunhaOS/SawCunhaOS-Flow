@@ -1,6 +1,10 @@
+---
+baseline_commit: 38f943aeb7cbbe0fb9d458e0de21d5d565a0350b
+---
+
 # Story 2.2: Ciclo de Vida de Funcionário
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -22,9 +26,9 @@ Para acompanhar o ciclo de vida dele com rastro auditável.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Códigos de erro novos — `SCOS_EMPLOYEE_014..020` (AC: 5, 6)
-  - [ ] **Antes de codar, confirme o próximo número livre**: `grep SCOS_EMPLOYEE_ ExceptionCodeError.java` — a Story 2.1 reserva `002..013`; se ela ainda não foi implementada ou reservou números diferentes, ajuste a sequência abaixo mantendo a mesma ordem lógica.
-  - [ ] Em `organization/flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/exception/ExceptionCodeError.java`, logo após a última entrada `SCOS_EMPLOYEE_0NN` existente, adicionar:
+- [x] Task 1: Códigos de erro novos — `SCOS_EMPLOYEE_014..020` (AC: 5, 6)
+  - [x] **Antes de codar, confirme o próximo número livre**: `grep SCOS_EMPLOYEE_ ExceptionCodeError.java` — a Story 2.1 reserva `002..013`; se ela ainda não foi implementada ou reservou números diferentes, ajuste a sequência abaixo mantendo a mesma ordem lógica.
+  - [x] Em `organization/flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/exception/ExceptionCodeError.java`, logo após a última entrada `SCOS_EMPLOYEE_0NN` existente, adicionar:
     ```java
     /** Funcionário informado não encontrado. HTTP 404. */
     SCOS_EMPLOYEE_014("SCOS_EMPLOYEE_014", 404, "SCOS_TITLE_NOT_FOUND"),
@@ -42,7 +46,7 @@ Para acompanhar o ciclo de vida dele com rastro auditável.
     SCOS_EMPLOYEE_020("SCOS_EMPLOYEE_020", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
     ```
     **Não** criar códigos novos para "reason inactive/incompatible" da **rota `enable`** (transição de domínio `activate` — não confundir com a rota `unblock`, que é a transição de domínio `enable`) — ela reutiliza `SCOS_EMPLOYEE_008`/`009` (Story 2.1), chamando o mesmo método privado `validateReasonActivate` já implementado em `EmployeeServiceBean` (mesmo padrão de `CompanyServiceBean.validateReasonActivate`, reaproveitado por `create()` **e** `activate()`).
-  - [ ] Em `scos_message_organization.properties`, logo após a última chave `SCOS_EMPLOYEE_0NN`:
+  - [x] Em `scos_message_organization.properties`, logo após a última chave `SCOS_EMPLOYEE_0NN`:
     ```properties
     SCOS_EMPLOYEE_014=Funcionário não encontrado.
     SCOS_EMPLOYEE_015=O motivo de inativação informado está inativo.
@@ -52,10 +56,10 @@ Para acompanhar o ciclo de vida dele com rastro auditável.
     SCOS_EMPLOYEE_019=O motivo de desbloqueio informado está inativo.
     SCOS_EMPLOYEE_020=O motivo de desbloqueio informado é incompatível com a entidade Funcionário.
     ```
-  - [ ] Mesmas 7 chaves em `scos_message_organization_en.properties`, texto em inglês (espelhar `SCOS_COMPANY_012..017` como referência de fraseado).
+  - [x] Mesmas 7 chaves em `scos_message_organization_en.properties`, texto em inglês (espelhar `SCOS_COMPANY_012..017` como referência de fraseado).
 
-- [ ] Task 2: `EmployeeService` (specification) — adicionar 4 assinaturas à interface já existente (AC: 1, 2, 3, 4)
-  - [ ] Em `organization/flow-organization-domain/.../corporate/employee/specification/EmployeeService.java` (criada pela Story 2.1 com só `create`), adicionar:
+- [x] Task 2: `EmployeeService` (specification) — adicionar 4 assinaturas à interface já existente (AC: 1, 2, 3, 4)
+  - [x] Em `organization/flow-organization-domain/.../corporate/employee/specification/EmployeeService.java` (criada pela Story 2.1 com só `create`), adicionar:
     ```java
     /** Ativa um Funcionário INACTIVE, gravando o motivo em SCOS_EMPLOYEE_STATUS_HISTORY (status sincronizado por trigger). */
     void activate(@NonNull Long id, @NonNull Long reasonActivateId, String observation);
@@ -71,9 +75,9 @@ Para acompanhar o ciclo de vida dele com rastro auditável.
     ```
     **Não** criar uma segunda interface/arquivo — é o mesmo `EmployeeService` da Story 2.1, só ganhando métodos novos.
 
-- [ ] Task 3: `EmployeeServiceBean` — implementar os 4 métodos (AC: 1, 2, 3, 4, 5, 6)
-  - [ ] No mesmo arquivo `.../corporate/employee/service/EmployeeServiceBean.java` (criado pela Story 2.1), injetar 3 collaborators novos via campo `final` (o `@RequiredArgsConstructor` já existente atualiza o construtor sozinho — **não** escrever construtor manual): `ReasonInactivateService`, `ReasonDisableService`, `ReasonEnableService`. `ReasonActivateService` e `EmployeeStatusHistoryRepository` **já estão injetados** pela Story 2.1 — reaproveitar, não duplicar o campo.
-  - [ ] Implementar, espelhando exatamente `CompanyServiceBean.activate/inactivate/disable/enable` (`organization/flow-organization-domain/.../corporate/company/service/CompanyServiceBean.java:240-320`), **sem** as guardas de hierarquia que só existem em Company (`assertNotLastActiveMatrix`/`assertNoActiveDescendant`/`assertNotOnlyActiveCompany` não têm equivalente em Employee — nenhum AC desta story pede isso):
+- [x] Task 3: `EmployeeServiceBean` — implementar os 4 métodos (AC: 1, 2, 3, 4, 5, 6)
+  - [x] No mesmo arquivo `.../corporate/employee/service/EmployeeServiceBean.java` (criado pela Story 2.1), injetar 3 collaborators novos via campo `final` (o `@RequiredArgsConstructor` já existente atualiza o construtor sozinho — **não** escrever construtor manual): `ReasonInactivateService`, `ReasonDisableService`, `ReasonEnableService`. `ReasonActivateService` e `EmployeeStatusHistoryRepository` **já estão injetados** pela Story 2.1 — reaproveitar, não duplicar o campo.
+  - [x] Implementar, espelhando exatamente `CompanyServiceBean.activate/inactivate/disable/enable` (`organization/flow-organization-domain/.../corporate/company/service/CompanyServiceBean.java:240-320`), **sem** as guardas de hierarquia que só existem em Company (`assertNotLastActiveMatrix`/`assertNoActiveDescendant`/`assertNotOnlyActiveCompany` não têm equivalente em Employee — nenhum AC desta story pede isso):
     ```java
     @Override
     @Transactional(rollbackFor = ScosException.class)
@@ -167,11 +171,11 @@ Para acompanhar o ciclo de vida dele com rastro auditável.
         }
     }
     ```
-  - [ ] **Não** implementar guarda de status para `disable`/`inactivate`/`enable`/`activate` no Service — a guarda (`SCOS_EMPLOYEE_001`, estado atual incompatível com a transição) já está no agregado `Employee` (`Employee.java`, métodos `activate/inactivate/disable/enable`, já existentes antes desta story). O Service só busca a entidade, valida o motivo e chama o método de domínio — mesma divisão de responsabilidade de `CompanyServiceBean`.
-  - [ ] **Não** criar `findEmployeeById` como método público na interface `EmployeeService`, nem reaproveitar o `resolveActiveSupervisor` da Story 2.1 — são checagens de significado diferente (supervisor FK opcional vs. o próprio Funcionário alvo da transição), mesmo padrão de `CompanyServiceBean` ter seu próprio `findCompanyById` privado (não o `findById` de outro agregado).
+  - [x] **Não** implementar guarda de status para `disable`/`inactivate`/`enable`/`activate` no Service — a guarda (`SCOS_EMPLOYEE_001`, estado atual incompatível com a transição) já está no agregado `Employee` (`Employee.java`, métodos `activate/inactivate/disable/enable`, já existentes antes desta story). O Service só busca a entidade, valida o motivo e chama o método de domínio — mesma divisão de responsabilidade de `CompanyServiceBean`.
+  - [x] **Não** criar `findEmployeeById` como método público na interface `EmployeeService`, nem reaproveitar o `resolveActiveSupervisor` da Story 2.1 — são checagens de significado diferente (supervisor FK opcional vs. o próprio Funcionário alvo da transição), mesmo padrão de `CompanyServiceBean` ter seu próprio `findCompanyById` privado (não o `findById` de outro agregado).
 
-- [ ] Task 4: 4 Use Cases + Beans — pacote já existente (AC: 7)
-  - [ ] Em `organization/flow-organization-usecase/.../usecase/corporate/employee/` (pacote criado pela Story 2.1 para `CreateEmployeeUseCase`), criar, espelhando **exatamente** `ActivateCompanyUseCase(Bean)`/`InactivateCompanyUseCase(Bean)`/`BlockCompanyUseCase(Bean)`/`UnblockCompanyUseCase(Bean)` (`organization/flow-organization-usecase/.../corporate/company/`):
+- [x] Task 4: 4 Use Cases + Beans — pacote já existente (AC: 7)
+  - [x] Em `organization/flow-organization-usecase/.../usecase/corporate/employee/` (pacote criado pela Story 2.1 para `CreateEmployeeUseCase`), criar, espelhando **exatamente** `ActivateCompanyUseCase(Bean)`/`InactivateCompanyUseCase(Bean)`/`BlockCompanyUseCase(Bean)`/`UnblockCompanyUseCase(Bean)` (`organization/flow-organization-usecase/.../corporate/company/`):
     ```java
     public interface ActivateEmployeeUseCase {
         void execute(@NonNull Long id, @NonNull EmployeeStatusTransitionRequest request);
@@ -195,8 +199,8 @@ Para acompanhar o ciclo de vida dele com rastro auditável.
     ```
     Repetir para `InactivateEmployeeUseCase(Bean)` → `employeeService.inactivate(...)`, `BlockEmployeeUseCase(Bean)` → `employeeService.disable(...)`, `UnblockEmployeeUseCase(Bean)` → `employeeService.enable(...)`. DTO `EmployeeStatusTransitionRequest` já é gerado a partir do schema OpenAPI (`ScosOrganization_Employee.yml`, já publicado — nenhuma mudança de contrato necessária nesta story).
 
-- [ ] Task 5: `EmployeeDelegate` — adicionar 4 métodos à classe já existente (AC: 1, 2, 3, 4, 7)
-  - [ ] Em `organization/flow-organization-api/.../api/delegate/employee/EmployeeDelegate.java` (criada pela Story 2.1 com só `createEmployee`), injetar os 4 Use Cases novos (campos `final`, `@RequiredArgsConstructor` já existente cobre) e implementar, espelhando `CompanyDelegate.activateCompany/inactivateCompany/blockCompany/unblockCompany`:
+- [x] Task 5: `EmployeeDelegate` — adicionar 4 métodos à classe já existente (AC: 1, 2, 3, 4, 7)
+  - [x] Em `organization/flow-organization-api/.../api/delegate/employee/EmployeeDelegate.java` (criada pela Story 2.1 com só `createEmployee`), injetar os 4 Use Cases novos (campos `final`, `@RequiredArgsConstructor` já existente cobre) e implementar, espelhando `CompanyDelegate.activateCompany/inactivateCompany/blockCompany/unblockCompany`:
     ```java
     @Override
     public Void activateEmployee(Long id, EmployeeStatusTransitionRequest employeeStatusTransitionRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
@@ -223,10 +227,10 @@ Para acompanhar o ciclo de vida dele com rastro auditável.
     }
     ```
     **Rodar `mvn generate-sources` em `flow-organization-usecase`/`flow-organization-api` antes de escrever isto**, para confirmar a assinatura exata gerada de `EmployeeApiDelegate.activateEmployee(...)` etc. (mesma recomendação já seguida nas Stories 1.5 e 2.1 — o schema nunca foi exercitado pelo generator neste módulo ainda).
-  - [ ] Nenhuma mudança em `etc/api/organization/ScosOrganization_Employee.yml` — os 4 endpoints (`enable`/`disable`/`block`/`unblock`), o schema `EmployeeStatusTransitionRequest` e as 4 permissões (`ENABLE_EMPLOYEE`/`DISABLE_EMPLOYEE`/`BLOCK_EMPLOYEE`/`UNBLOCK_EMPLOYEE`, `ScosOrganizationPermission.java:113,114,117,118`) **já estão publicados** — confirmar com leitura, não reescrever.
+  - [x] Nenhuma mudança em `etc/api/organization/ScosOrganization_Employee.yml` — os 4 endpoints (`enable`/`disable`/`block`/`unblock`), o schema `EmployeeStatusTransitionRequest` e as 4 permissões (`ENABLE_EMPLOYEE`/`DISABLE_EMPLOYEE`/`BLOCK_EMPLOYEE`/`UNBLOCK_EMPLOYEE`, `ScosOrganizationPermission.java:113,114,117,118`) **já estão publicados** — confirmar com leitura, não reescrever.
 
-- [ ] Task 6: Seed de teste — motivos `EMPLOYEE` inativos, para exercitar os casos `422 reason inactive` em teste de integração (AC: 6)
-  - [ ] Em `organization/flow-organization-boot/src/test/resources/postgresql/setsup_database.sql`, **nenhum motivo `entityType=EMPLOYEE` com `active=false` existe hoje** em nenhum dos 4 catálogos (`SCOS_REASON_ACTIVATE/INACTIVATE/DISABLE/ENABLE`) — só há registros `COMPANY`/inativos (ids 5/4/4/4, usados pelos testes de Company). Adicionar, mesmo padrão das linhas 165-169/182-186/199-203/216-220 (já existentes para `COMPANY`), um registro inativo `EMPLOYEE` em `SCOS_REASON_INACTIVATE`, `SCOS_REASON_DISABLE` e `SCOS_REASON_ENABLE` (a Story 2.1 pode já ter resolvido o caso de `SCOS_REASON_ACTIVATE`/`EMPLOYEE` inativo para seu próprio teste de `create` — conferir antes de duplicar):
+- [x] Task 6: Seed de teste — motivos `EMPLOYEE` inativos, para exercitar os casos `422 reason inactive` em teste de integração (AC: 6)
+  - [x] Em `organization/flow-organization-boot/src/test/resources/postgresql/setsup_database.sql`, **nenhum motivo `entityType=EMPLOYEE` com `active=false` existe hoje** em nenhum dos 4 catálogos (`SCOS_REASON_ACTIVATE/INACTIVATE/DISABLE/ENABLE`) — só há registros `COMPANY`/inativos (ids 5/4/4/4, usados pelos testes de Company). Adicionar, mesmo padrão das linhas 165-169/182-186/199-203/216-220 (já existentes para `COMPANY`), um registro inativo `EMPLOYEE` em `SCOS_REASON_INACTIVATE`, `SCOS_REASON_DISABLE` e `SCOS_REASON_ENABLE` (a Story 2.1 pode já ter resolvido o caso de `SCOS_REASON_ACTIVATE`/`EMPLOYEE` inativo para seu próprio teste de `create` — conferir antes de duplicar):
     ```sql
     -- (em SCOS_REASON_INACTIVATE, após a linha do ARCHIVED_REASON/COMPANY)
     INSERT INTO scos.SCOS_REASON_INACTIVATE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE, UPDATED_AT, USER_AT)
@@ -235,18 +239,18 @@ Para acompanhar o ciclo de vida dele com rastro auditável.
     -- (mesmo padrão em SCOS_REASON_DISABLE e SCOS_REASON_ENABLE, ENTITY_TYPE='EMPLOYEE')
     ```
     Anotar o `..._ID` gerado (comentário `-- REASON_..._ID gerado: N`, mesmo estilo do arquivo) para uso nas constantes do teste de integração (Task 7).
-  - [ ] Para o teste `422 reason incompatible` (entityType errado), **não** precisa de seed novo — reaproveitar um id `COMPANY`-scoped já existente (ex.: `REASON_INACTIVATE_ID=1`, `COMPANY_CLOSED`) aplicado a uma rota de Employee, mesmo truque já usado por `CompanyControllerTest` na direção oposta (reason `EMPLOYEE` aplicado a rota de Company).
+  - [x] Para o teste `422 reason incompatible` (entityType errado), **não** precisa de seed novo — reaproveitar um id `COMPANY`-scoped já existente (ex.: `REASON_INACTIVATE_ID=1`, `COMPANY_CLOSED`) aplicado a uma rota de Employee, mesmo truque já usado por `CompanyControllerTest` na direção oposta (reason `EMPLOYEE` aplicado a rota de Company).
 
-- [ ] Task 7: Testes (AC: 1, 2, 3, 4, 5, 6, 7)
-  - [ ] `EmployeeServiceBeanTest.java` (já existe, criado pela Story 2.1) — adicionar blocos `activate*`/`inactivate*`/`disable*`/`enable*`, espelhando **exatamente** os 23 testes de `CompanyServiceBeanTest.java:396-720` (`activateShouldPersistHistoryAndNotUpdateCompanyWhenValid`, `activateShouldThrowWhenCompanyIsNotInactive`, `activateShouldThrowWhenReasonIsInactive`, `activateShouldThrowWhenReasonEntityTypeIsIncompatible`, e o mesmo padrão × 4 verbos) — trocando `Company`/`company` por `Employee`/`employee`, `StatusCompany` por `StatusEmployee`, e omitindo os testes de guarda de hierarquia (`...LastActiveMatrix`/`...OnlyActiveCompany`/`...ActiveDescendant` — sem equivalente em Employee). Adicionar também: `activate/inactivate/disable/enableShouldThrowWhenEmployeeNotFound` → `SCOS_EMPLOYEE_014` (novo, sem equivalente direto em Company porque lá `findCompanyById` já tinha teste próprio de outros ACs).
-  - [ ] 4 arquivos novos em `flow-organization-usecase/src/test/.../usecase/corporate/employee/`: `ActivateEmployeeUseCaseBeanTest.java`, `InactivateEmployeeUseCaseBeanTest.java`, `BlockEmployeeUseCaseBeanTest.java`, `UnblockEmployeeUseCaseBeanTest.java` — mesmo padrão exato de `InactivateCompanyUseCaseBeanTest.java` (2 testes cada: delega `id`/`reasonId`/`observation` ao service correto; propaga `ScosException` quando o service falha).
-  - [ ] `EmployeeControllerTest.java` (já existe, criado pela Story 2.1) — adicionar 4 blocos (`enable`/`disable`/`block`/`unblock`), espelhando `CompanyControllerTest.java:301-364` (inclui o teste `block_seededActive_returns204AndSyncsStatusViaTrigger`, provando end-to-end que `trg_sync_employee_status` sincroniza `SCOS_EMPLOYEE.STATUS` via `GET` depois do `PUT`). Cobrir por rota: sucesso `204`; `{id}` inexistente `404 SCOS_EMPLOYEE_014`; status incompatível `422 SCOS_EMPLOYEE_001` (`enable` a partir de `ACTIVE`, `disable` a partir de `INACTIVE` — **não** testar `DISABLED` aqui, ver Dev Notes, `Employee.inactivate()` aceita `DISABLED` como origem válida e retorna `204`; `block` a partir de `INACTIVE`, `unblock` a partir de `ACTIVE`/`INACTIVE`); `reasonId` inativo e incompatível (`422`, códigos da Task 1); `401` sem token; `403` sem a permissão da rota. O Funcionário seed (`EMPLOYEE_ID=1`, `ACTIVE`) pode ser mutado diretamente pelos testes de transição — mesmo padrão já usado por `CompanyControllerTest` no `COMPANY_ID=1` seed (isolamento entre testes já garantido pela infra herdada de `ScosOrganizationTestUtil`, não recriar aqui).
+- [x] Task 7: Testes (AC: 1, 2, 3, 4, 5, 6, 7)
+  - [x] `EmployeeServiceBeanTest.java` (já existe, criado pela Story 2.1) — adicionar blocos `activate*`/`inactivate*`/`disable*`/`enable*`, espelhando **exatamente** os 23 testes de `CompanyServiceBeanTest.java:396-720` (`activateShouldPersistHistoryAndNotUpdateCompanyWhenValid`, `activateShouldThrowWhenCompanyIsNotInactive`, `activateShouldThrowWhenReasonIsInactive`, `activateShouldThrowWhenReasonEntityTypeIsIncompatible`, e o mesmo padrão × 4 verbos) — trocando `Company`/`company` por `Employee`/`employee`, `StatusCompany` por `StatusEmployee`, e omitindo os testes de guarda de hierarquia (`...LastActiveMatrix`/`...OnlyActiveCompany`/`...ActiveDescendant` — sem equivalente em Employee). Adicionar também: `activate/inactivate/disable/enableShouldThrowWhenEmployeeNotFound` → `SCOS_EMPLOYEE_014` (novo, sem equivalente direto em Company porque lá `findCompanyById` já tinha teste próprio de outros ACs).
+  - [x] 4 arquivos novos em `flow-organization-usecase/src/test/.../usecase/corporate/employee/`: `ActivateEmployeeUseCaseBeanTest.java`, `InactivateEmployeeUseCaseBeanTest.java`, `BlockEmployeeUseCaseBeanTest.java`, `UnblockEmployeeUseCaseBeanTest.java` — mesmo padrão exato de `InactivateCompanyUseCaseBeanTest.java` (2 testes cada: delega `id`/`reasonId`/`observation` ao service correto; propaga `ScosException` quando o service falha).
+  - [x] `EmployeeControllerTest.java` (já existe, criado pela Story 2.1) — adicionar 4 blocos (`enable`/`disable`/`block`/`unblock`), espelhando `CompanyControllerTest.java:301-364` (inclui o teste `block_seededActive_returns204AndSyncsStatusViaTrigger`, provando end-to-end que `trg_sync_employee_status` sincroniza `SCOS_EMPLOYEE.STATUS` via `GET` depois do `PUT`). Cobrir por rota: sucesso `204`; `{id}` inexistente `404 SCOS_EMPLOYEE_014`; status incompatível `422 SCOS_EMPLOYEE_001` (`enable` a partir de `ACTIVE`, `disable` a partir de `INACTIVE` — **não** testar `DISABLED` aqui, ver Dev Notes, `Employee.inactivate()` aceita `DISABLED` como origem válida e retorna `204`; `block` a partir de `INACTIVE`, `unblock` a partir de `ACTIVE`/`INACTIVE`); `reasonId` inativo e incompatível (`422`, códigos da Task 1); `401` sem token; `403` sem a permissão da rota. O Funcionário seed (`EMPLOYEE_ID=1`, `ACTIVE`) pode ser mutado diretamente pelos testes de transição — mesmo padrão já usado por `CompanyControllerTest` no `COMPANY_ID=1` seed (isolamento entre testes já garantido pela infra herdada de `ScosOrganizationTestUtil`, não recriar aqui).
 
-- [ ] Task 8: Guarda de escopo (AC: 1, 2, 3, 4)
-  - [ ] **Não** implementar nenhum cascade para `Login` vinculado ao Funcionário. `etc/doc/usecase/03-funcionario.md` (linhas 168-170 e 187-189) e a descrição do YAML (`disable`/`block`) mencionam "Logins vinculados são inativados e desabilitados no Keycloak via Saga" — **esse mecanismo não existe no código hoje** (não há `LoginService`/`LoginServiceBean` com transição de status, nem Saga/Outbox para Keycloak; `Login.java` só tem `rules/LoginInactiveRule`/`LoginBlockedRule` de leitura). É uma referência antecipada ao Epic 3 (Login com Aprovação, hoje `backlog`), que só existe depois que `LoginApprovalRequest`/mecanismo de aprovação forem construídos. O AC desta story (epics.md) **não** pede esse cascade — implementá-lo aqui exigiria inventar uma dependência que ainda não existe. Deixar como nota de gap conhecido entre o doc de spec e o estado real do código, não código morto/half-implementado.
-  - [ ] **Não** implementar `GET /v1/employees/{id}/status-history` (`UC-140`, permissão `GET_EMPLOYEE_STATUS_HISTORY` já existe) — fora do AC desta story, e `CompanyDelegate` (referência) também não implementa o equivalente `getCompanyStatusHistory` ainda (mesmo gap, não é regressão introduzida aqui).
-  - [ ] **Não** tocar em `rehire`/`transfer`/`hierarchy`/`subordinates`/`position-history`/`GET /v1/employees`/`GET /v1/employees/{id}` — Stories 2.3 e além.
-  - [ ] **Não** adicionar guarda de "última matriz ativa"/"única empresa ativa"/"descendente ativo" a Employee — são regras exclusivas da hierarquia de Company (Story 1.3), sem equivalente em Employee (Funcionário não tem subárvore).
+- [x] Task 8: Guarda de escopo (AC: 1, 2, 3, 4)
+  - [x] **Não** implementar nenhum cascade para `Login` vinculado ao Funcionário. `etc/doc/usecase/03-funcionario.md` (linhas 168-170 e 187-189) e a descrição do YAML (`disable`/`block`) mencionam "Logins vinculados são inativados e desabilitados no Keycloak via Saga" — **esse mecanismo não existe no código hoje** (não há `LoginService`/`LoginServiceBean` com transição de status, nem Saga/Outbox para Keycloak; `Login.java` só tem `rules/LoginInactiveRule`/`LoginBlockedRule` de leitura). É uma referência antecipada ao Epic 3 (Login com Aprovação, hoje `backlog`), que só existe depois que `LoginApprovalRequest`/mecanismo de aprovação forem construídos. O AC desta story (epics.md) **não** pede esse cascade — implementá-lo aqui exigiria inventar uma dependência que ainda não existe. Deixar como nota de gap conhecido entre o doc de spec e o estado real do código, não código morto/half-implementado.
+  - [x] **Não** implementar `GET /v1/employees/{id}/status-history` (`UC-140`, permissão `GET_EMPLOYEE_STATUS_HISTORY` já existe) — fora do AC desta story, e `CompanyDelegate` (referência) também não implementa o equivalente `getCompanyStatusHistory` ainda (mesmo gap, não é regressão introduzida aqui).
+  - [x] **Não** tocar em `rehire`/`transfer`/`hierarchy`/`subordinates`/`position-history`/`GET /v1/employees`/`GET /v1/employees/{id}` — Stories 2.3 e além.
+  - [x] **Não** adicionar guarda de "última matriz ativa"/"única empresa ativa"/"descendente ativo" a Employee — são regras exclusivas da hierarquia de Company (Story 1.3), sem equivalente em Employee (Funcionário não tem subárvore).
 
 ## Dev Notes
 
@@ -311,8 +315,51 @@ Para acompanhar o ciclo de vida dele com rastro auditável.
 
 ### Agent Model Used
 
+Claude Sonnet 5 (claude-sonnet-5)
+
 ### Debug Log References
+
+- `mvn -pl organization/flow-organization-domain,organization/flow-organization-usecase -am test` — suíte completa dos 2 módulos: 0 falhas, 0 erros.
+- `mvn -pl organization/flow-organization-boot test` (com `-Denforcer.skip=true` só para rodar localmente — ver nota abaixo) — 15 classes de teste de integração, 421 testes, 0 falhas, 0 erros. `EmployeeControllerTest`: 37/37 verde.
+- Nota de ambiente: `flow-organization-boot`/`flow-organization-infrastructure` falham no `maven-enforcer-plugin` (`RequireUpperBoundDeps`) por divergências de versão pré-existentes e não relacionadas a esta story (hibernate-core, error_prone_annotations, prometheus-metrics, okio, puxadas por módulos de fundação/infra). Rodei os testes de integração com `-Denforcer.skip=true` só nesta sessão de validação, sem alterar nenhum `pom.xml`.
+- Bug de teste encontrado e corrigido durante a validação: os testes de integração das 4 rotas de transição usavam o mesmo payload (`reasonId` sem `observation`) em múltiplas chamadas de precondição, colidindo com o cache de idempotência (`x-jdempotentrequestpayload`/Redis, TTL configurado no YAML) — a 2ª chamada com payload idêntico recebia a resposta cacheada da 1ª sem executar a lógica de negócio de fato. Corrigido adicionando um nonce (`observation` com timestamp) nas chamadas de setup (helper `transition()`). Também troquei a verificação pós-trigger de `GET /v1/employees/{id}` (rota inexistente — fora de escopo desta story, ver Task 8) por leitura direta via `employeeQueryRepository`.
 
 ### Completion Notes List
 
+- Ao iniciar esta execução, as Tasks 1–6 (códigos de erro, `EmployeeService`/`EmployeeServiceBean`, os 4 Use Cases/Beans, `EmployeeDelegate`, seed SQL) já estavam implementadas em uma sessão anterior (working tree com mudanças não commitadas), mas os checkboxes da story ainda não refletiam isso. Revalidei cada uma lendo o diff correspondente antes de marcar como concluída.
+- Task 7 (testes) estava incompleta: faltavam os 4 arquivos `*UseCaseBeanTest` (Activate/Inactivate/Block/Unblock) e os blocos de integração das 4 rotas em `EmployeeControllerTest`. Criei os 4 testes de Use Case espelhando `InactivateCompanyUseCaseBeanTest` (2 testes cada: delegação e propagação de `ScosException`) e adicionei ~350 linhas de testes de integração cobrindo, por rota: sucesso 204 + prova de sincronização via trigger, 404 (id inexistente), 422 de status incompatível (guarda de domínio), 422×2 de motivo inativo/incompatível, 401 e 403.
+- Corrigido também um erro de compilação pré-existente em `EmployeeServiceBeanTest.java` (imports faltando de `ReasonInactivateOutput`/`ReasonDisableOutput`/`ReasonEnableOutput`) que impedia o módulo de compilar.
+- Task 8 (guarda de escopo) não exigia código — apenas confirmar que nenhum cascade de Login, `GET /v1/employees/{id}`, `GET /v1/employees/{id}/status-history` ou lógica de `rehire`/hierarquia foi implementada nesta story. Confirmado por leitura: nada disso existe no diff.
+
 ### File List
+
+**Modificados:**
+- `organization/flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/exception/ExceptionCodeError.java`
+- `organization/flow-organization-shared/src/main/resources/scos_message_organization.properties`
+- `organization/flow-organization-shared/src/main/resources/scos_message_organization_en.properties`
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/specification/EmployeeService.java`
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/service/EmployeeServiceBean.java`
+- `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/corporate/employee/service/EmployeeServiceBeanTest.java`
+- `organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/employee/EmployeeDelegate.java`
+- `organization/flow-organization-boot/src/test/resources/postgresql/setsup_database.sql`
+- `organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/employee/EmployeeControllerTest.java`
+
+**Novos:**
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/ActivateEmployeeUseCase.java`
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/ActivateEmployeeUseCaseBean.java`
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/InactivateEmployeeUseCase.java`
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/InactivateEmployeeUseCaseBean.java`
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/BlockEmployeeUseCase.java`
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/BlockEmployeeUseCaseBean.java`
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/UnblockEmployeeUseCase.java`
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/UnblockEmployeeUseCaseBean.java`
+- `organization/flow-organization-usecase/src/test/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/ActivateEmployeeUseCaseBeanTest.java`
+- `organization/flow-organization-usecase/src/test/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/InactivateEmployeeUseCaseBeanTest.java`
+- `organization/flow-organization-usecase/src/test/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/BlockEmployeeUseCaseBeanTest.java`
+- `organization/flow-organization-usecase/src/test/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/UnblockEmployeeUseCaseBeanTest.java`
+
+## Change Log
+
+| Data | Descrição |
+|------|-----------|
+| 2026-08-05 | Story implementada: 4 Use Cases (Activate/Inactivate/Block/Unblock) + Service + Delegate + 7 códigos de erro novos (`SCOS_EMPLOYEE_014..020`) + seeds de teste. Testes completos: 37 unitários em `EmployeeServiceBeanTest`, 8 em `*UseCaseBeanTest`, 37 de integração em `EmployeeControllerTest`. Status → review. |
