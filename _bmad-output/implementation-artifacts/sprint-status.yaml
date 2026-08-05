@@ -1,5 +1,5 @@
 # generated: 2026-07-20
-# last_updated: 2026-07-22
+# last_updated: 2026-08-05
 # project: SawCunhaOS-Organization
 # project_key: NOKEY
 # tracking_system: file-system
@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-20
-last_updated: 2026-07-22
+last_updated: 2026-08-05
 project: SawCunhaOS-Organization
 project_key: NOKEY
 tracking_system: file-system
@@ -62,11 +62,11 @@ development_status:
   1-5-template-jornada-trabalho-cargo: done
   epic-1-retrospective: optional
 
-  epic-2: backlog
-  2-1-admissao-funcionario-copia-jornada-trabalho: backlog
-  2-2-ciclo-vida-funcionario: backlog
-  2-3-recontratacao-funcionario: backlog
-  2-4-licenca-ferias-colocar-funcionario-licenca: backlog
+  epic-2: in-progress
+  2-1-admissao-funcionario-copia-jornada-trabalho: ready-for-dev
+  2-2-ciclo-vida-funcionario: ready-for-dev
+  2-3-recontratacao-funcionario: ready-for-dev
+  2-4-licenca-ferias-colocar-funcionario-licenca: ready-for-dev
   epic-2-retrospective: optional
 
   epic-3: backlog
