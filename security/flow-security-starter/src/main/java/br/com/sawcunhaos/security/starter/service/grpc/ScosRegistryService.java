@@ -13,10 +13,10 @@
 
 package br.com.sawcunhaos.security.starter.service.grpc;
 
-import br.com.sawcunhaos.organization.grpc.proto.RegistryResourcesRequest;
-import br.com.sawcunhaos.organization.grpc.proto.RegistryServiceGrpc;
-import br.com.sawcunhaos.organization.grpc.proto.RegistrySystemRequest;
-import br.com.sawcunhaos.organization.grpc.proto.RegistrySystemResponse;
+import br.com.sawcunhaos.security.grpc.proto.RegistryResourcesRequest;
+import br.com.sawcunhaos.security.grpc.proto.RegistryServiceGrpc;
+import br.com.sawcunhaos.security.grpc.proto.RegistrySystemRequest;
+import br.com.sawcunhaos.security.grpc.proto.RegistrySystemResponse;
 import io.grpc.StatusException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -265,7 +265,7 @@ nova introduzida no Structural Seed — apenas Liquibase/Postgres, já cobertos.
 - **[MÉDIO — novo]** AD-3 justifica a fronteira Filter-fora-do-starter dizendo que
   `flow-security-starter` "é biblioteca reusável entre projetos SCOS" (`:60`, `:37` do
   diagrama de módulos). Verifiquei `flow-security-starter/pom.xml:92-95`: o módulo já
-  depende de `flow-organization-grpc-proto`, cujo `authority.proto` define
+  depende de `flow-security-grpc-proto`, cujo `authority.proto` define
   `AuthorityResponse` com campos `employee_id`, `company_id`, `branch_id` — conceitos
   específicos **deste** produto, não genéricos entre projetos SCOS. A Rule de AD-3 continua
   válida e aplicável (o Filter de turno realmente não deve entrar no starter,

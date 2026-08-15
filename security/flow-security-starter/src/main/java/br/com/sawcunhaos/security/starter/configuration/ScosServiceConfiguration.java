@@ -1,7 +1,7 @@
 package br.com.sawcunhaos.security.starter.configuration;
 
-import br.com.sawcunhaos.organization.grpc.proto.RegistryServiceGrpc;
-import br.com.sawcunhaos.organization.grpc.proto.ValidateAuthorityServiceGrpc;
+import br.com.sawcunhaos.security.grpc.proto.RegistryServiceGrpc;
+import br.com.sawcunhaos.security.grpc.proto.ValidateAuthorityServiceGrpc;
 import br.com.sawcunhaos.security.starter.configuration.properties.ScosRegistryProperties;
 import br.com.sawcunhaos.security.starter.service.ScosSecurityService;
 import br.com.sawcunhaos.security.starter.service.ScosSecurityStartupListener;

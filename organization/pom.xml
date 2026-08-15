@@ -11,7 +11,6 @@
     </parent>
 
     <modules>
-        <module>flow-organization-grpc-proto</module>
         <module>flow-organization-shared</module>
         <module>flow-organization-infrastructure</module>
         <module>flow-organization-domain</module>
@@ -19,7 +18,6 @@
         <module>flow-organization-api</module>
         <module>flow-organization-boot</module>
         <module>flow-organization-grpc-boot</module>
-        <module>flow-security-starter</module>
     </modules>
 
     <groupId>br.com.sawcunhaos.flow</groupId>
@@ -67,6 +65,11 @@
             <dependency>
                 <groupId>br.com.sawcunhaos.flow</groupId>
                 <artifactId>flow-organization-resources</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>br.com.sawcunhaos.flow</groupId>
+                <artifactId>flow-security-grpc-proto</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>

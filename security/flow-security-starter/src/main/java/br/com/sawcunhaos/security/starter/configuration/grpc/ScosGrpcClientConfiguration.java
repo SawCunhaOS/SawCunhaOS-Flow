@@ -12,8 +12,8 @@
 
 package br.com.sawcunhaos.security.starter.configuration.grpc;
 
-import br.com.sawcunhaos.organization.grpc.proto.RegistryServiceGrpc;
-import br.com.sawcunhaos.organization.grpc.proto.ValidateAuthorityServiceGrpc;
+import br.com.sawcunhaos.security.grpc.proto.RegistryServiceGrpc;
+import br.com.sawcunhaos.security.grpc.proto.ValidateAuthorityServiceGrpc;
 import br.com.sawcunhaos.security.starter.configuration.properties.ScosRegistryProperties;
 import br.com.sawcunhaos.security.starter.interceptor.ScosSystemAuthInterceptor;
 import com.netflix.discovery.EurekaClient;

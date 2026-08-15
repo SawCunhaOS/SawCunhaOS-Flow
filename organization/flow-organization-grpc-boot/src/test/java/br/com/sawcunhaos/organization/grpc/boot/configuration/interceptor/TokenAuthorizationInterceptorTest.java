@@ -48,9 +48,9 @@ class TokenAuthorizationInterceptorTest {
 
     private static final String EXPECTED_KEY_ACCESS = "expected-key";
     private static final String PROTECTED_METHOD =
-            "br.com.sawcunhaos.organization.grpc.proto.RegistryService/registryResources";
+            "br.com.sawcunhaos.security.grpc.proto.RegistryService/registryResources";
     private static final String UNPROTECTED_METHOD =
-            "br.com.sawcunhaos.organization.grpc.proto.SomeOtherService/someMethod";
+            "br.com.sawcunhaos.security.grpc.proto.SomeOtherService/someMethod";
 
     private ScosSystemService scosSystemService;
     private ScosGRPCProperties scosGRPCProperties;

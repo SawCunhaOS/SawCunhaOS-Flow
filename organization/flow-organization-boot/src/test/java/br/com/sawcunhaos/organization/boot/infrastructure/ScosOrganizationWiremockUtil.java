@@ -13,11 +13,11 @@
 
 package br.com.sawcunhaos.organization.boot.infrastructure;
 
-import br.com.sawcunhaos.organization.grpc.proto.AuthorityResponse;
-import br.com.sawcunhaos.organization.grpc.proto.Empty;
-import br.com.sawcunhaos.organization.grpc.proto.RegistryServiceGrpc;
-import br.com.sawcunhaos.organization.grpc.proto.RegistrySystemResponse;
-import br.com.sawcunhaos.organization.grpc.proto.ValidateAuthorityServiceGrpc;
+import br.com.sawcunhaos.security.grpc.proto.AuthorityResponse;
+import br.com.sawcunhaos.security.grpc.proto.Empty;
+import br.com.sawcunhaos.security.grpc.proto.RegistryServiceGrpc;
+import br.com.sawcunhaos.security.grpc.proto.RegistrySystemResponse;
+import br.com.sawcunhaos.security.grpc.proto.ValidateAuthorityServiceGrpc;
 import br.com.sawcunhaos.organization.infrastructure.enumaration.ScosOrganizationPermission;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;

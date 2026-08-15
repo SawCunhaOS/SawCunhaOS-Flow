@@ -15,9 +15,9 @@ package br.com.sawcunhaos.organization.grpc.boot.delegate;
 
 import br.com.sawcunhaos.organization.application.usecase.access.authority.validate.ValidateAuthorityOutput;
 import br.com.sawcunhaos.organization.application.usecase.access.authority.validate.ValidateAuthorityUseCase;
-import br.com.sawcunhaos.organization.grpc.proto.AuthorityRequest;
-import br.com.sawcunhaos.organization.grpc.proto.AuthorityResponse;
-import br.com.sawcunhaos.organization.grpc.proto.ValidateAuthorityServiceGrpc;
+import br.com.sawcunhaos.security.grpc.proto.AuthorityRequest;
+import br.com.sawcunhaos.security.grpc.proto.AuthorityResponse;
+import br.com.sawcunhaos.security.grpc.proto.ValidateAuthorityServiceGrpc;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

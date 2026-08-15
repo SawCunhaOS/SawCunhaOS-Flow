@@ -18,11 +18,11 @@ import br.com.sawcunhaos.organization.application.usecase.access.resource.regist
 import br.com.sawcunhaos.organization.application.usecase.access.system.registry.RegistrySystemInput;
 import br.com.sawcunhaos.organization.application.usecase.access.system.registry.RegistrySystemOutput;
 import br.com.sawcunhaos.organization.application.usecase.access.system.registry.RegistrySystemUseCase;
-import br.com.sawcunhaos.organization.grpc.proto.Empty;
-import br.com.sawcunhaos.organization.grpc.proto.RegistryResourcesRequest;
-import br.com.sawcunhaos.organization.grpc.proto.RegistryServiceGrpc;
-import br.com.sawcunhaos.organization.grpc.proto.RegistrySystemRequest;
-import br.com.sawcunhaos.organization.grpc.proto.RegistrySystemResponse;
+import br.com.sawcunhaos.security.grpc.proto.Empty;
+import br.com.sawcunhaos.security.grpc.proto.RegistryResourcesRequest;
+import br.com.sawcunhaos.security.grpc.proto.RegistryServiceGrpc;
+import br.com.sawcunhaos.security.grpc.proto.RegistrySystemRequest;
+import br.com.sawcunhaos.security.grpc.proto.RegistrySystemResponse;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

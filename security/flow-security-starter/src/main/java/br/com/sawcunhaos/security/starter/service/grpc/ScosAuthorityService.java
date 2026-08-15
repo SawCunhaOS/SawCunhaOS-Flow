@@ -13,9 +13,9 @@
 
 package br.com.sawcunhaos.security.starter.service.grpc;
 
-import br.com.sawcunhaos.organization.grpc.proto.AuthorityRequest;
-import br.com.sawcunhaos.organization.grpc.proto.AuthorityResponse;
-import br.com.sawcunhaos.organization.grpc.proto.ValidateAuthorityServiceGrpc;
+import br.com.sawcunhaos.security.grpc.proto.AuthorityRequest;
+import br.com.sawcunhaos.security.grpc.proto.AuthorityResponse;
+import br.com.sawcunhaos.security.grpc.proto.ValidateAuthorityServiceGrpc;
 import io.grpc.StatusException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

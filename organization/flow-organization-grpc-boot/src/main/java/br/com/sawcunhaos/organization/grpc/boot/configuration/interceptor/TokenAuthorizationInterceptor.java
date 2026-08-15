@@ -56,8 +56,8 @@ public class TokenAuthorizationInterceptor implements ServerInterceptor {
 
     // Apenas estes métodos exigem o token — ajuste para os seus
     private static final Set<String> PROTECTED_METHODS = Set.of(
-            "br.com.sawcunhaos.organization.grpc.proto.RegistryService/registryResources",
-            "br.com.sawcunhaos.organization.grpc.proto.ValidateAuthorityService/validateAuthority"
+            "br.com.sawcunhaos.security.grpc.proto.RegistryService/registryResources",
+            "br.com.sawcunhaos.security.grpc.proto.ValidateAuthorityService/validateAuthority"
     );
 
     @Override

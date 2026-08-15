@@ -13,10 +13,10 @@
 
 package br.com.sawcunhaos.security.starter.service;
 
-import br.com.sawcunhaos.organization.grpc.proto.RegistryResourcesRequest;
-import br.com.sawcunhaos.organization.grpc.proto.RegistrySystemRequest;
-import br.com.sawcunhaos.organization.grpc.proto.RegistrySystemResponse;
-import br.com.sawcunhaos.organization.grpc.proto.Resource;
+import br.com.sawcunhaos.security.grpc.proto.RegistryResourcesRequest;
+import br.com.sawcunhaos.security.grpc.proto.RegistrySystemRequest;
+import br.com.sawcunhaos.security.grpc.proto.RegistrySystemResponse;
+import br.com.sawcunhaos.security.grpc.proto.Resource;
 import br.com.sawcunhaos.security.starter.configuration.properties.ScosRegistryProperties;
 import br.com.sawcunhaos.security.starter.model.ScosSystemContext;
 import br.com.sawcunhaos.security.starter.model.ScosSystemContextHolder;

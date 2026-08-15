@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>br.com.sawcunhaos.flow</groupId>
-        <artifactId>organization</artifactId>
+        <artifactId>security</artifactId>
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>flow-organization-grpc-proto</artifactId>
+    <artifactId>flow-security-grpc-proto</artifactId>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>
