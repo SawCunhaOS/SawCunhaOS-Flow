@@ -1,6 +1,10 @@
+---
+baseline_commit: ad3702111db59c2d7375471f632be53b9a8f3e40
+---
+
 # Story 2.5: Consulta de Funcionário — Listagem e Detalhe
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -21,9 +25,9 @@ Para localizar rapidamente quem eu preciso gerenciar.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: Corrigir defeito de contrato — mover `getEmployeeById`/`updateEmployee` para `/v1/employees/{id}` (AC: 1, 4)
-  - [ ] Em `etc/api/organization/ScosOrganization_Employee.yml`, o bloco `/v1/employees/rehire:` hoje contém 3 operações no mesmo path item: `post` (`rehireEmployee`), `get` (`getEmployeeById`) e `put` (`updateEmployee`) — as duas últimas usam `$ref: '#/components/parameters/idRequest'` (`name: id, in: path`, definido em `ScosComponents.yml:52-58`), mas o path **não tem** `{id}` no template, então o binding do path variable está estruturalmente quebrado (confirmado: o Javadoc já gerado por `mvn generate-sources` diz `"GET /v1/employees/rehire : Get employee by id"`).
-  - [ ] Extrair `get`/`put` do bloco `/v1/employees/rehire:` para um novo bloco `/v1/employees/{id}:`, posicionado logo após `/v1/employees/rehire:` (antes de `/v1/employees/{id}/enable:`). **Não** mudar nenhum `operationId`, `x-authorize`, schema `$ref` ou descrição — só mover as 2 operações de path item. Resultado esperado:
+- [x] Task 1: Corrigir defeito de contrato — mover `getEmployeeById`/`updateEmployee` para `/v1/employees/{id}` (AC: 1, 4)
+  - [x] Em `etc/api/organization/ScosOrganization_Employee.yml`, o bloco `/v1/employees/rehire:` hoje contém 3 operações no mesmo path item: `post` (`rehireEmployee`), `get` (`getEmployeeById`) e `put` (`updateEmployee`) — as duas últimas usam `$ref: '#/components/parameters/idRequest'` (`name: id, in: path`, definido em `ScosComponents.yml:52-58`), mas o path **não tem** `{id}` no template, então o binding do path variable está estruturalmente quebrado (confirmado: o Javadoc já gerado por `mvn generate-sources` diz `"GET /v1/employees/rehire : Get employee by id"`).
+  - [x] Extrair `get`/`put` do bloco `/v1/employees/rehire:` para um novo bloco `/v1/employees/{id}:`, posicionado logo após `/v1/employees/rehire:` (antes de `/v1/employees/{id}/enable:`). **Não** mudar nenhum `operationId`, `x-authorize`, schema `$ref` ou descrição — só mover as 2 operações de path item. Resultado esperado:
     ```yaml
     /v1/employees/rehire:
       post:
@@ -108,11 +112,11 @@ Para localizar rapidamente quem eu preciso gerenciar.
           cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_EMPLOYEE
           ttl: 1
     ```
-  - [ ] **Não** tocar no bloco `/v1/employees:` (linhas 27-77, já correto — `get`/`getAllEmployees` e `post`/`createEmployee` no path certo).
-  - [ ] Rodar `mvn clean generate-sources` em `flow-organization-usecase` **e** `flow-organization-api` logo após editar o YAML — o Javadoc gerado de `getEmployeeById` deve passar a dizer `"GET /v1/employees/{id} : Get employee by id"` (confirma a correção antes de escrever qualquer Java).
+  - [x] **Não** tocar no bloco `/v1/employees:` (linhas 27-77, já correto — `get`/`getAllEmployees` e `post`/`createEmployee` no path certo).
+  - [x] Rodar `mvn clean generate-sources` em `flow-organization-usecase` **e** `flow-organization-api` logo após editar o YAML — o Javadoc gerado de `getEmployeeById` deve passar a dizer `"GET /v1/employees/{id} : Get employee by id"` (confirma a correção antes de escrever qualquer Java).
 
-- [ ] Task 2: `EmployeeQueryRepository` — 1 método novo, filtros opcionais via QueryDSL (AC: 2, 3)
-  - [ ] Em `EmployeeQueryRepository.java` (já existe), adicionar, mesmo padrão exato de `ContactTypeRepository.findAllFiltered` (`organization/flow-organization-domain/.../catalog/internal/ContactTypeRepository.java:64-79`):
+- [x] Task 2: `EmployeeQueryRepository` — 1 método novo, filtros opcionais via QueryDSL (AC: 2, 3)
+  - [x] Em `EmployeeQueryRepository.java` (já existe), adicionar, mesmo padrão exato de `ContactTypeRepository.findAllFiltered` (`organization/flow-organization-domain/.../catalog/internal/ContactTypeRepository.java:64-79`):
     ```java
     default Page<Employee> findAllFiltered(Long companyId, Long positionId, StatusEmployee status, Pageable pageable) {
         if (Objects.isNull(companyId) && Objects.isNull(positionId) && Objects.isNull(status)) {
@@ -136,16 +140,16 @@ Para localizar rapidamente quem eu preciso gerenciar.
     ```
     Adicionar `import java.util.Objects;`. `findAll(Predicate, Pageable)` vem de `QuerydslPredicateExecutor`, já na interface — mesmo `findAll(Pageable)` sem filtro já existente na linha 32 é reaproveitado no atalho "nenhum filtro informado".
 
-- [ ] Task 3: `EmployeeService` (specification) — 1 assinatura nova (`findById` já existe, Story 2.3) (AC: 2, 3)
-  - [ ] Em `EmployeeService.java`, adicionar:
+- [x] Task 3: `EmployeeService` (specification) — 1 assinatura nova (`findById` já existe, Story 2.3) (AC: 2, 3)
+  - [x] Em `EmployeeService.java`, adicionar:
     ```java
     /** Lista Funcionários paginados, filtrando por companyId/positionId/status quando informados (todos opcionais). */
     Page<EmployeeOutput> findAll(Long companyId, Long positionId, StatusEmployee status, @NonNull Pageable pageable);
     ```
     Import novo: `org.springframework.data.domain.Page`, `org.springframework.data.domain.Pageable`. **Não** mexer em `findById` (já implementado e testado pela Story 2.3).
 
-- [ ] Task 4: `EmployeeServiceBean` — implementar `findAll` (AC: 2, 3)
-  - [ ] Adicionar, reaproveitando o `toEmployeeOutput` privado já existente (usado por `create`/`rehire`/`findById`):
+- [x] Task 4: `EmployeeServiceBean` — implementar `findAll` (AC: 2, 3)
+  - [x] Adicionar, reaproveitando o `toEmployeeOutput` privado já existente (usado por `create`/`rehire`/`findById`):
     ```java
     @Override
     @Transactional(readOnly = true)
@@ -156,8 +160,8 @@ Para localizar rapidamente quem eu preciso gerenciar.
     }
     ```
 
-- [ ] Task 5: `EmployeeApiMapper` — 3 métodos novos no mapper já existente (Story 2.3) (AC: 2)
-  - [ ] Em `usecase/corporate/employee/EmployeeApiMapper.java` (criado pela Story 2.3 com `toApiEmployee` completo), adicionar o par resumido + conversores de status, mesmo padrão exato de `CompanyApiMapper.toApiCompanies`/`toApiStatus`/`toDomainStatus` (`organization/flow-organization-usecase/.../corporate/company/CompanyApiMapper.java:51-61,75-82`):
+- [x] Task 5: `EmployeeApiMapper` — 3 métodos novos no mapper já existente (Story 2.3) (AC: 2)
+  - [x] Em `usecase/corporate/employee/EmployeeApiMapper.java` (criado pela Story 2.3 com `toApiEmployee` completo), adicionar o par resumido + conversores de status, mesmo padrão exato de `CompanyApiMapper.toApiCompanies`/`toApiStatus`/`toDomainStatus` (`organization/flow-organization-usecase/.../corporate/company/CompanyApiMapper.java:51-61,75-82`):
     ```java
     /** Monta o {@code Employees} resumido (UC-036, listagem) a partir da saída do domínio — sem company/position/supervisor aninhados. */
     static Employees toApiEmployees(EmployeeOutput employee) {
@@ -180,8 +184,8 @@ Para localizar rapidamente quem eu preciso gerenciar.
     ```
     Imports novos: `br.com.sawcunhaos.organization.api.dto.Employees`, `br.com.sawcunhaos.organization.api.dto.EmployeeStatus`, `br.com.sawcunhaos.organization.domain.corporate.employee.internal.StatusEmployee`. **Não** alterar `toApiEmployee` existente (continua usando `EmployeeStatus.valueOf(employee.status().name())` inline — só as rotas novas passam a usar os conversores nomeados).
 
-- [ ] Task 6: `FindEmployeeUseCase`/`FindAllEmployeeUseCase` + Beans — pacote já existente (AC: 1, 2, 3, 5)
-  - [ ] Em `usecase/corporate/employee/` (pacote da Story 2.1), criar, espelhando **exatamente** `FindPositionUseCase(Bean)` (detalhe por id, `organization/flow-organization-usecase/.../corporate/position/FindPositionUseCaseBean.java`) e `FindAllCompanyUseCase(Bean)` (listagem paginada+filtros, `organization/flow-organization-usecase/.../corporate/company/FindAllCompanyUseCaseBean.java`):
+- [x] Task 6: `FindEmployeeUseCase`/`FindAllEmployeeUseCase` + Beans — pacote já existente (AC: 1, 2, 3, 5)
+  - [x] Em `usecase/corporate/employee/` (pacote da Story 2.1), criar, espelhando **exatamente** `FindPositionUseCase(Bean)` (detalhe por id, `organization/flow-organization-usecase/.../corporate/position/FindPositionUseCaseBean.java`) e `FindAllCompanyUseCase(Bean)` (listagem paginada+filtros, `organization/flow-organization-usecase/.../corporate/company/FindAllCompanyUseCaseBean.java`):
     ```java
     public interface FindEmployeeUseCase {
         Employee execute(@NonNull Long id);
@@ -243,9 +247,9 @@ Para localizar rapidamente quem eu preciso gerenciar.
     ```
     `FindEmployeeUseCase.execute` retorna `br.com.sawcunhaos.organization.api.dto.Employee` — mesma colisão de nome simples com a entidade de domínio já resolvida pela Story 2.3 (`RehireEmployeeUseCase`); como o corpo aqui não referencia a entidade de domínio diretamente (só `EmployeeOutput`/`CompanyOutput`/`PositionOutput`), basta importar `api.dto.Employee` normalmente, sem FQN. `PaginatioUtils` já existe em `usecase/utils/` (reaproveitado de `ContactType`/`Company`, nenhuma mudança nele).
 
-- [ ] Task 7: `EmployeeDelegate` — 2 métodos novos na classe já existente (AC: 1, 2, 3, 6)
-  - [ ] **Confirmar antes** que a Task 1 (fix de contrato) já rodou `generate-sources` — a assinatura exata de `EmployeeApiDelegate.getEmployeeById`/`getAllEmployees` muda de path (`{id}` passa a existir de fato) mas os parâmetros Java não mudam.
-  - [ ] Em `EmployeeDelegate.java` (criada pela Story 2.1), injetar `FindEmployeeUseCase`/`FindAllEmployeeUseCase` (campos `final`, `@RequiredArgsConstructor` já cobre) e implementar, espelhando `CompanyDelegate.getCompanyById`/`getAllCompanies` (`organization/flow-organization-api/.../delegate/company/CompanyDelegate.java:73-82`):
+- [x] Task 7: `EmployeeDelegate` — 2 métodos novos na classe já existente (AC: 1, 2, 3, 6)
+  - [x] **Confirmar antes** que a Task 1 (fix de contrato) já rodou `generate-sources` — a assinatura exata de `EmployeeApiDelegate.getEmployeeById`/`getAllEmployees` muda de path (`{id}` passa a existir de fato) mas os parâmetros Java não mudam.
+  - [x] Em `EmployeeDelegate.java` (criada pela Story 2.1), injetar `FindEmployeeUseCase`/`FindAllEmployeeUseCase` (campos `final`, `@RequiredArgsConstructor` já cobre) e implementar, espelhando `CompanyDelegate.getCompanyById`/`getAllCompanies` (`organization/flow-organization-api/.../delegate/company/CompanyDelegate.java:73-82`):
     ```java
     @Override
     public GetAllEmployeesResponse getAllEmployees(PaginationFilter paginationFilter, Optional<UUID> xRequestID, Optional<String> acceptLanguage, Optional<Long> companyId, Optional<Long> positionId, Optional<EmployeeStatus> status) {
@@ -261,17 +265,17 @@ Para localizar rapidamente quem eu preciso gerenciar.
     ```
     **Não** implementar `updateEmployee` (mesmo bloco YAML após a Task 1, método `PUT` — AC 4, fora de escopo).
 
-- [ ] Task 8: Testes (AC: 1, 2, 3, 4, 5, 6)
-  - [ ] `EmployeeServiceBeanTest.java` (já existe): bloco `findAll` — sem filtro retorna todos paginados (mock `employeeQueryRepository.findAllFiltered(null, null, null, pageable)`); com só `companyId`; com só `positionId`; com só `status`; combinando os 3 — cada cenário só precisa verificar que `employeeQueryRepository.findAllFiltered` foi chamado com os argumentos certos (via `ArgumentCaptor` ou `verify`) e que o resultado é mapeado por `toEmployeeOutput`, mesmo nível de teste que `create`/`rehire` já têm (não precisa reimplementar QueryDSL no teste, só mockar o repositório).
-  - [ ] `FindEmployeeUseCaseBeanTest.java` (novo, `flow-organization-usecase/src/test/.../corporate/employee/`), mesmo padrão de `RehireEmployeeUseCaseBeanTest` (Story 2.3): caminho feliz com supervisor (verifica `company`/`position`/`supervisor` aninhados no `Employee` retornado); caminho feliz sem supervisor (`supervisorId() == null` → `employeeService.findById` **não** é chamado uma segunda vez, `then(employeeService).should(times(1))...`); propagação de `ScosException` quando `employeeService.findById` lança (`SCOS_EMPLOYEE_014`, sem precisar simular o código — só verificar propagação).
-  - [ ] `FindAllEmployeeUseCaseBeanTest.java` (novo, mesmo pacote), mesmo padrão BDD: mapeamento de filtros para `employeeService.findAll` via `ArgumentCaptor`/`verify` (companyId/positionId/status repassados sem transformação, exceto `status` que passa por `EmployeeApiMapper.toDomainStatus`); `paginatedDTO`/`data` montados a partir do `Page<EmployeeOutput>` mockado (2+ elementos, checar que vira lista de `Employees` resumido); filtros todos nulos → chamada com `(null, null, null, pageable)`.
-  - [ ] `EmployeeControllerTest.java` (já existe): novo bloco `GET /v1/employees/{id}` — sucesso `200` com corpo completo (`$.data.company.id`, `$.data.position.id`, `$.data.supervisor` quando aplicável, mesmo formato já validado pelo teste de `rehire`, Story 2.3); `404 SCOS_EMPLOYEE_014` para id inexistente; `401` sem token; `403` sem `GET_EMPLOYEE`. Novo bloco `GET /v1/employees` — sucesso sem filtro (`$.data` array, `$.paginatedDTO` existe, mesmo padrão de `CompanyControllerTest.getAll_withValidToken_returns200`); sucesso filtrando por `companyId`/`positionId`/`status` (criar 2+ Funcionários com atributos diferentes dentro do próprio teste, como já é padrão neste arquivo desde a Story 2.3 — Task 9 dela); `401` sem token; `403` sem `GET_EMPLOYEE`. **CPF único por Funcionário criado** (mesmo cuidado de idempotência já documentado no cabeçalho da classe).
+- [x] Task 8: Testes (AC: 1, 2, 3, 4, 5, 6)
+  - [x] `EmployeeServiceBeanTest.java` (já existe): bloco `findAll` — sem filtro retorna todos paginados (mock `employeeQueryRepository.findAllFiltered(null, null, null, pageable)`); com só `companyId`; com só `positionId`; com só `status`; combinando os 3 — cada cenário só precisa verificar que `employeeQueryRepository.findAllFiltered` foi chamado com os argumentos certos (via `ArgumentCaptor` ou `verify`) e que o resultado é mapeado por `toEmployeeOutput`, mesmo nível de teste que `create`/`rehire` já têm (não precisa reimplementar QueryDSL no teste, só mockar o repositório).
+  - [x] `FindEmployeeUseCaseBeanTest.java` (novo, `flow-organization-usecase/src/test/.../corporate/employee/`), mesmo padrão de `RehireEmployeeUseCaseBeanTest` (Story 2.3): caminho feliz com supervisor (verifica `company`/`position`/`supervisor` aninhados no `Employee` retornado); caminho feliz sem supervisor (`supervisorId() == null` → `employeeService.findById` **não** é chamado uma segunda vez, `then(employeeService).should(times(1))...`); propagação de `ScosException` quando `employeeService.findById` lança (`SCOS_EMPLOYEE_014`, sem precisar simular o código — só verificar propagação).
+  - [x] `FindAllEmployeeUseCaseBeanTest.java` (novo, mesmo pacote), mesmo padrão BDD: mapeamento de filtros para `employeeService.findAll` via `ArgumentCaptor`/`verify` (companyId/positionId/status repassados sem transformação, exceto `status` que passa por `EmployeeApiMapper.toDomainStatus`); `paginatedDTO`/`data` montados a partir do `Page<EmployeeOutput>` mockado (2+ elementos, checar que vira lista de `Employees` resumido); filtros todos nulos → chamada com `(null, null, null, pageable)`.
+  - [x] `EmployeeControllerTest.java` (já existe): novo bloco `GET /v1/employees/{id}` — sucesso `200` com corpo completo (`$.data.company.id`, `$.data.position.id`, `$.data.supervisor` quando aplicável, mesmo formato já validado pelo teste de `rehire`, Story 2.3); `404 SCOS_EMPLOYEE_014` para id inexistente; `401` sem token; `403` sem `GET_EMPLOYEE`. Novo bloco `GET /v1/employees` — sucesso sem filtro (`$.data` array, `$.paginatedDTO` existe, mesmo padrão de `CompanyControllerTest.getAll_withValidToken_returns200`); sucesso filtrando por `companyId`/`positionId`/`status` (criar 2+ Funcionários com atributos diferentes dentro do próprio teste, como já é padrão neste arquivo desde a Story 2.3 — Task 9 dela); `401` sem token; `403` sem `GET_EMPLOYEE`. **CPF único por Funcionário criado** (mesmo cuidado de idempotência já documentado no cabeçalho da classe).
 
-- [ ] Task 9: Guarda de escopo (AC: 4)
-  - [ ] **Não** implementar `updateEmployee` (`PUT /v1/employees/{id}`) — só o path é corrigido (Task 1), a rota continua sem `@Override` no Delegate.
-  - [ ] **Não** implementar `getEmployeeHierarchy`, `getEmployeeSubordinates`, `getEmployeePositionHistory`, `getEmployeeStatusHistory`, nem os endpoints de `Employee Contact`/`Employee Address`/`Employee Work Schedule` — nenhum é tocado por esta story, todos são recursos separados no mesmo arquivo YAML.
-  - [ ] **Não** criar nenhuma permissão nova — `GET_EMPLOYEE` já existe (`ScosOrganizationPermission`, Story 2.1), reaproveitada pelas 2 rotas desta story.
-  - [ ] **Não** adicionar filtro novo além de `companyId`/`positionId`/`status` — são os 3 únicos já publicados no contrato (`companyIdFilter`/`positionIdFilter`/`statusFilter`, linhas 37-39 do YAML); não inventar filtro por nome/CPF que o contrato não pede.
+- [x] Task 9: Guarda de escopo (AC: 4)
+  - [x] **Não** implementar `updateEmployee` (`PUT /v1/employees/{id}`) — só o path é corrigido (Task 1), a rota continua sem `@Override` no Delegate.
+  - [x] **Não** implementar `getEmployeeHierarchy`, `getEmployeeSubordinates`, `getEmployeePositionHistory`, `getEmployeeStatusHistory`, nem os endpoints de `Employee Contact`/`Employee Address`/`Employee Work Schedule` — nenhum é tocado por esta story, todos são recursos separados no mesmo arquivo YAML.
+  - [x] **Não** criar nenhuma permissão nova — `GET_EMPLOYEE` já existe (`ScosOrganizationPermission`, Story 2.1), reaproveitada pelas 2 rotas desta story.
+  - [x] **Não** adicionar filtro novo além de `companyId`/`positionId`/`status` — são os 3 únicos já publicados no contrato (`companyIdFilter`/`positionIdFilter`/`statusFilter`, linhas 37-39 do YAML); não inventar filtro por nome/CPF que o contrato não pede.
 
 ## Dev Notes
 
@@ -334,8 +338,42 @@ Para localizar rapidamente quem eu preciso gerenciar.
 
 ### Agent Model Used
 
+Claude Sonnet 5 (claude-sonnet-5), via Claude Code, workflow `bmad-dev-story`.
+
 ### Debug Log References
+
+- Mesmo ambiente sem acesso ao Docker documentado na Story 2.4 — os testes de integração novos em `EmployeeControllerTest` (`GET /v1/employees/{id}`, `GET /v1/employees`) foram **escritos mas não executados**. Unitário (`domain`) e Use Case (`usecase`) foram executados e passam. Rodar `mvn -pl organization/flow-organization-boot test -Denforcer.skip=true` localmente (com Docker acessível) antes de aprovar a review.
+- Mesmo contorno de `maven-surefire-plugin` (pinado em `2.17` neste ambiente, incompatível com JUnit 5) usado para validar `domain`/`usecase`: `mvn org.apache.maven.plugins:maven-surefire-plugin:3.5.4:test -Denforcer.skip=true ...`.
+- Task 1 confirmada por leitura do Javadoc gerado (`mvn generate-sources`): `EmployeeApiDelegate.getEmployeeById` passou de `"GET /v1/employees/rehire : Get employee by id"` para `"GET /v1/employees/{id} : Get employee by id"`.
+- CPFs/CNPJs novos usados nos testes de integração foram gerados com dígito verificador calculado (algoritmo padrão CPF/CNPJ), não copiados de exemplo — necessário porque `Cpf`/validação de `taxIdentifier` rejeita DV inválido.
 
 ### Completion Notes List
 
+- Todas as 6 ACs implementadas: defeito de contrato corrigido (`/v1/employees/{id}` com `get`/`put`, Task 1); `EmployeeQueryRepository.findAllFiltered` com os 3 filtros opcionais combináveis via QueryDSL (Task 2); `EmployeeService.findAll`/`EmployeeServiceBean.findAll` (Tasks 3/4); `EmployeeApiMapper.toApiEmployees`/`toApiStatus`/`toDomainStatus` (Task 5); `FindEmployeeUseCase(Bean)`/`FindAllEmployeeUseCase(Bean)` novos, reaproveitando `EmployeeService.findById` e `EmployeeApiMapper.toApiEmployee` (Task 6); `EmployeeDelegate.getAllEmployees`/`getEmployeeById` implementados (Task 7).
+- `updateEmployee` permanece sem `@Override` no Delegate (Task 9, guarda de escopo) — só o path foi corrigido. Nenhuma rota de hierarquia/subordinados/histórico/contact/address/work-schedule foi tocada. Nenhuma permissão nova criada — `GET_EMPLOYEE` reaproveitada (Story 2.1).
+- Testes unitários (`domain`): suíte completa (286 testes) passa, incluindo os 5 cenários novos de `findAll` (sem filtro, companyId, positionId, status, combinado).
+- Testes de Use Case (`usecase`): suíte completa (217 testes) passa, incluindo os 6 cenários novos (`FindEmployeeUseCaseBeanTest` × 3, `FindAllEmployeeUseCaseBeanTest` × 3).
+- Testes de integração (`boot`, `EmployeeControllerTest`): 11 cenários novos escritos (`GET /v1/employees/{id}` × 5, `GET /v1/employees` × 6) seguindo o padrão existente — **não executados nesta sessão** (ver Debug Log). Recomendo rodar antes de mover para `done`.
+
 ### File List
+
+- `etc/api/organization/ScosOrganization_Employee.yml`
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/internal/EmployeeQueryRepository.java`
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/specification/EmployeeService.java`
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/service/EmployeeServiceBean.java`
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/EmployeeApiMapper.java`
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/FindEmployeeUseCase.java` (novo)
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/FindEmployeeUseCaseBean.java` (novo)
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/FindAllEmployeeUseCase.java` (novo)
+- `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/FindAllEmployeeUseCaseBean.java` (novo)
+- `organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/employee/EmployeeDelegate.java`
+- `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/corporate/employee/service/EmployeeServiceBeanTest.java`
+- `organization/flow-organization-usecase/src/test/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/FindEmployeeUseCaseBeanTest.java` (novo)
+- `organization/flow-organization-usecase/src/test/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/FindAllEmployeeUseCaseBeanTest.java` (novo)
+- `organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/employee/EmployeeControllerTest.java`
+
+## Change Log
+
+| Data | Descrição |
+|------|-----------|
+| 2026-08-15 | Story implementada: corrigido defeito de contrato (`getEmployeeById`/`updateEmployee` movidos para `/v1/employees/{id}`), `GET /v1/employees/{id}` e `GET /v1/employees` (paginação + filtros companyId/positionId/status) implementados via `FindEmployeeUseCase`/`FindAllEmployeeUseCase` novos. 5 testes unitários de domínio novos, 6 de Use Case, 11 de integração (não executados — ambiente sem Docker). Status → review. |

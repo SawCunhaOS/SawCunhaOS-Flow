@@ -40,7 +40,7 @@ public class ReasonInactivateControllerTest extends ScosOrganizationTestUtil {
     private static final String SEEDED_CODE = "COMPANY_CLOSED";
     private static final String SEEDED_ENTITY_TYPE = "COMPANY";
     // Registro semeado JÁ INATIVO (ARCHIVED_REASON/COMPANY) — ver setsup_database.sql.
-    private static final long SEEDED_INACTIVE_ID = 4L;
+    private static final long SEEDED_INACTIVE_ID = 6L;
     private static final long NONEXISTENT_ID = 999_999L;
 
     private static final String DETAIL_NOT_FOUND = "O motivo de inativação informado não existe.";

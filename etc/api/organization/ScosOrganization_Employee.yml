@@ -111,6 +111,7 @@ paths:
         cachePrefix: SCOS_ORGANIZATION_IDP_REHIRE_EMPLOYEE
         ttl: 1
 
+  /v1/employees/{id}:
     get:
       tags: [Employee]
       summary: Get employee by id
@@ -1274,6 +1275,13 @@ components:
           x-jdempotentrequestpayload: true
         observation:
           type: string
+        expectedReturnDate:
+          type: string
+          format: date
+          description: >-
+            Data prevista de retorno. Só é aceita quando reasonId referencia um motivo de código VACATION ou MEDICAL_LEAVE
+            em SCOS_REASON_INACTIVATE (rota disable) - qualquer outro motivo rejeita se este campo vier preenchido.
+            Sempre opcional, mesmo para VACATION/MEDICAL_LEAVE.
     EmployeeStatusHistory:
       type: object
       properties:

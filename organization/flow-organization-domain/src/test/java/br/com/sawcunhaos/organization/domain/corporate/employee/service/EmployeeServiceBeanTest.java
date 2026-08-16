@@ -57,6 +57,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.time.Clock;
 import java.time.Instant;
@@ -80,6 +83,7 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -496,7 +500,7 @@ class EmployeeServiceBeanTest {
         when(reasonInactivateService.findById(20L)).thenReturn(reasonInactivate(true, EntityType.EMPLOYEE));
         when(scosUserAuthentication.findUserAuthentication()).thenReturn("tester");
 
-        employeeServiceBean.inactivate(1L, 20L, "Desligamento");
+        employeeServiceBean.inactivate(1L, 20L, "Desligamento", null);
 
         ArgumentCaptor<EmployeeStatusHistory> captor = ArgumentCaptor.forClass(EmployeeStatusHistory.class);
         verify(employeeStatusHistoryRepository).merge(captor.capture());
@@ -511,7 +515,7 @@ class EmployeeServiceBeanTest {
         when(employeeQueryRepository.findById(1L)).thenReturn(Optional.of(employee));
         when(reasonInactivateService.findById(20L)).thenReturn(reasonInactivate(true, EntityType.EMPLOYEE));
 
-        employeeServiceBean.inactivate(1L, 20L, null);
+        employeeServiceBean.inactivate(1L, 20L, null, null);
 
         verify(employeeStatusHistoryRepository).merge(any(EmployeeStatusHistory.class));
     }
@@ -520,7 +524,7 @@ class EmployeeServiceBeanTest {
     void inactivateShouldThrowWhenEmployeeNotFound() {
         when(employeeQueryRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> employeeServiceBean.inactivate(1L, 20L, null))
+        assertThatThrownBy(() -> employeeServiceBean.inactivate(1L, 20L, null, null))
                 .isInstanceOf(ScosException.class)
                 .hasFieldOrPropertyWithValue("code", br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_014.getCode());
     }
@@ -531,7 +535,7 @@ class EmployeeServiceBeanTest {
         when(employeeQueryRepository.findById(1L)).thenReturn(Optional.of(employee));
         when(reasonInactivateService.findById(20L)).thenReturn(reasonInactivate(true, EntityType.EMPLOYEE));
 
-        assertThatThrownBy(() -> employeeServiceBean.inactivate(1L, 20L, null))
+        assertThatThrownBy(() -> employeeServiceBean.inactivate(1L, 20L, null, null))
                 .isInstanceOf(ScosException.class)
                 .hasFieldOrPropertyWithValue("code", br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_001.getCode());
     }
@@ -542,7 +546,7 @@ class EmployeeServiceBeanTest {
         when(employeeQueryRepository.findById(1L)).thenReturn(Optional.of(employee));
         when(reasonInactivateService.findById(20L)).thenReturn(reasonInactivate(false, EntityType.EMPLOYEE));
 
-        assertThatThrownBy(() -> employeeServiceBean.inactivate(1L, 20L, null))
+        assertThatThrownBy(() -> employeeServiceBean.inactivate(1L, 20L, null, null))
                 .isInstanceOf(ScosException.class)
                 .hasFieldOrPropertyWithValue("code", br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_015.getCode());
     }
@@ -553,9 +557,67 @@ class EmployeeServiceBeanTest {
         when(employeeQueryRepository.findById(1L)).thenReturn(Optional.of(employee));
         when(reasonInactivateService.findById(20L)).thenReturn(reasonInactivate(true, EntityType.COMPANY));
 
-        assertThatThrownBy(() -> employeeServiceBean.inactivate(1L, 20L, null))
+        assertThatThrownBy(() -> employeeServiceBean.inactivate(1L, 20L, null, null))
                 .isInstanceOf(ScosException.class)
                 .hasFieldOrPropertyWithValue("code", br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_016.getCode());
+    }
+
+    @Test
+    void inactivateShouldPersistExpectedReturnDateWhenReasonIsVacation() {
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.ACTIVE).build();
+        LocalDate expectedReturnDate = LocalDate.of(2026, 9, 1);
+        when(employeeQueryRepository.findById(1L)).thenReturn(Optional.of(employee));
+        when(reasonInactivateService.findById(20L)).thenReturn(reasonInactivate(true, EntityType.EMPLOYEE, "VACATION"));
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn("tester");
+
+        employeeServiceBean.inactivate(1L, 20L, "Férias", expectedReturnDate);
+
+        ArgumentCaptor<EmployeeStatusHistory> captor = ArgumentCaptor.forClass(EmployeeStatusHistory.class);
+        verify(employeeStatusHistoryRepository).merge(captor.capture());
+        assertThat(captor.getValue().getExpectedReturnDate()).isEqualTo(expectedReturnDate);
+    }
+
+    @Test
+    void inactivateShouldPersistExpectedReturnDateWhenReasonIsMedicalLeave() {
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.ACTIVE).build();
+        LocalDate expectedReturnDate = LocalDate.of(2026, 9, 15);
+        when(employeeQueryRepository.findById(1L)).thenReturn(Optional.of(employee));
+        when(reasonInactivateService.findById(20L)).thenReturn(reasonInactivate(true, EntityType.EMPLOYEE, "MEDICAL_LEAVE"));
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn("tester");
+
+        employeeServiceBean.inactivate(1L, 20L, "Licença médica", expectedReturnDate);
+
+        ArgumentCaptor<EmployeeStatusHistory> captor = ArgumentCaptor.forClass(EmployeeStatusHistory.class);
+        verify(employeeStatusHistoryRepository).merge(captor.capture());
+        assertThat(captor.getValue().getExpectedReturnDate()).isEqualTo(expectedReturnDate);
+    }
+
+    @Test
+    void inactivateShouldAcceptNullExpectedReturnDateWhenReasonIsVacationOrMedicalLeave() {
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.ACTIVE).build();
+        when(employeeQueryRepository.findById(1L)).thenReturn(Optional.of(employee));
+        when(reasonInactivateService.findById(20L)).thenReturn(reasonInactivate(true, EntityType.EMPLOYEE, "VACATION"));
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn("tester");
+
+        employeeServiceBean.inactivate(1L, 20L, null, null);
+
+        ArgumentCaptor<EmployeeStatusHistory> captor = ArgumentCaptor.forClass(EmployeeStatusHistory.class);
+        verify(employeeStatusHistoryRepository).merge(captor.capture());
+        assertThat(captor.getValue().getExpectedReturnDate()).isNull();
+    }
+
+    @Test
+    void inactivateShouldThrowWhenExpectedReturnDateInformedWithIncompatibleReason() {
+        Employee employee = Employee.builder().id(1L).status(StatusEmployee.ACTIVE).build();
+        LocalDate expectedReturnDate = LocalDate.of(2026, 9, 1);
+        when(employeeQueryRepository.findById(1L)).thenReturn(Optional.of(employee));
+        when(reasonInactivateService.findById(20L)).thenReturn(reasonInactivate(true, EntityType.EMPLOYEE, "RESIGNATION"));
+
+        assertThatThrownBy(() -> employeeServiceBean.inactivate(1L, 20L, null, expectedReturnDate))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_024.getCode());
+
+        verify(employeeStatusHistoryRepository, never()).merge(any(EmployeeStatusHistory.class));
     }
 
     // ---- disable (rota block, UC-043) ----
@@ -677,7 +739,11 @@ class EmployeeServiceBeanTest {
     }
 
     private ReasonInactivateOutput reasonInactivate(boolean active, EntityType entityType) {
-        return ReasonInactivateOutput.builder().id(20L).code("RESIGNATION").active(active).entityType(entityType).build();
+        return reasonInactivate(active, entityType, "RESIGNATION");
+    }
+
+    private ReasonInactivateOutput reasonInactivate(boolean active, EntityType entityType, String code) {
+        return ReasonInactivateOutput.builder().id(20L).code(code).active(active).entityType(entityType).build();
     }
 
     private ReasonDisableOutput reasonDisable(boolean active, EntityType entityType) {
@@ -920,5 +986,71 @@ class EmployeeServiceBeanTest {
         assertThatThrownBy(() -> employeeServiceBean.findById(1L))
                 .isInstanceOf(ScosException.class)
                 .hasFieldOrPropertyWithValue("code", br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_014.getCode());
+    }
+
+    // ---- findAll ----
+
+    private Employee filterableEmployee(long id) {
+        return Employee.builder().id(id).status(StatusEmployee.ACTIVE)
+                .taxIdentifier(new Cpf(VALID_CPF)).email(new Email(VALID_EMAIL))
+                .company(activeCompany()).position(activePosition()).build();
+    }
+
+    @Test
+    void findAllShouldReturnAllPagedWhenNoFilterInformed() {
+        Pageable pageable = Pageable.unpaged();
+        when(employeeQueryRepository.findAllFiltered(null, null, null, pageable))
+                .thenReturn(new PageImpl<>(List.of(filterableEmployee(1L))));
+
+        Page<EmployeeOutput> result = employeeServiceBean.findAll(null, null, null, pageable);
+
+        assertThat(result.getContent()).hasSize(1);
+        assertThat(result.getContent().getFirst().id()).isEqualTo(1L);
+        verify(employeeQueryRepository).findAllFiltered(eq(null), eq(null), eq(null), eq(pageable));
+    }
+
+    @Test
+    void findAllShouldDelegateToRepositoryWithCompanyIdFilter() {
+        Pageable pageable = Pageable.unpaged();
+        when(employeeQueryRepository.findAllFiltered(1L, null, null, pageable))
+                .thenReturn(new PageImpl<>(List.of(filterableEmployee(1L))));
+
+        employeeServiceBean.findAll(1L, null, null, pageable);
+
+        verify(employeeQueryRepository).findAllFiltered(eq(1L), eq(null), eq(null), eq(pageable));
+    }
+
+    @Test
+    void findAllShouldDelegateToRepositoryWithPositionIdFilter() {
+        Pageable pageable = Pageable.unpaged();
+        when(employeeQueryRepository.findAllFiltered(null, 2L, null, pageable))
+                .thenReturn(new PageImpl<>(List.of(filterableEmployee(1L))));
+
+        employeeServiceBean.findAll(null, 2L, null, pageable);
+
+        verify(employeeQueryRepository).findAllFiltered(eq(null), eq(2L), eq(null), eq(pageable));
+    }
+
+    @Test
+    void findAllShouldDelegateToRepositoryWithStatusFilter() {
+        Pageable pageable = Pageable.unpaged();
+        when(employeeQueryRepository.findAllFiltered(null, null, StatusEmployee.ACTIVE, pageable))
+                .thenReturn(new PageImpl<>(List.of(filterableEmployee(1L))));
+
+        employeeServiceBean.findAll(null, null, StatusEmployee.ACTIVE, pageable);
+
+        verify(employeeQueryRepository).findAllFiltered(eq(null), eq(null), eq(StatusEmployee.ACTIVE), eq(pageable));
+    }
+
+    @Test
+    void findAllShouldDelegateToRepositoryWithAllFiltersCombined() {
+        Pageable pageable = Pageable.unpaged();
+        when(employeeQueryRepository.findAllFiltered(1L, 2L, StatusEmployee.ACTIVE, pageable))
+                .thenReturn(new PageImpl<>(List.of(filterableEmployee(1L))));
+
+        Page<EmployeeOutput> result = employeeServiceBean.findAll(1L, 2L, StatusEmployee.ACTIVE, pageable);
+
+        assertThat(result.getContent()).hasSize(1);
+        verify(employeeQueryRepository).findAllFiltered(eq(1L), eq(2L), eq(StatusEmployee.ACTIVE), eq(pageable));
     }
 }

@@ -35,6 +35,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Setter
 @Getter
@@ -77,6 +78,9 @@ public class EmployeeStatusHistory {
 
     @Column(name = "OBSERVATION")
     private String observation;
+
+    @Column(name = "EXPECTED_RETURN_DATE")
+    private LocalDate expectedReturnDate;
 
     @CreationTimestamp
     @Column(name = "CREATED_AT")

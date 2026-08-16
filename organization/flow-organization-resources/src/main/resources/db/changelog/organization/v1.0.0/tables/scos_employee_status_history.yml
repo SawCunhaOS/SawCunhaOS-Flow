@@ -82,3 +82,23 @@ databaseChangeLog:
             tableName: SCOS_EMPLOYEE_STATUS_HISTORY
             schemaName: scos
             cascadeConstraints: true
+
+  - changeSet:
+      id: 20260815-Samuel.Cunha-001
+      author: Samuel.Cunha
+      comment: "Adiciona EXPECTED_RETURN_DATE em SCOS_EMPLOYEE_STATUS_HISTORY (Story 2.4 — licença/férias, FR-28)"
+      changes:
+        - addColumn:
+            tableName: SCOS_EMPLOYEE_STATUS_HISTORY
+            schemaName: scos
+            columns:
+              - column:
+                  name: EXPECTED_RETURN_DATE
+                  type: DATE
+                  constraints:
+                    nullable: true
+      rollback:
+        - dropColumn:
+            tableName: SCOS_EMPLOYEE_STATUS_HISTORY
+            schemaName: scos
+            columnName: EXPECTED_RETURN_DATE

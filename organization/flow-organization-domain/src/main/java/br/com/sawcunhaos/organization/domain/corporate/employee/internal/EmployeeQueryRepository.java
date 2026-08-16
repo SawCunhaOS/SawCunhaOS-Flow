@@ -21,6 +21,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -67,6 +68,26 @@ public interface EmployeeQueryRepository extends BaseJpaRepository<Employee, Lon
         booleanBuilder.and(qEmployee.taxIdentifier.cpf.eq(taxIdentifier))
                 .and(qEmployee.status.eq(status));
         return findOne(booleanBuilder.getValue());
+    }
+
+    default Page<Employee> findAllFiltered(Long companyId, Long positionId, StatusEmployee status, Pageable pageable) {
+        if (Objects.isNull(companyId) && Objects.isNull(positionId) && Objects.isNull(status)) {
+            return findAll(pageable);
+        }
+
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        if (Objects.nonNull(companyId)) {
+            booleanBuilder.and(qEmployee.company.id.eq(companyId));
+        }
+        if (Objects.nonNull(positionId)) {
+            booleanBuilder.and(qEmployee.position.id.eq(positionId));
+        }
+        if (Objects.nonNull(status)) {
+            booleanBuilder.and(qEmployee.status.eq(status));
+        }
+
+        return findAll(booleanBuilder.getValue(), pageable);
     }
 
 }

@@ -17,12 +17,17 @@ import br.com.sawcunhaos.organization.api.controller.EmployeeApiDelegate;
 import br.com.sawcunhaos.organization.api.dto.Create;
 import br.com.sawcunhaos.organization.api.dto.CreateEmployeeRequest;
 import br.com.sawcunhaos.organization.api.dto.CreateResponse;
+import br.com.sawcunhaos.organization.api.dto.EmployeeStatus;
 import br.com.sawcunhaos.organization.api.dto.EmployeeStatusTransitionRequest;
+import br.com.sawcunhaos.organization.api.dto.GetAllEmployeesResponse;
 import br.com.sawcunhaos.organization.api.dto.GetEmployeeResponse;
+import br.com.sawcunhaos.organization.api.dto.PaginationFilter;
 import br.com.sawcunhaos.organization.api.dto.RehireEmployeeRequest;
 import br.com.sawcunhaos.organization.application.usecase.corporate.employee.ActivateEmployeeUseCase;
 import br.com.sawcunhaos.organization.application.usecase.corporate.employee.BlockEmployeeUseCase;
 import br.com.sawcunhaos.organization.application.usecase.corporate.employee.CreateEmployeeUseCase;
+import br.com.sawcunhaos.organization.application.usecase.corporate.employee.FindAllEmployeeUseCase;
+import br.com.sawcunhaos.organization.application.usecase.corporate.employee.FindEmployeeUseCase;
 import br.com.sawcunhaos.organization.application.usecase.corporate.employee.InactivateEmployeeUseCase;
 import br.com.sawcunhaos.organization.application.usecase.corporate.employee.RehireEmployeeUseCase;
 import br.com.sawcunhaos.organization.application.usecase.corporate.employee.UnblockEmployeeUseCase;
@@ -44,6 +49,8 @@ public class EmployeeDelegate implements EmployeeApiDelegate {
     private final BlockEmployeeUseCase blockEmployeeUseCase;
     private final UnblockEmployeeUseCase unblockEmployeeUseCase;
     private final RehireEmployeeUseCase rehireEmployeeUseCase;
+    private final FindEmployeeUseCase findEmployeeUseCase;
+    private final FindAllEmployeeUseCase findAllEmployeeUseCase;
 
     @Override
     public CreateResponse createEmployee(CreateEmployeeRequest createEmployeeRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
@@ -80,6 +87,18 @@ public class EmployeeDelegate implements EmployeeApiDelegate {
     public GetEmployeeResponse rehireEmployee(RehireEmployeeRequest rehireEmployeeRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
         return GetEmployeeResponse.builder()
                 .data(rehireEmployeeUseCase.execute(rehireEmployeeRequest))
+                .build();
+    }
+
+    @Override
+    public GetAllEmployeesResponse getAllEmployees(PaginationFilter paginationFilter, Optional<UUID> xRequestID, Optional<String> acceptLanguage, Optional<Long> companyId, Optional<Long> positionId, Optional<EmployeeStatus> status) {
+        return findAllEmployeeUseCase.execute(paginationFilter, companyId.orElse(null), positionId.orElse(null), status.orElse(null));
+    }
+
+    @Override
+    public GetEmployeeResponse getEmployeeById(Long id, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        return GetEmployeeResponse.builder()
+                .data(findEmployeeUseCase.execute(id))
                 .build();
     }
 }

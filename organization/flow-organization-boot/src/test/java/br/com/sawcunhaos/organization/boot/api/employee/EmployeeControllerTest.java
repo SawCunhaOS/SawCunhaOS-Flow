@@ -26,7 +26,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
+import java.time.LocalDate;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -58,7 +61,9 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
     private static final long REASON_ACTIVATE_EMPLOYEE_INACTIVE = 6L;
     private static final long REASON_ACTIVATE_COMPANY_SCOPED = 1L;
     private static final long REASON_INACTIVATE_EMPLOYEE_RESIGNATION = 2L;
-    private static final long REASON_INACTIVATE_EMPLOYEE_INACTIVE = 5L;
+    private static final long REASON_INACTIVATE_EMPLOYEE_VACATION = 4L;
+    private static final long REASON_INACTIVATE_EMPLOYEE_MEDICAL_LEAVE = 5L;
+    private static final long REASON_INACTIVATE_EMPLOYEE_INACTIVE = 7L;
     private static final long REASON_INACTIVATE_COMPANY_SCOPED = 1L;
     private static final long REASON_DISABLE_EMPLOYEE_UNDER_AUDIT = 2L;
     private static final long REASON_DISABLE_EMPLOYEE_INACTIVE = 5L;
@@ -80,6 +85,10 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
     private static final String CPF_WRONG_EMAIL_DOMAIN = "32262626022";
     private static final String CPF_NO_TOKEN = "39036331005";
     private static final String CPF_NO_PERMISSION = "87606057745";
+
+    private static final String CPF_GET_BY_ID = "15881399803";
+    private static final String CPF_GETALL_FILTER_COMPANY = "64556815177";
+    private static final String CPF_GETALL_FILTER_POSITION = "88447294072";
 
     private static final String CPF_REHIRE_HAPPY_PATH = "10433218100";
     private static final String CPF_REHIRE_STILL_ACTIVE = "96001338914";
@@ -119,6 +128,8 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
     private static final String CODE_DISABLE_REASON_INCOMPATIBLE = "SCOS_EMPLOYEE_018";
     private static final String CODE_ENABLE_REASON_INACTIVE = "SCOS_EMPLOYEE_019";
     private static final String CODE_ENABLE_REASON_INCOMPATIBLE = "SCOS_EMPLOYEE_020";
+
+    private static final String CODE_EXPECTED_RETURN_DATE_INCOMPATIBLE = "SCOS_EMPLOYEE_024";
 
     private static final String CODE_REHIRE_NOT_FOUND = "SCOS_EMPLOYEE_021";
     private static final String CODE_REASON_POSITION_CHANGE_NOT_FOUND = "SCOS_EMPLOYEE_022";
@@ -270,6 +281,189 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
                         .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createBody(CPF_NO_PERMISSION, "nopermission@sawcunhaos.com.br", SEEDED_COMPANY_ID, SEEDED_POSITION_ID, REASON_ACTIVATE_EMPLOYEE_NEW_HIRE)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
+    }
+
+    // =====================================================================================
+    // GET /v1/employees/{id} (UC-037)
+    // =====================================================================================
+
+    @Test
+    @DisplayName("GET /v1/employees/{id} — retorna o Funcionário completo com company/position (200)")
+    void getById_seeded_returns200() throws Exception {
+        mockMvc.perform(get(EMPLOYEES_URI + "/{id}", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.id").value(SEEDED_EMPLOYEE_ID))
+                .andExpect(jsonPath("$.data.company.id").value(SEEDED_COMPANY_ID))
+                .andExpect(jsonPath("$.data.position.id").value(SEEDED_POSITION_ID))
+                .andExpect(jsonPath("$.data.status").exists());
+    }
+
+    @Test
+    @DisplayName("GET /v1/employees/{id} — com supervisor retorna o bloco supervisor aninhado (200)")
+    void getById_withSupervisor_returns200WithNestedSupervisor() throws Exception {
+        long supervisorId = createEmployee(CPF_GET_BY_ID, "getbyid@sawcunhaos.com.br");
+
+        mockMvc.perform(post(EMPLOYEES_URI)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "name": "Subordinado Teste",
+                                  "nameTreatment": "Sr.",
+                                  "taxIdentifier": "%s",
+                                  "email": "%s",
+                                  "birthDate": "2000-01-01",
+                                  "dateOfHiring": "2026-08-01",
+                                  "contractType": "CLT",
+                                  "companyId": %d,
+                                  "positionId": %d,
+                                  "supervisorId": %d,
+                                  "reasonActivateId": %d
+                                }
+                                """.formatted("37759458061", "subordinado@sawcunhaos.com.br", SEEDED_COMPANY_ID, SEEDED_POSITION_ID, supervisorId, REASON_ACTIVATE_EMPLOYEE_NEW_HIRE)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.id").exists());
+
+        mockMvc.perform(get(EMPLOYEES_URI + "/{id}", supervisorId)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.id").value(supervisorId));
+    }
+
+    @Test
+    @DisplayName("GET /v1/employees/{id} — id inexistente retorna 404 SCOS_EMPLOYEE_014")
+    void getById_notFound_returns404() throws Exception {
+        mockMvc.perform(get(EMPLOYEES_URI + "/{id}", NONEXISTENT_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_EMPLOYEE_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("GET /v1/employees/{id} — sem token retorna 401")
+    void getById_withoutToken_returns401() throws Exception {
+        mockMvc.perform(get(EMPLOYEES_URI + "/{id}", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, null, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("GET /v1/employees/{id} — sem permissão retorna 403")
+    void getById_withoutPermission_returns403() throws Exception {
+        stubValidateAuthorityWithoutPermissions();
+
+        mockMvc.perform(get(EMPLOYEES_URI + "/{id}", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
+    }
+
+    // =====================================================================================
+    // GET /v1/employees (UC-036)
+    // =====================================================================================
+
+    @Test
+    @DisplayName("GET /v1/employees — sem filtro lista paginado, resumido, sem company/position/supervisor aninhados (200)")
+    void getAll_withoutFilter_returns200() throws Exception {
+        mockMvc.perform(get(EMPLOYEES_URI)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .param("page", "1")
+                        .param("sizePerPage", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data").isArray())
+                .andExpect(jsonPath("$.data[?(@.id == " + SEEDED_EMPLOYEE_ID + ")]").exists())
+                .andExpect(jsonPath("$.data[0].company").doesNotExist())
+                .andExpect(jsonPath("$.paginatedDTO").exists());
+    }
+
+    @Test
+    @DisplayName("GET /v1/employees — filtro companyId retorna só o Funcionário daquela empresa (200)")
+    void getAll_filterByCompanyId_returnsOnlyMatching() throws Exception {
+        long otherCompanyId = createCompany("34826905000137");
+        long otherEmployeeId = createEmployeeAt(CPF_GETALL_FILTER_COMPANY, "getallcompany@sawcunhaos.com.br", otherCompanyId, SEEDED_POSITION_ID);
+
+        mockMvc.perform(get(EMPLOYEES_URI)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .param("page", "1").param("sizePerPage", "10")
+                        .param("companyId", String.valueOf(otherCompanyId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[?(@.id == " + otherEmployeeId + ")]").exists())
+                .andExpect(jsonPath("$.data[?(@.id == " + SEEDED_EMPLOYEE_ID + ")]").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("GET /v1/employees — filtro positionId retorna só o Funcionário daquele cargo (200)")
+    void getAll_filterByPositionId_returnsOnlyMatching() throws Exception {
+        long otherPositionId = createPosition("GETALLPOS");
+        long otherEmployeeId = createEmployeeAt(CPF_GETALL_FILTER_POSITION, "getallposition@sawcunhaos.com.br", SEEDED_COMPANY_ID, otherPositionId);
+
+        mockMvc.perform(get(EMPLOYEES_URI)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .param("page", "1").param("sizePerPage", "10")
+                        .param("positionId", String.valueOf(otherPositionId)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[?(@.id == " + otherEmployeeId + ")]").exists())
+                .andExpect(jsonPath("$.data[?(@.id == " + SEEDED_EMPLOYEE_ID + ")]").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("GET /v1/employees — filtro status retorna só os Funcionários naquele status (200)")
+    void getAll_filterByStatus_returnsOnlyMatching() throws Exception {
+        transition("disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(get(EMPLOYEES_URI)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .param("page", "1").param("sizePerPage", "10")
+                        .param("status", "INACTIVE"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[?(@.id == " + SEEDED_EMPLOYEE_ID + ")]").exists())
+                .andExpect(jsonPath("$.data[0].status").value("INACTIVE"));
+    }
+
+    @Test
+    @DisplayName("GET /v1/employees — filtros combinados (companyId+positionId+status) restringem simultaneamente (200)")
+    void getAll_filterCombined_returnsOnlyMatchingAll() throws Exception {
+        long otherCompanyId = createCompany("92981884000120");
+        long otherPositionId = createPosition("GETALLCOMBO");
+        long matchingEmployeeId = createEmployeeAt("79869411118", "getallcombo1@sawcunhaos.com.br", otherCompanyId, otherPositionId);
+        // mesmo companyId/positionId, mas sem bater no filtro de status (fica ACTIVE, filtro pede INACTIVE)
+        createEmployeeAt("51095494198", "getallcombo2@sawcunhaos.com.br", otherCompanyId, otherPositionId);
+        transitionEmployee(matchingEmployeeId, "disable", REASON_INACTIVATE_EMPLOYEE_RESIGNATION);
+
+        mockMvc.perform(get(EMPLOYEES_URI)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .param("page", "1").param("sizePerPage", "10")
+                        .param("companyId", String.valueOf(otherCompanyId))
+                        .param("positionId", String.valueOf(otherPositionId))
+                        .param("status", "INACTIVE"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.length()").value(1))
+                .andExpect(jsonPath("$.data[0].id").value(matchingEmployeeId));
+    }
+
+    @Test
+    @DisplayName("GET /v1/employees — sem token retorna 401")
+    void getAll_withoutToken_returns401() throws Exception {
+        mockMvc.perform(get(EMPLOYEES_URI)
+                        .headers(httpHeaders(LANGUAGE_PT, null, MediaType.APPLICATION_JSON_VALUE))
+                        .param("page", "1").param("sizePerPage", "10"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("GET /v1/employees — sem permissão retorna 403")
+    void getAll_withoutPermission_returns403() throws Exception {
+        stubValidateAuthorityWithoutPermissions();
+
+        mockMvc.perform(get(EMPLOYEES_URI)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .param("page", "1").param("sizePerPage", "10"))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.status").value(403))
                 .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
@@ -435,6 +629,60 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(jsonPath("$.status").value(422))
                 .andExpect(jsonPath("$.code").value(CODE_INACTIVATE_REASON_INCOMPATIBLE));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/disable — VACATION com expectedReturnDate grava a data no histórico (204)")
+    void disable_vacationWithExpectedReturnDate_returns204AndPersistsDate() throws Exception {
+        LocalDate expectedReturnDate = LocalDate.of(2026, 9, 1);
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/disable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_INACTIVATE_EMPLOYEE_VACATION, "Férias", expectedReturnDate)))
+                .andExpect(status().isNoContent());
+
+        assertThat(employeeStatusHistoryRepository.findAll()).anyMatch(h -> h.getEmployee().getId().equals(SEEDED_EMPLOYEE_ID)
+                && h.getExpectedReturnDate() != null && h.getExpectedReturnDate().equals(expectedReturnDate));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/disable — MEDICAL_LEAVE com expectedReturnDate grava a data no histórico (204)")
+    void disable_medicalLeaveWithExpectedReturnDate_returns204AndPersistsDate() throws Exception {
+        LocalDate expectedReturnDate = LocalDate.of(2026, 9, 15);
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/disable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_INACTIVATE_EMPLOYEE_MEDICAL_LEAVE, "Licença médica", expectedReturnDate)))
+                .andExpect(status().isNoContent());
+
+        assertThat(employeeStatusHistoryRepository.findAll()).anyMatch(h -> h.getEmployee().getId().equals(SEEDED_EMPLOYEE_ID)
+                && h.getExpectedReturnDate() != null && h.getExpectedReturnDate().equals(expectedReturnDate));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/disable — VACATION sem expectedReturnDate grava histórico com data nula (204)")
+    void disable_vacationWithoutExpectedReturnDate_returns204AndPersistsNullDate() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/disable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_INACTIVATE_EMPLOYEE_VACATION, null)))
+                .andExpect(status().isNoContent());
+
+        assertThat(employeeStatusHistoryRepository.findAll()).anyMatch(h -> h.getEmployee().getId().equals(SEEDED_EMPLOYEE_ID)
+                && h.getReasonInactivate() != null && h.getReasonInactivate().getId().equals(REASON_INACTIVATE_EMPLOYEE_VACATION)
+                && h.getExpectedReturnDate() == null);
+    }
+
+    @Test
+    @DisplayName("PUT /v1/employees/{id}/disable — expectedReturnDate com motivo incompatível retorna 422 SCOS_EMPLOYEE_024")
+    void disable_expectedReturnDateWithIncompatibleReason_returns422() throws Exception {
+        mockMvc.perform(put(EMPLOYEES_URI + "/{id}/disable", SEEDED_EMPLOYEE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(statusTransitionBody(REASON_INACTIVATE_EMPLOYEE_RESIGNATION, null, LocalDate.of(2026, 9, 1))))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_EXPECTED_RETURN_DATE_INCOMPATIBLE));
     }
 
     @Test
@@ -977,6 +1225,16 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
                 """.formatted(observationField, reasonId);
     }
 
+    private static String statusTransitionBody(long reasonId, String observation, LocalDate expectedReturnDate) {
+        String observationField = observation == null ? "" : "  \"observation\": \"" + observation + "\",\n";
+        String expectedReturnDateField = expectedReturnDate == null ? "" : "  \"expectedReturnDate\": \"" + expectedReturnDate + "\",\n";
+        return """
+                {
+                %s%s  "reasonId": %d
+                }
+                """.formatted(observationField, expectedReturnDateField, reasonId);
+    }
+
     /**
      * Aplica uma transição de status auxiliar (setup de precondição) no Funcionário seed, esperando 204.
      * A {@code observation} carrega um nonce (timestamp) para não colidir com o cache de idempotência
@@ -995,10 +1253,14 @@ class EmployeeControllerTest extends ScosOrganizationTestUtil {
     }
 
     private long createEmployee(String taxIdentifier, String email) throws Exception {
+        return createEmployeeAt(taxIdentifier, email, SEEDED_COMPANY_ID, SEEDED_POSITION_ID);
+    }
+
+    private long createEmployeeAt(String taxIdentifier, String email, long companyId, long positionId) throws Exception {
         String response = mockMvc.perform(post(EMPLOYEES_URI)
                         .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(createBody(taxIdentifier, email, SEEDED_COMPANY_ID, SEEDED_POSITION_ID, REASON_ACTIVATE_EMPLOYEE_NEW_HIRE)))
+                        .content(createBody(taxIdentifier, email, companyId, positionId, REASON_ACTIVATE_EMPLOYEE_NEW_HIRE)))
                 .andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
         return ((Number) com.jayway.jsonpath.JsonPath.read(response, "$.data.id")).longValue();

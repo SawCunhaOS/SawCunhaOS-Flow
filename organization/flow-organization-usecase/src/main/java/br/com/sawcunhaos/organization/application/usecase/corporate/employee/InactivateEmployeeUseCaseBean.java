@@ -34,6 +34,6 @@ class InactivateEmployeeUseCaseBean implements InactivateEmployeeUseCase {
     @Override
     public void execute(@NonNull Long id, @NonNull EmployeeStatusTransitionRequest request) {
         log.info("Inactivate employee: {}", id);
-        employeeService.inactivate(id, request.reasonId(), request.observation());
+        employeeService.inactivate(id, request.reasonId(), request.observation(), request.expectedReturnDate());
     }
 }

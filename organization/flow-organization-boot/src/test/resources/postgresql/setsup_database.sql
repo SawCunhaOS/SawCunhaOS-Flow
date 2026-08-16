@@ -181,18 +181,20 @@ INSERT INTO scos.SCOS_REASON_INACTIVATE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE,
 VALUES
     ('COMPANY_CLOSED', 'Encerramento da empresa',          'COMPANY',  true, NOW(), 'seed'),
     ('RESIGNATION',    'Desligamento/demissão',            'EMPLOYEE', true, NOW(), 'seed'),
-    ('ACCOUNT_CLOSED', 'Encerramento definitivo da conta', 'LOGIN',    true, NOW(), 'seed')
+    ('ACCOUNT_CLOSED', 'Encerramento definitivo da conta', 'LOGIN',    true, NOW(), 'seed'),
+    ('VACATION',       'Férias',                           'EMPLOYEE', true, NOW(), 'seed'),
+    ('MEDICAL_LEAVE',  'Licença médica',                   'EMPLOYEE', true, NOW(), 'seed')
 ON CONFLICT DO NOTHING;
--- REASON_INACTIVATE_ID gerados: 1=COMPANY, 2=EMPLOYEE, 3=LOGIN
+-- REASON_INACTIVATE_ID gerados: 1=COMPANY, 2=EMPLOYEE, 3=LOGIN, 4=VACATION/EMPLOYEE, 5=MEDICAL_LEAVE/EMPLOYEE
 
 -- Registro adicional INATIVO — usado no IT de "disable já inativo" (ver nota em SCOS_ADDRESS_TYPE).
--- REASON_INACTIVATE_ID gerado: 4.
+-- REASON_INACTIVATE_ID gerado: 6.
 INSERT INTO scos.SCOS_REASON_INACTIVATE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE, UPDATED_AT, USER_AT)
 VALUES ('ARCHIVED_REASON', 'Motivo de inativação arquivado (inativo p/ testes)', 'COMPANY', false, NOW(), 'seed')
 ON CONFLICT DO NOTHING;
 
 -- Registro adicional INATIVO/EMPLOYEE — usado no IT de "disable com motivo inativo/incompatível" (Story 2.2).
--- REASON_INACTIVATE_ID gerado: 5.
+-- REASON_INACTIVATE_ID gerado: 7.
 INSERT INTO scos.SCOS_REASON_INACTIVATE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE, UPDATED_AT, USER_AT)
 VALUES ('ARCHIVED_REASON', 'Motivo de inativação arquivado (inativo p/ testes)', 'EMPLOYEE', false, NOW(), 'seed')
 ON CONFLICT DO NOTHING;

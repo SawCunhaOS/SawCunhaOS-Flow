@@ -154,6 +154,8 @@ public enum ExceptionCodeError implements ExceptionCode {
     SCOS_EMPLOYEE_022("SCOS_EMPLOYEE_022", 404, "SCOS_TITLE_NOT_FOUND"),
     /** Motivo de mudança de cargo informado está inativo. HTTP 422. */
     SCOS_EMPLOYEE_023("SCOS_EMPLOYEE_023", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** expectedReturnDate informado, mas o motivo de inativação não é VACATION nem MEDICAL_LEAVE. HTTP 422. */
+    SCOS_EMPLOYEE_024("SCOS_EMPLOYEE_024", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
 
     // User / Login
     SCOS_USER_001("SCOS_USER_001", 502, "SCOS_TITLE_EXTERNAL_INTEGRATION_FAILURE"),

@@ -18,11 +18,13 @@ import br.com.sawcunhaos.organization.api.dto.Employee;
 import br.com.sawcunhaos.organization.api.dto.EmployeeCompany;
 import br.com.sawcunhaos.organization.api.dto.EmployeeContractType;
 import br.com.sawcunhaos.organization.api.dto.EmployeeStatus;
+import br.com.sawcunhaos.organization.api.dto.Employees;
 import br.com.sawcunhaos.organization.api.dto.Position;
 import br.com.sawcunhaos.organization.api.dto.Supervisor;
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.CompanyOutput;
 import br.com.sawcunhaos.organization.domain.corporate.department.dto.DepartmentOutput;
 import br.com.sawcunhaos.organization.domain.corporate.employee.dto.EmployeeOutput;
+import br.com.sawcunhaos.organization.domain.corporate.employee.internal.StatusEmployee;
 import br.com.sawcunhaos.organization.domain.corporate.position.dto.PositionOutput;
 
 final class EmployeeApiMapper {
@@ -47,6 +49,25 @@ final class EmployeeApiMapper {
                 .company(toApiEmployeeCompany(company))
                 .position(toApiPosition(position))
                 .build();
+    }
+
+    /** Monta o {@code Employees} resumido (UC-036, listagem) a partir da saída do domínio — sem company/position/supervisor aninhados. */
+    static Employees toApiEmployees(EmployeeOutput employee) {
+        return Employees.builder()
+                .id(employee.id())
+                .name(employee.name())
+                .nameTreatment(employee.nameTreatment())
+                .email(employee.email())
+                .status(toApiStatus(employee.status()))
+                .build();
+    }
+
+    static EmployeeStatus toApiStatus(StatusEmployee status) {
+        return status == null ? null : EmployeeStatus.valueOf(status.name());
+    }
+
+    static StatusEmployee toDomainStatus(EmployeeStatus status) {
+        return status == null ? null : StatusEmployee.valueOf(status.name());
     }
 
     private static Supervisor toApiSupervisor(EmployeeOutput supervisor) {

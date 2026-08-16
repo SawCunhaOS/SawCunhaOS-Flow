@@ -52,6 +52,8 @@ import br.com.sawcunhaos.organization.domain.corporate.position.specification.Po
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -82,6 +84,7 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_021;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_022;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_023;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_024;
 
 /**
  * Implementação de {@link EmployeeService} — regras de negócio da admissão do Funcionário que
@@ -93,6 +96,8 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 class EmployeeServiceBean implements EmployeeService {
 
     private static final String NEW_HIRE_REASON_CODE = "NEW_HIRE";
+    private static final String VACATION_REASON_CODE = "VACATION";
+    private static final String MEDICAL_LEAVE_REASON_CODE = "MEDICAL_LEAVE";
 
     private final EmployeeQueryRepository employeeQueryRepository;
     private final EmployeeStatusHistoryRepository employeeStatusHistoryRepository;
@@ -203,20 +208,33 @@ class EmployeeServiceBean implements EmployeeService {
      * @throws ScosException SCOS_EMPLOYEE_014 (404) se o {@code id} não existir.
      * @throws ScosException SCOS_EMPLOYEE_001 (422) se o Funcionário já estiver {@code INACTIVE}.
      * @throws ScosException SCOS_EMPLOYEE_015/016 (422) para motivo de inativação inativo/incompatível.
+     * @throws ScosException SCOS_EMPLOYEE_024 (422) se {@code expectedReturnDate} for informado com motivo diferente de VACATION/MEDICAL_LEAVE.
      * @throws ScosException SCOS_REASON_INACTIVATE_001 (404) se o motivo não existir.
      */
     @Override
     @Transactional(rollbackFor = ScosException.class)
-    public void inactivate(@NonNull Long id, @NonNull Long reasonInactivateId, String observation) {
+    public void inactivate(@NonNull Long id, @NonNull Long reasonInactivateId, String observation, LocalDate expectedReturnDate) {
         log.info("Inactivate Employee: {}", id);
         Employee employee = findEmployeeById(id);
-        validateReasonInactivate(reasonInactivateId);
+        ReasonInactivateOutput reason = validateReasonInactivateAndGet(reasonInactivateId);
+        assertExpectedReturnDateAllowed(reason, expectedReturnDate);
         String user = scosUserAuthentication.findUserAuthentication();
 
         EmployeeStatusHistory history = employee.inactivate(reasonInactivateId);
         history.setObservation(observation);
+        history.setExpectedReturnDate(expectedReturnDate);
         history.setUserAt(user);
         employeeStatusHistoryRepository.merge(history);
+    }
+
+    private void assertExpectedReturnDateAllowed(ReasonInactivateOutput reason, LocalDate expectedReturnDate) {
+        if (expectedReturnDate == null) {
+            return;
+        }
+        boolean isLeaveReason = VACATION_REASON_CODE.equals(reason.code()) || MEDICAL_LEAVE_REASON_CODE.equals(reason.code());
+        if (!isLeaveReason) {
+            throw new ScosException(SCOS_EMPLOYEE_024);
+        }
     }
 
     /**
@@ -321,6 +339,14 @@ class EmployeeServiceBean implements EmployeeService {
         return toEmployeeOutput(findEmployeeById(id));
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Page<EmployeeOutput> findAll(Long companyId, Long positionId, StatusEmployee status, @NonNull Pageable pageable) {
+        log.info("Find All Employees, CompanyId: {}, PositionId: {}, Status: {}", companyId, positionId, status);
+        return employeeQueryRepository.findAllFiltered(companyId, positionId, status, pageable)
+                .map(this::toEmployeeOutput);
+    }
+
     private ReasonPositionChange findActiveReasonPositionChangeOrThrow(Long reasonPositionChangeId) {
         ReasonPositionChange reason = reasonPositionChangeRepository.findById(reasonPositionChangeId)
                 .orElseThrow(() -> new ScosException(SCOS_EMPLOYEE_022));
@@ -336,7 +362,7 @@ class EmployeeServiceBean implements EmployeeService {
         );
     }
 
-    private void validateReasonInactivate(Long reasonInactivateId) {
+    private ReasonInactivateOutput validateReasonInactivateAndGet(Long reasonInactivateId) {
         ReasonInactivateOutput reason = reasonInactivateService.findById(reasonInactivateId);
         if (!reason.active()) {
             throw new ScosException(SCOS_EMPLOYEE_015);
@@ -344,6 +370,7 @@ class EmployeeServiceBean implements EmployeeService {
         if (reason.entityType() != EntityType.EMPLOYEE) {
             throw new ScosException(SCOS_EMPLOYEE_016);
         }
+        return reason;
     }
 
     private void validateReasonDisable(Long reasonDisableId) {

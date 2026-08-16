@@ -101,7 +101,9 @@ INSERT INTO scos.SCOS_REASON_INACTIVATE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE,
 VALUES
     ('COMPANY_CLOSED', 'Encerramento da empresa',          'COMPANY',  true, NOW(), 'seed'),
     ('RESIGNATION',    'Desligamento/demissão',            'EMPLOYEE', true, NOW(), 'seed'),
-    ('ACCOUNT_CLOSED', 'Encerramento definitivo da conta', 'LOGIN',    true, NOW(), 'seed')
+    ('ACCOUNT_CLOSED', 'Encerramento definitivo da conta', 'LOGIN',    true, NOW(), 'seed'),
+    ('VACATION',       'Férias',                           'EMPLOYEE', true, NOW(), 'seed'),
+    ('MEDICAL_LEAVE',  'Licença médica',                   'EMPLOYEE', true, NOW(), 'seed')
 ON CONFLICT DO NOTHING;
 -- REASON_INACTIVATE_ID gerados: 1=COMPANY, 2=EMPLOYEE, 3=LOGIN
 
