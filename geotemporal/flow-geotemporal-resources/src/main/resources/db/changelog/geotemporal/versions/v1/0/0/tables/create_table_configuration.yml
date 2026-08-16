@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_IFA_CONFIGURATION
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: INIT
+        - createTable:
+            tableName: IFA_CONFIGURATION
+            dbms: 'mysql, postgresql'
+            columns:
+              - column:
+                  name: CONFIGURATION_ID
+                  autoIncrement: true
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_IFA_CONFIGURATION
+                    nullable: false
+              - column:
+                  name: CONFIGURATION_KEY
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CONFIGURATION_VALUE
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: DEFAULT_VALUE
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+        - renameSequence:
+              oldSequenceName: ifa_configuration_configuration_id_seq
+              newSequenceName: SEQ_CONFIGURATION_ID
+        - addUniqueConstraint:
+            columnNames: CONFIGURATION_KEY
+            constraintName: UK_IFA_CONFIGURATION
+            tableName: IFA_CONFIGURATION
+            validate: true
+      rollback:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: IFA_CONFIGURATION

@@ -278,7 +278,7 @@ mvn verify  # inclui integração com Testcontainers (Postgres + Redis reais)
 
 - Testes unitários vivem junto de cada módulo (`domain`, `usecase`), mockando as dependências.
 - Testes de integração full-stack (`*ControllerTest`) vivem em `flow-organization-boot`, estendendo `ScosOrganizationTestUtil` (Testcontainers singleton).
-- `PermissionsConsistencyTest` (`flow-organization-infrastructure`) garante que toda permissão em `x-authorize` do contrato OpenAPI tem constante correspondente em `ScosOrganizationPermission` — evita endpoint com `403` permanente por permissão nunca cadastrada.
+- `PermissionsConsistencyTest` (`flow-organization-infrastructure`) garante que toda permissão em `x-authorize` do contrato OpenAPI tem constante correspondente em `ScosGeotemporalPermission` — evita endpoint com `403` permanente por permissão nunca cadastrada.
 
 ---
 

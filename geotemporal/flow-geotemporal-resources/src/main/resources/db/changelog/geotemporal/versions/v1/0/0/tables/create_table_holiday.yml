@@ -1,0 +1,88 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_IFA_HOLIDAY
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: INIT
+        - createTable:
+            tableName: IFA_HOLIDAY
+            dbms: 'postgresql'
+            columns:
+              - column:
+                  name: HOLIDAY_ID
+                  autoIncrement: true
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_IFA_HOLIDAY
+                    nullable: false
+              - column:
+                  name: NAME
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: TYPE
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: FROM_TIME
+                  autoIncrement: false
+                  type: TIME
+                  constraints:
+                    nullable: true
+              - column:
+                  name: OPTIONAL
+                  autoIncrement: false
+                  type: ${typeBoolean}
+                  defaultValue: ${defaultValueBoolean}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: AUTOMATIC_UPDATE
+                  autoIncrement: false
+                  type: ${typeBoolean}
+                  defaultValue: ${trueValueBoolean}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DAY_ID
+                  autoIncrement: false
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_DAY_ID_IFA_HOLIDAY
+                    validateForeignKey: true
+                    referencedColumnNames: DAY_ID
+                    referencedTableName: IFA_DAY
+              - column:
+                  name: FIXED_HOLIDAY_ID
+                  autoIncrement: false
+                  type: BIGINT
+              - column:
+                  name: NATIONAL_HOLIDAY
+                  autoIncrement: false
+                  type: ${typeBoolean}
+                  defaultValue: ${defaultValueBoolean}
+        - renameSequence:
+              oldSequenceName: ifa_holiday_holiday_id_seq
+              newSequenceName: SEQ_HOLIDAY_ID
+        - addUniqueConstraint:
+            columnNames: DAY_ID
+            constraintName: UK_DAY_IFA_HOLIDAY
+            tableName: IFA_DAY
+            validate: true
+      rollback:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: IFA_HOLIDAY

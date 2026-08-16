@@ -1,0 +1,54 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_IFA_REQUEST_PARAMETER
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: INIT
+        - createTable:
+            tableName: IFA_REQUEST_PARAMETER
+            dbms: 'postgresql'
+            columns:
+              - column:
+                  name: REQUEST_PARAMETER_ID
+                  autoIncrement: true
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_IFA_REQUEST_PARAMETER
+                    nullable: false
+              - column:
+                  name: TYPE_PARAMETER
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: VALUE_PARAMETER
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: TYPE_VALUE
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: REQUEST_ID
+                  autoIncrement: false
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_REQUESTS_ID_IFA_REQUEST_PARAMETER
+                    validateForeignKey: true
+                    referencedColumnNames: REQUEST_ID
+                    referencedTableName: IFA_REQUEST
+        - renameSequence:
+              oldSequenceName: ifa_request_parameter_request_parameter_id_seq
+              newSequenceName: SEQ_REQUEST_PARAMETER_ID
+      rollback:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: IFA_REQUEST_PARAMETER

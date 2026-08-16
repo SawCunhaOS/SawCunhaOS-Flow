@@ -1,0 +1,58 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert_configuration
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: INIT
+        - insert:
+            dbms: 'postgresql'
+            tableName: IFA_CONFIGURATION
+            columns:
+              - column:
+                  name: CONFIGURATION_KEY
+                  value: 'LIMIT_FORWARD_DAYS_YEARS'
+              - column:
+                  name: DESCRIPTION
+                  value: 'Indicates the Limit for creating the days forward in years'
+              - column:
+                  name: CONFIGURATION_VALUE
+                  value: '50'
+              - column:
+                  name: DEFAULT_VALUE
+                  value: '50'
+        - insert:
+            dbms: 'postgresql'
+            tableName: IFA_CONFIGURATION
+            columns:
+              - column:
+                  name: CONFIGURATION_KEY
+                  value: 'LIMIT_BACK_DAYS_YEARS'
+              - column:
+                  name: DESCRIPTION
+                  value: 'Indicates the Limit to create the days back in years'
+              - column:
+                  name: CONFIGURATION_VALUE
+                  value: '2'
+              - column:
+                  name: DEFAULT_VALUE
+                  value: '2'
+        - insert:
+            dbms: 'postgresql'
+            tableName: IFA_CONFIGURATION
+            columns:
+              - column:
+                  name: CONFIGURATION_KEY
+                  value: 'COUNTRY_DEFAULT'
+              - column:
+                  name: DESCRIPTION
+                  value: 'Default Application Country'
+              - column:
+                  name: CONFIGURATION_VALUE
+                  value: '1'
+              - column:
+                  name: DEFAULT_VALUE
+                  value: '1'
+      rollback:
+        - sql:
+            sql: TRUNCATE TABLE IFA_CONFIGURATION

@@ -1,0 +1,76 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_IFA_DISTRICT
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: INIT
+        - createTable:
+            tableName: IFA_DISTRICT
+            dbms: 'mysql, postgresql'
+            columns:
+              - column:
+                  name: DISTRICT_ID
+                  autoIncrement: true
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_IFA_DISTRICT
+                    nullable: false
+              - column:
+                  name: NAME
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  remarks: Represents the name of the District
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ACRONYM
+                  autoIncrement: false
+                  type: VARCHAR(100)
+                  remarks: Represents the Acronym of the District
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  remarks: A brief description for the line or additional information
+                  constraints:
+                    nullable: true
+              - column:
+                  name: CODE
+                  autoIncrement: false
+                  type: INT
+                  remarks: 'Represents the District Code (Ex Sao Jose: 1234)'
+                  constraints:
+                    nullable: true
+              - column:
+                  name: CITY_ID
+                  autoIncrement: false
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_STATE_ID_IFA_DISTRICT
+                    validateForeignKey: true
+                    referencedColumnNames: CITY_ID
+                    referencedTableName: IFA_CITY
+              - column:
+                  name: MIGRATION_ID
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  remarks: Informs the migration id
+                  constraints:
+                    nullable: true
+        - renameSequence:
+              oldSequenceName: ifa_district_district_id_seq
+              newSequenceName: SEQ_DISTRICT_ID
+        - addUniqueConstraint:
+            columnNames: CODE
+            constraintName: UK_CODE_IFA_DISTRICT
+            tableName: IFA_DISTRICT
+            validate: true
+      rollback:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: IFA_DISTRICT

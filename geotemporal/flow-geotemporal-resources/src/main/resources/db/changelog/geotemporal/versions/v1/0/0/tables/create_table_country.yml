@@ -1,0 +1,81 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_IFA_COUNTRY
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: CREATE_COUNTRY
+        - createTable:
+            tableName: IFA_COUNTRY
+            dbms: 'mysql, postgresql'
+            columns:
+              - column:
+                  name: COUNTRY_ID
+                  autoIncrement: true
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_IFA_COUNTRY
+                    nullable: false
+              - column:
+                  name: NAME
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  remarks: Represents the name of the country
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ACRONYM
+                  autoIncrement: false
+                  type: VARCHAR(15)
+                  remarks: Represents the Acronym of the Country
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CODE
+                  autoIncrement: false
+                  type: INT
+                  remarks: 'Represents the Country Code (Ex Brazil: 55)'
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  remarks: A brief description for the line or additional information
+                  constraints:
+                    nullable: true
+              - column:
+                  name: MIGRATION_ID
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  remarks: Informs the migration id
+                  constraints:
+                    nullable: true
+        - renameSequence:
+              oldSequenceName: ifa_country_country_id_seq
+              newSequenceName: SEQ_COUNTRY_ID
+        - alterSequence:
+              sequenceName: SEQ_COUNTRY_ID
+              startValue: 1
+              incrementBy: 1
+              minValue: 1
+        - addUniqueConstraint:
+            columnNames: NAME
+            constraintName: UK_NAME_IFA_COUNTRY
+            tableName: IFA_COUNTRY
+            validate: true
+        - addUniqueConstraint:
+            columnNames: ACRONYM
+            constraintName: UK_ACRONYM_IFA_COUNTRY
+            tableName: IFA_COUNTRY
+            validate: true
+        - addUniqueConstraint:
+            columnNames: CODE
+            constraintName: UK_CODE_IFA_COUNTRY
+            tableName: IFA_COUNTRY
+            validate: true
+      rollback:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: IFA_COUNTRY

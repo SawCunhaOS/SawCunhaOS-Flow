@@ -21,7 +21,7 @@ Para que todo Funcionário admitido nesse Cargo já nasça com uma jornada padr�
 3. **Given** um `positionId` que não existe **When** `GET`/`POST /v1/positions/{positionId}/work-schedule` é chamado **Then** o sistema rejeita com `404 SCOS_POSITION_001` — reaproveitado de `PositionService.findPositionById`, **sem** criar código novo para isso.
 4. **Given** já existe um registro para o par `(positionId, dayOfWeek)` **When** RH tenta `POST` outro para o mesmo par **Then** o sistema rejeita com `409` e um código novo (`SCOS_POSITION_WORK_SCHEDULE_002`).
 5. **Given** não existe registro para o par `(positionId, dayOfWeek)` **When** RH tenta `PUT`/`DELETE /v1/positions/{positionId}/work-schedule/{dayOfWeek}` **Then** o sistema rejeita com `404` e um código novo (`SCOS_POSITION_WORK_SCHEDULE_001`) — cobre tanto `positionId` inválido quanto dia não cadastrado, é uma checagem só (ver Dev Notes).
-6. **Given** o contrato OpenAPI dos 4 endpoints (`getAllPositionWorkSchedule`/`createPositionWorkSchedule`/`updatePositionWorkSchedule`/`deletePositionWorkSchedule`), o enum `DayOfWeek` compartilhado, as 4 permissões (`GET`/`CREATE`/`UPDATE`/`DELETE_POSITION_WORK_SCHEDULE`) e o schema Liquibase de `SCOS_POSITION_WORK_SCHEDULE` **já existirem publicados hoje** **When** esta story é implementada **Then** cria **somente** as camadas `domain`/`usecase`/`api` (Use Case + Delegate do zero, como o épico pede) — **nenhuma** mudança em `etc/api/organization/*.yml`, `ScosOrganizationPermission`, ou `flow-organization-resources` (Liquibase).
+6. **Given** o contrato OpenAPI dos 4 endpoints (`getAllPositionWorkSchedule`/`createPositionWorkSchedule`/`updatePositionWorkSchedule`/`deletePositionWorkSchedule`), o enum `DayOfWeek` compartilhado, as 4 permissões (`GET`/`CREATE`/`UPDATE`/`DELETE_POSITION_WORK_SCHEDULE`) e o schema Liquibase de `SCOS_POSITION_WORK_SCHEDULE` **já existirem publicados hoje** **When** esta story é implementada **Then** cria **somente** as camadas `domain`/`usecase`/`api` (Use Case + Delegate do zero, como o épico pede) — **nenhuma** mudança em `etc/api/organization/*.yml`, `ScosGeotemporalPermission`, ou `flow-organization-resources` (Liquibase).
 7. **Given** o CRUD de `EmployeeWorkSchedule` (mesmo padrão, sob `/v1/employees/{employeeId}/work-schedule`, contrato **também já publicado** em `ScosOrganization_Employee.yml`) não pertencer a nenhuma story do sprint atual **e** a cópia do template para o Funcionário na admissão pertencer à Story 2.1 **When** esta story é implementada **Then** nenhum dos dois é tocado — só `PositionWorkSchedule`.
 
 ## Tasks / Subtasks
@@ -306,7 +306,7 @@ Para que todo Funcionário admitido nesse Cargo já nasça com uma jornada padr�
 - **`shared/exception/ExceptionCodeError.java` + `scos_message_organization[_en].properties`**: 3 códigos novos (`SCOS_POSITION_WORK_SCHEDULE_001/002/003`).
 - **`usecase/corporate/position/`**: 4 pares Use Case+Bean novos + extensão de `PositionApiMapper.java` (já existe).
 - **`api/delegate/position/PositionDelegate.java`** (já existe, 4 `@Override` novos).
-- **Nenhuma mudança em**: `etc/api/organization/*.yml`, `ScosOrganizationPermission`, Liquibase (`flow-organization-resources`), nada em `Employee`.
+- **Nenhuma mudança em**: `etc/api/organization/*.yml`, `ScosGeotemporalPermission`, Liquibase (`flow-organization-resources`), nada em `Employee`.
 
 ### Testing Standards
 
@@ -369,7 +369,7 @@ Claude Sonnet 5 (claude-sonnet-5)
 - 3 códigos de erro novos em módulo próprio (`SCOS_POSITION_WORK_SCHEDULE_001/002/003`), não emendados em `SCOS_POSITION_00X` — segue o padrão já usado por outros sub-recursos (`ADDRESS_TYPE`, `CNAE`, etc.).
 - Colisão de nomes deliberada entre `domain.internal.PositionWorkSchedule`/`DayOfWeek` e `api.dto.PositionWorkSchedule`/`DayOfWeek` resolvida importando só um lado por arquivo (nunca os dois via `import` simples) — mesmo princípio já usado pra `Position`/`Company`. `Update`/`DeleteUseCase` recebem `api.dto.DayOfWeek` (o que o Delegate gerado entrega) e convertem para `domain.internal.DayOfWeek` via FQN inline.
 - `CreatePositionWorkScheduleUseCase` retorna `Long` (não o objeto mapeado) porque o schema `PositionWorkSchedule` não expõe `id` — decisão de design já tomada (chave natural do sub-recurso é `(positionId, dayOfWeek)`).
-- Guarda de escopo (Task 8) confirmada via `git status`: zero mudança em `etc/api/organization/*.yml`, `ScosOrganizationPermission`, Liquibase ou `Employee` — só `domain`/`usecase`/`api`/`shared` + testes.
+- Guarda de escopo (Task 8) confirmada via `git status`: zero mudança em `etc/api/organization/*.yml`, `ScosGeotemporalPermission`, Liquibase ou `Employee` — só `domain`/`usecase`/`api`/`shared` + testes.
 - Item opcional da Task 8 (seed de `SCOS_RESOURCE` para as 4 permissões) não aplicado — não bloqueante, autorização nos testes vem do enum Java via WireMock, confirmado nos 385 testes de integração passando.
 
 ### File List

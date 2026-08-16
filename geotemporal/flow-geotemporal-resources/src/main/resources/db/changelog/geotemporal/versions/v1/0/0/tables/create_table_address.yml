@@ -1,0 +1,133 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_IFA_ADDRESS
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: INIT
+        - createTable:
+            tableName: IFA_ADDRESS
+            dbms: 'mysql, postgresql'
+            columns:
+              - column:
+                  name: ADDRESS_ID
+                  autoIncrement: true
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_IFA_ADDRESS
+                    nullable: false
+              - column:
+                  name: ZIP_CODE
+                  autoIncrement: false
+                  type: VARCHAR(15)
+                  remarks: Represents the Zip code of the Address
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UNIQUE_ZIP_CODE
+                  autoIncrement: false
+                  type: ${typeBoolean}
+                  defaultValue: ${defaultValueBoolean}
+                  remarks: Informs if the zip code is unique
+                  constraints:
+                    nullable: false
+              - column:
+                  name: STREET_TYPE_ID
+                  autoIncrement: false
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_STREET_TYPE_ID_IFA_ADDRESS
+                    validateForeignKey: true
+                    referencedColumnNames: STREET_TYPE_ID
+                    referencedTableName: IFA_STREET_TYPE
+              - column:
+                  name: STREET
+                  autoIncrement: false
+                  type: VARCHAR
+                  remarks: Represents the Street of the Address
+                  constraints:
+                    nullable: false
+              - column:
+                  name: COMPLEMENT
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  remarks: A brief description for the line or additional information
+                  constraints:
+                    nullable: true
+              - column:
+                  name: GEOLOCATION
+                  autoIncrement: false
+                  type: ${POINTType}
+                  remarks: Informs the latitude and longitude of the Street
+                  constraints:
+                    nullable: true
+              - column:
+                  name: USER_EDITING
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  remarks: Informs the last user who edited the address
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DATE_EDITING
+                  autoIncrement: false
+                  type: DATETIME
+                  remarks: Informs the date of the last edition of the address ...
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DISTRICT_ID
+                  autoIncrement: false
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_DISTRICT_ID_IFA_ADDRESS
+                    validateForeignKey: true
+                    referencedColumnNames: DISTRICT_ID
+                    referencedTableName: IFA_DISTRICT
+              - column:
+                  name: MIGRATION_ID
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  remarks: Informs the migration id
+                  constraints:
+                    nullable: true
+        - renameSequence:
+            oldSequenceName: ifa_address_address_id_seq
+            newSequenceName: SEQ_ADDRESS_ID
+        - createIndex:
+            clustered: true
+            tableName: IFA_ADDRESS
+            columns:
+              - column:
+                  descending: true
+                  name: ZIP_CODE
+            indexName: IDX_ZIP_CODE_IFA_ADDRESS
+        - createIndex:
+            clustered: true
+            tableName: IFA_ADDRESS
+            columns:
+              - column:
+                  descending: true
+                  name: ZIP_CODE
+              - column:
+                  descending: true
+                  name: UNIQUE_ZIP_CODE
+            indexName: IDX_ZIP_CODE_UNQ_ZIP_CODE_IFA_A
+        - createIndex:
+            clustered: true
+            tableName: IFA_ADDRESS
+            columns:
+              - column:
+                  descending: true
+                  name: ZIP_CODE
+              - column:
+                  descending: true
+                  name: STREET
+            indexName: IDX_STREET_ZIP_CODE_IFA_ADDRESS
+      rollback:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: IFA_ADDRESS

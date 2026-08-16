@@ -163,7 +163,7 @@ Para que a operação nunca deixe o ISP sem empresa raiz ativa nem crie filial �
 - [x] Task 8: Guarda de escopo (AC: 7)
   - [x] **Não** alterar `etc/api/organization/ScosOrganization_Company.yml` — os 4 endpoints e o `$ref` genérico de `4XX` já cobrem os códigos novos, sem necessidade de documentar cada código individualmente (mesmo padrão de `SCOS_COMPANY_007`).
   - [x] **Não** criar Use Case novo nem alterar `CompanyDelegate` — as guardas vivem inteiramente em `CompanyServiceBean` (camada `domain`), a Story 1.2 já resolve o mapeamento rota→Use Case→`CompanyService`.
-  - [x] **Não** adicionar permissão nova em `ScosOrganizationPermission` — `DISABLE_COMPANY`/`BLOCK_COMPANY` já existem e já cobrem essas rotas.
+  - [x] **Não** adicionar permissão nova em `ScosGeotemporalPermission` — `DISABLE_COMPANY`/`BLOCK_COMPANY` já existem e já cobrem essas rotas.
   - [x] **Não** implementar os 4 métodos de transição da Story 1.2 do zero — se ao abrir esta story eles não existirem, é sinal de que a Story 1.2 não foi concluída (ver Task 0).
 
 ## Dev Notes
@@ -271,7 +271,7 @@ Claude Sonnet 5 (claude-sonnet-5)
 - Ordem das guardas em `inactivate`/`disable`: estruturais desta story (005/006/018) rodam **antes** da validação de motivo (012–017, Story 1.2) — falha rápido na regra mais fundamental.
 - Regressão conhecida e esperada corrigida (Task 7): o teste de `block` da Story 1.2 usava a única Empresa seed (`SEEDED_ID`) — com `SCOS_COMPANY_006` isso passou a ser rejeitado; corrigido criando uma 2ª empresa `ACTIVE` antes do `block`. 3 cenários novos de integração adicionados (`005`, `006`, `018`), reaproveitando `SEEDED_ID` e helpers já existentes no arquivo.
 - Reaproveitadas 2 constantes de CNPJ que estavam declaradas mas sem uso no arquivo (`CNPJ_UPDATE`→`CNPJ_SECOND_ACTIVE`, `CNPJ_DUP_A`→`CNPJ_FILIAL_ACTIVE_UNDER_SEEDED`) em vez de inventar CNPJs novos sem checksum verificado.
-- Guarda de escopo (Task 8) confirmada via `git status`: zero mudança em YAML, Use Case, `CompanyDelegate` ou `ScosOrganizationPermission` — só `domain`/`shared` + 2 arquivos de teste em `boot`.
+- Guarda de escopo (Task 8) confirmada via `git status`: zero mudança em YAML, Use Case, `CompanyDelegate` ou `ScosGeotemporalPermission` — só `domain`/`shared` + 2 arquivos de teste em `boot`.
 
 ### File List
 

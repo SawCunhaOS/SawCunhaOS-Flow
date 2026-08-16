@@ -271,7 +271,7 @@ LF, `insert_final_newline`, UTF-8. `.java`/`pom.xml`: 4 espaços. `.yml`: 2 espa
 4. Use Case (interface + Bean package-private) em `usecase/.../<bc>/<agregado>/`
 5. Domain service + entidade em `domain/.../<bc>/<agregado>/`
 6. `ExceptionCodeError` + mensagens PT-BR/EN em `shared`
-7. Se novo `x-authorize`: constante em `ScosOrganizationPermission` + descrição em `messages_permission.properties` **e** `_en` (os 3 são 1:1) → validar com `PermissionsConsistencyTest`
+7. Se novo `x-authorize`: constante em `ScosGeotemporalPermission` + descrição em `messages_geotemporal_permission.properties` **e** `_en` (os 3 são 1:1) → validar com `PermissionsConsistencyTest`
 8. Changelog Liquibase em `boot` (com rollback)
 9. Teste unitário (`usecase`/`domain`) + integração (`boot`)
 
@@ -348,9 +348,9 @@ Hoje só se roda teste com `-Denforcer.skip=true`. **Não use esse flag para "re
 #### Segurança
 
 - Endpoint novo **sem** `x-authorize` no YAML fica sem `@PreAuthorize` → **exposto**. Guardado por `PermissionsConsistencyTest`.
-- `x-authorize` só é efetivo se a constante existir em `ScosOrganizationPermission` E o papel estiver no realm do Keycloak (`Scos_Realm.json`) e no seed do DB (`etc/database/seed_data.sql`). Falta de sincronia = 403 em runtime, silencioso em compile.
+- `x-authorize` só é efetivo se a constante existir em `ScosGeotemporalPermission` E o papel estiver no realm do Keycloak (`Scos_Realm.json`) e no seed do DB (`etc/database/seed_data.sql`). Falta de sincronia = 403 em runtime, silencioso em compile.
 - `PermissionsConsistencyTest` guarda **nome**, não propagação: ele prova que a constante existe, NÃO que o papel chegou ao Keycloak/seed. Essa parte segue manual.
-- Permissão nova = 3 lugares, sempre: constante no enum + entrada em `messages_permission.properties` **e** `_en`. Os três são 1:1 (129/129/129 hoje).
+- Permissão nova = 3 lugares, sempre: constante no enum + entrada em `messages_geotemporal_permission.properties` **e** `_en`. Os três são 1:1 (129/129/129 hoje).
 - PII: mascarar em log via `scos-foundation-privacy` (`%mask`/`%maskmdc`). Nunca logar documento/senha cru. Entidade com PII → `@Auditable` + `auditEncryptFields`.
 - Segredo só via Jasypt/env. Nunca literal em YAML ou commit.
 

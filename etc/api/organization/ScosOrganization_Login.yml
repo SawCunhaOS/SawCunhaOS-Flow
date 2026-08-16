@@ -241,7 +241,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [UPDATE_LOGIN_STATUS]
+      x-authorize: [BLOCK_LOGIN]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_BLOCK_LOGIN
         ttl: 1
@@ -272,7 +272,7 @@ paths:
           $ref: './ScosComponents.yml#/components/responses/4XX'
         '5XX':
           $ref: './ScosComponents.yml#/components/responses/5XX'
-      x-authorize: [UPDATE_LOGIN_STATUS]
+      x-authorize: [UNBLOCK_LOGIN]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UNBLOCK_LOGIN
         ttl: 1
@@ -424,7 +424,7 @@ paths:
     post:
       tags: [Login]
       summary: Create employee login
-      description: UC-054 - Cria login tipo EMPLOYEE vinculado ao funcionário. Inicia a Saga Keycloak com atributos de empresa e filial
+      description: UC-054 - Cria login tipo EMPLOYEE vinculado ao funcionário, em PENDING_APPROVAL. A Saga Keycloak só dispara quando a aprovação leva o Login a ACTIVE
       operationId: createEmployeeLogin
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -841,6 +841,7 @@ components:
     LoginStatus:
       type: string
       enum:
+        - PENDING_APPROVAL
         - ACTIVE
         - BLOCKED
         - INACTIVE
@@ -1011,22 +1012,22 @@ components:
           type: integer
           format: int64
           x-required-message: SCOS_VALIDATION_003
+        # Tipo EMPLOYEE deve ser criado via POST /v1/employees/{employeeId}/logins — restrição de negócio
+        # (Story 4.1), não de contrato. $ref reaproveita o schema LoginType (EMPLOYEE/EXTERNAL/SERVICE)
+        # em vez de duplicar um enum inline: enum inline como propriedade (não como schema nomeado)
+        # não gera corretamente com os templates mustache deste projeto (achado ao ligar este spec
+        # ao build pela 1ª vez, nesta story — TypeEnum não era emitido).
         type:
-          type: string
-          description: Tipo EMPLOYEE deve ser criado via POST /v1/employees/{employeeId}/logins
-          enum:
-            - EXTERNAL
-            - SERVICE
-          x-required-message: SCOS_VALIDATION_003
+          $ref: '#/components/schemas/LoginType'
         reasonActivateId:
           type: integer
           format: int64
           description: Motivo da criação (primeira linha de status ACTIVE em LoginStatusHistory). Referencia ReasonActivate com entityType=LOGIN
           x-required-message: SCOS_VALIDATION_003
     CreateEmployeeLoginRequest:
-      required: [login, profileId, reasonActivateId]
+      required: [login, profileId]
       type: object
-      description: Para funcionários - o tipo é automaticamente EMPLOYEE
+      description: Para funcionários - o tipo é automaticamente EMPLOYEE. Login nasce em PENDING_APPROVAL; motivo de ativação só existe quando a aprovação é decidida.
       properties:
         login:
           type: string
@@ -1036,11 +1037,6 @@ components:
         profileId:
           type: integer
           format: int64
-          x-required-message: SCOS_VALIDATION_003
-        reasonActivateId:
-          type: integer
-          format: int64
-          description: Motivo da criação (primeira linha de status ACTIVE em LoginStatusHistory). Referencia ReasonActivate com entityType=LOGIN
           x-required-message: SCOS_VALIDATION_003
     UpdateLoginRequest:
       required: [login]

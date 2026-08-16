@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-20
-last_updated: 2026-08-16
+last_updated: 2026-08-16 (3-1 pronta para review)
 project: SawCunhaOS-Organization
 project_key: NOKEY
 tracking_system: file-system
@@ -71,17 +71,19 @@ development_status:
   2-6-separar-predicates-repository: review
   epic-2-retrospective: optional
 
-  epic-3: backlog
-  3-1-criacao-login-vinculado-funcionario: backlog
-  3-2-cadeia-aprovacao-criacao-login: backlog
-  3-3-aprovacao-reativacao-login: backlog
-  3-4-perfis-recursos-aprovacao-mudanca-perfil: backlog
-  3-5-retorno-automatico-assistido-licenca-ferias: backlog
+  epic-3: in-progress
+  3-1-criacao-login-vinculado-funcionario: review
+  3-2-cadeia-aprovacao-criacao-login: ready-for-dev
+  3-3-aprovacao-reativacao-login: ready-for-dev
+  3-4-perfis-recursos-aprovacao-mudanca-perfil: ready-for-dev
+  3-5-retorno-automatico-assistido-licenca-ferias: ready-for-dev
+  3-6-aprovacao-criacao-alteracao-perfil-recursos: ready-for-dev
+  3-7-cascade-status-funcionario-login: ready-for-dev
   epic-3-retrospective: optional
 
-  epic-4: backlog
-  4-1-criacao-login-sistema-servico: backlog
-  4-2-criacao-edicao-perfil-aprovacao: backlog
+  epic-4: in-progress
+  4-1-criacao-login-sistema-servico: ready-for-dev
+  4-2-criacao-edicao-perfil-aprovacao: backlog # redundante com a Story 3.6 (Epic 3) — não implementar, ver epics.md
   epic-4-retrospective: optional
 
   epic-5: backlog
@@ -96,7 +98,7 @@ development_status:
   6-2-reativacao-nao-restaura-sessoes-antigas: backlog
   epic-6-retrospective: optional
 
-  epic-7: backlog
+  epic-7: in-progress
   7-1-consulta-empresa-historico-hierarquia-filiais: backlog
   7-2-contato-endereco-empresa: backlog
   7-3-cnae-secundario-empresa: backlog
@@ -105,4 +107,5 @@ development_status:
   7-6-transferencia-funcionario: backlog
   7-7-contato-endereco-funcionario: backlog
   7-8-jornada-trabalho-funcionario-api-completa: backlog
+  7-9-corrigir-n1-listagem-empresa-cargo: ready-for-dev
   epic-7-retrospective: optional

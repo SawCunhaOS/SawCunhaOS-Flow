@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_IFA_DAY_TAG
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: INIT
+        - createTable:
+            tableName: IFA_DAY_TAG
+            dbms: 'postgresql'
+            columns:
+              - column:
+                  name: DAY_ID
+                  autoIncrement: false
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_DAY_ID_IFA_DAY_TAG
+                    validateForeignKey: true
+                    referencedColumnNames: DAY_ID
+                    referencedTableName: IFA_DAY
+              - column:
+                  name: TAG_ID
+                  autoIncrement: false
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_TAG_ID_IFA_DAY_TAG
+                    validateForeignKey: true
+                    referencedColumnNames: TAG_ID
+                    referencedTableName: IFA_TAG
+        - addPrimaryKey:
+            columnNames: DAY_ID, TAG_ID
+            constraintName: PK_DAY_TAG
+            tableName: IFA_DAY_TAG
+            validate: true
+      rollback:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: IFA_DAY_TAG

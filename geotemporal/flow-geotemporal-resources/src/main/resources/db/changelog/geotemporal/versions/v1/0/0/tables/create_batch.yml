@@ -1,0 +1,300 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Samuel.Cunha
+      changes:
+        - createTable:
+            tableName: IFA_BATCH_JOB_INSTANCE
+            columns:
+              - column:
+                  name: JOB_INSTANCE_ID
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: VERSION
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: JOB_NAME
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: JOB_KEY
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: IFA_BATCH_JOB_INSTANCE
+            columnNames: JOB_NAME, JOB_KEY
+            constraintName: UK_IFA_BATCH_JOB_INSTANCE_JOB_NAME_JOB_KEY
+  
+  - changeSet:
+      id: 2
+      author: Samuel.Cunha
+      changes:
+        - createTable:
+            tableName: IFA_BATCH_JOB_EXECUTION
+            columns:
+              - column:
+                  name: JOB_EXECUTION_ID
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: VERSION
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: JOB_INSTANCE_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATE_TIME
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: START_TIME
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: END_TIME
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: STATUS
+                  type: VARCHAR(10)
+              - column:
+                  name: EXIT_CODE
+                  type: VARCHAR(2500)
+              - column:
+                  name: EXIT_MESSAGE
+                  type: VARCHAR(2500)
+              - column:
+                  name: LAST_UPDATED
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: IFA_BATCH_JOB_EXECUTION
+            baseColumnNames: JOB_INSTANCE_ID
+            referencedTableName: IFA_BATCH_JOB_INSTANCE
+            referencedColumnNames: JOB_INSTANCE_ID
+            constraintName: FK_IFA_BATCH_JOB_EXECUTION_JOB_INSTANCE
+  - changeSet:
+      id: 3
+      author: Samuel.Cunha
+      changes:
+        - createTable:
+            tableName: IFA_BATCH_JOB_EXECUTION_PARAMS
+            columns:
+              - column:
+                  name: JOB_EXECUTION_ID
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: PARAMETER_NAME
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PARAMETER_TYPE
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: PARAMETER_VALUE
+                  type: VARCHAR(2500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: IDENTIFYING
+                  type: CHAR(1)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: IFA_BATCH_JOB_EXECUTION_PARAMS
+            baseColumnNames: JOB_EXECUTION_ID
+            referencedTableName: IFA_BATCH_JOB_EXECUTION
+            referencedColumnNames: JOB_EXECUTION_ID
+            constraintName: FK_IFA_BATCH_JOB_EXECUTION_PARAMS_JOB_EXECUTION_ID
+  
+  - changeSet:
+      id: 4
+      author: Samuel.Cunha
+      changes:
+        - createTable:
+            tableName: IFA_BATCH_STEP_EXECUTION
+            columns:
+              - column:
+                  name: STEP_EXECUTION_ID
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: VERSION
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: JOB_EXECUTION_ID
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: STEP_NAME
+                  type: VARCHAR(1000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATE_TIME
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: START_TIME
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: END_TIME
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: STATUS
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: COMMIT_COUNT
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: READ_COUNT
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: FILTER_COUNT
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: WRITE_COUNT
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: READ_SKIP_COUNT
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: WRITE_SKIP_COUNT
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: PROCESS_SKIP_COUNT
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: ROLLBACK_COUNT
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: EXIT_CODE
+                  type: VARCHAR(2500)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: EXIT_MESSAGE
+                  type: VARCHAR(2500)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: LAST_UPDATED
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+        - addForeignKeyConstraint:
+            baseTableName: IFA_BATCH_STEP_EXECUTION
+            baseColumnNames: JOB_EXECUTION_ID
+            referencedTableName: IFA_BATCH_JOB_EXECUTION
+            referencedColumnNames: JOB_EXECUTION_ID
+            constraintName: FK_IFA_BATCH_STEP_EXECUTION_JOB_EXECUTION
+  
+  - changeSet:
+      id: 5
+      author: Samuel.Cunha
+      changes:
+        - createTable:
+            tableName: IFA_BATCH_JOB_EXECUTION_CONTEXT
+            columns:
+              - column:
+                  name: JOB_EXECUTION_ID
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: SHORT_CONTEXT
+                  type: VARCHAR(250)
+              - column:
+                  name: SERIALIZED_CONTEXT
+                  type: TEXT
+        - addForeignKeyConstraint:
+            baseTableName: IFA_BATCH_JOB_EXECUTION_CONTEXT
+            baseColumnNames: JOB_EXECUTION_ID
+            referencedTableName: IFA_BATCH_JOB_EXECUTION
+            referencedColumnNames: JOB_EXECUTION_ID
+            constraintName: FK_IFA_BATCH_JOB_EXECUTION_CONTEXT_JOB_EXECUTION
+  
+  - changeSet:
+      id: 6
+      author: Samuel.Cunha
+      changes:
+        - createTable:
+            tableName: IFA_BATCH_STEP_EXECUTION_CONTEXT
+            columns:
+              - column:
+                  name: STEP_EXECUTION_ID
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: SHORT_CONTEXT
+                  type: VARCHAR(2500)
+              - column:
+                  name: SERIALIZED_CONTEXT
+                  type: TEXT
+        - addForeignKeyConstraint:
+            baseTableName: IFA_BATCH_STEP_EXECUTION_CONTEXT
+            baseColumnNames: STEP_EXECUTION_ID
+            referencedTableName: IFA_BATCH_STEP_EXECUTION
+            referencedColumnNames: STEP_EXECUTION_ID
+            constraintName: FK_IFA_BATCH_STEP_EXECUTION_CONTEXT_STEP_EXECUTION
+        
+        - createSequence:
+            sequenceName: IFA_BATCH_STEP_EXECUTION_SEQ
+            startValue: 1
+            incrementBy: 1
+        - createSequence:
+            sequenceName: IFA_BATCH_JOB_EXECUTION_SEQ
+            startValue: 1
+            incrementBy: 1
+        - createSequence:
+            sequenceName: IFA_BATCH_JOB_SEQ
+            startValue: 1
+            incrementBy: 1

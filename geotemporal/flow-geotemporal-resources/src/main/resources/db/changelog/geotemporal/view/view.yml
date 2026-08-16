@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260716-Samuel.Cunha-001
+      author: Samuel Cunha
+      changes:
+        - sqlFile:
+            path: address_view.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: true
+            endDelimiter: ";"

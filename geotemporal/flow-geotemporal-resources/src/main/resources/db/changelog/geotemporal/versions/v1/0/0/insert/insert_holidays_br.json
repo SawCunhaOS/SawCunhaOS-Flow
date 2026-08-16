@@ -1,0 +1,464 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "insert_holidays_br",
+        "author": "System",
+        "changes": [
+          {
+            "tagDatabase": {
+              "tag": "INIT"
+            }
+          },
+          {
+            "insert": {
+              "dbms": "postgresql",
+              "tableName": "IFA_FIXED_HOLIDAY",
+              "columns": [
+                {
+                  "column": {
+                    "name": "NAME",
+                    "value": "Confraternização universal"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DESCRIPTION",
+                    "value": "Confraternização Universal"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DAY_HOLIDAY",
+                    "value": "1"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "MONTH_HOLIDAY",
+                    "value": "1"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "OPTIONAL",
+                    "value": "0"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "FROM_TIME",
+                    "value": "null"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "insert": {
+              "dbms": "postgresql",
+              "tableName": "IFA_FIXED_HOLIDAY",
+              "columns": [
+                {
+                  "column": {
+                    "name": "NAME",
+                    "value": "Tiradentes"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DESCRIPTION",
+                    "value": "Tiradentes"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DAY_HOLIDAY",
+                    "value": "21"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "MONTH_HOLIDAY",
+                    "value": "4"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "OPTIONAL",
+                    "value": "0"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "FROM_TIME",
+                    "value": "null"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "insert": {
+              "dbms": "postgresql",
+              "tableName": "IFA_FIXED_HOLIDAY",
+              "columns": [
+                {
+                  "column": {
+                    "name": "NAME",
+                    "value": "Dia do Trabalho"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DESCRIPTION",
+                    "value": "Dia do Trabalho"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DAY_HOLIDAY",
+                    "value": "1"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "MONTH_HOLIDAY",
+                    "value": "5"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "OPTIONAL",
+                    "value": "0"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "FROM_TIME",
+                    "value": "null"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "insert": {
+              "dbms": "postgresql",
+              "tableName": "IFA_FIXED_HOLIDAY",
+              "columns": [
+                {
+                  "column": {
+                    "name": "NAME",
+                    "value": "Dia da Independência do Brasil"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DESCRIPTION",
+                    "value": "Dia da Independência do Brasil - 7 de Setembro"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DAY_HOLIDAY",
+                    "value": "7"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "MONTH_HOLIDAY",
+                    "value": "9"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "OPTIONAL",
+                    "value": "0"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "FROM_TIME",
+                    "value": "null"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "insert": {
+              "dbms": "postgresql",
+              "tableName": "IFA_FIXED_HOLIDAY",
+              "columns": [
+                {
+                  "column": {
+                    "name": "NAME",
+                    "value": "Nossa Senhora Aparecida"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DESCRIPTION",
+                    "value": "Nossa Senhora Aparecida"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DAY_HOLIDAY",
+                    "value": "12"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "MONTH_HOLIDAY",
+                    "value": "10"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "OPTIONAL",
+                    "value": "0"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "FROM_TIME",
+                    "value": "null"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "insert": {
+              "dbms": "postgresql",
+              "tableName": "IFA_FIXED_HOLIDAY",
+              "columns": [
+                {
+                  "column": {
+                    "name": "NAME",
+                    "value": "Finados"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DESCRIPTION",
+                    "value": "Finados"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DAY_HOLIDAY",
+                    "value": "2"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "MONTH_HOLIDAY",
+                    "value": "11"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "OPTIONAL",
+                    "value": "0"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "FROM_TIME",
+                    "value": "null"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "insert": {
+              "dbms": "postgresql",
+              "tableName": "IFA_FIXED_HOLIDAY",
+              "columns": [
+                {
+                  "column": {
+                    "name": "NAME",
+                    "value": "Proclamação da República"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DESCRIPTION",
+                    "value": "Proclamação da República"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DAY_HOLIDAY",
+                    "value": "15"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "MONTH_HOLIDAY",
+                    "value": "11"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "OPTIONAL",
+                    "value": "0"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "FROM_TIME",
+                    "value": "null"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "insert": {
+              "dbms": "postgresql",
+              "tableName": "IFA_FIXED_HOLIDAY",
+              "columns": [
+                {
+                  "column": {
+                    "name": "NAME",
+                    "value": "Véspera de Natal"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DESCRIPTION",
+                    "value": "Véspera de Natal"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DAY_HOLIDAY",
+                    "value": "24"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "MONTH_HOLIDAY",
+                    "value": "12"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "OPTIONAL",
+                    "value": "1"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "FROM_TIME",
+                    "value": "null"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "insert": {
+              "dbms": "postgresql",
+              "tableName": "IFA_FIXED_HOLIDAY",
+              "columns": [
+                {
+                  "column": {
+                    "name": "NAME",
+                    "value": "Natal"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DESCRIPTION",
+                    "value": "Natal"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DAY_HOLIDAY",
+                    "value": "25"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "MONTH_HOLIDAY",
+                    "value": "12"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "OPTIONAL",
+                    "value": "0"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "FROM_TIME",
+                    "value": "null"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "insert": {
+              "dbms": "postgresql",
+              "tableName": "IFA_FIXED_HOLIDAY",
+              "columns": [
+                {
+                  "column": {
+                    "name": "NAME",
+                    "value": "Véspera de Ano-Novo"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DESCRIPTION",
+                    "value": "Véspera de Ano-Novo"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "DAY_HOLIDAY",
+                    "value": "31"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "MONTH_HOLIDAY",
+                    "value": "12"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "OPTIONAL",
+                    "value": "1"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "FROM_TIME",
+                    "value": "null"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "rollback": [
+          {
+            "sql": {
+              "sql": "TRUNCATE TABLE IFA_FIXED_HOLIDAY;"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -156,6 +156,8 @@ public enum ExceptionCodeError implements ExceptionCode {
     SCOS_EMPLOYEE_023("SCOS_EMPLOYEE_023", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
     /** expectedReturnDate informado, mas o motivo de inativação não é VACATION nem MEDICAL_LEAVE. HTTP 422. */
     SCOS_EMPLOYEE_024("SCOS_EMPLOYEE_024", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Funcionário não está ACTIVE — guarda de CreateEmployeeLoginUseCase antes de criar o Login. HTTP 422. */
+    SCOS_EMPLOYEE_025("SCOS_EMPLOYEE_025", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
 
     // User / Login
     SCOS_USER_001("SCOS_USER_001", 502, "SCOS_TITLE_EXTERNAL_INTEGRATION_FAILURE"),
@@ -241,6 +243,15 @@ public enum ExceptionCodeError implements ExceptionCode {
     SCOS_LOGIN_011("SCOS_LOGIN_011", 401, "SCOS_TITLE_UNAUTHORIZED"),
     /** Transição de status inválida solicitada para o Login informado. HTTP 422. */
     SCOS_LOGIN_013("SCOS_LOGIN_013", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Login pendente de aprovação — bloqueado por LoginPendingApprovalRule via LoginRolesService. HTTP 422. */
+    SCOS_LOGIN_014("SCOS_LOGIN_014", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Já existe um Login com esse valor de login (unique). HTTP 409. */
+    SCOS_LOGIN_015("SCOS_LOGIN_015", 409, "SCOS_TITLE_CONFLICT"),
+    /** Login não encontrado pelo id informado. HTTP 404. */
+    SCOS_LOGIN_016("SCOS_LOGIN_016", 404, "SCOS_TITLE_NOT_FOUND"),
+
+    /** Profile não encontrado pelo id informado. HTTP 404. */
+    SCOS_PROFILE_001("SCOS_PROFILE_001", 404, "SCOS_TITLE_NOT_FOUND"),
 
     SCOS_SECURITY_ENCRYPT("SCOS_SECURITY_ENCRYPT", 400, "SCOS_TITLE_GENERIC"),
     SCOS_SECURITY_DECRYPT("SCOS_SECURITY_DECRYPT", 400, "SCOS_TITLE_GENERIC"),

@@ -12,6 +12,10 @@
 
     <groupId>br.com.sawcunhaos.flow</groupId>
     <artifactId>geotemporal</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>flow-geotemporal-resources</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>

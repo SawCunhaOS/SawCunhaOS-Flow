@@ -14,7 +14,7 @@
 1. Atualizar o YAML em `etc/api/organization/*.yml` primeiro (contrato antes do código)
 2. Implementar `XxxDelegate implements XxxApiDelegate` em `flow-organization-api/.../delegate/<agregado>/`
 3. Criar Use Case (interface pública + `@Service` Bean package-private) em `flow-organization-usecase/.../usecase/<bounded-context>/<agregado>/`
-4. Adicionar permissão ao `ScosOrganizationPermission` se novo `x-authorize`
+4. Adicionar permissão ao `ScosGeotemporalPermission` se novo `x-authorize`
 
 **Padrão de resposta OpenAPI:**
 - `200` → schema próprio com `data:` wrapper

@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_IFA_STREET_TYPE
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: INIT
+        - createTable:
+            tableName: IFA_STREET_TYPE
+            dbms: 'mysql, postgresql'
+            columns:
+              - column:
+                  name: STREET_TYPE_ID
+                  autoIncrement: true
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_IFA_STREET_TYPE
+                    nullable: false
+              - column:
+                  name: STREET_TYPE
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  remarks: Represents the name of the Street Type
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ACRONYM
+                  autoIncrement: false
+                  type: VARCHAR(15)
+                  remarks: Represent the acronym of the Street Type
+                  constraints:
+                    nullable: true
+        - renameSequence:
+            oldSequenceName: ifa_street_type_street_type_id_seq
+            newSequenceName: SEQ_STREET_TYPE
+      rollback:
+          - dropTable:
+            cascadeConstraints: true
+            tableName: IFA_STREET_TYPE

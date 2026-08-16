@@ -27,7 +27,7 @@ Para que toda mudança de status tenha justificativa e rastro auditável.
 9. **Given** um `reasonId` que não existe no catálogo **When** qualquer uma das 4 transições é chamada **Then** o sistema rejeita com o 404 que o respectivo `Reason*Service.findById` já lança hoje (`SCOS_REASON_ACTIVATE_001`/`SCOS_REASON_INACTIVATE_001`/`SCOS_REASON_DISABLE_001`/`SCOS_REASON_ENABLE_001`) — reaproveitado sem alteração, nenhum código novo.
 10. **Given** o trigger `trg_sync_company_status` (`AFTER INSERT ON SCOS_COMPANY_STATUS_HISTORY`, já implementado em `flow-organization-resources/.../triggers/`) **When** a linha de histórico é persistida **Then** `SCOS_COMPANY.STATUS`/`UPDATED_AT` são sincronizados automaticamente pelo banco (`fn_sync_company_status`) **And** o Use Case/Service desta story NÃO deve chamar `company.setStatus(...)` nem `companyRepository.update(company)` para propagar o novo status — só persistir a `CompanyStatusHistory`, exatamente como já é feito para `Login` (AD-4).
 11. **Given** hoje não existe nenhum dos 4 Use Cases nem override no `CompanyDelegate` para as 4 rotas (`CompanyApiDelegate.activateCompany/inactivateCompany/blockCompany/unblockCompany` caem no `default` gerado, que lança `MethodNotImplementedException`) **When** esta story é implementada **Then** são criados `ActivateCompanyUseCase(Bean)`, `InactivateCompanyUseCase(Bean)`, `BlockCompanyUseCase(Bean)`, `UnblockCompanyUseCase(Bean)` (pacote `usecase/corporate/company/`, mesmo padrão de `UpdateCompanyUseCaseBean`) **And** `CompanyDelegate` ganha `@Override` dos 4 métodos, delegando ao Use Case correto **And** o mapeamento rota→Use Case→método de domínio NÃO é 1:1 por nome (ver tabela na Dev Notes) — `BlockCompanyUseCase` chama `companyService.disable(...)`, não `companyService.block(...)` (esse método não existe).
-12. **Given** a guarda de escopo **When** esta story é implementada **Then** NÃO altera `etc/api/organization/ScosOrganization_Company.yml` (contrato já publicado e completo, inclusive `x-authorize`/`x-jdempotentresource`) **And** NÃO implementa `GET /v1/companies/{id}/status-history` (UC-138, endpoint de leitura já declarado no YAML mas fora do escopo desta story) **And** NÃO toca `SCOS_COMPANY_005`/`SCOS_COMPANY_006` (guardas de última-matriz-ativa/única-empresa-ativa — Story 1.3) **And** NÃO cria/altera CRUD de `ReasonActivate`/`ReasonInactivate`/`ReasonDisable`/`ReasonEnable` (já existem) **And** NÃO adiciona permissão nova em `ScosOrganizationPermission` (`ENABLE_COMPANY`/`DISABLE_COMPANY`/`BLOCK_COMPANY`/`UNBLOCK_COMPANY` já cadastrados desde 2026-07-09/15, com `messages_permission.properties`/`_en` já traduzidos).
+12. **Given** a guarda de escopo **When** esta story é implementada **Then** NÃO altera `etc/api/organization/ScosOrganization_Company.yml` (contrato já publicado e completo, inclusive `x-authorize`/`x-jdempotentresource`) **And** NÃO implementa `GET /v1/companies/{id}/status-history` (UC-138, endpoint de leitura já declarado no YAML mas fora do escopo desta story) **And** NÃO toca `SCOS_COMPANY_005`/`SCOS_COMPANY_006` (guardas de última-matriz-ativa/única-empresa-ativa — Story 1.3) **And** NÃO cria/altera CRUD de `ReasonActivate`/`ReasonInactivate`/`ReasonDisable`/`ReasonEnable` (já existem) **And** NÃO adiciona permissão nova em `ScosGeotemporalPermission` (`ENABLE_COMPANY`/`DISABLE_COMPANY`/`BLOCK_COMPANY`/`UNBLOCK_COMPANY` já cadastrados desde 2026-07-09/15, com `messages_geotemporal_permission.properties`/`_en` já traduzidos).
 
 ## Tasks / Subtasks
 
@@ -137,7 +137,7 @@ Para que toda mudança de status tenha justificativa e rastro auditável.
     }
     ```
     Mesmo formato para `inactivateCompany`/`blockCompany`/`unblockCompany`, mesmo padrão de `updateCompany` já existente no arquivo (delegate fino, `return null` → `204`).
-  - [x] **Não** mexer no YAML nem em `ScosOrganizationPermission` — `x-authorize`/permissões já existem (AC 12).
+  - [x] **Não** mexer no YAML nem em `ScosGeotemporalPermission` — `x-authorize`/permissões já existem (AC 12).
 
 - [x] Task 5: Testes (AC: todas)
   - [x] `CompanyServiceBeanTest.java` — acrescentar `@Mock ReasonInactivateService`/`ReasonDisableService`/`ReasonEnableService` (mesmo padrão `@Mock`/`@InjectMocks` já usado no arquivo). Para cada uma das 4 transições (`activate`/`inactivate`/`disable`/`enable`):
@@ -153,7 +153,7 @@ Para que toda mudança de status tenha justificativa e rastro auditável.
   - [x] NÃO implementar `GET /v1/companies/{id}/status-history` (UC-138).
   - [x] NÃO tocar `SCOS_COMPANY_005`/`006` nem qualquer lógica de "última matriz ativa"/"única empresa ativa" — Story 1.3.
   - [x] NÃO criar/alterar CRUD de `ReasonActivate`/`ReasonInactivate`/`ReasonDisable`/`ReasonEnable`.
-  - [x] NÃO adicionar permissão nova em `ScosOrganizationPermission` — as 4 já existem.
+  - [x] NÃO adicionar permissão nova em `ScosGeotemporalPermission` — as 4 já existem.
 
 ## Dev Notes
 
@@ -192,7 +192,7 @@ Se o dev agent mapear por nome (ex.: `BlockCompanyUseCase` → `companyService.b
 
 **Achado 5 — jDempotent já está todo resolvido no contrato/codegen.** `CompanyApi.java` (gerado) já tem `@JdempotentResource(cachePrefix = "SCOS_ORGANIZATION_IDP_ACTIVATE_COMPANY", ...)` e `@JdempotentRequestPayload` nos 4 métodos, herdado do `x-jdempotentresource`/`x-jdempotentrequestpayload` já presentes no YAML. Nada a fazer no Delegate/Use Case quanto a idempotência.
 
-**Achado 6 — permissões já existem.** `ScosOrganizationPermission.java:85-88`: `ENABLE_COMPANY`, `DISABLE_COMPANY`, `BLOCK_COMPANY`, `UNBLOCK_COMPANY` já cadastrados (2026-07-09/15), com `messages_permission.properties`/`_en` já traduzidos. `x-authorize` do YAML já aponta pra eles. Nada a adicionar — `PermissionsConsistencyTest` já cobre.
+**Achado 6 — permissões já existem.** `ScosOrganizationPermission.java:85-88`: `ENABLE_COMPANY`, `DISABLE_COMPANY`, `BLOCK_COMPANY`, `UNBLOCK_COMPANY` já cadastrados (2026-07-09/15), com `messages_geotemporal_permission.properties`/`_en` já traduzidos. `x-authorize` do YAML já aponta pra eles. Nada a adicionar — `PermissionsConsistencyTest` já cobre.
 
 ### Por que os códigos de erro novos (Task 1) não reaproveitam `SCOS_COMPANY_008`/`009`
 
@@ -205,7 +205,7 @@ Se o dev agent mapear por nome (ex.: `BlockCompanyUseCase` → `companyService.b
 - **`domain/corporate/company/service/CompanyServiceBean.java`**: implementação + 3 helpers de validação de motivo novos (`validateReasonActivate` já existe, reaproveitado) (Task 3).
 - **`usecase/corporate/company/`**: 4 pares Use Case + Bean novos (Task 4).
 - **`api/delegate/company/CompanyDelegate.java`**: 4 `@Override` novos (Task 4).
-- **Nenhuma mudança em**: `etc/api/organization/*.yml` (contrato já pronto), Liquibase (`flow-organization-resources` — coluna/tabela/trigger já existem), `ScosOrganizationPermission`.
+- **Nenhuma mudança em**: `etc/api/organization/*.yml` (contrato já pronto), Liquibase (`flow-organization-resources` — coluna/tabela/trigger já existem), `ScosGeotemporalPermission`.
 
 ### Testing Standards
 
@@ -258,7 +258,7 @@ Claude Sonnet 5 (claude-sonnet-5)
 - 4 métodos novos em `CompanyService`/`CompanyServiceBean` (`activate`/`inactivate`/`disable`/`enable`) seguindo o padrão de `create()`: acham a Company, validam o motivo (404 se não existe, 422 se inativo/incompatível), delegam o guard de transição de status ao método de domínio já implementado em `Company.java` (que lança `SCOS_COMPANY_007` se a origem for inválida), e persistem só o `CompanyStatusHistory` — **nenhum método chama `company.setStatus(...)` nem `companyRepository.update(company)`**, propagação de status é 100% via `trg_sync_company_status` (confirmado end-to-end no teste de integração).
 - 4 pares Use Case+Bean novos (`ActivateCompanyUseCase(Bean)`, `InactivateCompanyUseCase(Bean)`, `BlockCompanyUseCase(Bean)`, `UnblockCompanyUseCase(Bean)`) em `usecase/corporate/company/`, recebendo `CompanyStatusTransitionRequest` gerado da API direto (sem DTO próprio) — mapeamento rota→domínio respeitado à risca: `BlockCompanyUseCase`→`companyService.disable(...)`, `UnblockCompanyUseCase`→`companyService.enable(...)` (não `block`/`unblock`, que não existem no `CompanyService`).
 - `CompanyDelegate` ganhou os 4 `@Override` (antes cadiam no `default` gerado que lança `MethodNotImplementedException`), delegate fino, `return null` → 204.
-- Guarda de escopo (Task 6) confirmada via `git status`: zero mudança em `etc/api/organization/*.yml`, Liquibase, ou `ScosOrganizationPermission` — só `domain`/`usecase`/`api`/`shared` + 2 arquivos de teste em `boot`/`domain`.
+- Guarda de escopo (Task 6) confirmada via `git status`: zero mudança em `etc/api/organization/*.yml`, Liquibase, ou `ScosGeotemporalPermission` — só `domain`/`usecase`/`api`/`shared` + 2 arquivos de teste em `boot`/`domain`.
 - Teste de integração novo em `CompanyControllerTest` prova de ponta a ponta que `trg_sync_company_status` sincroniza `SCOS_COMPANY.STATUS` a partir do INSERT em `SCOS_COMPANY_STATUS_HISTORY` (não só que o histórico foi gravado).
 
 ### File List

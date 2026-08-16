@@ -1,0 +1,81 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_IFA_CITY
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: INIT
+        - createTable:
+            tableName: IFA_CITY
+            dbms: 'mysql, postgresql'
+            columns:
+              - column:
+                  name: CITY_ID
+                  autoIncrement: true
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_IFA_CITY
+                    nullable: false
+              - column:
+                  name: NAME
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  remarks: Represents the name of the City
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ACRONYM
+                  autoIncrement: false
+                  type: VARCHAR(100)
+                  remarks: Represents the Acronym of the City
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  remarks: A brief description for the line or additional information
+                  constraints:
+                    nullable: true
+              - column:
+                  name: CODE
+                  autoIncrement: false
+                  type: INT
+                  remarks: 'Represents the State Code (Ex Brazil: IBGE)'
+                  constraints:
+                    nullable: false
+              - column:
+                  name: STATE_ID
+                  autoIncrement: false
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_STATE_ID_IFA_CITY
+                    validateForeignKey: true
+                    referencedColumnNames: STATE_ID
+                    referencedTableName: IFA_STATE
+              - column:
+                  name: MIGRATION_ID
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  remarks: Informs the migration id
+                  constraints:
+                    nullable: true
+        - renameSequence:
+              oldSequenceName: ifa_city_city_id_seq
+              newSequenceName: SEQ_CITY_ID
+        - addUniqueConstraint:
+            columnNames: CODE
+            constraintName: UK_CODE_IFA_CITY
+            tableName: IFA_CITY
+            validate: true
+        - addUniqueConstraint:
+            columnNames: NAME,STATE_ID
+            constraintName: UK_NAME_IFA_CITY
+            tableName: IFA_CITY
+            validate: true
+      rollback:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: IFA_CITY

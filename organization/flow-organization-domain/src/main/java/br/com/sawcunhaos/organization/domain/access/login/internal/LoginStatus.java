@@ -14,7 +14,9 @@
 package br.com.sawcunhaos.organization.domain.access.login.internal;
 
 public enum LoginStatus {
+    PENDING_APPROVAL,
     ACTIVE,
     INACTIVE,
-    BLOCKED;
+    BLOCKED,
+    REJECTED;
 }

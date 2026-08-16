@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_IFA_CITY_HOLIDAY
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: INIT
+        - createTable:
+            tableName: IFA_CITY_HOLIDAY
+            dbms: 'postgresql'
+            columns:
+              - column:
+                  name: CITY_ID
+                  autoIncrement: false
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_CITY_ID_IFA_CITY_HOLIDAY
+                    validateForeignKey: true
+                    referencedColumnNames: CITY_ID
+                    referencedTableName: IFA_CITY
+              - column:
+                  name: HOLIDAY_ID
+                  autoIncrement: false
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: FK_HOLIDAY_ID_IFA_CITY_HOLIDAY
+                    validateForeignKey: true
+                    referencedColumnNames: HOLIDAY_ID
+                    referencedTableName: IFA_HOLIDAY
+              - column:
+                  name: HOLIDAY
+                  autoIncrement: false
+                  type: ${typeBoolean}
+                  defaultValue: ${defaultValueBoolean}
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            columnNames: CITY_ID, HOLIDAY_ID
+            constraintName: PK_IFA_CITY_HOLIDAY
+            tableName: IFA_CITY_HOLIDAY
+            validate: true
+      rollback:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: IFA_CITY_HOLIDAY

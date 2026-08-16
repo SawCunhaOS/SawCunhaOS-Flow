@@ -1,0 +1,2095 @@
+databaseChangeLog:
+  - changeSet:
+      id: INSERT_STREET_TYPE
+      author: SAMUEL CUNHA
+      changes:
+        - tagDatabase:
+            tag: INIT
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+              - column:
+                  name: STREET_TYPE
+                  value: 'RUA'
+              - column:
+                  name: ACRONYM
+                  value: 'RUA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ALAMEDA'
+            - column:
+                name: ACRONYM
+                value: 'ALA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'AVENIDA'
+            - column:
+                name: ACRONYM
+                value: 'AVE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'BALNEÁRIO'
+            - column:
+                name: ACRONYM
+                value: 'BAL'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'BELVEDERE'
+            - column:
+                name: ACRONYM
+                value: 'BEL'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'BECO'
+            - column:
+                name: ACRONYM
+                value: 'BEC'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'BOSQUE'
+            - column:
+                name: ACRONYM
+                value: 'BOS'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'BAIXA'
+            - column:
+                name: ACRONYM
+                value: 'BAI'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CAIS'
+            - column:
+                name: ACRONYM
+                value: 'CAI'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CONJUNTO'
+            - column:
+                name: ACRONYM
+                value: 'CON'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'COLÔNIA'
+            - column:
+                name: ACRONYM
+                value: 'COL'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CAMPO'
+            - column:
+                name: ACRONYM
+                value: 'CAM'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'DESVIO'
+            - column:
+                name: ACRONYM
+                value: 'DES'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'DISTRITO'
+            - column:
+                name: ACRONYM
+                value: 'DIS'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESCADA'
+            - column:
+                name: ACRONYM
+                value: 'ESC'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESTAÇÃO'
+            - column:
+                name: ACRONYM
+                value: 'EST'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESTÁDIO'
+            - column:
+                name: ACRONYM
+                value: 'EST'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'FAVELA'
+            - column:
+                name: ACRONYM
+                value: 'FAV'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'FERROVIA'
+            - column:
+                name: ACRONYM
+                value: 'FER'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'GALERIA'
+            - column:
+                name: ACRONYM
+                value: 'GAL'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ILHA'
+            - column:
+                name: ACRONYM
+                value: 'ILH'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'JARDIM'
+            - column:
+                name: ACRONYM
+                value: 'JAR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'LARGO'
+            - column:
+                name: ACRONYM
+                value: 'LAR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'LAGOA'
+            - column:
+                name: ACRONYM
+                value: 'LAG'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PARALELA'
+            - column:
+                name: ACRONYM
+                value: 'PAR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PASSEIO'
+            - column:
+                name: ACRONYM
+                value: 'PAS'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PÁTIO'
+            - column:
+                name: ACRONYM
+                value: 'PÁT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PRAIA'
+            - column:
+                name: ACRONYM
+                value: 'PRA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PASSARELA'
+            - column:
+                name: ACRONYM
+                value: 'PAS'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'QUINTA'
+            - column:
+                name: ACRONYM
+                value: 'QUI'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RAMAL'
+            - column:
+                name: ACRONYM
+                value: 'RAM'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RECANTO'
+            - column:
+                name: ACRONYM
+                value: 'REC'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RETIRO'
+            - column:
+                name: ACRONYM
+                value: 'RET'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RETORNO'
+            - column:
+                name: ACRONYM
+                value: 'RET'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'SÍTIO'
+            - column:
+                name: ACRONYM
+                value: 'SÍT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'SERVIDÃO'
+            - column:
+                name: ACRONYM
+                value: 'SER'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'SETOR'
+            - column:
+                name: ACRONYM
+                value: 'SET'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'SUBIDA'
+            - column:
+                name: ACRONYM
+                value: 'SUB'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'TERMINAL'
+            - column:
+                name: ACRONYM
+                value: 'TER'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'TREVO'
+            - column:
+                name: ACRONYM
+                value: 'TRE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'TRAVESSA'
+            - column:
+                name: ACRONYM
+                value: 'TRA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VILA'
+            - column:
+                name: ACRONYM
+                value: 'VIL'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VIELA'
+            - column:
+                name: ACRONYM
+                value: 'VIE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ZIGUE'
+            - column:
+                name: ACRONYM
+                value: 'ZIG'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'TRECHO'
+            - column:
+                name: ACRONYM
+                value: 'TRE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PORTO'
+            - column:
+                name: ACRONYM
+                value: 'POR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'BALÃO'
+            - column:
+                name: ACRONYM
+                value: 'BAL'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PARADOURO'
+            - column:
+                name: ACRONYM
+                value: 'PAR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ÁREA'
+            - column:
+                name: ACRONYM
+                value: 'ÁRE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'JARDINETE'
+            - column:
+                name: ACRONYM
+                value: 'JAR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'QUINTAS'
+            - column:
+                name: ACRONYM
+                value: 'QUI'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RÓTULA'
+            - column:
+                name: ACRONYM
+                value: 'RÓT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RAMPA'
+            - column:
+                name: ACRONYM
+                value: 'RAM'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PONTA'
+            - column:
+                name: ACRONYM
+                value: 'PON'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RESIDENCIAL'
+            - column:
+                name: ACRONYM
+                value: 'RES'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'MÓDULO'
+            - column:
+                name: ACRONYM
+                value: 'MÓD'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESTÂNCIA'
+            - column:
+                name: ACRONYM
+                value: 'EST'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'NÚCLEO'
+            - column:
+                name: ACRONYM
+                value: 'NÚC'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'COMPLEXO'
+            - column:
+                name: ACRONYM
+                value: 'COM'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PRAÇA'
+            - column:
+                name: ACRONYM
+                value: 'PRA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ROTATÓRIA'
+            - column:
+                name: ACRONYM
+                value: 'ROT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '4ª'
+            - column:
+                name: ACRONYM
+                value: '4ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '10ª'
+            - column:
+                name: ACRONYM
+                value: '10ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '11ª'
+            - column:
+                name: ACRONYM
+                value: '11ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '13ª'
+            - column:
+                name: ACRONYM
+                value: '13ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '14ª'
+            - column:
+                name: ACRONYM
+                value: '14ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '15ª'
+            - column:
+                name: ACRONYM
+                value: '15ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '16ª'
+            - column:
+                name: ACRONYM
+                value: '16ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '3º'
+            - column:
+                name: ACRONYM
+                value: '3º'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '4º'
+            - column:
+                name: ACRONYM
+                value: '4º'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '5º'
+            - column:
+                name: ACRONYM
+                value: '5º'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '5ª'
+            - column:
+                name: ACRONYM
+                value: '5ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '7ª'
+            - column:
+                name: ACRONYM
+                value: '7ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '12ª'
+            - column:
+                name: ACRONYM
+                value: '12ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESTACIONAMENTO'
+            - column:
+                name: ACRONYM
+                value: 'EST'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VALA'
+            - column:
+                name: ACRONYM
+                value: 'VAL'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'TÚNEL'
+            - column:
+                name: ACRONYM
+                value: 'TÚN'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RODO'
+            - column:
+                name: ACRONYM
+                value: 'ROD'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ENTRADA'
+            - column:
+                name: ACRONYM
+                value: 'ENT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ACAMPAMENTO'
+            - column:
+                name: ACRONYM
+                value: 'ACA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '18ª'
+            - column:
+                name: ACRONYM
+                value: '18ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '19ª'
+            - column:
+                name: ACRONYM
+                value: '19ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PARQUE'
+            - column:
+                name: ACRONYM
+                value: 'PAR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESTRADA'
+            - column:
+                name: ACRONYM
+                value: 'EST'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '6ª'
+            - column:
+                name: ACRONYM
+                value: '6ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CONTORNO'
+            - column:
+                name: ACRONYM
+                value: 'CON'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'BLOCOS'
+            - column:
+                name: ACRONYM
+                value: 'BLO'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '3ª'
+            - column:
+                name: ACRONYM
+                value: '3ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'QUARTA'
+            - column:
+                name: ACRONYM
+                value: 'QUA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PASSAGEM'
+            - column:
+                name: ACRONYM
+                value: 'PAS'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'TERCEIRA AVENIDA'
+            - column:
+                name: ACRONYM
+                value: 'TER AV.'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PASSEIO PÚBLICO'
+            - column:
+                name: ACRONYM
+                value: 'PAS'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ENTRE'
+            - column:
+                name: ACRONYM
+                value: 'ENT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ILHOTA'
+            - column:
+                name: ACRONYM
+                value: 'ILH'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '1ª'
+            - column:
+                name: ACRONYM
+                value: '1ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CAMPUS'
+            - column:
+                name: ACRONYM
+                value: 'CAM'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'MARGEM'
+            - column:
+                name: ACRONYM
+                value: 'MAR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CONDOMÍNIO'
+            - column:
+                name: ACRONYM
+                value: 'CON'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CALÇADÃO'
+            - column:
+                name: ACRONYM
+                value: 'CAL'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CAMINHO'
+            - column:
+                name: ACRONYM
+                value: 'CAM'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'EIXO'
+            - column:
+                name: ACRONYM
+                value: 'EIX'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ANEL'
+            - column:
+                name: ACRONYM
+                value: 'ANE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '17ª'
+            - column:
+                name: ACRONYM
+                value: '17ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ANTIGA'
+            - column:
+                name: ACRONYM
+                value: 'ANT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '20ª'
+            - column:
+                name: ACRONYM
+                value: '20ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '21ª'
+            - column:
+                name: ACRONYM
+                value: '21ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '22ª'
+            - column:
+                name: ACRONYM
+                value: '22ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VARIANTE'
+            - column:
+                name: ACRONYM
+                value: 'VAR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'NOVA'
+            - column:
+                name: ACRONYM
+                value: 'NOV'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'GLEBA'
+            - column:
+                name: ACRONYM
+                value: 'GLE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'MARGINAL'
+            - column:
+                name: ACRONYM
+                value: 'MAR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'COLINA'
+            - column:
+                name: ACRONYM
+                value: 'COL'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ALÇA'
+            - column:
+                name: ACRONYM
+                value: 'ALÇ'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '8ª'
+            - column:
+                name: ACRONYM
+                value: '8ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '9ª'
+            - column:
+                name: ACRONYM
+                value: '9ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PISTA'
+            - column:
+                name: ACRONYM
+                value: 'PIS'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'EDIFÍCIO'
+            - column:
+                name: ACRONYM
+                value: 'EDI'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '26ª'
+            - column:
+                name: ACRONYM
+                value: '26ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ORLA'
+            - column:
+                name: ACRONYM
+                value: 'ORL'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CHÁCARAS'
+            - column:
+                name: ACRONYM
+                value: 'CHÁ'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ALDEIA'
+            - column:
+                name: ACRONYM
+                value: 'ALD'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '1º'
+            - column:
+                name: ACRONYM
+                value: '1º'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '2º'
+            - column:
+                name: ACRONYM
+                value: '2º'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: '2ª'
+            - column:
+                name: ACRONYM
+                value: '2ª'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ACESSO'
+            - column:
+                name: ACRONYM
+                value: 'ACE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ACESSO LOCAL'
+            - column:
+                name: ACRONYM
+                value: 'ACE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ADRO'
+            - column:
+                name: ACRONYM
+                value: 'ADR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ÁREA ESPECIAL'
+            - column:
+                name: ACRONYM
+                value: 'ÁRE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'AEROPORTO'
+            - column:
+                name: ACRONYM
+                value: 'AER'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'AVENIDA MARGINAL DIREITA'
+            - column:
+                name: ACRONYM
+                value: 'AVE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'AVENIDA MARGINAL ESQUERDA'
+            - column:
+                name: ACRONYM
+                value: 'AVE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ANEL VIÁRIO'
+            - column:
+                name: ACRONYM
+                value: 'ANE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ANTIGA ESTRADA'
+            - column:
+                name: ACRONYM
+                value: 'ANT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ARTÉRIA'
+            - column:
+                name: ACRONYM
+                value: 'ART'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ALTO'
+            - column:
+                name: ACRONYM
+                value: 'ALT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ATALHO'
+            - column:
+                name: ACRONYM
+                value: 'ATA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ÁREA VERDE'
+            - column:
+                name: ACRONYM
+                value: 'Á'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'AVENIDA CONTORNO'
+            - column:
+                name: ACRONYM
+                value: 'AVE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'AVENIDA MARGINAL'
+            - column:
+                name: ACRONYM
+                value: 'AVE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'AVENIDA VELHA'
+            - column:
+                name: ACRONYM
+                value: 'AVE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'BURACO'
+            - column:
+                name: ACRONYM
+                value: 'BUR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'BLOCO'
+            - column:
+                name: ACRONYM
+                value: 'BLO'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'BULEVAR'
+            - column:
+                name: ACRONYM
+                value: 'BUL'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'BOULEVARD'
+            - column:
+                name: ACRONYM
+                value: 'BOU'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CALÇADA'
+            - column:
+                name: ACRONYM
+                value: 'CAL'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CANAL'
+            - column:
+                name: ACRONYM
+                value: 'CAN'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CHÁCARA'
+            - column:
+                name: ACRONYM
+                value: 'CHÁ'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CHAPADÃO'
+            - column:
+                name: ACRONYM
+                value: 'CHA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CICLOVIA'
+            - column:
+                name: ACRONYM
+                value: 'CIC'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CIRCULAR'
+            - column:
+                name: ACRONYM
+                value: 'CIR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CONJUNTO MUTIRÃO'
+            - column:
+                name: ACRONYM
+                value: 'CON'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'COMPLEXO VIÁRIO'
+            - column:
+                name: ACRONYM
+                value: 'COM'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'COMUNIDADE'
+            - column:
+                name: ACRONYM
+                value: 'COM'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CORREDOR'
+            - column:
+                name: ACRONYM
+                value: 'COR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'CÓRREGO'
+            - column:
+                name: ACRONYM
+                value: 'CÓR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'DESCIDA'
+            - column:
+                name: ACRONYM
+                value: 'DES'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ENTRE BLOCO'
+            - column:
+                name: ACRONYM
+                value: 'ENT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESTRADA INTERMUNICIPAL'
+            - column:
+                name: ACRONYM
+                value: 'EST'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ENSEADA'
+            - column:
+                name: ACRONYM
+                value: 'ENS'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ENTRADA PARTICULAR'
+            - column:
+                name: ACRONYM
+                value: 'ENT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ENTRE QUADRA'
+            - column:
+                name: ACRONYM
+                value: 'ENT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESCADARIA'
+            - column:
+                name: ACRONYM
+                value: 'ESC'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESTRADA ESTADUAL'
+            - column:
+                name: ACRONYM
+                value: 'EST'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESTRADA VICINAL'
+            - column:
+                name: ACRONYM
+                value: 'EST'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESTRADA DE LIGAÇÃO'
+            - column:
+                name: ACRONYM
+                value: 'EST'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESTRADA MUNICIPAL'
+            - column:
+                name: ACRONYM
+                value: 'EST'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESPLANADA'
+            - column:
+                name: ACRONYM
+                value: 'ESP'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESTRADA DE SERVIDÃO'
+            - column:
+                name: ACRONYM
+                value: 'EST'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESTRADA VELHA'
+            - column:
+                name: ACRONYM
+                value: 'EST'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESTRADA ANTIGA'
+            - column:
+                name: ACRONYM
+                value: 'EST'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ESTRADA PARTICULAR'
+            - column:
+                name: ACRONYM
+                value: 'EST'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'EVANGÉLICA'
+            - column:
+                name: ACRONYM
+                value: 'EVA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ELEVADA'
+            - column:
+                name: ACRONYM
+                value: 'ELE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'EIXO INDUSTRIAL'
+            - column:
+                name: ACRONYM
+                value: 'EIX'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'FAZENDA'
+            - column:
+                name: ACRONYM
+                value: 'FAZ'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'FONTE'
+            - column:
+                name: ACRONYM
+                value: 'FON'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'FEIRA'
+            - column:
+                name: ACRONYM
+                value: 'FEI'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'FORTE'
+            - column:
+                name: ACRONYM
+                value: 'FOR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'GRANJA'
+            - column:
+                name: ACRONYM
+                value: 'GRA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'NÚCLEO HABITACIONAL'
+            - column:
+                name: ACRONYM
+                value: 'NÚC'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'INDETERMINADO'
+            - column:
+                name: ACRONYM
+                value: 'IND'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'LADEIRA'
+            - column:
+                name: ACRONYM
+                value: 'LAD'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'LAGO'
+            - column:
+                name: ACRONYM
+                value: 'LAG'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'LOTEAMENTO'
+            - column:
+                name: ACRONYM
+                value: 'LOT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'LOTE'
+            - column:
+                name: ACRONYM
+                value: 'LOT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'MERCADO'
+            - column:
+                name: ACRONYM
+                value: 'MER'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'MARINA'
+            - column:
+                name: ACRONYM
+                value: 'MAR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'MODULO'
+            - column:
+                name: ACRONYM
+                value: 'MOD'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PROJEÇÃO'
+            - column:
+                name: ACRONYM
+                value: 'PRO'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'MORRO'
+            - column:
+                name: ACRONYM
+                value: 'MOR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'MONTE'
+            - column:
+                name: ACRONYM
+                value: 'MON'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'NÚCLEO RURAL'
+            - column:
+                name: ACRONYM
+                value: 'NÚC'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'OUTEIRO'
+            - column:
+                name: ACRONYM
+                value: 'OUT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PRAÇA DE ESPORTES'
+            - column:
+                name: ACRONYM
+                value: 'PRA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PARADA'
+            - column:
+                name: ACRONYM
+                value: 'PAR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PROLONGAMENTO'
+            - column:
+                name: ACRONYM
+                value: 'PRO'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PARQUE MUNICIPAL'
+            - column:
+                name: ACRONYM
+                value: 'PAR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PARQUE RESIDENCIAL'
+            - column:
+                name: ACRONYM
+                value: 'PAR'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PASSAGEM DE PEDESTRE'
+            - column:
+                name: ACRONYM
+                value: 'PAS'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PASSAGEM SUBTERRÂNEA'
+            - column:
+                name: ACRONYM
+                value: 'PAS'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'PONTE'
+            - column:
+                name: ACRONYM
+                value: 'PON'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'QUADRA'
+            - column:
+                name: ACRONYM
+                value: 'QUA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RUA INTEGRAÇÃO'
+            - column:
+                name: ACRONYM
+                value: 'RUA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RUA DE LIGAÇÃO'
+            - column:
+                name: ACRONYM
+                value: 'RUA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RUA PARTICULAR'
+            - column:
+                name: ACRONYM
+                value: 'RUA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RUA VELHA'
+            - column:
+                name: ACRONYM
+                value: 'RUA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RECREIO'
+            - column:
+                name: ACRONYM
+                value: 'REC'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RETA'
+            - column:
+                name: ACRONYM
+                value: 'RET'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RUELA'
+            - column:
+                name: ACRONYM
+                value: 'RUE'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RODO ANEL'
+            - column:
+                name: ACRONYM
+                value: 'ROD'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RODOVIA'
+            - column:
+                name: ACRONYM
+                value: 'ROD'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ROTULA'
+            - column:
+                name: ACRONYM
+                value: 'ROT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'RUA DE PEDESTRE'
+            - column:
+                name: ACRONYM
+                value: 'RUA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'SEGUNDA AVENIDA'
+            - column:
+                name: ACRONYM
+                value: 'SEG'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'SITIO'
+            - column:
+                name: ACRONYM
+                value: 'SIT'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'TRINCHEIRA'
+            - column:
+                name: ACRONYM
+                value: 'TRI'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'TRAVESSA PARTICULAR'
+            - column:
+                name: ACRONYM
+                value: 'TRA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'TRAVESSA VELHA'
+            - column:
+                name: ACRONYM
+                value: 'TRA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'UNIDADE'
+            - column:
+                name: ACRONYM
+                value: 'UNI'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VIA'
+            - column:
+                name: ACRONYM
+                value: 'VIA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VIA COLETORA'
+            - column:
+                name: ACRONYM
+                value: 'VIA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VIA LOCAL'
+            - column:
+                name: ACRONYM
+                value: 'VIA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VIA DE ACESSO'
+            - column:
+                name: ACRONYM
+                value: 'VIA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VIA COSTEIRA'
+            - column:
+                name: ACRONYM
+                value: 'VIA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VIADUTO'
+            - column:
+                name: ACRONYM
+                value: 'VIA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VIA EXPRESSA'
+            - column:
+                name: ACRONYM
+                value: 'VIA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VEREDA'
+            - column:
+                name: ACRONYM
+                value: 'VER'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VIA ELEVADO'
+            - column:
+                name: ACRONYM
+                value: 'VIA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VALE'
+            - column:
+                name: ACRONYM
+                value: 'VAL'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VIA LITORÂNEA'
+            - column:
+                name: ACRONYM
+                value: 'VIA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'VIA DE PEDESTRE'
+            - column:
+                name: ACRONYM
+                value: 'VIA'
+        - insert:
+            tableName: IFA_STREET_TYPE
+            columns:
+            - column:
+                name: STREET_TYPE
+                value: 'ZIGUE-ZAGUE'
+            - column:
+                name: ACRONYM
+                value: 'ZIG'

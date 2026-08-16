@@ -32,7 +32,8 @@ class MessageConfiguration {
             "classpath:scos_message_organization",
             "classpath:scos_utils_messages",
             "classpath:key_configuration_description",
-            "classpath:messages_permission"
+            "classpath:messages_organization_permission",
+            "classpath:messages_geotemporal_permission"
 		);
 		messageSource.setDefaultEncoding("UTF-8");
 		messageSource.setCacheSeconds(360);

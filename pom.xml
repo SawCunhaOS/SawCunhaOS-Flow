@@ -25,6 +25,7 @@
         <module>infrastructure</module>
         <module>organization/flow-organization-resources</module>
         <module>server-fat</module>
+        <module>geotemporal/flow-geotemporal-infrastructure</module>
     </modules>
 
     <parent>

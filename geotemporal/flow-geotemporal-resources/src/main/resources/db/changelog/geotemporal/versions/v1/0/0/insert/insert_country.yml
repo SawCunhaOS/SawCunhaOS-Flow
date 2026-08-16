@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert_country
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+          tag: INIT
+        - insert:
+            dbms: 'postgresql'
+            tableName: IFA_COUNTRY
+            columns:
+            - column:
+                name: NAME
+                value: 'Brasil'
+            - column:
+                name: ACRONYM
+                value: 'BR'
+            - column:
+                name: CODE
+                value: '55'
+            - column:
+                name: DESCRIPTION
+                value: 'Brasil'
+      rollback:
+        - sql:
+            sql: TRUNCATE TABLE IFA_COUNTRY

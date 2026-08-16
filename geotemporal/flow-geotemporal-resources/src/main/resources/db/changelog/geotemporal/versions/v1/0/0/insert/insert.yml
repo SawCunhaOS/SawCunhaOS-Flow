@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - include:
+      file: insert_country.yml
+      relativeToChangelogFile: true
+  - include:
+      file: insert_configuration.yml
+      relativeToChangelogFile: true
+  - include:
+      file: insert_holidays_br.json
+      relativeToChangelogFile: true
+  - include:
+      file: insert_street_type.yml
+      relativeToChangelogFile: true

@@ -1037,7 +1037,7 @@ Para que o catálogo usado por `rehire` (Story 2.3) deixe de depender de seed ma
 
 **Given** os 3 registros seed já existentes (`NEW_HIRE`/`PROMOTION`/`TRANSFER`, todos `active=true`) e o registro `ARCHIVED_REASON` adicionado manualmente pela Story 2.3 para testes **When** esta story é implementada **Then** nenhum dado de seed muda — só a camada de aplicação é criada por cima do que já existe
 
-**Given** nenhuma permissão nova é necessária **When** esta story é implementada **Then** reaproveita `GET_REASON_POSITION_CHANGE`/`CREATE_REASON_POSITION_CHANGE`/`UPDATE_REASON_POSITION_CHANGE`/`ENABLE_REASON_POSITION_CHANGE`/`DISABLE_REASON_POSITION_CHANGE`, já cadastradas em `ScosOrganizationPermission`
+**Given** nenhuma permissão nova é necessária **When** esta story é implementada **Then** reaproveita `GET_REASON_POSITION_CHANGE`/`CREATE_REASON_POSITION_CHANGE`/`UPDATE_REASON_POSITION_CHANGE`/`ENABLE_REASON_POSITION_CHANGE`/`DISABLE_REASON_POSITION_CHANGE`, já cadastradas em `ScosGeotemporalPermission`
 
 ### Story 7.5: Consulta de Funcionário — Histórico de Status, Hierarquia, Subordinados e Histórico de Cargo
 

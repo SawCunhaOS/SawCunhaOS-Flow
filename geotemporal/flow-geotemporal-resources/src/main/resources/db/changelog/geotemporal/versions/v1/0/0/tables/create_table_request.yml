@@ -1,0 +1,72 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_IFA_REQUEST
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: INIT
+        - createTable:
+            tableName: IFA_REQUEST
+            dbms: 'postgresql'
+            columns:
+              - column:
+                  name: REQUEST_ID
+                  autoIncrement: true
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_IFA_REQUEST
+                    nullable: false
+              - column:
+                  name: REQUESTING
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: TYPE_REQUEST
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: STATUS_REQUEST
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATE_DATE
+                  autoIncrement: false
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: START_DATE
+                  autoIncrement: false
+                  type: DATETIME
+                  constraints:
+                    nullable: true
+              - column:
+                  name: END_DATE
+                  autoIncrement: false
+                  type: DATETIME
+                  constraints:
+                    nullable: true
+        - renameSequence:
+              oldSequenceName: ifa_request_request_id_seq
+              newSequenceName: SEQ_REQUEST_ID
+        - createIndex:
+            clustered: true
+            indexName: IDX_TYPE_STATUS_REQUEST
+            tableName: IFA_REQUEST
+            dbms: 'postgresql'
+            columns:
+              - column:
+                  name: TYPE_REQUEST
+              - column:
+                  name: STATUS_REQUEST
+      rollback:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: IFA_REQUEST

@@ -182,7 +182,7 @@ Para separar a regra de montagem da regra de pesquisa, com cobertura de teste un
 - `corporate/department/internal/`: `DepartmentPredicates` nova + teste; `DepartmentRepository` refatorado (Task 6).
 - `corporate/company/internal/`: `CompanyPredicates` nova + teste; `CompanyRepository` ganha `findAllFiltered` novo (aditivo, nada removido).
 - `corporate/company/service/`: `CompanyServiceBean.findAll` refatorado (remove `BooleanBuilder`/`QCompany`); `CompanyServiceBeanTest` ajustado no mock de `findAll`.
-- Nenhuma mudança em `usecase`, `api`, `boot`, YAML de contrato, Liquibase, ou `ScosOrganizationPermission`.
+- Nenhuma mudança em `usecase`, `api`, `boot`, YAML de contrato, Liquibase, ou `ScosGeotemporalPermission`.
 
 ### Testing Standards
 
@@ -242,7 +242,7 @@ Claude Sonnet 5 (claude-sonnet-5), via Claude Code, workflow `bmad-dev-story`.
 - AC 5 (Company): `CompanyPredicates` nova (`predicateStatusAndName`, réplica exata da lógica antes inline em `CompanyServiceBean.findAll`, incluindo o fallback `id.isNotNull()`); `CompanyRepository.findAllFiltered` novo (aditivo); `CompanyServiceBean.findAll` simplificado para delegar ao repositório, removendo `BooleanBuilder`/`QCompany`; `CompanyServiceBeanTest.findAllShouldReturnMappedPage` ajustado para mockar `findAllFiltered` em vez de `findAll(Predicate, Pageable)`; `CompanyPredicatesTest` novo (5 testes, incluindo o fallback vazio).
 - AC 6 (padrão de teste): todas as 10 classes `XxxPredicatesTest` seguem JUnit 5 puro, mesmo pacote `internal` do main (visibilidade package-private), asserção via `predicate.toString()`.
 - AC 7 (regressão): suíte completa dos 3 módulos passa; único ajuste de asserção fora dos arquivos novos foi o mock de `CompanyServiceBeanTest.findAllShouldReturnMappedPage`, previsto na story.
-- Nenhuma mudança em `usecase`, `api`, `boot` (código), YAML de contrato, Liquibase ou `ScosOrganizationPermission`.
+- Nenhuma mudança em `usecase`, `api`, `boot` (código), YAML de contrato, Liquibase ou `ScosGeotemporalPermission`.
 - Notas: durante a análise de escopo (Task 8), identifiquei que `organization/flow-organization-domain/pom.xml`, `organization/flow-organization-resources/pom.xml`, `.../ScosFlowOrganizationLiquibaseProperties.java`, `.../triggers.yml` e `.../liquibase.properties` já estavam staged no início desta sessão com trabalho não relacionado a esta story (relocação do `liquibase-maven-plugin`, correção de path/extensão de changelog, `runOnChange: true` em triggers) — não tocados por esta story.
 
 ### File List

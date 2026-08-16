@@ -1,0 +1,285 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260228-Samuel.Cunha-018
+      author: Samuel.Cunha
+      comment: "Limpeza: remove funções legadas do schema public migradas para scos"
+      dbms: postgresql
+      changes:
+        - sql:
+            sql: |
+              DROP FUNCTION IF EXISTS public.check_employee_supervisor() CASCADE;
+              DROP FUNCTION IF EXISTS public.remove_formatting_tax_identifier() CASCADE;
+      rollback:
+        - empty
+
+  - changeSet:
+      id: 20260228-Samuel.Cunha-019
+      author: Samuel.Cunha
+      comment: "Função scos.check_employee_supervisor: valida que SUPERVISOR_ID != EMPLOYEE_ID"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: check_employee_supervisor.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.check_employee_supervisor() CASCADE;
+
+  - changeSet:
+      id: 20260228-Samuel.Cunha-020
+      author: Samuel.Cunha
+      comment: "Função scos.check_company_parent_company: valida que PARENT_COMPANY_ID != COMPANY_ID"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: check_company_parent_company.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.check_company_parent_company() CASCADE;
+
+  - changeSet:
+      id: 20260228-Samuel.Cunha-021
+      author: Samuel.Cunha
+      comment: "Função scos.remove_formatting_tax_identifier: remove formatação do TAX_IDENTIFIER"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: remove_formatting_tax_identifier.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.remove_formatting_tax_identifier() CASCADE;
+
+  - changeSet:
+      id: 20260701-Samuel.Cunha-023
+      author: Samuel.Cunha
+      comment: "Função scos.fn_before_insert_company_status_history: deriva PREVIOUS_STATUS e valida ENTITY_TYPE do motivo"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: fn_before_insert_company_status_history.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.fn_before_insert_company_status_history() CASCADE;
+
+  - changeSet:
+      id: 20260701-Samuel.Cunha-024
+      author: Samuel.Cunha
+      comment: "Função scos.fn_before_insert_employee_status_history: deriva PREVIOUS_STATUS e valida ENTITY_TYPE do motivo"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: fn_before_insert_employee_status_history.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.fn_before_insert_employee_status_history() CASCADE;
+
+  - changeSet:
+      id: 20260701-Samuel.Cunha-025
+      author: Samuel.Cunha
+      comment: "Função scos.fn_before_insert_login_status_history: deriva PREVIOUS_STATUS e valida ENTITY_TYPE do motivo"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: fn_before_insert_login_status_history.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.fn_before_insert_login_status_history() CASCADE;
+
+  - changeSet:
+      id: 20260701-Samuel.Cunha-026
+      author: Samuel.Cunha
+      comment: "Função scos.fn_sync_company_status: propaga STATUS do histórico para SCOS_COMPANY"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: fn_sync_company_status.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.fn_sync_company_status() CASCADE;
+
+  - changeSet:
+      id: 20260701-Samuel.Cunha-027
+      author: Samuel.Cunha
+      comment: "Função scos.fn_sync_employee_status: propaga STATUS do histórico para SCOS_EMPLOYEE"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: fn_sync_employee_status.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.fn_sync_employee_status() CASCADE;
+
+  - changeSet:
+      id: 20260701-Samuel.Cunha-028
+      author: Samuel.Cunha
+      comment: "Função scos.fn_sync_login_status: propaga STATUS do histórico para SCOS_LOGIN"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: fn_sync_login_status.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.fn_sync_login_status() CASCADE;
+
+  - changeSet:
+      id: 20260701-Samuel.Cunha-029
+      author: Samuel.Cunha
+      comment: "Função scos.fn_block_delete: bloqueia DELETE em tabelas de referência (compartilhada)"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: fn_block_delete.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.fn_block_delete() CASCADE;
+
+  - changeSet:
+      id: 20260701-Samuel.Cunha-030
+      author: Samuel.Cunha
+      comment: "Função scos.fn_validate_employee_contact_type: valida ENTITY_TYPE = EMPLOYEE em CONTACT_TYPE_ID"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: fn_validate_employee_contact_type.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.fn_validate_employee_contact_type() CASCADE;
+
+  - changeSet:
+      id: 20260701-Samuel.Cunha-031
+      author: Samuel.Cunha
+      comment: "Função scos.fn_validate_company_contact_type: valida ENTITY_TYPE = COMPANY em CONTACT_TYPE_ID"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: fn_validate_company_contact_type.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.fn_validate_company_contact_type() CASCADE;
+
+  - changeSet:
+      id: 20260701-Samuel.Cunha-032
+      author: Samuel.Cunha
+      comment: "Função scos.fn_validate_employee_address_type: valida ENTITY_TYPE = EMPLOYEE em ADDRESS_TYPE_ID"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: fn_validate_employee_address_type.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.fn_validate_employee_address_type() CASCADE;
+
+  - changeSet:
+      id: 20260701-Samuel.Cunha-033
+      author: Samuel.Cunha
+      comment: "Função scos.fn_validate_company_address_type: valida ENTITY_TYPE = COMPANY em ADDRESS_TYPE_ID"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: fn_validate_company_address_type.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.fn_validate_company_address_type() CASCADE;
+
+  - changeSet:
+      id: 20260701-Samuel.Cunha-034
+      author: Samuel.Cunha
+      comment: "Função scos.fn_close_previous_position: fecha a linha de cargo aberta antes do novo INSERT"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: fn_close_previous_position.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.fn_close_previous_position() CASCADE;
+
+  - changeSet:
+      id: 20260701-Samuel.Cunha-035
+      author: Samuel.Cunha
+      comment: "Função scos.fn_sync_employee_position: propaga POSITION_ID do histórico para SCOS_EMPLOYEE"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: fn_sync_employee_position.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.fn_sync_employee_position() CASCADE;
+
+  - changeSet:
+      id: 20260701-Samuel.Cunha-036
+      author: Samuel.Cunha
+      comment: "Função scos.fn_validate_login_profile_not_primary: impede duplicar o perfil principal como adicional"
+      runOnChange: true
+      changes:
+        - sqlFile:
+            path: fn_validate_login_profile_not_primary.sql
+            relativeToChangelogFile: true
+            encoding: utf8
+            stripComments: true
+            splitStatements: false
+      rollback:
+        - sql:
+            sql: DROP FUNCTION IF EXISTS scos.fn_validate_login_profile_not_primary() CASCADE;

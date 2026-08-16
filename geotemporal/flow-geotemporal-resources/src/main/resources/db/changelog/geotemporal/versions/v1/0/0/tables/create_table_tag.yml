@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_IFA_TAG
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: INIT
+        - createTable:
+            tableName: IFA_TAG
+            dbms: 'postgresql'
+            columns:
+              - column:
+                  name: TAG_ID
+                  autoIncrement: true
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_IFA_TAG
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CODE
+                  autoIncrement: false
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+        - renameSequence:
+              oldSequenceName: ifa_tag_tag_id_seq
+              newSequenceName: SEQ_TAG_ID
+        - addUniqueConstraint:
+            columnNames: CODE
+            constraintName: UK_CODE_IFA_TAG
+            tableName: IFA_TAG
+            validate: true
+        - createIndex:
+            clustered: true
+            indexName: IDX_DT_CODE
+            tableName: IFA_TAG
+            dbms: 'postgresql'
+            columns:
+              - column:
+                  name: CODE
+      rollback:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: IFA_TAG

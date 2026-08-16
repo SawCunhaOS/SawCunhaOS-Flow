@@ -1,0 +1,73 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_IFA_FIXED_HOLIDAY
+      author: Samuel Cunha
+      changes:
+        - tagDatabase:
+            tag: INIT
+        - createTable:
+            tableName: IFA_FIXED_HOLIDAY
+            dbms: 'postgresql'
+            columns:
+              - column:
+                  name: FIXED_HOLIDAY_ID
+                  autoIncrement: true
+                  type: SERIAL
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: PK_IFA_FIXED_HOLIDAY
+                    nullable: false
+              - column:
+                  name: NAME
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: DESCRIPTION
+                  autoIncrement: false
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: DAY_HOLIDAY
+                  autoIncrement: false
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: MONTH_HOLIDAY
+                  autoIncrement: false
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: OPTIONAL
+                  autoIncrement: false
+                  type: ${typeBoolean}
+                  defaultValue: ${defaultValueBoolean}
+                  constraints:
+                    nullable: false
+              - column:
+                  name: FROM_TIME
+                  autoIncrement: false
+                  type: TIME
+                  constraints:
+                    nullable: true
+              - column:
+                  name: ENABLE
+                  autoIncrement: false
+                  type: ${typeBoolean}
+                  defaultValue: ${trueValueBoolean}
+        - renameSequence:
+              oldSequenceName: ifa_fixed_holiday_fixed_holiday_id_seq
+              newSequenceName: SEQ_FIXED_HOLIDAY_ID
+        - addUniqueConstraint:
+            columnNames: DAY_HOLIDAY,MONTH_HOLIDAY
+            constraintName: UK_FIXED_HOLIDAY_COUNTRY
+            tableName: IFA_FIXED_HOLIDAY
+            validate: true
+      rollback:
+        - dropTable:
+            cascadeConstraints: true
+            tableName: IFA_FIXED_HOLIDAY
