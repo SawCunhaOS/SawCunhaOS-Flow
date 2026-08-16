@@ -137,7 +137,7 @@ RH consegue admitir um Funcionário (que já nasce com a Jornada de Trabalho do 
 RH consegue criar um Login para um Funcionário e ele só fica utilizável depois que um Supervisor ou Gerente aprova — nunca o próprio solicitante — com escalonamento automático se ninguém responder a tempo. O mesmo vale para reativar um Login existente ou aumentar o acesso dele com um novo Perfil.
 **FRs covered:** FR-6, FR-7, FR-23, FR-24, FR-25
 **Depende de:** Epic 2 (Funcionário precisa existir para o Login referenciar).
-**Nota:** Login criado só é utilizável de fato quando o fluxo de aprovação (FR-23) está completo — por isso FR-6 e FR-23/24/25 vivem no mesmo épico (entregar Login sem aprovação não seria funcionalidade completa).
+**Nota:** Login criado só é utilizável de fato quando o fluxo de aprovação (FR-23) está completo — por isso FR-6 e FR-23/24/25 vivem no mesmo épico (entregar Login sem aprovação não seria funcionalidade completa). **Story 3.7 (adicionada numa validação cruzada entre épicos)** fecha o cascade de status Funcionário→Login que as Stories 2.2/2.4 (Epic 2) já esperavam de FR-6/FR-28, mas nenhuma story original do Epic 3 cobria. **Story 3.6 (idem)** cobre FR-27 — tecnicamente mapeado pro Epic 4 (Story 4.2, marcada redundante), mantido aqui por decisão do usuário.
 
 ### Epic 4: Acesso de Sistema e Governança de Perfil
 A equipe de TI consegue criar Logins de sistema/serviço sem Funcionário por trás, e criar ou editar Perfis de permissão — ambos passando por aprovação de um grupo de TI/Admin designado diretamente, não da hierarquia de RH.
@@ -158,6 +158,7 @@ Desligar ou bloquear um colaborador mata a sessão dele em menos de 1 segundo, m
 Débito técnico transversal, não mapeado a FR do PRD: fecha o buraco entre contrato OpenAPI, plano (épicos/stories) e código para os agregados Company e Employee — endpoints que já estão publicados no YAML (e em alguns casos até têm entidade/repositório prontos) mas nunca ganharam Use Case/Delegate **nem** apareceram em nenhuma story, incluindo dois já em produção declarada `done` (Epic 1). Achado em auditoria de cobertura de API feita após a Story 2.5 (que fechou o mesmo tipo de buraco para leitura de Funcionário).
 **FRs covered:** Nenhuma — débito técnico de completude de API (achado de auditoria, mesmo padrão do Epic 0).
 **Depende de:** Epic 1 e Epic 2 (ambos já concluídos/em andamento — este épico só adiciona cobertura sobre agregados que já existem, não cria nada novo em termos de domínio).
+**Story 7.9 (adicionada numa auditoria de N+1 pedida pelo usuário):** achou 2 consultas N+1 já em produção (`GET /v1/companies` e `GET /v1/departments/{id}/positions`, ambos Epic 1, `done`) — mesmo espírito de auditoria de completude, aqui sobre performance de consulta em vez de rota faltando.
 
 ---
 
@@ -617,6 +618,11 @@ Para que ele tenha uma credencial de acesso ao sistema.
 **When** esta story é implementada
 **Then** `BLOCK_LOGIN` e `UNBLOCK_LOGIN` ficam separadas (schema já implementado — story cria só a camada Java)
 
+**Given** nenhuma story do roadmap implementa consulta de Login
+**When** esta story é implementada
+**Then** `GET /v1/logins/{id}`, `GET /v1/logins` e `GET /v1/employees/{id}/logins` passam a funcionar
+**And** sem isso RH não teria como descobrir o Login criado nem seu status, depois da criação
+
 ### Story 3.2: Cadeia de Aprovação de Criação de Login
 
 Como Supervisor ou Gerente do Departamento,
@@ -646,6 +652,19 @@ Para garantir que ninguém ganha acesso sem o aval de outra pessoa.
 **Given** nenhuma notificação existe ainda (Motor de Notificação é Etapa 3/P2)
 **When** o aprovador quer agir
 **Then** consulta solicitações pendentes via `GET` a qualquer momento, sem depender de aviso proativo
+
+**Given** hoje não existe API para definir o Gerente do Departamento (nível 2 da cadeia)
+**When** esta story é implementada
+**Then** o endpoint de atualização de Departamento já existente passa a aceitar o gerente
+**And** sem isso o nível `MANAGER` nunca resolveria de verdade
+
+**Given** RH quer o histórico de decisões de um Login específico, ou saber quem pode decidir hoje no nível `SYSTEM_ACCESS_GROUP`
+**When** consulta a API de solicitações de aprovação
+**Then** consegue filtrar por Login **And** consegue listar quem tem a permissão `APPROVE_SYSTEM_ACCESS` no momento
+
+**Given** não existe notificação (Etapa 3/P2) e a resposta da API não dizia quem precisa decidir agora
+**When** consulta uma solicitação de aprovação
+**Then** a resposta inclui o aprovador resolvido para o nível atual (`null` quando o nível é `SYSTEM_ACCESS_GROUP`, que não resolve uma pessoa específica)
 
 ### Story 3.3: Aprovação de Reativação de Login
 
@@ -710,6 +729,52 @@ Para que RH não precise lembrar de reativar manualmente.
 **When** a data chegaria
 **Then** o gatilho automático não dispara
 
+### Story 3.6: Aprovação de Criação/Alteração de Perfil e Recursos
+
+Como titular da permissão `APPROVE_SYSTEM_ACCESS`,
+Eu quero aprovar toda criação de um novo Perfil e toda mudança no conjunto de Recursos de um Perfil existente,
+Para controlar escalada de privilégio na origem — antes de qualquer Login sequer poder ser trocado para esse Perfil.
+
+**Acceptance Criteria:**
+
+**Given** RH aciona a criação de um Perfil ou a substituição do conjunto de Recursos de um Perfil existente
+**When** a solicitação é enviada
+**Then** entra em aprovação de 1 nível só (sem cadeia Supervisor/Gerente, sem SLA — FR-27 não prevê escalonamento, diferente de FR-23)
+**And** nada muda de fato (Perfil não existe, Recursos efetivos não mudam) até a decisão
+
+**Given** Logins que já usam um Perfil com mudança de Recursos pendente
+**When** a solicitação ainda não foi decidida
+**Then** continuam com o conjunto de Recursos anterior em vigor (FR-27, literal)
+
+**Given** a solicitação é aprovada
+**When** a decisão é registrada
+**Then** o Perfil passa a existir (criação) ou o conjunto de Recursos efetivo é substituído pelo proposto (alteração)
+
+**Given** a solicitação é rejeitada
+**When** a decisão é registrada
+**Then** nada muda — Perfil proposto nunca existe, ou Recursos efetivos permanecem os anteriores
+
+### Story 3.7: Cascade de Status — Funcionário Desativado/Bloqueado Inativa seus Logins
+
+Como sistema,
+Eu quero que desativar ou bloquear um Funcionário inative automaticamente todos os Logins `ACTIVE` vinculados a ele,
+Para que ninguém continue com acesso depois que o vínculo com a empresa muda.
+
+**Acceptance Criteria:**
+
+**Given** um Funcionário `ACTIVE` com Logins `ACTIVE` vinculados
+**When** RH aciona `disable` ou `block` no Funcionário (Story 2.2, já implementada)
+**Then** todos os Logins `ACTIVE` vinculados transitam para `INACTIVE`, disparando Saga Keycloak para cada um
+**And** este comportamento já estava documentado em `etc/doc/usecase/03-funcionario.md` e no FR-28 completo, deferido pelas Stories 2.2/2.4 explicitamente pra "a story final do Epic 3"
+
+**Given** um Funcionário reativado
+**When** a reativação é confirmada
+**Then** nenhum Login vinculado é reativado automaticamente (FR-14) — cada Login segue seu próprio fluxo de aprovação (Story 3.3)
+
+**Given** um Login já `BLOCKED`/`INACTIVE`/`PENDING_APPROVAL`/`REJECTED` vinculado ao Funcionário
+**When** o cascade roda
+**Then** só os Logins `ACTIVE` são tocados — os demais permanecem como estavam
+
 ---
 
 ## Epic 4: Acesso de Sistema e Governança de Perfil
@@ -742,6 +807,8 @@ Para que ferramentas ou integrações automatizadas consumam a API com identidad
 **Then** segue o mesmo mecanismo de aprovação desta story
 
 ### Story 4.2: Criação e Edição de Perfil com Aprovação
+
+**⚠️ Redundante — já coberta pela Story 3.6 (Epic 3).** Ao criar as stories do Epic 3, um gap de FR-27 foi identificado (nenhuma das 5 stories originais do Epic 3 cobria criação/edição de Perfil com aprovação) e resolvido criando a Story 3.6, sem checar que esta Story 4.2 já existia com o mesmo escopo. Confirmado numa validação cruzada entre épicos: são a mesma feature. Decisão do usuário: manter o trabalho de design na Story 3.6 (arquivo `3-6-aprovacao-criacao-alteracao-perfil-recursos.md`) em vez de duplicar aqui — **não implementar esta story**, ela existe só como registro histórico do planejamento original. Ver `_bmad-output/implementation-artifacts/3-6-aprovacao-criacao-alteracao-perfil-recursos.md`.
 
 Como membro de TI,
 Eu quero que criar um novo Perfil ou editar os Recursos de um Perfil existente exija aprovação,
@@ -1031,3 +1098,19 @@ Para ajustar o horário dele depois da cópia inicial feita na admissão (Story 
 **Given** um Funcionário existente **When** RH cria via `POST` (dia da semana ainda sem registro) ou atualiza/remove via `PUT`/`DELETE /v1/employees/{employeeId}/work-schedule/{dayOfWeek}` **Then** as 3 operações funcionam, reaproveitando a mesma validação cronológica estrita já usada por `PositionWorkSchedule` (Story 1.5): `startTime < lunchStart < lunchEnd < endTime`
 
 **Given** nenhuma das 4 operações tem Use Case/Delegate hoje (só a entidade/repositório, escritos internamente pela Story 2.1) **When** esta story é implementada **Then** cria as 4 do zero — nenhuma mudança de schema, Liquibase ou permissão (`GET_EMPLOYEE_WORK_SCHEDULE`/`CREATE_EMPLOYEE_WORK_SCHEDULE`/`UPDATE_EMPLOYEE_WORK_SCHEDULE`/`DELETE_EMPLOYEE_WORK_SCHEDULE` já existem)
+
+---
+
+### Story 7.9: Corrigir Consultas N+1 em Listagem de Empresa e Cargo
+
+Como Analista de RH,
+Eu quero que listar Empresas e Cargos não faça 1 consulta extra ao banco por linha da página,
+Para que a listagem continue rápida conforme o volume de dados cresce, e para que `GET /v1/departments/{departmentId}/positions` pare de devolver `department` sempre `null` (bug de contrato, achado junto).
+
+**Acceptance Criteria:**
+
+**Given** `GET /v1/companies` **When** a página tem Empresas com `parentCompanyId` preenchido (filiais) **Then** a consulta não dispara 1 SELECT extra por filial pra resolver o nome/CNPJ da matriz — dado que a resposta de lista (`Companies`) nem expõe isso, hoje descartado depois de buscado
+
+**Given** `GET /v1/departments/{departmentId}/positions` **When** a página é montada **Then** cada Cargo retorna o `department` populado (hoje sempre `null`, quebrando o contrato) **And** isso não custa 1 consulta por Cargo — só 1 consulta total, já que todos os Cargos da página pertencem ao mesmo Departamento (`departmentId` já é filtro obrigatório)
+
+**Given** `GET /v1/companies/{id}` e `GET /v1/positions/{id}` (detalhe, 1 linha) **When** consultados **Then** continuam retornando `parentCompany`/`department` completos, sem nenhuma mudança de comportamento — só a listagem muda

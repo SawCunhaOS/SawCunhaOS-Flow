@@ -1,9 +1,10 @@
 {
 	"info": {
-		"_postman_id": "5be10ad6-2348-4ae5-9831-2d1d170088b9",
+		"_postman_id": "b6e4e543-3eba-49ca-b4a3-39f953141392",
 		"name": "Scos",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "39295595"
+		"_exporter_id": "52436897",
+		"_collection_link": "https://sawcunha-165677.postman.co/workspace/Samuel-Gon%25C3%25A7alves-Cunha's-Worksp~b15152eb-7009-4799-8fd2-4c365a1d407d/collection/52436897-b6e4e543-3eba-49ca-b4a3-39f953141392?action=share&source=collection_link&creator=52436897"
 	},
 	"item": [
 		{
@@ -6023,7 +6024,7 @@
 						},
 						{
 							"key": "password",
-							"value": "Api@1234!",
+							"value": "Scos#2026",
 							"type": "text"
 						},
 						{
