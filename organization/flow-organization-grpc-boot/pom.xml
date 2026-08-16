@@ -64,7 +64,7 @@
             <exclusions>
                 <exclusion>
                     <groupId>br.com.sawcunhaos.flow</groupId>
-                    <artifactId>scos-security-starter</artifactId>
+                    <artifactId>flow-security-starter</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

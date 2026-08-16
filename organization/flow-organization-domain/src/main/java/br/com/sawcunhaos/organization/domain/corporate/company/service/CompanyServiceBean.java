@@ -38,13 +38,11 @@ import br.com.sawcunhaos.organization.domain.corporate.company.internal.Company;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.CompanyRepository;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.LegalNature;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.QCnae;
-import br.com.sawcunhaos.organization.domain.corporate.company.internal.QCompany;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.QLegalNature;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.StatusCompany;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.CnaeRepository;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.LegalNatureRepository;
 import br.com.sawcunhaos.organization.domain.corporate.company.specification.CompanyService;
-import com.querydsl.core.BooleanBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
@@ -191,19 +189,7 @@ class CompanyServiceBean implements CompanyService {
     @Transactional(readOnly = true)
     public Page<CompanyOutput> findAll(StatusCompany status, String name, @NonNull Pageable pageable) {
         log.info("Find All Companies, Status: {}, Name: {}", status, name);
-
-        BooleanBuilder predicate = new BooleanBuilder();
-        if (status != null) {
-            predicate.and(QCompany.company.status.eq(status));
-        }
-        if (name != null && !name.isBlank()) {
-            predicate.and(QCompany.company.name.containsIgnoreCase(name));
-        }
-        if (!predicate.hasValue()) {
-            predicate.and(QCompany.company.id.isNotNull());
-        }
-
-        return companyRepository.findAll(predicate, pageable).map(companyMapper::toCompanyOutput);
+        return companyRepository.findAllFiltered(status, name, pageable).map(companyMapper::toCompanyOutput);
     }
 
     @Override

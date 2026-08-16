@@ -13,7 +13,6 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.employee.internal;
 
-import com.querydsl.core.BooleanBuilder;
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,50 +23,39 @@ import org.springframework.stereotype.Repository;
 import java.util.Objects;
 import java.util.Optional;
 
+import static br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeeQueryPredicates.predicateCompanyIdAndPositionIdAndStatus;
+import static br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeeQueryPredicates.predicateEmail;
+import static br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeeQueryPredicates.predicatePositionId;
+import static br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeeQueryPredicates.predicatePositionIdAndStatus;
+import static br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeeQueryPredicates.predicateTaxIdentifier;
+import static br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeeQueryPredicates.predicateTaxIdentifierAndStatus;
+
 
 @Repository
 public interface EmployeeQueryRepository extends BaseJpaRepository<Employee, Long>, JpaSpecificationExecutor<Employee>, QuerydslPredicateExecutor<Employee> {
-
-    QEmployee qEmployee = QEmployee.employee;
 
     Page<Employee> findAll(Pageable pageable);
 
     Optional<Employee> findById(Long id);
 
     default boolean existsByPositionId(Long positionId) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qEmployee.position.id.eq(positionId));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicatePositionId(positionId));
     }
 
     default boolean existsByPositionIdAndStatus(Long positionId, StatusEmployee status) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qEmployee.position.id.eq(positionId))
-                .and(qEmployee.status.eq(status));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicatePositionIdAndStatus(positionId, status));
     }
 
     default boolean existsByTaxIdentifier(String taxIdentifier) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-        booleanBuilder.and(qEmployee.taxIdentifier.cpf.eq(taxIdentifier));
-        return exists(booleanBuilder.getValue());
+        return exists(predicateTaxIdentifier(taxIdentifier));
     }
 
     default boolean existsByEmail(String email) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-        booleanBuilder.and(qEmployee.email.email.eq(email));
-        return exists(booleanBuilder.getValue());
+        return exists(predicateEmail(email));
     }
 
     default Optional<Employee> findByTaxIdentifierAndStatus(String taxIdentifier, StatusEmployee status) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-        booleanBuilder.and(qEmployee.taxIdentifier.cpf.eq(taxIdentifier))
-                .and(qEmployee.status.eq(status));
-        return findOne(booleanBuilder.getValue());
+        return findOne(predicateTaxIdentifierAndStatus(taxIdentifier, status));
     }
 
     default Page<Employee> findAllFiltered(Long companyId, Long positionId, StatusEmployee status, Pageable pageable) {
@@ -75,19 +63,7 @@ public interface EmployeeQueryRepository extends BaseJpaRepository<Employee, Lon
             return findAll(pageable);
         }
 
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        if (Objects.nonNull(companyId)) {
-            booleanBuilder.and(qEmployee.company.id.eq(companyId));
-        }
-        if (Objects.nonNull(positionId)) {
-            booleanBuilder.and(qEmployee.position.id.eq(positionId));
-        }
-        if (Objects.nonNull(status)) {
-            booleanBuilder.and(qEmployee.status.eq(status));
-        }
-
-        return findAll(booleanBuilder.getValue(), pageable);
+        return findAll(predicateCompanyIdAndPositionIdAndStatus(companyId, positionId, status), pageable);
     }
 
 }

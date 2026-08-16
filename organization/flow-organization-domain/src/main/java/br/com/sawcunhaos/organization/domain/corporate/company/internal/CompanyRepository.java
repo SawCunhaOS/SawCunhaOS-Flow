@@ -182,4 +182,11 @@ public interface CompanyRepository extends BaseJpaRepository<Company, Long>, Jpa
         return hasActiveDescendantFlag(companyId) == 1;
     }
 
+    /**
+     * Lista paginada, filtrando por {@code status}/{@code name} (contém, sem distinguir maiúsculas) quando informados.
+     */
+    default Page<Company> findAllFiltered(StatusCompany status, String name, Pageable pageable) {
+        return findAll(CompanyPredicates.predicateStatusAndName(status, name), pageable);
+    }
+
 }

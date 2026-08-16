@@ -74,7 +74,7 @@ Definição da permissão passa a carregar metadados completos (grupo, subgrupo,
 
 ### Componentes Afetados
 ```
-scos-security-starter (CONSUMIDOR/genérico)
+flow-security-starter (CONSUMIDOR/genérico)
 ├── specification/ScosPermission: ✅ já modificado (set final de métodos)
 ├── service/ScosSystemRegistrationService: modificação (resolver i18n + preencher proto)
 └── config MessageSource do bundle de permissão: adição
@@ -179,8 +179,8 @@ WHERE  SCOS_RESOURCE.ACTIVE                IS DISTINCT FROM EXCLUDED.ACTIVE
 - Config `MessageSource` do bundle de permissão (no starter ou exposto pelo consumidor) — definir na proposta.
 
 **Modificados**:
-- `scos-security-starter/.../specification/ScosPermission.java` — set final de métodos (já iniciado).
-- `scos-security-starter/.../service/ScosSystemRegistrationService.java` — resolver i18n + preencher proto completo.
+- `flow-security-starter/.../specification/ScosPermission.java` — set final de métodos (já iniciado).
+- `flow-security-starter/.../service/ScosSystemRegistrationService.java` — resolver i18n + preencher proto completo.
 - `flow-organization-infrastructure/.../enumaration/ScosOrganizationPermission.java` — refatorar ~110 constantes.
 - `grpc/flow-organization-grpc-proto/.../registry.proto` — `Resource`: renomear `updateAt`→`updated_at`; manter `description_pt/en`.
 - `grpc/flow-organization-grpc-boot/.../delegate/RegistreServiceImpl.java` — mapear campos novos.
@@ -218,7 +218,7 @@ WHERE  SCOS_RESOURCE.ACTIVE                IS DISTINCT FROM EXCLUDED.ACTIVE
 ---
 
 ## 📎 Referências
-- `scos-security-starter/.../specification/ScosPermission.java` (interface em edição)
+- `flow-security-starter/.../specification/ScosPermission.java` (interface em edição)
 - `flow-organization-infrastructure/.../enumaration/ScosOrganizationPermission.java` (enum)
 - `grpc/flow-organization-grpc-proto/.../registry.proto` (proto `Resource`)
 - `flow-organization-boot/.../view/vw_authority_response.sql` (prova de não-impacto no login)

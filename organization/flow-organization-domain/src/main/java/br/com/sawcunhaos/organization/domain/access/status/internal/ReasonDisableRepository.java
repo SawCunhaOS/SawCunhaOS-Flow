@@ -13,7 +13,6 @@
 
 package br.com.sawcunhaos.organization.domain.access.status.internal;
 
-import com.querydsl.core.BooleanBuilder;
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,12 +22,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Objects;
 
+import static br.com.sawcunhaos.organization.domain.access.status.internal.ReasonDisablePredicates.predicateCodeAndEntityType;
+import static br.com.sawcunhaos.organization.domain.access.status.internal.ReasonDisablePredicates.predicateCodeAndEntityTypeAndNotId;
+import static br.com.sawcunhaos.organization.domain.access.status.internal.ReasonDisablePredicates.predicateEntityTypeAndActive;
+
 /**
  * Repositório JPA/QueryDSL de {@link ReasonDisable}.
  */
 @Repository
 public interface ReasonDisableRepository extends BaseJpaRepository<ReasonDisable, Long>, JpaSpecificationExecutor<ReasonDisable>, QuerydslPredicateExecutor<ReasonDisable> {
-    QReasonDisable qReasonDisable = QReasonDisable.reasonDisable;
 
     Page<ReasonDisable> findAll(Pageable pageable);
 
@@ -36,25 +38,14 @@ public interface ReasonDisableRepository extends BaseJpaRepository<ReasonDisable
      * Verifica se já existe um {@link ReasonDisable} com o {@code code} informado dentro do mesmo {@code entityType}.
      */
     default boolean existsByCodeAndEntityType(String code, EntityType entityType) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qReasonDisable.code.eq(code))
-                      .and(qReasonDisable.entityType.eq(entityType));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicateCodeAndEntityType(code, entityType));
     }
 
     /**
      * Verifica duplicidade de {@code code}/{@code entityType} excluindo o próprio {@code reasonDisableId} — usado na atualização.
      */
     default boolean existsByCodeAndEntityTypeAndNotId(String code, EntityType entityType, Long reasonDisableId) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qReasonDisable.code.eq(code))
-                      .and(qReasonDisable.entityType.eq(entityType))
-                      .and(qReasonDisable.id.ne(reasonDisableId));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicateCodeAndEntityTypeAndNotId(code, entityType, reasonDisableId));
     }
 
     /**
@@ -65,14 +56,6 @@ public interface ReasonDisableRepository extends BaseJpaRepository<ReasonDisable
             return findAll(pageable);
         }
 
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-        if (Objects.nonNull(active)) {
-            booleanBuilder.and(qReasonDisable.active.eq(active));
-        }
-        if (Objects.nonNull(entityType)) {
-            booleanBuilder.and(qReasonDisable.entityType.eq(entityType));
-        }
-
-        return findAll(booleanBuilder.getValue(), pageable);
+        return findAll(predicateEntityTypeAndActive(entityType, active), pageable);
     }
 }

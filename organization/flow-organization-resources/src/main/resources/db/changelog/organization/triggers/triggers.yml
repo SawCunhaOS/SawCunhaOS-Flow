@@ -3,6 +3,7 @@ databaseChangeLog:
       id: 20260228-Samuel.Cunha-022
       author: Samuel.Cunha
       comment: "Trigger trg_check_employee_supervisor: impede que SUPERVISOR_ID == EMPLOYEE_ID"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_check_employee_supervisor.sql
@@ -18,6 +19,7 @@ databaseChangeLog:
       id: 20260228-Samuel.Cunha-023
       author: Samuel.Cunha
       comment: "Trigger trg_check_company_parent_company: impede que PARENT_COMPANY_ID == COMPANY_ID"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_check_company_parent_company.sql
@@ -33,6 +35,7 @@ databaseChangeLog:
       id: 20260228-Samuel.Cunha-024
       author: Samuel.Cunha
       comment: "Trigger trg_remove_formatting_tax_identifier_company: normaliza TAX_IDENTIFIER em SCOS_COMPANY"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_remove_formatting_tax_identifier_company.sql
@@ -48,6 +51,7 @@ databaseChangeLog:
       id: 20260228-Samuel.Cunha-025
       author: Samuel.Cunha
       comment: "Trigger trg_remove_formatting_tax_identifier_employee: normaliza TAX_IDENTIFIER em SCOS_EMPLOYEE"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_remove_formatting_tax_identifier_employee.sql
@@ -63,6 +67,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-037
       author: Samuel.Cunha
       comment: "Trigger trg_before_insert_company_status_history: BEFORE INSERT em SCOS_COMPANY_STATUS_HISTORY"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_before_insert_company_status_history.sql
@@ -78,6 +83,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-038
       author: Samuel.Cunha
       comment: "Trigger trg_before_insert_employee_status_history: BEFORE INSERT em SCOS_EMPLOYEE_STATUS_HISTORY"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_before_insert_employee_status_history.sql
@@ -93,6 +99,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-039
       author: Samuel.Cunha
       comment: "Trigger trg_before_insert_login_status_history: BEFORE INSERT em SCOS_LOGIN_STATUS_HISTORY"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_before_insert_login_status_history.sql
@@ -108,6 +115,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-040
       author: Samuel.Cunha
       comment: "Trigger trg_sync_company_status: AFTER INSERT em SCOS_COMPANY_STATUS_HISTORY, sincroniza SCOS_COMPANY.STATUS"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_sync_company_status.sql
@@ -123,6 +131,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-041
       author: Samuel.Cunha
       comment: "Trigger trg_sync_employee_status: AFTER INSERT em SCOS_EMPLOYEE_STATUS_HISTORY, sincroniza SCOS_EMPLOYEE.STATUS"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_sync_employee_status.sql
@@ -138,6 +147,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-042
       author: Samuel.Cunha
       comment: "Trigger trg_sync_login_status: AFTER INSERT em SCOS_LOGIN_STATUS_HISTORY, sincroniza SCOS_LOGIN.STATUS"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_sync_login_status.sql
@@ -153,6 +163,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-043
       author: Samuel.Cunha
       comment: "Trigger trg_block_delete_address_type: bloqueia DELETE em SCOS_ADDRESS_TYPE"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_block_delete_address_type.sql
@@ -168,6 +179,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-044
       author: Samuel.Cunha
       comment: "Trigger trg_block_delete_contact_type: bloqueia DELETE em SCOS_CONTACT_TYPE"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_block_delete_contact_type.sql
@@ -183,6 +195,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-045
       author: Samuel.Cunha
       comment: "Trigger trg_block_delete_outbox_topic: bloqueia DELETE em SCOS_OUTBOX_TOPIC"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_block_delete_outbox_topic.sql
@@ -198,6 +211,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-046
       author: Samuel.Cunha
       comment: "Trigger trg_block_delete_reason_activate: bloqueia DELETE em SCOS_REASON_ACTIVATE"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_block_delete_reason_activate.sql
@@ -213,6 +227,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-047
       author: Samuel.Cunha
       comment: "Trigger trg_block_delete_reason_inactivate: bloqueia DELETE em SCOS_REASON_INACTIVATE"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_block_delete_reason_inactivate.sql
@@ -228,6 +243,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-048
       author: Samuel.Cunha
       comment: "Trigger trg_block_delete_reason_disable: bloqueia DELETE em SCOS_REASON_DISABLE"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_block_delete_reason_disable.sql
@@ -243,6 +259,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-049
       author: Samuel.Cunha
       comment: "Trigger trg_block_delete_reason_enable: bloqueia DELETE em SCOS_REASON_ENABLE"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_block_delete_reason_enable.sql
@@ -258,6 +275,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-050
       author: Samuel.Cunha
       comment: "Trigger trg_block_delete_reason_position_change: bloqueia DELETE em SCOS_REASON_POSITION_CHANGE"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_block_delete_reason_position_change.sql
@@ -273,6 +291,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-051
       author: Samuel.Cunha
       comment: "Trigger trg_validate_employee_contact_type: valida ENTITY_TYPE = EMPLOYEE em SCOS_EMPLOYEE_CONTACT.CONTACT_TYPE_ID"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_validate_employee_contact_type.sql
@@ -288,6 +307,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-052
       author: Samuel.Cunha
       comment: "Trigger trg_validate_company_contact_type: valida ENTITY_TYPE = COMPANY em SCOS_COMPANY_CONTACT.CONTACT_TYPE_ID"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_validate_company_contact_type.sql
@@ -303,6 +323,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-053
       author: Samuel.Cunha
       comment: "Trigger trg_validate_employee_address_type: valida ENTITY_TYPE = EMPLOYEE em SCOS_EMPLOYEE_ADDRESS.ADDRESS_TYPE_ID"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_validate_employee_address_type.sql
@@ -318,6 +339,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-054
       author: Samuel.Cunha
       comment: "Trigger trg_validate_company_address_type: valida ENTITY_TYPE = COMPANY em SCOS_COMPANY_ADDRESS.ADDRESS_TYPE_ID"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_validate_company_address_type.sql
@@ -348,6 +370,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-056
       author: Samuel.Cunha
       comment: "Trigger trg_sync_employee_position: AFTER INSERT em SCOS_EMPLOYEE_POSITION_HISTORY, sincroniza SCOS_EMPLOYEE.POSITION_ID"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_sync_employee_position.sql
@@ -363,6 +386,7 @@ databaseChangeLog:
       id: 20260701-Samuel.Cunha-057
       author: Samuel.Cunha
       comment: "Trigger trg_validate_login_profile_not_primary: impede duplicar o perfil principal como adicional em SCOS_LOGIN_PROFILE"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_validate_login_profile_not_primary.sql
@@ -378,6 +402,7 @@ databaseChangeLog:
       id: 20260718-Samuel.Cunha-001
       author: Samuel.Cunha
       comment: "Trigger trg_block_delete_login_approval_request: bloqueia DELETE em SCOS_LOGIN_APPROVAL_REQUEST (Etapa 1, AD-4 da spine)"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_block_delete_login_approval_request.sql
@@ -393,6 +418,7 @@ databaseChangeLog:
       id: 20260718-Samuel.Cunha-002
       author: Samuel.Cunha
       comment: "Trigger trg_block_delete_shift_enforcement_log: bloqueia DELETE em SCOS_SHIFT_ENFORCEMENT_LOG (Etapa 1, FR-11)"
+      runOnChange: true
       changes:
         - sqlFile:
             path: trg_block_delete_shift_enforcement_log.sql

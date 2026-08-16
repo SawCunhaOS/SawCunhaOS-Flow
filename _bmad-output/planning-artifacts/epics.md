@@ -550,6 +550,46 @@ Para localizar rapidamente quem eu preciso gerenciar.
 **When** esta story é implementada
 **Then** cria os 2 Use Cases do zero, mesmo padrão de Company/Position (par completo/resumido no mapper, filtros opcionais via QueryDSL)
 
+### Story 2.6: Separar Regras de Montagem de Predicate dos Repositories
+
+Como Desenvolvedor da plataforma,
+Eu quero que toda montagem dinâmica de predicate QueryDSL (`BooleanBuilder`) hoje embutida em métodos `default` de Repository — e, num caso, dentro de um Service — viva numa classe `XxxPredicates` dedicada no mesmo pacote `internal`, e que a suíte de testes do módulo `domain` volte a executar de verdade,
+Para separar a regra de montagem da regra de pesquisa, com cobertura de teste unitário isolada, sem mudar nenhum comportamento existente e sem depender de workaround manual para rodar `mvn test`.
+
+**Acceptance Criteria:**
+
+**Given** o módulo `domain` hoje reporta `Tests run: 0` ao rodar `mvn test`, porque `maven-surefire-plugin` não tem `<version>` pinada em nenhum `pluginManagement` do monorepo — resolve para `2.17`, a versão mais antiga cacheada localmente, sem provider de JUnit 5
+**When** esta story é implementada
+**Then** `maven-surefire-plugin` ganha `<version>3.5.4</version>` no `pom.xml` raiz (mesmo bloco onde `maven-failsafe-plugin` já está pinado em `3.2.5`)
+**And** a suíte completa volta a executar (`mvn test` deixa de reportar 0 testes silenciosamente), eliminando o workaround manual documentado nas Stories 2.3/2.5
+
+**Given** `AddressTypeRepository`/`ContactTypeRepository` (`catalog/internal`) já têm a montagem extraída para `AddressTypePredicates`/`ContactTypePredicates` nesta sessão de trabalho (working tree, ainda não commitado)
+**When** esta story é implementada
+**Then** as duas classes ganham cobertura de teste unitário dedicada (`AddressTypePredicatesTest`/`ContactTypePredicatesTest`), sem mudar assinatura ou comportamento do repositório
+**And** `AddressTypePredicates` ganha o cabeçalho de licença Apache 2.0 que hoje falta (inconsistência com `ContactTypePredicates`, que já tem)
+
+**Given** os 4 repositórios simétricos de motivo (`ReasonEnableRepository`/`ReasonDisableRepository`/`ReasonActivateRepository`/`ReasonInactivateRepository`, `access/status/internal`) — hoje idênticos em forma, cada um com 3 métodos `default` montando `BooleanBuilder` inline
+**When** esta story é implementada
+**Then** cada um ganha sua própria `ReasonXPredicates`, mesmo padrão exato de `AddressTypePredicates`, com teste unitário dedicado por classe
+
+**Given** `EmployeeQueryRepository`, `PositionRepository` e `DepartmentRepository` — cada um com métodos `default` que montam `BooleanBuilder` para `exists`/`findOne`/`findAllFiltered`
+**When** esta story é implementada
+**Then** cada um ganha sua `XxxPredicates` dedicada (`EmployeeQueryPredicates`, `PositionPredicates`, `DepartmentPredicates`), com teste unitário dedicado — `DepartmentRepository.existsByIdAndPositionsActive`, que já usa predicate direto sem `BooleanBuilder`, permanece intocado (fora do critério de escopo desta story)
+
+**Given** `CompanyServiceBean.findAll` — único Service encontrado que monta um `BooleanBuilder` (`QCompany`) diretamente, cruzando a fronteira de `internal/` a partir da camada `service/`
+**When** esta story é implementada
+**Then** a montagem migra para uma nova `CompanyPredicates` em `corporate/company/internal/`, exposta por um novo método `default Page<Company> findAllFiltered(StatusCompany, String, Pageable)` em `CompanyRepository`
+**And** `CompanyServiceBean.findAll` passa só a chamar `companyRepository.findAllFiltered(status, name, pageable)`, sem importar `BooleanBuilder`/`QCompany`
+**And** o comportamento observável não muda: sem filtro nenhum, a consulta continua retornando todas as empresas (fallback `id.isNotNull()` quando o predicate está vazio, preservado)
+
+**Given** todas as classes `XxxPredicates` desta story
+**When** os testes unitários são escritos
+**Then** seguem o mesmo padrão: JUnit 5 puro (sem Spring, sem banco), no pacote `internal` (visibilidade package-private preservada), asserção via AssertJ comparando `predicate.toString()` com o predicate esperado montado no teste — nenhuma dependência de Testcontainers/H2
+
+**Given** nenhuma regra de negócio muda nesta story — é refatoração pura (mesma assinatura pública, mesmo resultado de query)
+**When** esta story é implementada
+**Then** a suíte de testes já existente (`domain`, `usecase`, `boot`) continua passando sem nenhuma alteração de asserção fora dos arquivos tocados por esta story
+
 ---
 
 ## Epic 3: Login do Funcionário com Aprovação

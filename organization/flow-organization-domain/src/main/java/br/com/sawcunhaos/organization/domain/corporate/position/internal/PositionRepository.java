@@ -13,7 +13,6 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.position.internal;
 
-import com.querydsl.core.BooleanBuilder;
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,38 +22,29 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+import static br.com.sawcunhaos.organization.domain.corporate.position.internal.PositionPredicates.predicateCode;
+import static br.com.sawcunhaos.organization.domain.corporate.position.internal.PositionPredicates.predicateCodeAndNotId;
+import static br.com.sawcunhaos.organization.domain.corporate.position.internal.PositionPredicates.predicateDepartmentId;
+import static br.com.sawcunhaos.organization.domain.corporate.position.internal.PositionPredicates.predicateDepartmentIdAndActive;
+
 
 @Repository
 public interface PositionRepository extends BaseJpaRepository<Position, Long>, JpaSpecificationExecutor<Position>, QuerydslPredicateExecutor<Position> {
-    QPosition qPosition = QPosition.position;
 
     Page<Position> findAll(Pageable pageable);
 
     Optional<Position> findById(Long id);
 
     default boolean existsByDepartmentId(Long departmentId) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qPosition.department.id.eq(departmentId));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicateDepartmentId(departmentId));
     }
 
     default boolean existsByCodeAndNotId(Long positionId, String code) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qPosition.code.eq(code))
-                .and(qPosition.id.ne(positionId));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicateCodeAndNotId(positionId, code));
     }
 
     default boolean existsByCode(String code) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qPosition.code.eq(code));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicateCode(code));
     }
 
     default Page<Position> findAllFiltered(Long departmentId, Boolean active, Pageable pageable) {
@@ -62,14 +52,6 @@ public interface PositionRepository extends BaseJpaRepository<Position, Long>, J
             return findAll(pageable);
         }
 
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-        if (departmentId != null) {
-            booleanBuilder.and(qPosition.department.id.eq(departmentId));
-        }
-        if (active != null) {
-            booleanBuilder.and(qPosition.active.eq(active));
-        }
-
-        return findAll(booleanBuilder.getValue(), pageable);
+        return findAll(predicateDepartmentIdAndActive(departmentId, active), pageable);
     }
 }

@@ -13,7 +13,6 @@
 
 package br.com.sawcunhaos.organization.domain.access.status.internal;
 
-import com.querydsl.core.BooleanBuilder;
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,12 +22,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Objects;
 
+import static br.com.sawcunhaos.organization.domain.access.status.internal.ReasonInactivatePredicates.predicateCodeAndEntityType;
+import static br.com.sawcunhaos.organization.domain.access.status.internal.ReasonInactivatePredicates.predicateCodeAndEntityTypeAndNotId;
+import static br.com.sawcunhaos.organization.domain.access.status.internal.ReasonInactivatePredicates.predicateEntityTypeAndActive;
+
 /**
  * Repositório JPA/QueryDSL de {@link ReasonInactivate}.
  */
 @Repository
 public interface ReasonInactivateRepository extends BaseJpaRepository<ReasonInactivate, Long>, JpaSpecificationExecutor<ReasonInactivate>, QuerydslPredicateExecutor<ReasonInactivate> {
-    QReasonInactivate qReasonInactivate = QReasonInactivate.reasonInactivate;
 
     Page<ReasonInactivate> findAll(Pageable pageable);
 
@@ -36,25 +38,14 @@ public interface ReasonInactivateRepository extends BaseJpaRepository<ReasonInac
      * Verifica se já existe um {@link ReasonInactivate} com o {@code code} informado dentro do mesmo {@code entityType}.
      */
     default boolean existsByCodeAndEntityType(String code, EntityType entityType) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qReasonInactivate.code.eq(code))
-                      .and(qReasonInactivate.entityType.eq(entityType));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicateCodeAndEntityType(code, entityType));
     }
 
     /**
      * Verifica duplicidade de {@code code}/{@code entityType} excluindo o próprio {@code reasonInactivateId} — usado na atualização.
      */
     default boolean existsByCodeAndEntityTypeAndNotId(String code, EntityType entityType, Long reasonInactivateId) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qReasonInactivate.code.eq(code))
-                      .and(qReasonInactivate.entityType.eq(entityType))
-                      .and(qReasonInactivate.id.ne(reasonInactivateId));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicateCodeAndEntityTypeAndNotId(code, entityType, reasonInactivateId));
     }
 
     /**
@@ -65,14 +56,6 @@ public interface ReasonInactivateRepository extends BaseJpaRepository<ReasonInac
             return findAll(pageable);
         }
 
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-        if (Objects.nonNull(active)) {
-            booleanBuilder.and(qReasonInactivate.active.eq(active));
-        }
-        if (Objects.nonNull(entityType)) {
-            booleanBuilder.and(qReasonInactivate.entityType.eq(entityType));
-        }
-
-        return findAll(booleanBuilder.getValue(), pageable);
+        return findAll(predicateEntityTypeAndActive(entityType, active), pageable);
     }
 }

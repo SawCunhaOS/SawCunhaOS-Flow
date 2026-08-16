@@ -13,7 +13,6 @@
 
 package br.com.sawcunhaos.organization.domain.access.status.internal;
 
-import com.querydsl.core.BooleanBuilder;
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,12 +22,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Objects;
 
+import static br.com.sawcunhaos.organization.domain.access.status.internal.ReasonActivatePredicates.predicateCodeAndEntityType;
+import static br.com.sawcunhaos.organization.domain.access.status.internal.ReasonActivatePredicates.predicateCodeAndEntityTypeAndNotId;
+import static br.com.sawcunhaos.organization.domain.access.status.internal.ReasonActivatePredicates.predicateEntityTypeAndActive;
+
 /**
  * Repositório JPA/QueryDSL de {@link ReasonActivate}.
  */
 @Repository
 public interface ReasonActivateRepository extends BaseJpaRepository<ReasonActivate, Long>, JpaSpecificationExecutor<ReasonActivate>, QuerydslPredicateExecutor<ReasonActivate> {
-    QReasonActivate qReasonActivate = QReasonActivate.reasonActivate;
 
     Page<ReasonActivate> findAll(Pageable pageable);
 
@@ -36,25 +38,14 @@ public interface ReasonActivateRepository extends BaseJpaRepository<ReasonActiva
      * Verifica se já existe um {@link ReasonActivate} com o {@code code} informado dentro do mesmo {@code entityType}.
      */
     default boolean existsByCodeAndEntityType(String code, EntityType entityType) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qReasonActivate.code.eq(code))
-                      .and(qReasonActivate.entityType.eq(entityType));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicateCodeAndEntityType(code, entityType));
     }
 
     /**
      * Verifica duplicidade de {@code code}/{@code entityType} excluindo o próprio {@code reasonActivateId} — usado na atualização.
      */
     default boolean existsByCodeAndEntityTypeAndNotId(String code, EntityType entityType, Long reasonActivateId) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qReasonActivate.code.eq(code))
-                      .and(qReasonActivate.entityType.eq(entityType))
-                      .and(qReasonActivate.id.ne(reasonActivateId));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicateCodeAndEntityTypeAndNotId(code, entityType, reasonActivateId));
     }
 
     /**
@@ -65,14 +56,6 @@ public interface ReasonActivateRepository extends BaseJpaRepository<ReasonActiva
             return findAll(pageable);
         }
 
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-        if (Objects.nonNull(active)) {
-            booleanBuilder.and(qReasonActivate.active.eq(active));
-        }
-        if (Objects.nonNull(entityType)) {
-            booleanBuilder.and(qReasonActivate.entityType.eq(entityType));
-        }
-
-        return findAll(booleanBuilder.getValue(), pageable);
+        return findAll(predicateEntityTypeAndActive(entityType, active), pageable);
     }
 }

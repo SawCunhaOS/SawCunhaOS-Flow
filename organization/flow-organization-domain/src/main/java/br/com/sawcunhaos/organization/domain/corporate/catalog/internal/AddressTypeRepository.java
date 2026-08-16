@@ -14,7 +14,6 @@
 package br.com.sawcunhaos.organization.domain.corporate.catalog.internal;
 
 import br.com.sawcunhaos.organization.domain.access.status.internal.EntityType;
-import com.querydsl.core.BooleanBuilder;
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,38 +23,29 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Objects;
 
+import static br.com.sawcunhaos.organization.domain.corporate.catalog.internal.AddressTypePredicates.predicateCodeAndEntityType;
+import static br.com.sawcunhaos.organization.domain.corporate.catalog.internal.AddressTypePredicates.predicateCodeAndEntityTypeAndNotId;
+import static br.com.sawcunhaos.organization.domain.corporate.catalog.internal.AddressTypePredicates.predicateEntityAndActive;
+
 /**
  * Repositório JPA/QueryDSL de {@link AddressType}.
  */
 @Repository
 public interface AddressTypeRepository extends BaseJpaRepository<AddressType, Long>, JpaSpecificationExecutor<AddressType>, QuerydslPredicateExecutor<AddressType> {
-    QAddressType qAddressType = QAddressType.addressType;
-
     Page<AddressType> findAll(Pageable pageable);
 
     /**
      * Verifica se já existe um {@link AddressType} com o {@code code} informado dentro do mesmo {@code entityType}.
      */
     default boolean existsByCodeAndEntityType(String code, EntityType entityType) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qAddressType.code.eq(code))
-                .and(qAddressType.entityType.eq(entityType));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicateCodeAndEntityType(code, entityType));
     }
 
     /**
      * Verifica duplicidade de {@code code}/{@code entityType} excluindo o próprio {@code addressTypeId} — usado na atualização.
      */
     default boolean existsByCodeAndEntityTypeAndNotId(String code, EntityType entityType, Long addressTypeId) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qAddressType.code.eq(code))
-                      .and(qAddressType.id.ne(addressTypeId))
-                      .and(qAddressType.entityType.eq(entityType));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicateCodeAndEntityTypeAndNotId(code, entityType, addressTypeId));
     }
 
     /**
@@ -66,14 +56,6 @@ public interface AddressTypeRepository extends BaseJpaRepository<AddressType, Lo
             return findAll(pageable);
         }
 
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-        if (Objects.nonNull(active)) {
-            booleanBuilder.and(qAddressType.active.eq(active));
-        }
-        if (Objects.nonNull(entityType)) {
-            booleanBuilder.and(qAddressType.entityType.eq(entityType));
-        }
-
-        return findAll(booleanBuilder.getValue(), pageable);
+        return findAll(predicateEntityAndActive(entityType, active), pageable);
     }
 }

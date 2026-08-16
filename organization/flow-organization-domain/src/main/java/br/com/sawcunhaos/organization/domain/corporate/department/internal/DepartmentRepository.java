@@ -13,7 +13,6 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.department.internal;
 
-import com.querydsl.core.BooleanBuilder;
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +21,10 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+
+import static br.com.sawcunhaos.organization.domain.corporate.department.internal.DepartmentPredicates.predicateActive;
+import static br.com.sawcunhaos.organization.domain.corporate.department.internal.DepartmentPredicates.predicateCode;
+import static br.com.sawcunhaos.organization.domain.corporate.department.internal.DepartmentPredicates.predicateCodeAndNotId;
 
 
 @Repository
@@ -33,19 +36,11 @@ public interface DepartmentRepository extends BaseJpaRepository<Department, Long
     Optional<Department> findById(Long id);
 
     default boolean existsByCodeAndNotId(Long departmentId, String code) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qDepartment.code.eq(code))
-                      .and(qDepartment.id.ne(departmentId));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicateCodeAndNotId(departmentId, code));
     }
+
     default boolean existsByCode(String code) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qDepartment.code.eq(code));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicateCode(code));
     }
 
     default boolean existsByIdAndPositionsActive(Long departmentId) {
@@ -61,10 +56,7 @@ public interface DepartmentRepository extends BaseJpaRepository<Department, Long
             return findAll(pageable);
         }
 
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-        booleanBuilder.and(qDepartment.active.eq(active));
-
-        return findAll(booleanBuilder.getValue(), pageable);
+        return findAll(predicateActive(active), pageable);
     }
 
 }

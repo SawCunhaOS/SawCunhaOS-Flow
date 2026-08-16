@@ -14,7 +14,6 @@
 package br.com.sawcunhaos.organization.domain.corporate.catalog.internal;
 
 import br.com.sawcunhaos.organization.domain.access.status.internal.EntityType;
-import com.querydsl.core.BooleanBuilder;
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,12 +23,15 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Objects;
 
+import static br.com.sawcunhaos.organization.domain.corporate.catalog.internal.ContactTypePredicates.predicateCodeAndEntityAndNotId;
+import static br.com.sawcunhaos.organization.domain.corporate.catalog.internal.ContactTypePredicates.predicateCodeAndEntityType;
+import static br.com.sawcunhaos.organization.domain.corporate.catalog.internal.ContactTypePredicates.predicateEntityTypeAndActive;
+
 /**
  * Repositório JPA/QueryDSL de {@link ContactType}.
  */
 @Repository
 public interface ContactTypeRepository extends BaseJpaRepository<ContactType, Long>, JpaSpecificationExecutor<ContactType>, QuerydslPredicateExecutor<ContactType> {
-    QContactType qContactType = QContactType.contactType;
 
     Page<ContactType> findAll(Pageable pageable);
 
@@ -37,25 +39,14 @@ public interface ContactTypeRepository extends BaseJpaRepository<ContactType, Lo
      * Verifica se já existe um {@link ContactType} com o {@code code} informado dentro do mesmo {@code entityType}.
      */
     default boolean existsByCodeAndEntityType(String code, EntityType entityType) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qContactType.code.eq(code))
-                      .and(qContactType.entityType.eq(entityType));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicateCodeAndEntityType(code, entityType));
     }
 
     /**
      * Verifica duplicidade de {@code code}/{@code entityType} excluindo o próprio {@code contactTypeId} — usado na atualização.
      */
     default boolean existsByCodeAndEntityAndNotId(String code, EntityType entityType, Long contactTypeId) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(qContactType.code.eq(code))
-                      .and(qContactType.id.ne(contactTypeId))
-                      .and(qContactType.entityType.eq(entityType));
-
-        return exists(booleanBuilder.getValue());
+        return exists(predicateCodeAndEntityAndNotId(code, entityType, contactTypeId));
     }
 
     /**
@@ -66,16 +57,7 @@ public interface ContactTypeRepository extends BaseJpaRepository<ContactType, Lo
             return findAll(pageable);
         }
 
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        if (Objects.nonNull(active)) {
-            booleanBuilder.and(qContactType.active.eq(active));
-        }
-        if (Objects.nonNull(entityType)) {
-            booleanBuilder.and(qContactType.entityType.eq(entityType));
-        }
-
-        return findAll(booleanBuilder.getValue(), pageable);
+        return findAll(predicateEntityTypeAndActive(entityType, active), pageable);
     }
 
     boolean existsByCode(String code);

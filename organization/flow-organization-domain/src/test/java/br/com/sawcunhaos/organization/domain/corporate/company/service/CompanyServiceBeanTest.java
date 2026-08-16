@@ -75,6 +75,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -324,7 +325,7 @@ class CompanyServiceBeanTest {
         Company existing = Company.builder().id(1L).status(StatusCompany.ACTIVE).build();
         CompanyOutput output = CompanyOutput.builder().id(1L).status(StatusCompany.ACTIVE).build();
 
-        when(companyRepository.findAll(any(Predicate.class), any(Pageable.class)))
+        when(companyRepository.findAllFiltered(eq(StatusCompany.ACTIVE), eq("Saw"), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(existing)));
         when(companyMapper.toCompanyOutput(existing)).thenReturn(output);
 

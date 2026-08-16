@@ -60,7 +60,7 @@ Exemplos válidos: `flow-organization-domain`, `flow-organization-grpc-boot`,
   `<name>Scos Organization Security Start</name>`, que não bate com o artefato nem é uma frase
   completa
 - Referência cruzada entre módulos **DEVE** usar o `artifactId` real. 🔄 **Migração**:
-  `flow-organization-grpc-boot` declara dependência de `scos-security-starter`, artefato que não
+  `flow-organization-grpc-boot` declara dependência de `flow-security-starter`, artefato que não
   existe no monorepo com esse nome
 - Camada nova (um `<camada>` fora da lista acima) **DEVE** ser acordada antes de criada
 
@@ -540,7 +540,7 @@ Termo novo do domínio **DEVE** entrar nesta tabela no mesmo PR em que aparece n
 | # | Divergência | Onde | Regra |
 |---|---|---|---|
 | N-1 | `<name>` do módulo não bate com o `artifactId` | `flow-security-starter` (`Scos Organization Security Start`) | §2.2 |
-| N-2 | Dependência declarada para artefato inexistente | `flow-organization-grpc-boot` → `scos-security-starter` | §2.2 |
+| N-2 | Dependência declarada para artefato inexistente | `flow-organization-grpc-boot` → `flow-security-starter` | §2.2 |
 | N-3 | Quarto pacote-raiz usado só por teste | `br.com.sawcunhaos.foundation.security` | §3.1 |
 | N-4 | Pacote com erro de grafia | `infrastructure.enumaration` | §3.2 |
 | N-5 | Classe com erro de grafia | `PaginatioUtils` | §1.7 |
