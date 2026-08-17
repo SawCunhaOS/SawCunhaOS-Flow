@@ -19,10 +19,14 @@ import br.com.sawcunhaos.organization.domain.access.login.dto.LoginApprovalReque
 import br.com.sawcunhaos.organization.domain.access.login.internal.Login;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequest;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestRepository;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestProfileChangeKind;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestStatus;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginRepository;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginStatus;
 import br.com.sawcunhaos.organization.domain.access.login.specification.LoginApprovalRequestService;
+import br.com.sawcunhaos.organization.domain.access.profile.internal.LoginProfile;
+import br.com.sawcunhaos.organization.domain.access.profile.internal.LoginProfilePk;
+import br.com.sawcunhaos.organization.domain.access.profile.internal.LoginProfileRepository;
 import br.com.sawcunhaos.organization.domain.access.status.internal.LoginStatusHistory;
 import br.com.sawcunhaos.organization.domain.access.status.internal.LoginStatusHistoryRepository;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.Employee;
@@ -69,6 +73,7 @@ class LoginApprovalRequestServiceBean implements LoginApprovalRequestService {
 
     private final LoginApprovalRequestRepository loginApprovalRequestRepository;
     private final LoginRepository loginRepository;
+    private final LoginProfileRepository loginProfileRepository;
     private final LoginStatusHistoryRepository loginStatusHistoryRepository;
     private final OutboxEventRepository outboxEventRepository;
     private final OutboxTopicRepository outboxTopicRepository;
@@ -115,7 +120,12 @@ class LoginApprovalRequestServiceBean implements LoginApprovalRequestService {
             case REACTIVATE_LOGIN -> approved
                     ? (login.getStatus() == LoginStatus.INACTIVE ? login.activate(reasonId) : login.enable(reasonId))
                     : null; // rejeição de reativação não muda o Login (AC 5 da Story 3.3) - só a LoginApprovalRequest registra REJECTED
-            case CHANGE_PROFILE -> throw new IllegalStateException("Story 3.4"); // guarda temporária, substituída lá
+            case CHANGE_PROFILE -> {
+                if (approved) {
+                    applyProfileChange(request, login, user);
+                }
+                yield null; // troca de perfil não é transição de status - sem LoginStatusHistory (AC 1 da Story 3.4)
+            }
         };
 
         if (history != null) {
@@ -124,7 +134,11 @@ class LoginApprovalRequestServiceBean implements LoginApprovalRequestService {
 
         if (approved) {
             request.approve(currentLogin, isSelfApproval, now);
-            openKeycloakSyncOutboxEvent(login, user, now);
+            // Saga Keycloak só existe para o ciclo de vida do próprio Login (FR-6/FR-25) - CHANGE_PROFILE
+            // nunca produz history (sempre null aqui), então esta condição já exclui esse requestType.
+            if (history != null) {
+                openKeycloakSyncOutboxEvent(login, user, now);
+            }
         } else {
             request.reject(currentLogin, isSelfApproval, now);
         }
@@ -170,6 +184,23 @@ class LoginApprovalRequestServiceBean implements LoginApprovalRequestService {
         }
         if (employeeService.findById(login.getEmployee().getId()).status() != StatusEmployee.ACTIVE) {
             throw new ScosException(SCOS_LOGIN_018);
+        }
+    }
+
+    /**
+     * Aplica a troca de Perfil aprovada (Story 3.4) - troca direta de FK ({@code SET_PRIMARY}) ou
+     * nova linha em {@code SCOS_LOGIN_PROFILE} ({@code ADD_ADDITIONAL}). Não é transição de status
+     * do Login, por isso não passa por método validado como {@code activate}/{@code approve}.
+     */
+    private void applyProfileChange(LoginApprovalRequest request, Login login, String user) {
+        if (request.getProfileChangeKind() == LoginApprovalRequestProfileChangeKind.SET_PRIMARY) {
+            login.setProfile(request.getRequestedProfile());
+            loginRepository.merge(login);
+        } else {
+            loginProfileRepository.merge(LoginProfile.builder()
+                    .id(LoginProfilePk.builder().loginId(login.getId()).profileId(request.getRequestedProfile().getId()).build())
+                    .userAt(user)
+                    .build());
         }
     }
 

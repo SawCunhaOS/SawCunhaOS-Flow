@@ -20,6 +20,7 @@ import br.com.sawcunhaos.organization.domain.access.login.dto.LoginOutput;
 import br.com.sawcunhaos.organization.domain.access.login.internal.Login;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequest;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestLevel;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestProfileChangeKind;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestRepository;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestStatus;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestType;
@@ -52,7 +53,9 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_015;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_016;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_019;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_020;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_PROFILE_001;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_PROFILE_002;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -96,6 +99,10 @@ class LoginServiceBeanTest {
         requester = Login.builder().id(99L).login("test-user").type(LoginType.EMPLOYEE).status(LoginStatus.ACTIVE).build();
         lenient().when(scosUserAuthentication.findUserAuthentication()).thenReturn("test-user");
         lenient().when(loginRepository.findByLogin("test-user")).thenReturn(Optional.of(requester));
+        // merge() real da JPA devolve a entidade gerenciada (com id, se autogerado) - aqui só o
+        // suficiente pra evitar NPE em openApprovalRequest().getId(); testes que precisam do id
+        // real sobrescrevem com um stub próprio.
+        lenient().when(loginApprovalRequestRepository.merge(any())).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
     // ---- create ----
@@ -342,6 +349,124 @@ class LoginServiceBeanTest {
                 .thenReturn(Optional.of(LoginApprovalRequest.builder().id(1L).build()));
 
         assertThatThrownBy(() -> loginServiceBean.requestReactivation(10L))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_LOGIN_019.getCode());
+
+        verify(loginApprovalRequestRepository, never()).merge(any());
+    }
+
+    // ---- requestProfileChange (Story 3.4) ----
+
+    @Test
+    void requestProfileChangeShouldOpenApprovalRequestForSetPrimary() {
+        Profile currentProfile = Profile.builder().id(1L).code("ADMIN").active(true).build();
+        Profile requestedProfile = Profile.builder().id(2L).code("VIEWER").active(true).build();
+        Login login = Login.builder().id(10L).login("john.doe").type(LoginType.SERVICE).status(LoginStatus.ACTIVE).profile(currentProfile).build();
+
+        when(loginRepository.findById(10L)).thenReturn(Optional.of(login));
+        when(profileRepository.findById(2L)).thenReturn(Optional.of(requestedProfile));
+        when(loginApprovalRequestRepository.findByLoginIdAndStatus(10L, LoginApprovalRequestStatus.PENDING)).thenReturn(Optional.empty());
+        when(loginApprovalRequestRepository.merge(any())).thenReturn(LoginApprovalRequest.builder().id(5L).build());
+
+        Long requestId = loginServiceBean.requestProfileChange(10L, 2L, LoginApprovalRequestProfileChangeKind.SET_PRIMARY);
+
+        assertThat(requestId).isEqualTo(5L);
+        assertThat(login.getProfile()).isEqualTo(currentProfile); // Login não muda até a decisão (AC 1)
+
+        ArgumentCaptor<LoginApprovalRequest> captor = ArgumentCaptor.forClass(LoginApprovalRequest.class);
+        verify(loginApprovalRequestRepository).merge(captor.capture());
+        assertThat(captor.getValue().getRequestType()).isEqualTo(LoginApprovalRequestType.CHANGE_PROFILE);
+        assertThat(captor.getValue().getRequestedProfile()).isEqualTo(requestedProfile);
+        assertThat(captor.getValue().getProfileChangeKind()).isEqualTo(LoginApprovalRequestProfileChangeKind.SET_PRIMARY);
+    }
+
+    @Test
+    void requestProfileChangeShouldOpenApprovalRequestForAddAdditional() {
+        Profile currentProfile = Profile.builder().id(1L).code("ADMIN").active(true).build();
+        Profile requestedProfile = Profile.builder().id(2L).code("VIEWER").active(true).build();
+        Login login = Login.builder().id(10L).login("john.doe").type(LoginType.SERVICE).status(LoginStatus.ACTIVE).profile(currentProfile).build();
+
+        when(loginRepository.findById(10L)).thenReturn(Optional.of(login));
+        when(profileRepository.findById(2L)).thenReturn(Optional.of(requestedProfile));
+        when(loginApprovalRequestRepository.findByLoginIdAndStatus(10L, LoginApprovalRequestStatus.PENDING)).thenReturn(Optional.empty());
+
+        loginServiceBean.requestProfileChange(10L, 2L, LoginApprovalRequestProfileChangeKind.ADD_ADDITIONAL);
+
+        ArgumentCaptor<LoginApprovalRequest> captor = ArgumentCaptor.forClass(LoginApprovalRequest.class);
+        verify(loginApprovalRequestRepository).merge(captor.capture());
+        assertThat(captor.getValue().getProfileChangeKind()).isEqualTo(LoginApprovalRequestProfileChangeKind.ADD_ADDITIONAL);
+    }
+
+    @Test
+    void requestProfileChangeShouldThrowWhenLoginIsNotActive() {
+        Login login = Login.builder().id(10L).status(LoginStatus.INACTIVE).build();
+        when(loginRepository.findById(10L)).thenReturn(Optional.of(login));
+
+        assertThatThrownBy(() -> loginServiceBean.requestProfileChange(10L, 2L, LoginApprovalRequestProfileChangeKind.SET_PRIMARY))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_LOGIN_013.getCode());
+
+        verify(loginApprovalRequestRepository, never()).merge(any());
+    }
+
+    @Test
+    void requestProfileChangeShouldThrowWhenProfileDoesNotExist() {
+        Login login = Login.builder().id(10L).status(LoginStatus.ACTIVE).profile(profile).build();
+        when(loginRepository.findById(10L)).thenReturn(Optional.of(login));
+        when(profileRepository.findById(99L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> loginServiceBean.requestProfileChange(10L, 99L, LoginApprovalRequestProfileChangeKind.SET_PRIMARY))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_PROFILE_001.getCode());
+    }
+
+    @Test
+    void requestProfileChangeShouldThrowWhenProfileIsInactive() {
+        Profile inactiveProfile = Profile.builder().id(2L).code("VIEWER").active(false).build();
+        Login login = Login.builder().id(10L).status(LoginStatus.ACTIVE).profile(profile).build();
+        when(loginRepository.findById(10L)).thenReturn(Optional.of(login));
+        when(profileRepository.findById(2L)).thenReturn(Optional.of(inactiveProfile));
+
+        assertThatThrownBy(() -> loginServiceBean.requestProfileChange(10L, 2L, LoginApprovalRequestProfileChangeKind.SET_PRIMARY))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_PROFILE_002.getCode());
+    }
+
+    @Test
+    void requestProfileChangeShouldThrowWhenAddAdditionalTargetsThePrimaryProfile() {
+        Login login = Login.builder().id(10L).status(LoginStatus.ACTIVE).profile(profile).build();
+        when(loginRepository.findById(10L)).thenReturn(Optional.of(login));
+        when(profileRepository.findById(1L)).thenReturn(Optional.of(profile));
+
+        assertThatThrownBy(() -> loginServiceBean.requestProfileChange(10L, 1L, LoginApprovalRequestProfileChangeKind.ADD_ADDITIONAL))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_LOGIN_020.getCode());
+
+        verify(loginApprovalRequestRepository, never()).merge(any());
+    }
+
+    @Test
+    void requestProfileChangeShouldAllowSetPrimaryToTargetTheCurrentPrimaryProfile() {
+        // SET_PRIMARY não faz o short-circuit especial (Dev Notes: "mais simples, sem caso especial")
+        Login login = Login.builder().id(10L).status(LoginStatus.ACTIVE).profile(profile).build();
+        when(loginRepository.findById(10L)).thenReturn(Optional.of(login));
+        when(profileRepository.findById(1L)).thenReturn(Optional.of(profile));
+        when(loginApprovalRequestRepository.findByLoginIdAndStatus(10L, LoginApprovalRequestStatus.PENDING)).thenReturn(Optional.empty());
+
+        loginServiceBean.requestProfileChange(10L, 1L, LoginApprovalRequestProfileChangeKind.SET_PRIMARY);
+
+        verify(loginApprovalRequestRepository).merge(any());
+    }
+
+    @Test
+    void requestProfileChangeShouldThrowWhenAPendingApprovalRequestAlreadyExists() {
+        Login login = Login.builder().id(10L).status(LoginStatus.ACTIVE).profile(profile).build();
+        when(loginRepository.findById(10L)).thenReturn(Optional.of(login));
+        when(profileRepository.findById(2L)).thenReturn(Optional.of(Profile.builder().id(2L).active(true).build()));
+        when(loginApprovalRequestRepository.findByLoginIdAndStatus(10L, LoginApprovalRequestStatus.PENDING))
+                .thenReturn(Optional.of(LoginApprovalRequest.builder().id(1L).build()));
+
+        assertThatThrownBy(() -> loginServiceBean.requestProfileChange(10L, 2L, LoginApprovalRequestProfileChangeKind.SET_PRIMARY))
                 .isInstanceOf(ScosException.class)
                 .hasFieldOrPropertyWithValue("code", SCOS_LOGIN_019.getCode());
 

@@ -307,7 +307,10 @@ paths:
     put:
       tags: [Login]
       summary: Update login profile
-      description: UC-065 - Substitui o perfil do login. Novas permissões valem na próxima validação
+      description: >-
+        UC-065 - Abre solicitação de troca do perfil principal (Epic 3, cadeia de 3 níveis). O Login
+        continua ACTIVE, operando com o perfil atual, até a solicitação ser aprovada
+        (PUT /v1/login-approval-requests/{id}/approve) - só então o perfil principal muda de fato
       operationId: updateLoginProfile
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -357,8 +360,11 @@ paths:
       tags: [Login]
       summary: Add an additional login profile
       description: >-
-        UC-153 - Adiciona um perfil adicional ao login (SCOS_LOGIN_PROFILE). Sem request body - chave via path params.
-        profileId não pode ser igual ao perfil principal do login (Login.profileId) - rejeitado com 4XX antes da trigger TRG_VALIDATE_LOGIN_PROFILE_NOT_PRIMARY do banco
+        UC-153 - Abre solicitação para adicionar um perfil adicional ao login (Epic 3, cadeia de 3
+        níveis). Sem request body - chave via path params. O Login continua ACTIVE, sem o perfil
+        adicional, até a solicitação ser aprovada - só então a linha é gravada em SCOS_LOGIN_PROFILE.
+        profileId não pode ser igual ao perfil principal do login (Login.profileId) - rejeitado com 4XX
+        já na abertura da solicitação, antes da trigger TRG_VALIDATE_LOGIN_PROFILE_NOT_PRIMARY do banco
       operationId: createLoginProfile
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'

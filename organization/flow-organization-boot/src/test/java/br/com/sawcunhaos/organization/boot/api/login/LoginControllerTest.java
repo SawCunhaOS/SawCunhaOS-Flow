@@ -16,8 +16,13 @@ package br.com.sawcunhaos.organization.boot.api.login;
 import br.com.sawcunhaos.organization.boot.infrastructure.ScosOrganizationTestUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -55,11 +60,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 public class LoginControllerTest extends ScosOrganizationTestUtil {
 
+    @Autowired(required = false)
+    private JdbcTemplate jdbcTemplate;
+
     private static final String EMPLOYEES_URI = "/api/v1/employees";
     private static final String LOGINS_URI = "/api/v1/logins";
+    private static final String LOGIN_APPROVAL_REQUESTS_URI = "/api/v1/login-approval-requests";
 
     private static final long SEEDED_ACTIVE_EMPLOYEE_ID = 1L;
     private static final long SEEDED_ADMIN_PROFILE_ID = 1L;
+    private static final long SEEDED_INTEGRATION_PROFILE_ID = 2L;
     private static final long SEEDED_LOGIN_ID = 1L;
     private static final String SEEDED_LOGIN_VALUE = "scos-admin";
     private static final long SEEDED_INACTIVE_LOGIN_ID = 4L;
@@ -75,6 +85,7 @@ public class LoginControllerTest extends ScosOrganizationTestUtil {
     private static final String CODE_LOGIN_NOT_FOUND = "SCOS_LOGIN_016";
     private static final String CODE_LOGIN_INVALID_TRANSITION = "SCOS_LOGIN_013";
     private static final String CODE_LOGIN_REACTIVATION_PENDING = "SCOS_LOGIN_019";
+    private static final String CODE_PROFILE_ALREADY_PRIMARY = "SCOS_LOGIN_020";
     private static final String CODE_PROFILE_NOT_FOUND = "SCOS_PROFILE_001";
     private static final String CODE_EMPLOYEE_NOT_FOUND = "SCOS_EMPLOYEE_014";
     private static final String CODE_EMPLOYEE_NOT_ACTIVE = "SCOS_EMPLOYEE_025";
@@ -380,6 +391,199 @@ public class LoginControllerTest extends ScosOrganizationTestUtil {
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.status").value(403))
                 .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
+    }
+
+    // =====================================================================================
+    // PUT /v1/logins/{id}/profile/{profileId} — troca do Perfil principal via aprovação (Story 3.4)
+    // =====================================================================================
+
+    @Test
+    @DisplayName("PUT .../profile/{profileId} — abre LoginApprovalRequest e, aprovada, troca o Perfil principal (204)")
+    void updateLoginProfile_approved_changesPrimaryProfile() throws Exception {
+        mockMvc.perform(put(LOGINS_URI + "/{id}/profile/{profileId}", SEEDED_LOGIN_ID, SEEDED_INTEGRATION_PROFILE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isNoContent());
+
+        // Login permanece ACTIVE, com o Perfil atual, até a decisão (AC 1)
+        mockMvc.perform(get(LOGINS_URI + "/{id}", SEEDED_LOGIN_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.status").value("ACTIVE"))
+                .andExpect(jsonPath("$.data.profile.id").value(SEEDED_ADMIN_PROFILE_ID));
+
+        long requestId = findApprovalRequestId(SEEDED_LOGIN_ID);
+
+        mockMvc.perform(put(LOGIN_APPROVAL_REQUESTS_URI + "/{id}/approve", requestId)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"reasonId": 8}
+                                """))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get(LOGINS_URI + "/{id}", SEEDED_LOGIN_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.profile.id").value(SEEDED_INTEGRATION_PROFILE_ID));
+    }
+
+    @Test
+    @DisplayName("PUT .../profile/{profileId} — rejeitada mantém o Perfil principal atual (204)")
+    void updateLoginProfile_rejected_keepsPrimaryProfileUnchanged() throws Exception {
+        long loginId = 2L; // scos-api, primary=INTEGRATION(2)
+
+        // profileId = o próprio principal (2,2) - não (2,1): o jDempotent (scos-foundation-jdempotent)
+        // trata os 2 Long marcados como conjunto não-ordenado - (id=2,profileId=1) colidiria com
+        // (id=1,profileId=2) de outro teste (mesmo cachePrefix UPDATE_LOGIN_PROFILE, mesmo conjunto {1,2})
+        mockMvc.perform(put(LOGINS_URI + "/{id}/profile/{profileId}", loginId, SEEDED_INTEGRATION_PROFILE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isNoContent());
+
+        long requestId = findApprovalRequestId(loginId);
+
+        mockMvc.perform(put(LOGIN_APPROVAL_REQUESTS_URI + "/{id}/reject", requestId)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"reasonId": 3, "observation": "fora do escopo do cargo"}
+                                """))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get(LOGINS_URI + "/{id}", loginId)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.profile.id").value(SEEDED_INTEGRATION_PROFILE_ID));
+    }
+
+    @Test
+    @DisplayName("PUT .../profile/{profileId} — já existe solicitação PENDING para o Login retorna 422 SCOS_LOGIN_019")
+    void updateLoginProfile_withPendingRequestAlready_returns422() throws Exception {
+        long loginId = 3L; // inside.admin, primary=ADMIN(1)
+
+        mockMvc.perform(put(LOGINS_URI + "/{id}/profile/{profileId}", loginId, SEEDED_INTEGRATION_PROFILE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(put(LOGINS_URI + "/{id}/profile/{profileId}", loginId, SEEDED_ADMIN_PROFILE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_LOGIN_REACTIVATION_PENDING));
+    }
+
+    @Test
+    @DisplayName("PUT .../profile/{profileId} — Login não ACTIVE retorna 422 SCOS_LOGIN_013")
+    void updateLoginProfile_loginNotActive_returns422() throws Exception {
+        mockMvc.perform(put(LOGINS_URI + "/{id}/profile/{profileId}", SEEDED_INACTIVE_LOGIN_ID, SEEDED_ADMIN_PROFILE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_LOGIN_INVALID_TRANSITION));
+    }
+
+    @Test
+    @DisplayName("PUT .../profile/{profileId} — profileId inexistente retorna 404 SCOS_PROFILE_001")
+    void updateLoginProfile_profileNotFound_returns404() throws Exception {
+        mockMvc.perform(put(LOGINS_URI + "/{id}/profile/{profileId}", SEEDED_LOGIN_ID, NONEXISTENT_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_PROFILE_NOT_FOUND));
+    }
+
+    // =====================================================================================
+    // POST /v1/logins/{id}/profiles/{profileId} — Perfil adicional via aprovação (Story 3.4)
+    // =====================================================================================
+
+    @Test
+    @DisplayName("POST .../profiles/{profileId} — abre LoginApprovalRequest (201 com o id da solicitação) e, aprovada, grava o Perfil adicional")
+    void createLoginProfile_approved_addsAdditionalProfile() throws Exception {
+        String response = mockMvc.perform(post(LOGINS_URI + "/{id}/profiles/{profileId}", SEEDED_LOGIN_ID, SEEDED_INTEGRATION_PROFILE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data.id").exists())
+                .andReturn().getResponse().getContentAsString();
+        long requestId = ((Number) com.jayway.jsonpath.JsonPath.read(response, "$.data.id")).longValue();
+
+        // ainda não gravado - só quando a solicitação for aprovada (GET /v1/logins/{id}/profiles
+        // não está implementado - fora do escopo desta story - verifica direto na tabela)
+        assertThat(countLoginProfile(SEEDED_LOGIN_ID, SEEDED_INTEGRATION_PROFILE_ID)).isZero();
+
+        mockMvc.perform(put(LOGIN_APPROVAL_REQUESTS_URI + "/{id}/approve", requestId)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"reasonId": 9}
+                                """))
+                .andExpect(status().isNoContent());
+
+        assertThat(countLoginProfile(SEEDED_LOGIN_ID, SEEDED_INTEGRATION_PROFILE_ID)).isEqualTo(1);
+    }
+
+    private int countLoginProfile(long loginId, long profileId) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM scos.scos_login_profile WHERE login_id = ? AND profile_id = ?",
+                Integer.class, loginId, profileId);
+        return count == null ? 0 : count;
+    }
+
+    @Test
+    @DisplayName("POST .../profiles/{profileId} — profileId igual ao Perfil principal retorna 422 SCOS_LOGIN_020")
+    void createLoginProfile_targetingPrimaryProfile_returns422() throws Exception {
+        mockMvc.perform(post(LOGINS_URI + "/{id}/profiles/{profileId}", SEEDED_LOGIN_ID, SEEDED_ADMIN_PROFILE_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_PROFILE_ALREADY_PRIMARY));
+    }
+
+    // =====================================================================================
+    // vw_login_context — Perfil adicional soma permissão do Perfil principal (Story 3.4 Task 1)
+    // Isolado do fluxo de aprovação (Tasks 2-4): grava direto em SCOS_LOGIN_PROFILE, exatamente
+    // como um Perfil adicional já atribuído antes desta story se beneficiaria da correção.
+    // =====================================================================================
+
+    @Test
+    @DisplayName("vw_login_context — Perfil adicional passa a somar permissão do Perfil principal após o fix (Task 1)")
+    @org.springframework.transaction.annotation.Transactional // pool com auto-commit:false (bootstrap.yml) - liga os vários jdbcTemplate.* nesta mesma conexão/transação
+    void vwLoginContext_additionalProfile_aggregatesPermissionWithPrimary() {
+        String uniqueResourceCode = "TEST_STORY_3_4_" + UUID.randomUUID().toString().substring(0, 8);
+
+        UUID resourceId = jdbcTemplate.queryForObject("""
+                INSERT INTO scos.scos_resource (system_id, code, description_pt, description_en, active, resource_group, sub_group, version, definition_updated_at, updated_at, user_at)
+                VALUES ('03000000-0000-0000-0000-000000000003', ?, 'Recurso de teste', 'Test resource', true, 'Test', 'Test', '1.0.0', NOW(), NOW(), 'test')
+                RETURNING resource_id
+                """, UUID.class, uniqueResourceCode);
+
+        // recurso vinculado só ao Perfil INTEGRATION (2) - scos-admin (login 1) tem primary ADMIN (1) e não o possui
+        jdbcTemplate.update("""
+                INSERT INTO scos.scos_profile_resource (profile_id, resource_id, created_at, user_at)
+                VALUES (?, ?, NOW(), 'test')
+                """, SEEDED_INTEGRATION_PROFILE_ID, resourceId);
+
+        // Perfil adicional gravado direto - sem depender do fluxo de aprovação (Dev Notes da Task 1)
+        jdbcTemplate.update("""
+                INSERT INTO scos.scos_login_profile (login_id, profile_id, created_at, user_at)
+                VALUES (?, ?, NOW(), 'test')
+                """, SEEDED_LOGIN_ID, SEEDED_INTEGRATION_PROFILE_ID);
+
+        jdbcTemplate.execute("REFRESH MATERIALIZED VIEW scos.vw_login_context");
+
+        Integer count = jdbcTemplate.queryForObject("""
+                SELECT COUNT(*) FROM scos.vw_login_context WHERE login_id = ? AND permission = ?
+                """, Integer.class, SEEDED_LOGIN_ID, uniqueResourceCode);
+
+        assertThat(count).isEqualTo(1);
+    }
+
+    private long findApprovalRequestId(long loginId) throws Exception {
+        String response = mockMvc.perform(get(LOGIN_APPROVAL_REQUESTS_URI)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .param("page", "1").param("sizePerPage", "10")
+                        .param("loginId", String.valueOf(loginId)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        return ((Number) com.jayway.jsonpath.JsonPath.read(response, "$.data[0].id")).longValue();
     }
 
     // =====================================================================================

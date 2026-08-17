@@ -16,6 +16,7 @@ package br.com.sawcunhaos.organization.domain.access.login.internal;
 import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
 import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
 import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.organization.domain.access.profile.internal.Profile;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -78,6 +79,13 @@ public class LoginApprovalRequest extends BaseEntity {
     private LoginApprovalRequestType requestType;
     @Column(name = "IS_EXCEPTION_SELF_APPROVAL")
     private boolean isExceptionSelfApproval;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "REQUESTED_PROFILE_ID")
+    private Profile requestedProfile;
+    @Column(name = "PROFILE_CHANGE_KIND")
+    @Enumerated(EnumType.STRING)
+    private LoginApprovalRequestProfileChangeKind profileChangeKind;
 
     @Column(name = "SLA_DEADLINE")
     private Instant slaDeadline;

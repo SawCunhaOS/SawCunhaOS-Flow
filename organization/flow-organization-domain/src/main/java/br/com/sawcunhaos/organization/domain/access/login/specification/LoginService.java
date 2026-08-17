@@ -15,6 +15,7 @@ package br.com.sawcunhaos.organization.domain.access.login.specification;
 
 import br.com.sawcunhaos.organization.domain.access.login.dto.LoginInput;
 import br.com.sawcunhaos.organization.domain.access.login.dto.LoginOutput;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestProfileChangeKind;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginStatus;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginType;
 import org.jspecify.annotations.NonNull;
@@ -43,5 +44,16 @@ public interface LoginService {
      * solicitação PENDING para este Login.
      */
     void requestReactivation(@NonNull Long loginId);
+
+    /**
+     * Abre uma {@code LoginApprovalRequest} de troca de Perfil (Story 3.4) para um Login
+     * {@code ACTIVE} - nem o Perfil principal nem os adicionais mudam até a aprovação ser decidida.
+     * @return o id da {@code LoginApprovalRequest} criada.
+     * @throws br.com.sawcunhaos.foundation.utils.exception.ScosException SCOS_LOGIN_016 se o Login
+     * não existir; SCOS_LOGIN_013 se não estiver ACTIVE; SCOS_PROFILE_001 se o Perfil não existir;
+     * SCOS_PROFILE_002 se o Perfil estiver inativo; SCOS_LOGIN_020 se {@code kind=ADD_ADDITIONAL} e
+     * o Perfil já for o principal do Login; SCOS_LOGIN_019 se já houver uma solicitação PENDING.
+     */
+    Long requestProfileChange(@NonNull Long loginId, @NonNull Long profileId, @NonNull LoginApprovalRequestProfileChangeKind kind);
 
 }

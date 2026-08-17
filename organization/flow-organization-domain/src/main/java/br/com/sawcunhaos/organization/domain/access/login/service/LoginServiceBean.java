@@ -21,6 +21,7 @@ import br.com.sawcunhaos.organization.domain.access.login.internal.Login;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequest;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestEscalationPolicy;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestLevel;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestProfileChangeKind;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestRepository;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestStatus;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestType;
@@ -49,7 +50,9 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_015;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_016;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_019;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_020;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_PROFILE_001;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_PROFILE_002;
 
 @Service
 @RequiredArgsConstructor
@@ -91,7 +94,7 @@ class LoginServiceBean implements LoginService {
 
         login = loginRepository.merge(login);
 
-        openApprovalRequest(login, LoginApprovalRequestType.CREATE_LOGIN);
+        openApprovalRequest(login, LoginApprovalRequestType.CREATE_LOGIN, null, null);
 
         return toLoginOutput(login, true);
     }
@@ -105,19 +108,49 @@ class LoginServiceBean implements LoginService {
         if (login.getStatus() != LoginStatus.INACTIVE && login.getStatus() != LoginStatus.BLOCKED) {
             throw new ScosException(SCOS_LOGIN_013);
         }
+        assertNoPendingApprovalRequest(loginId);
+
+        openApprovalRequest(login, LoginApprovalRequestType.REACTIVATE_LOGIN, null, null);
+    }
+
+    @Override
+    @Transactional(rollbackFor = ScosException.class)
+    public Long requestProfileChange(@NonNull Long loginId, @NonNull Long profileId, @NonNull LoginApprovalRequestProfileChangeKind kind) {
+        log.info("Request Login Profile Change: {}, ProfileId: {}, Kind: {}", loginId, profileId, kind);
+
+        Login login = findLoginById(loginId);
+        if (login.getStatus() != LoginStatus.ACTIVE) {
+            throw new ScosException(SCOS_LOGIN_013);
+        }
+
+        Profile requestedProfile = profileRepository.findById(profileId)
+                .orElseThrow(() -> new ScosException(SCOS_PROFILE_001));
+        if (!requestedProfile.isActive()) {
+            throw new ScosException(SCOS_PROFILE_002);
+        }
+        if (kind == LoginApprovalRequestProfileChangeKind.ADD_ADDITIONAL && profileId.equals(login.getProfile().getId())) {
+            throw new ScosException(SCOS_LOGIN_020);
+        }
+        assertNoPendingApprovalRequest(loginId);
+
+        return openApprovalRequest(login, LoginApprovalRequestType.CHANGE_PROFILE, requestedProfile, kind);
+    }
+
+    /** Guarda "1 solicitação pendente por Login por vez" (Story 3.3 AC 3, reaproveitada pela Story 3.4 AC 5). */
+    private void assertNoPendingApprovalRequest(Long loginId) {
         if (loginApprovalRequestRepository.findByLoginIdAndStatus(loginId, LoginApprovalRequestStatus.PENDING).isPresent()) {
             throw new ScosException(SCOS_LOGIN_019);
         }
-
-        openApprovalRequest(login, LoginApprovalRequestType.REACTIVATE_LOGIN);
     }
 
     /**
-     * Abre, na mesma transação, a {@link LoginApprovalRequest} que decide se o Login vira ACTIVE.
-     * Reaproveitado pela criação ({@code CREATE_LOGIN}, Story 3.1) e pela reativação
-     * ({@code REACTIVATE_LOGIN}, Story 3.3) - o Login não muda de status aqui em nenhum dos dois casos.
+     * Abre, na mesma transação, a {@link LoginApprovalRequest} que decide o desfecho. Reaproveitada
+     * pela criação ({@code CREATE_LOGIN}, Story 3.1), reativação ({@code REACTIVATE_LOGIN}, Story 3.3)
+     * e troca de perfil ({@code CHANGE_PROFILE}, Story 3.4) - {@code requestedProfile}/{@code profileChangeKind}
+     * só são usados por este último, nulos nos outros dois.
+     * @return o id da {@code LoginApprovalRequest} criada.
      */
-    private void openApprovalRequest(Login login, LoginApprovalRequestType requestType) {
+    private Long openApprovalRequest(Login login, LoginApprovalRequestType requestType, Profile requestedProfile, LoginApprovalRequestProfileChangeKind profileChangeKind) {
         Login requestedByLogin = loginRepository.findByLogin(scosUserAuthentication.findUserAuthentication())
                 .orElseThrow(() -> new ScosException(SCOS_LOGIN_016));
 
@@ -132,12 +165,14 @@ class LoginServiceBean implements LoginService {
                 .escalationPolicy(LoginApprovalRequestEscalationPolicy.INDEFINITE)
                 .status(LoginApprovalRequestStatus.PENDING)
                 .requestType(requestType)
+                .requestedProfile(requestedProfile)
+                .profileChangeKind(profileChangeKind)
                 .isExceptionSelfApproval(false)
                 .slaDeadline(businessDayCalculator.plusBusinessDays(now, 1, ZoneOffset.UTC))
                 .build();
         request.updateAuditInfo(scosUserAuthentication.findUserAuthentication());
 
-        loginApprovalRequestRepository.merge(request);
+        return loginApprovalRequestRepository.merge(request).getId();
     }
 
     @Override

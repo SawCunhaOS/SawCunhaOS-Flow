@@ -27,6 +27,8 @@ import br.com.sawcunhaos.organization.application.usecase.access.login.CreateEmp
 import br.com.sawcunhaos.organization.application.usecase.access.login.FindAllEmployeeLoginUseCase;
 import br.com.sawcunhaos.organization.application.usecase.access.login.FindAllLoginUseCase;
 import br.com.sawcunhaos.organization.application.usecase.access.login.FindLoginUseCase;
+import br.com.sawcunhaos.organization.application.usecase.access.login.ProfileChangeKind;
+import br.com.sawcunhaos.organization.application.usecase.access.login.RequestLoginProfileChangeUseCase;
 import br.com.sawcunhaos.organization.application.usecase.access.login.RequestLoginReactivationUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +47,22 @@ public class LoginDelegate implements LoginApiDelegate {
     private final FindAllLoginUseCase findAllLoginUseCase;
     private final FindAllEmployeeLoginUseCase findAllEmployeeLoginUseCase;
     private final RequestLoginReactivationUseCase requestLoginReactivationUseCase;
+    private final RequestLoginProfileChangeUseCase requestLoginProfileChangeUseCase;
+
+    @Override
+    public Void updateLoginProfile(Long id, Long profileId, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        requestLoginProfileChangeUseCase.execute(id, profileId, ProfileChangeKind.SET_PRIMARY);
+        return null;
+    }
+
+    @Override
+    public CreateResponse createLoginProfile(Long id, Long profileId, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        return CreateResponse.builder()
+                .data(Create.builder()
+                        .id(requestLoginProfileChangeUseCase.execute(id, profileId, ProfileChangeKind.ADD_ADDITIONAL))
+                        .build())
+                .build();
+    }
 
     @Override
     public Void activateLogin(Long id, LoginReactivationRequest loginReactivationRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {

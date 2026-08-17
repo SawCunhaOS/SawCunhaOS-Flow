@@ -24,7 +24,11 @@ import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApproval
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestType;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginRepository;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginStatus;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestProfileChangeKind;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginType;
+import br.com.sawcunhaos.organization.domain.access.profile.internal.LoginProfile;
+import br.com.sawcunhaos.organization.domain.access.profile.internal.LoginProfileRepository;
+import br.com.sawcunhaos.organization.domain.access.profile.internal.Profile;
 import br.com.sawcunhaos.organization.domain.access.status.internal.LoginStatusHistory;
 import br.com.sawcunhaos.organization.domain.access.status.internal.LoginStatusHistoryRepository;
 import br.com.sawcunhaos.organization.domain.corporate.employee.dto.EmployeeOutput;
@@ -80,6 +84,8 @@ class LoginApprovalRequestServiceBeanTest {
     @Mock
     private LoginRepository loginRepository;
     @Mock
+    private LoginProfileRepository loginProfileRepository;
+    @Mock
     private LoginStatusHistoryRepository loginStatusHistoryRepository;
     @Mock
     private OutboxEventRepository outboxEventRepository;
@@ -94,8 +100,8 @@ class LoginApprovalRequestServiceBeanTest {
 
     private LoginApprovalRequestServiceBean service() {
         return new LoginApprovalRequestServiceBean(loginApprovalRequestRepository, loginRepository,
-                loginStatusHistoryRepository, outboxEventRepository, outboxTopicRepository, employeeService,
-                scosUserAuthentication, clock);
+                loginProfileRepository, loginStatusHistoryRepository, outboxEventRepository, outboxTopicRepository,
+                employeeService, scosUserAuthentication, clock);
     }
 
     /** {@code update(S)}/{@code merge(S)} existem tanto em {@link BaseJpaRepository} quanto em outra sobrecarga - estreita o tipo. */
@@ -341,6 +347,97 @@ class LoginApprovalRequestServiceBeanTest {
         verify(loginStatusHistoryRepository, never()).merge(any());
         verify(outboxEventRepository, never()).merge(any());
         verify(asBaseJpaRepository()).update(request);
+    }
+
+    // ---- decide CHANGE_PROFILE (Story 3.4) ----
+
+    @Test
+    void decideShouldSetPrimaryProfileWhenChangeProfileApproved() {
+        Employee supervisor = employee(5L, "Sam Supervisor", null);
+        Employee employee = employee(2L, "Jane Doe", supervisor);
+        Login login = pendingLogin(1L, employee);
+        login.setStatus(LoginStatus.ACTIVE);
+        Profile currentProfile = Profile.builder().id(1L).code("ADMIN").build();
+        Profile requestedProfile = Profile.builder().id(2L).code("VIEWER").build();
+        login.setProfile(currentProfile);
+        LoginApprovalRequest request = pendingRequest(login, LoginApprovalRequestType.CHANGE_PROFILE);
+        request.setRequestedProfile(requestedProfile);
+        request.setProfileChangeKind(LoginApprovalRequestProfileChangeKind.SET_PRIMARY);
+
+        Login deciderLogin = pendingLogin(50L, supervisor);
+        deciderLogin.setStatus(LoginStatus.ACTIVE);
+
+        when(loginApprovalRequestRepository.findById(1L)).thenReturn(Optional.of(request));
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn(DECIDER_USERNAME);
+        when(loginRepository.findByLogin(DECIDER_USERNAME)).thenReturn(Optional.of(deciderLogin));
+        stubEmployeeActive(2L);
+
+        service().decide(1L, LoginApprovalRequestStatus.APPROVED, 4L, null, false);
+
+        assertThat(login.getProfile()).isEqualTo(requestedProfile);
+        assertThat(request.getStatus()).isEqualTo(LoginApprovalRequestStatus.APPROVED);
+        verify(loginRepository).merge(login);
+        verify(loginProfileRepository, never()).merge(any());
+        verify(loginStatusHistoryRepository, never()).merge(any()); // troca de perfil não é transição de status
+        verify(outboxEventRepository, never()).merge(any()); // sem Saga Keycloak para CHANGE_PROFILE
+    }
+
+    @Test
+    void decideShouldAddAdditionalProfileWhenChangeProfileApproved() {
+        Employee supervisor = employee(5L, "Sam Supervisor", null);
+        Employee employee = employee(2L, "Jane Doe", supervisor);
+        Login login = pendingLogin(1L, employee);
+        login.setStatus(LoginStatus.ACTIVE);
+        Profile requestedProfile = Profile.builder().id(2L).code("VIEWER").build();
+        LoginApprovalRequest request = pendingRequest(login, LoginApprovalRequestType.CHANGE_PROFILE);
+        request.setRequestedProfile(requestedProfile);
+        request.setProfileChangeKind(LoginApprovalRequestProfileChangeKind.ADD_ADDITIONAL);
+
+        Login deciderLogin = pendingLogin(50L, supervisor);
+        deciderLogin.setStatus(LoginStatus.ACTIVE);
+
+        when(loginApprovalRequestRepository.findById(1L)).thenReturn(Optional.of(request));
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn(DECIDER_USERNAME);
+        when(loginRepository.findByLogin(DECIDER_USERNAME)).thenReturn(Optional.of(deciderLogin));
+        stubEmployeeActive(2L);
+
+        service().decide(1L, LoginApprovalRequestStatus.APPROVED, 4L, null, false);
+
+        ArgumentCaptor<LoginProfile> captor = ArgumentCaptor.forClass(LoginProfile.class);
+        verify(loginProfileRepository).merge(captor.capture());
+        assertThat(captor.getValue().getId().getLoginId()).isEqualTo(1L);
+        assertThat(captor.getValue().getId().getProfileId()).isEqualTo(2L);
+        verify(loginRepository, never()).merge(any(Login.class));
+        verify(outboxEventRepository, never()).merge(any());
+    }
+
+    @Test
+    void decideShouldKeepProfileUnchangedWhenChangeProfileIsRejected() {
+        Employee supervisor = employee(5L, "Sam Supervisor", null);
+        Employee employee = employee(2L, "Jane Doe", supervisor);
+        Login login = pendingLogin(1L, employee);
+        login.setStatus(LoginStatus.ACTIVE);
+        Profile currentProfile = Profile.builder().id(1L).code("ADMIN").build();
+        login.setProfile(currentProfile);
+        LoginApprovalRequest request = pendingRequest(login, LoginApprovalRequestType.CHANGE_PROFILE);
+        request.setRequestedProfile(Profile.builder().id(2L).code("VIEWER").build());
+        request.setProfileChangeKind(LoginApprovalRequestProfileChangeKind.SET_PRIMARY);
+
+        Login deciderLogin = pendingLogin(50L, supervisor);
+
+        when(loginApprovalRequestRepository.findById(1L)).thenReturn(Optional.of(request));
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn(DECIDER_USERNAME);
+        when(loginRepository.findByLogin(DECIDER_USERNAME)).thenReturn(Optional.of(deciderLogin));
+        stubEmployeeActive(2L);
+
+        service().decide(1L, LoginApprovalRequestStatus.REJECTED, 3L, "sem aderência", false);
+
+        assertThat(login.getProfile()).isEqualTo(currentProfile);
+        assertThat(request.getStatus()).isEqualTo(LoginApprovalRequestStatus.REJECTED);
+        verify(loginRepository, never()).merge(any(Login.class));
+        verify(loginProfileRepository, never()).merge(any());
+        verify(loginStatusHistoryRepository, never()).merge(any());
+        verify(outboxEventRepository, never()).merge(any());
     }
 
     @Test

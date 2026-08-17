@@ -182,6 +182,15 @@ INSERT INTO scos.SCOS_REASON_ACTIVATE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE, U
 VALUES ('REACTIVATION', 'Reativação de acesso aprovada', 'LOGIN', true, NOW(), 'seed')
 ON CONFLICT DO NOTHING;
 
+-- 2 motivos dedicados à aprovação de troca de Perfil (Story 3.4) - mesma razão do id=7: cada teste
+-- que aprova a 1ª LoginApprovalRequest (id=1) da sua própria rodada precisa de um reasonId só seu.
+-- REASON_ACTIVATE_ID gerados: 8, 9.
+INSERT INTO scos.SCOS_REASON_ACTIVATE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE, UPDATED_AT, USER_AT)
+VALUES
+    ('PROFILE_CHANGE_SET_PRIMARY',    'Troca de Perfil principal aprovada', 'LOGIN', true, NOW(), 'seed'),
+    ('PROFILE_CHANGE_ADD_ADDITIONAL', 'Perfil adicional aprovado',          'LOGIN', true, NOW(), 'seed')
+ON CONFLICT DO NOTHING;
+
 -- ============================================================
 -- SCOS_REASON_INACTIVATE — motivos de encerramento definitivo
 -- ============================================================
