@@ -253,6 +253,8 @@ public enum ExceptionCodeError implements ExceptionCode {
     SCOS_LOGIN_017("SCOS_LOGIN_017", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
     /** Funcionário vinculado ao Login não está mais ACTIVE no momento da decisão. HTTP 422. */
     SCOS_LOGIN_018("SCOS_LOGIN_018", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Já existe uma LoginApprovalRequest PENDING para este Login - só 1 solicitação pendente por vez. HTTP 422. */
+    SCOS_LOGIN_019("SCOS_LOGIN_019", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
 
     /** Profile não encontrado pelo id informado. HTTP 404. */
     SCOS_PROFILE_001("SCOS_PROFILE_001", 404, "SCOS_TITLE_NOT_FOUND"),

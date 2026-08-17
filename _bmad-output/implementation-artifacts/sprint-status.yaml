@@ -41,7 +41,7 @@
 # - Retrospective appends its action items to action_items; sprint-status surfaces open ones
 
 generated: 2026-07-20
-last_updated: 2026-08-16 (3-2 pronta para review)
+last_updated: 2026-08-17 (3-3 pronta para review)
 project: SawCunhaOS-Organization
 project_key: NOKEY
 tracking_system: file-system
@@ -74,7 +74,7 @@ development_status:
   epic-3: in-progress
   3-1-criacao-login-vinculado-funcionario: review
   3-2-cadeia-aprovacao-criacao-login: review
-  3-3-aprovacao-reativacao-login: ready-for-dev
+  3-3-aprovacao-reativacao-login: review
   3-4-perfis-recursos-aprovacao-mudanca-perfil: ready-for-dev
   3-5-retorno-automatico-assistido-licenca-ferias: ready-for-dev
   3-6-aprovacao-criacao-alteracao-perfil-recursos: ready-for-dev

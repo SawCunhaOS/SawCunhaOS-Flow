@@ -35,4 +35,13 @@ public interface LoginService {
     /** Lista Logins paginados, filtrando por type/status/employeeId quando informados (todos opcionais). */
     Page<LoginOutput> findAll(LoginType type, LoginStatus status, Long employeeId, @NonNull Pageable pageable);
 
+    /**
+     * Abre uma {@code LoginApprovalRequest} de reativação (Story 3.3) para um Login {@code INACTIVE}/
+     * {@code BLOCKED} - o Login não muda de status até a aprovação ser decidida.
+     * @throws br.com.sawcunhaos.foundation.utils.exception.ScosException SCOS_LOGIN_016 se não existir;
+     * SCOS_LOGIN_013 se o status atual não for INACTIVE/BLOCKED; SCOS_LOGIN_019 se já houver uma
+     * solicitação PENDING para este Login.
+     */
+    void requestReactivation(@NonNull Long loginId);
+
 }

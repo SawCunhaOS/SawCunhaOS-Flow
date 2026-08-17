@@ -21,9 +21,11 @@ import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApproval
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestLevel;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestRepository;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestStatus;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestType;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginRepository;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginStatus;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginType;
+import br.com.sawcunhaos.organization.domain.access.status.internal.LoginStatusHistory;
 import br.com.sawcunhaos.organization.domain.access.status.internal.LoginStatusHistoryRepository;
 import br.com.sawcunhaos.organization.domain.corporate.employee.dto.EmployeeOutput;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.Employee;
@@ -35,6 +37,7 @@ import br.com.sawcunhaos.organization.domain.outbox.internal.OutboxTopicReposito
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -109,9 +112,14 @@ class LoginApprovalRequestServiceBeanTest {
     }
 
     private LoginApprovalRequest pendingRequest(Login login) {
+        return pendingRequest(login, LoginApprovalRequestType.CREATE_LOGIN);
+    }
+
+    private LoginApprovalRequest pendingRequest(Login login, LoginApprovalRequestType requestType) {
         return LoginApprovalRequest.builder()
                 .id(1L).login(login).currentLevel(LoginApprovalRequestLevel.SUPERVISOR)
                 .status(LoginApprovalRequestStatus.PENDING)
+                .requestType(requestType)
                 .build();
     }
 
@@ -250,6 +258,87 @@ class LoginApprovalRequestServiceBeanTest {
 
         assertThat(request.getStatus()).isEqualTo(LoginApprovalRequestStatus.REJECTED);
         verify(loginStatusHistoryRepository).merge(any());
+        verify(outboxEventRepository, never()).merge(any());
+        verify(asBaseJpaRepository()).update(request);
+    }
+
+    // ---- decide REACTIVATE_LOGIN (Story 3.3) ----
+
+    @Test
+    void decideShouldActivateWhenReactivationApprovedFromInactive() {
+        Employee supervisor = employee(5L, "Sam Supervisor", null);
+        Employee employee = employee(2L, "Jane Doe", supervisor);
+        Login login = pendingLogin(1L, employee);
+        login.setStatus(LoginStatus.INACTIVE);
+        LoginApprovalRequest request = pendingRequest(login, LoginApprovalRequestType.REACTIVATE_LOGIN);
+
+        Login deciderLogin = pendingLogin(50L, supervisor);
+        deciderLogin.setStatus(LoginStatus.ACTIVE);
+
+        when(loginApprovalRequestRepository.findById(1L)).thenReturn(Optional.of(request));
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn(DECIDER_USERNAME);
+        when(loginRepository.findByLogin(DECIDER_USERNAME)).thenReturn(Optional.of(deciderLogin));
+        stubEmployeeActive(2L);
+        stubOutboxTopic();
+
+        service().decide(1L, LoginApprovalRequestStatus.APPROVED, 4L, null, false);
+
+        assertThat(request.getStatus()).isEqualTo(LoginApprovalRequestStatus.APPROVED);
+        ArgumentCaptor<LoginStatusHistory> historyCaptor = ArgumentCaptor.forClass(LoginStatusHistory.class);
+        verify(loginStatusHistoryRepository).merge(historyCaptor.capture());
+        assertThat(historyCaptor.getValue().getStatus()).isEqualTo(LoginStatus.ACTIVE);
+        assertThat(historyCaptor.getValue().getReasonActivate()).isNotNull();
+        assertThat(historyCaptor.getValue().getReasonEnable()).isNull();
+        verify(outboxEventRepository).merge(any());
+    }
+
+    @Test
+    void decideShouldEnableWhenReactivationApprovedFromBlocked() {
+        Employee supervisor = employee(5L, "Sam Supervisor", null);
+        Employee employee = employee(2L, "Jane Doe", supervisor);
+        Login login = pendingLogin(1L, employee);
+        login.setStatus(LoginStatus.BLOCKED);
+        LoginApprovalRequest request = pendingRequest(login, LoginApprovalRequestType.REACTIVATE_LOGIN);
+
+        Login deciderLogin = pendingLogin(50L, supervisor);
+        deciderLogin.setStatus(LoginStatus.ACTIVE);
+
+        when(loginApprovalRequestRepository.findById(1L)).thenReturn(Optional.of(request));
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn(DECIDER_USERNAME);
+        when(loginRepository.findByLogin(DECIDER_USERNAME)).thenReturn(Optional.of(deciderLogin));
+        stubEmployeeActive(2L);
+        stubOutboxTopic();
+
+        service().decide(1L, LoginApprovalRequestStatus.APPROVED, 4L, null, false);
+
+        ArgumentCaptor<LoginStatusHistory> historyCaptor = ArgumentCaptor.forClass(LoginStatusHistory.class);
+        verify(loginStatusHistoryRepository).merge(historyCaptor.capture());
+        assertThat(historyCaptor.getValue().getStatus()).isEqualTo(LoginStatus.ACTIVE);
+        assertThat(historyCaptor.getValue().getReasonEnable()).isNotNull();
+        assertThat(historyCaptor.getValue().getReasonActivate()).isNull();
+        verify(outboxEventRepository).merge(any());
+    }
+
+    @Test
+    void decideShouldKeepLoginUnchangedWhenReactivationIsRejected() {
+        Employee supervisor = employee(5L, "Sam Supervisor", null);
+        Employee employee = employee(2L, "Jane Doe", supervisor);
+        Login login = pendingLogin(1L, employee);
+        login.setStatus(LoginStatus.INACTIVE);
+        LoginApprovalRequest request = pendingRequest(login, LoginApprovalRequestType.REACTIVATE_LOGIN);
+
+        Login deciderLogin = pendingLogin(50L, supervisor);
+
+        when(loginApprovalRequestRepository.findById(1L)).thenReturn(Optional.of(request));
+        when(scosUserAuthentication.findUserAuthentication()).thenReturn(DECIDER_USERNAME);
+        when(loginRepository.findByLogin(DECIDER_USERNAME)).thenReturn(Optional.of(deciderLogin));
+        stubEmployeeActive(2L);
+
+        service().decide(1L, LoginApprovalRequestStatus.REJECTED, 3L, "sem justificativa", false);
+
+        assertThat(login.getStatus()).isEqualTo(LoginStatus.INACTIVE);
+        assertThat(request.getStatus()).isEqualTo(LoginApprovalRequestStatus.REJECTED);
+        verify(loginStatusHistoryRepository, never()).merge(any());
         verify(outboxEventRepository, never()).merge(any());
         verify(asBaseJpaRepository()).update(request);
     }

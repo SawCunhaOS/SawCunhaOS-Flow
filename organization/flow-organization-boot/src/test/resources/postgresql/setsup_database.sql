@@ -174,6 +174,14 @@ INSERT INTO scos.SCOS_REASON_ACTIVATE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE, U
 VALUES ('ARCHIVED_REASON', 'Motivo de ativação arquivado (inativo p/ testes)', 'EMPLOYEE', false, NOW(), 'seed')
 ON CONFLICT DO NOTHING;
 
+-- Motivo de aprovação de reativação (Story 3.3), distinto do NEW_HIRE (id=4) usado na aprovação de
+-- criação (Story 3.2) - reasonId próprio evita colidir no cache jDempotent (Redis não é resetado
+-- entre métodos/classes) quando ambos os fluxos aprovam a 1ª LoginApprovalRequest (id=1) da rodada.
+-- REASON_ACTIVATE_ID gerado: 7.
+INSERT INTO scos.SCOS_REASON_ACTIVATE (CODE, DESCRIPTION, ENTITY_TYPE, ACTIVE, UPDATED_AT, USER_AT)
+VALUES ('REACTIVATION', 'Reativação de acesso aprovada', 'LOGIN', true, NOW(), 'seed')
+ON CONFLICT DO NOTHING;
+
 -- ============================================================
 -- SCOS_REASON_INACTIVATE — motivos de encerramento definitivo
 -- ============================================================
@@ -555,16 +563,26 @@ ON CONFLICT DO NOTHING;
 --     o Login de quem está autenticado nos testes (Story 3.2 - abertura da LoginApprovalRequest
 --     na criação, decisão de aprovação). Só no seed de teste - não existe em produção.
 --     EXTERNAL_ID = 04000000-0000-0000-0000-000000000004
+--
+--   scos-inactive → SERVICE (sem funcionário), status INACTIVE - fixture da Story 3.3
+--     (PUT /v1/logins/{id}/enable), já que disable/block não têm endpoint que os produza
+--     EXTERNAL_ID = 05000000-0000-0000-0000-000000000005
+--
+--   scos-blocked → SERVICE (sem funcionário), status BLOCKED - fixture da Story 3.3
+--     (PUT /v1/logins/{id}/unblock)
+--     EXTERNAL_ID = 06000000-0000-0000-0000-000000000006
 -- ============================================================
 INSERT INTO scos.SCOS_LOGIN (
     PROFILE_ID, EMPLOYEE_ID, EXTERNAL_ID, LOGIN, STATUS, TYPE, UPDATED_AT, USER_AT
 )
 VALUES
-    (1, 1,    '01000000-0000-0000-0000-000000000001', 'scos-admin',   'ACTIVE', 'EMPLOYEE', NOW(), 'seed'),
-    (2, NULL, '02000000-0000-0000-0000-000000000002', 'scos-api',     'ACTIVE', 'SERVICE',  NOW(), 'seed'),
-    (1, 1,    '04000000-0000-0000-0000-000000000004', 'inside.admin', 'ACTIVE', 'EMPLOYEE', NOW(), 'seed')
+    (1, 1,    '01000000-0000-0000-0000-000000000001', 'scos-admin',    'ACTIVE',   'EMPLOYEE', NOW(), 'seed'),
+    (2, NULL, '02000000-0000-0000-0000-000000000002', 'scos-api',      'ACTIVE',   'SERVICE',  NOW(), 'seed'),
+    (1, 1,    '04000000-0000-0000-0000-000000000004', 'inside.admin',  'ACTIVE',   'EMPLOYEE', NOW(), 'seed'),
+    (2, NULL, '05000000-0000-0000-0000-000000000005', 'scos-inactive', 'INACTIVE', 'SERVICE',  NOW(), 'seed'),
+    (2, NULL, '06000000-0000-0000-0000-000000000006', 'scos-blocked',  'BLOCKED',  'SERVICE',  NOW(), 'seed')
 ON CONFLICT DO NOTHING;
--- LOGIN_ID: 1 = scos-admin, 2 = scos-api, 3 = inside.admin
+-- LOGIN_ID: 1 = scos-admin, 2 = scos-api, 3 = inside.admin, 4 = scos-inactive, 5 = scos-blocked
 
 -- ============================================================
 -- SCOS_EMPLOYEE_POSITION_HISTORY — cargo inicial (bootstrap)

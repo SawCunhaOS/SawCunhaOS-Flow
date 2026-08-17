@@ -21,6 +21,8 @@ import br.com.sawcunhaos.organization.domain.access.login.internal.Login;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequest;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestLevel;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestRepository;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestStatus;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestType;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginRepository;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginStatus;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginType;
@@ -46,8 +48,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_014;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_013;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_015;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_016;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_019;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_PROFILE_001;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -254,5 +258,93 @@ class LoginServiceBeanTest {
         loginServiceBean.findAll(LoginType.EMPLOYEE, LoginStatus.ACTIVE, 2L, pageable);
 
         verify(loginRepository).findAllFiltered(LoginType.EMPLOYEE, LoginStatus.ACTIVE, 2L, pageable);
+    }
+
+    // ---- requestReactivation (Story 3.3) ----
+
+    @Test
+    void requestReactivationShouldOpenApprovalRequestWhenLoginIsInactive() {
+        Login login = Login.builder().id(10L).login("john.doe").type(LoginType.SERVICE).status(LoginStatus.INACTIVE).build();
+        when(loginRepository.findById(10L)).thenReturn(Optional.of(login));
+        when(loginApprovalRequestRepository.findByLoginIdAndStatus(10L, LoginApprovalRequestStatus.PENDING)).thenReturn(Optional.empty());
+
+        loginServiceBean.requestReactivation(10L);
+
+        assertThat(login.getStatus()).isEqualTo(LoginStatus.INACTIVE);
+
+        ArgumentCaptor<LoginApprovalRequest> captor = ArgumentCaptor.forClass(LoginApprovalRequest.class);
+        verify(loginApprovalRequestRepository).merge(captor.capture());
+        assertThat(captor.getValue().getLogin()).isEqualTo(login);
+        assertThat(captor.getValue().getRequestType()).isEqualTo(LoginApprovalRequestType.REACTIVATE_LOGIN);
+        assertThat(captor.getValue().getRequestedByLogin()).isEqualTo(requester);
+    }
+
+    @Test
+    void requestReactivationShouldOpenApprovalRequestWhenLoginIsBlocked() {
+        Login login = Login.builder().id(11L).login("jane.doe").type(LoginType.SERVICE).status(LoginStatus.BLOCKED).build();
+        when(loginRepository.findById(11L)).thenReturn(Optional.of(login));
+        when(loginApprovalRequestRepository.findByLoginIdAndStatus(11L, LoginApprovalRequestStatus.PENDING)).thenReturn(Optional.empty());
+
+        loginServiceBean.requestReactivation(11L);
+
+        assertThat(login.getStatus()).isEqualTo(LoginStatus.BLOCKED);
+        verify(loginApprovalRequestRepository).merge(any(LoginApprovalRequest.class));
+    }
+
+    @Test
+    void requestReactivationShouldThrowWhenLoginNotFound() {
+        when(loginRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> loginServiceBean.requestReactivation(999L))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_LOGIN_016.getCode());
+
+        verify(loginApprovalRequestRepository, never()).merge(any());
+    }
+
+    @Test
+    void requestReactivationShouldThrowWhenLoginIsAlreadyActive() {
+        Login login = Login.builder().id(10L).login("john.doe").type(LoginType.SERVICE).status(LoginStatus.ACTIVE).build();
+        when(loginRepository.findById(10L)).thenReturn(Optional.of(login));
+
+        assertThatThrownBy(() -> loginServiceBean.requestReactivation(10L))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_LOGIN_013.getCode());
+
+        verify(loginApprovalRequestRepository, never()).merge(any());
+    }
+
+    @Test
+    void requestReactivationShouldThrowWhenLoginIsPendingApproval() {
+        Login login = Login.builder().id(10L).login("john.doe").type(LoginType.SERVICE).status(LoginStatus.PENDING_APPROVAL).build();
+        when(loginRepository.findById(10L)).thenReturn(Optional.of(login));
+
+        assertThatThrownBy(() -> loginServiceBean.requestReactivation(10L))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_LOGIN_013.getCode());
+    }
+
+    @Test
+    void requestReactivationShouldThrowWhenLoginIsRejected() {
+        Login login = Login.builder().id(10L).login("john.doe").type(LoginType.SERVICE).status(LoginStatus.REJECTED).build();
+        when(loginRepository.findById(10L)).thenReturn(Optional.of(login));
+
+        assertThatThrownBy(() -> loginServiceBean.requestReactivation(10L))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_LOGIN_013.getCode());
+    }
+
+    @Test
+    void requestReactivationShouldThrowWhenAPendingApprovalRequestAlreadyExists() {
+        Login login = Login.builder().id(10L).login("john.doe").type(LoginType.SERVICE).status(LoginStatus.INACTIVE).build();
+        when(loginRepository.findById(10L)).thenReturn(Optional.of(login));
+        when(loginApprovalRequestRepository.findByLoginIdAndStatus(10L, LoginApprovalRequestStatus.PENDING))
+                .thenReturn(Optional.of(LoginApprovalRequest.builder().id(1L).build()));
+
+        assertThatThrownBy(() -> loginServiceBean.requestReactivation(10L))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_LOGIN_019.getCode());
+
+        verify(loginApprovalRequestRepository, never()).merge(any());
     }
 }

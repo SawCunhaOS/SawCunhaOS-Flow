@@ -27,7 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Teste de integração das regras de negócio do agregado Login — mecânica base de criação
  * (Story 3.1): {@code POST /v1/employees/{employeeId}/logins} nasce sempre em
- * {@code PENDING_APPROVAL}, e os 3 GETs (por id, listagem geral, listagem por funcionário).
+ * {@code PENDING_APPROVAL}, os 3 GETs (por id, listagem geral, listagem por funcionário), e a
+ * reativação via aprovação (Story 3.3): {@code PUT .../enable}/{@code unblock} abrem uma
+ * {@code LoginApprovalRequest} sem mudar o status do Login.
  *
  * <p>Sobe o stack real via {@link ScosOrganizationTestUtil}: Postgres + Redis (ComposeContainer),
  * WireMock :7080 (Keycloak/JWT) e GrpcMock :8090 (registry/authority). Caminho exercitado:
@@ -41,6 +43,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *   <li>SCOS_LOGIN id=1 ('scos-admin', EMPLOYEE, employee_id=1, ACTIVE) — usado pro cenário
  *       de login duplicado (409) e pros GETs de sucesso</li>
  *   <li>SCOS_LOGIN id=2 ('scos-api', SERVICE, sem employee, ACTIVE) — usado pro filtro por type</li>
+ *   <li>SCOS_LOGIN id=4 ('scos-inactive', SERVICE, sem employee, INACTIVE) — fixture da Story 3.3
+ *       para {@code PUT .../enable}, já que não há endpoint que produza esse estado via API</li>
+ *   <li>SCOS_LOGIN id=5 ('scos-blocked', SERVICE, sem employee, BLOCKED) — fixture da Story 3.3
+ *       para {@code PUT .../unblock}</li>
  * </ul>
  *
  * <p>Isolamento por método via {@code @Sql} (setup/delete_all) — ver Javadoc de
@@ -56,6 +62,8 @@ public class LoginControllerTest extends ScosOrganizationTestUtil {
     private static final long SEEDED_ADMIN_PROFILE_ID = 1L;
     private static final long SEEDED_LOGIN_ID = 1L;
     private static final String SEEDED_LOGIN_VALUE = "scos-admin";
+    private static final long SEEDED_INACTIVE_LOGIN_ID = 4L;
+    private static final long SEEDED_BLOCKED_LOGIN_ID = 5L;
     private static final long NONEXISTENT_ID = 999_999L;
 
     private static final long SEEDED_COMPANY_ID = 1L;
@@ -65,6 +73,8 @@ public class LoginControllerTest extends ScosOrganizationTestUtil {
 
     private static final String CODE_LOGIN_CONFLICT = "SCOS_LOGIN_015";
     private static final String CODE_LOGIN_NOT_FOUND = "SCOS_LOGIN_016";
+    private static final String CODE_LOGIN_INVALID_TRANSITION = "SCOS_LOGIN_013";
+    private static final String CODE_LOGIN_REACTIVATION_PENDING = "SCOS_LOGIN_019";
     private static final String CODE_PROFILE_NOT_FOUND = "SCOS_PROFILE_001";
     private static final String CODE_EMPLOYEE_NOT_FOUND = "SCOS_EMPLOYEE_014";
     private static final String CODE_EMPLOYEE_NOT_ACTIVE = "SCOS_EMPLOYEE_025";
@@ -190,6 +200,183 @@ public class LoginControllerTest extends ScosOrganizationTestUtil {
                         .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(createLoginBody("new.login.7", SEEDED_ADMIN_PROFILE_ID)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403))
+                .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
+    }
+
+    // =====================================================================================
+    // PUT /v1/logins/{id}/enable e /unblock — reativação via aprovação (Story 3.3)
+    // =====================================================================================
+
+    @Test
+    @DisplayName("PUT /v1/logins/{id}/enable — Login INACTIVE abre LoginApprovalRequest PENDING e permanece INACTIVE (204)")
+    void activateLogin_fromInactive_opensApprovalRequestWithoutChangingStatus() throws Exception {
+        mockMvc.perform(put(LOGINS_URI + "/{id}/enable", SEEDED_INACTIVE_LOGIN_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(reactivationBody("activate-inactive")))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get(LOGINS_URI + "/{id}", SEEDED_INACTIVE_LOGIN_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.status").value("INACTIVE"));
+
+        mockMvc.perform(get("/api/v1/login-approval-requests")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .param("page", "1").param("sizePerPage", "10")
+                        .param("loginId", String.valueOf(SEEDED_INACTIVE_LOGIN_ID)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].loginId").value(SEEDED_INACTIVE_LOGIN_ID))
+                .andExpect(jsonPath("$.data[0].status").value("PENDING"))
+                .andExpect(jsonPath("$.data[0].requestType").value("REACTIVATE_LOGIN"));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/logins/{id}/unblock — Login BLOCKED abre LoginApprovalRequest PENDING e permanece BLOCKED (204)")
+    void unblockLogin_fromBlocked_opensApprovalRequestWithoutChangingStatus() throws Exception {
+        mockMvc.perform(put(LOGINS_URI + "/{id}/unblock", SEEDED_BLOCKED_LOGIN_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(reactivationBody("unblock-blocked")))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get(LOGINS_URI + "/{id}", SEEDED_BLOCKED_LOGIN_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.status").value("BLOCKED"));
+
+        mockMvc.perform(get("/api/v1/login-approval-requests")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .param("page", "1").param("sizePerPage", "10")
+                        .param("loginId", String.valueOf(SEEDED_BLOCKED_LOGIN_ID)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].requestType").value("REACTIVATE_LOGIN"));
+    }
+
+    @Test
+    @DisplayName("PUT .../approve — reativação (INACTIVE) aprovada leva o Login a ACTIVE via activate() (204)")
+    void approveReactivation_fromInactive_activatesLogin() throws Exception {
+        mockMvc.perform(put(LOGINS_URI + "/{id}/enable", SEEDED_INACTIVE_LOGIN_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(reactivationBody("approve-inactive")))
+                .andExpect(status().isNoContent());
+
+        long requestId = findReactivationRequestId(SEEDED_INACTIVE_LOGIN_ID);
+
+        // reasonId 7 (LOGIN/REACTIVATION) - não 4 (LOGIN/NEW_HIRE) - para não colidir no cache
+        // jDempotent com LoginApprovalRequestControllerTest#approve_withSystemAccessHolder_activatesLogin,
+        // que aprova a 1ª LoginApprovalRequest (id=1) da sua rodada com o mesmo reasonId=4 e nenhum
+        // outro campo no corpo para diferenciar (Redis não é resetado entre métodos/classes)
+        mockMvc.perform(put("/api/v1/login-approval-requests/{id}/approve", requestId)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"reasonId": 7}
+                                """))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get(LOGINS_URI + "/{id}", SEEDED_INACTIVE_LOGIN_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.status").value("ACTIVE"));
+    }
+
+    @Test
+    @DisplayName("PUT .../reject — reativação (BLOCKED) rejeitada mantém o Login BLOCKED, sem novo estado terminal (204)")
+    void rejectReactivation_fromBlocked_keepsLoginBlocked() throws Exception {
+        mockMvc.perform(put(LOGINS_URI + "/{id}/unblock", SEEDED_BLOCKED_LOGIN_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(reactivationBody("reject-blocked")))
+                .andExpect(status().isNoContent());
+
+        long requestId = findReactivationRequestId(SEEDED_BLOCKED_LOGIN_ID);
+
+        mockMvc.perform(put("/api/v1/login-approval-requests/{id}/reject", requestId)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"reasonId": 3, "observation": "sem aval"}
+                                """))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get(LOGINS_URI + "/{id}", SEEDED_BLOCKED_LOGIN_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.status").value("BLOCKED"));
+
+        mockMvc.perform(get("/api/v1/login-approval-requests/{id}", requestId)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.status").value("REJECTED"));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/logins/{id}/enable — Login já ACTIVE retorna 422 SCOS_LOGIN_013 (transição inválida)")
+    void activateLogin_alreadyActive_returns422() throws Exception {
+        mockMvc.perform(put(LOGINS_URI + "/{id}/enable", SEEDED_LOGIN_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_LOGIN_INVALID_TRANSITION));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/logins/{id}/enable — id inexistente retorna 404 SCOS_LOGIN_016")
+    void activateLogin_notFound_returns404() throws Exception {
+        mockMvc.perform(put(LOGINS_URI + "/{id}/enable", NONEXISTENT_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_LOGIN_NOT_FOUND));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/logins/{id}/enable — já existe solicitação PENDING para o Login retorna 422 SCOS_LOGIN_019")
+    void activateLogin_withPendingReactivationAlready_returns422() throws Exception {
+        mockMvc.perform(put(LOGINS_URI + "/{id}/enable", SEEDED_INACTIVE_LOGIN_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(reactivationBody("pending-first")))
+                .andExpect(status().isNoContent());
+
+        // observation diferente da 1ª chamada - senão o jDempotent devolveria a resposta cacheada
+        // (204) da 1ª chamada em vez de executar a regra de negócio de novo (ver Javadoc da classe)
+        mockMvc.perform(put(LOGINS_URI + "/{id}/enable", SEEDED_INACTIVE_LOGIN_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(reactivationBody("pending-second")))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.status").value(422))
+                .andExpect(jsonPath("$.code").value(CODE_LOGIN_REACTIVATION_PENDING));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/logins/{id}/enable — sem token retorna 401")
+    void activateLogin_withoutToken_returns401() throws Exception {
+        mockMvc.perform(put(LOGINS_URI + "/{id}/enable", SEEDED_INACTIVE_LOGIN_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, null, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("PUT /v1/logins/{id}/enable — sem a permissão ENABLE_LOGIN retorna 403")
+    void activateLogin_withoutPermission_returns403() throws Exception {
+        stubValidateAuthorityWithoutPermissions();
+
+        mockMvc.perform(put(LOGINS_URI + "/{id}/enable", SEEDED_INACTIVE_LOGIN_ID)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(reactivationBody("without-permission")))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.status").value(403))
                 .andExpect(jsonPath("$.code").value(CODE_ACCESS_DENIED));
@@ -363,6 +550,25 @@ public class LoginControllerTest extends ScosOrganizationTestUtil {
                   "profileId": %d
                 }
                 """.formatted(login, profileId);
+    }
+
+    /** {@code observation} é a chave de idempotência de enable/unblock (sem mais reasonId) - precisa ser única por teste, mesma lógica do {@code login} único usado na criação. */
+    private static String reactivationBody(String observation) {
+        return """
+                {
+                  "observation": "%s"
+                }
+                """.formatted(observation);
+    }
+
+    private long findReactivationRequestId(long loginId) throws Exception {
+        String response = mockMvc.perform(get("/api/v1/login-approval-requests")
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .param("page", "1").param("sizePerPage", "10")
+                        .param("loginId", String.valueOf(loginId)))
+                .andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        return ((Number) com.jayway.jsonpath.JsonPath.read(response, "$.data[0].id")).longValue();
     }
 
     private long createEmployeeLogin(long employeeId, String login, long profileId) throws Exception {

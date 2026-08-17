@@ -21,6 +21,7 @@ import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApproval
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestRepository;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestStatus;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginRepository;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginStatus;
 import br.com.sawcunhaos.organization.domain.access.login.specification.LoginApprovalRequestService;
 import br.com.sawcunhaos.organization.domain.access.status.internal.LoginStatusHistory;
 import br.com.sawcunhaos.organization.domain.access.status.internal.LoginStatusHistoryRepository;
@@ -107,13 +108,24 @@ class LoginApprovalRequestServiceBean implements LoginApprovalRequestService {
 
         Instant now = clock.instant();
         Login login = request.getLogin();
+        boolean approved = decision == LoginApprovalRequestStatus.APPROVED;
 
-        if (decision == LoginApprovalRequestStatus.APPROVED) {
-            persistHistory(login.approve(reasonId), observation, user);
+        LoginStatusHistory history = switch (request.getRequestType()) {
+            case CREATE_LOGIN -> approved ? login.approve(reasonId) : login.reject(reasonId);
+            case REACTIVATE_LOGIN -> approved
+                    ? (login.getStatus() == LoginStatus.INACTIVE ? login.activate(reasonId) : login.enable(reasonId))
+                    : null; // rejeição de reativação não muda o Login (AC 5 da Story 3.3) - só a LoginApprovalRequest registra REJECTED
+            case CHANGE_PROFILE -> throw new IllegalStateException("Story 3.4"); // guarda temporária, substituída lá
+        };
+
+        if (history != null) {
+            persistHistory(history, observation, user);
+        }
+
+        if (approved) {
             request.approve(currentLogin, isSelfApproval, now);
             openKeycloakSyncOutboxEvent(login, user, now);
         } else {
-            persistHistory(login.reject(reasonId), observation, user);
             request.reject(currentLogin, isSelfApproval, now);
         }
 

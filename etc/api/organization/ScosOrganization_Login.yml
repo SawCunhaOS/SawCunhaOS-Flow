@@ -157,8 +157,9 @@ paths:
       tags: [Login]
       summary: Activate login
       description: >-
-        UC-141 - Transição de domínio "activate": reativa login com status INACTIVE para ACTIVE. Dispara Saga Keycloak TYPE=UPDATE reabilitando o usuário (enabled=true).
-        Motivo vem do catálogo ReasonActivate
+        UC-141 - Abre solicitação de reativação (Epic 3, cadeia de 3 níveis). O Login permanece INACTIVE
+        até a solicitação ser aprovada (PUT /v1/login-approval-requests/{id}/approve), quando então
+        transita para ACTIVE via Login.activate() e dispara a Saga Keycloak TYPE=UPDATE
       operationId: activateLogin
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -169,7 +170,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginStatusTransitionRequest'
+              $ref: '#/components/schemas/LoginReactivationRequest'
         x-jdempotentrequestpayload: true
       responses:
         '204':
@@ -251,8 +252,9 @@ paths:
       tags: [Login]
       summary: Unblock login
       description: >-
-        UC-064 - Transição de domínio "enable": restaura o acesso de um login BLOCKED, status muda para ACTIVE. Dispara Saga Keycloak TYPE=UPDATE reabilitando o usuário (enabled=true).
-        Nome da rota (`unblock`) não corresponde 1:1 ao nome da transição de domínio (`enable`) - motivo vem do catálogo ReasonEnable
+        UC-064 - Abre solicitação de reativação (Epic 3, cadeia de 3 níveis). O Login permanece BLOCKED
+        até a solicitação ser aprovada (PUT /v1/login-approval-requests/{id}/approve), quando então
+        transita para ACTIVE via Login.enable() e dispara a Saga Keycloak TYPE=UPDATE
       operationId: unblockLogin
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -263,7 +265,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginStatusTransitionRequest'
+              $ref: '#/components/schemas/LoginReactivationRequest'
         x-jdempotentrequestpayload: true
       responses:
         '204':
@@ -1163,6 +1165,15 @@ components:
             $ref: '#/components/schemas/ResourceSummary'
         paginatedDTO:
           $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    LoginReactivationRequest:
+      type: object
+      description: >-
+        Corpo de enable/unblock (Epic 3) - sem reasonId: o motivo da reativação é dado na aprovação
+        (PUT /v1/login-approval-requests/{id}/approve), não na abertura da solicitação
+      properties:
+        observation:
+          type: string
+          description: Texto livre do solicitante sobre o pedido de reativação - não é o motivo formal do catálogo
     LoginStatusTransitionRequest:
       required: [reasonId]
       type: object

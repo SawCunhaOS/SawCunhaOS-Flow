@@ -45,8 +45,10 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_014;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_013;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_015;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_016;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_019;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_PROFILE_001;
 
 @Service
@@ -89,17 +91,33 @@ class LoginServiceBean implements LoginService {
 
         login = loginRepository.merge(login);
 
-        openApprovalRequest(login);
+        openApprovalRequest(login, LoginApprovalRequestType.CREATE_LOGIN);
 
         return toLoginOutput(login, true);
     }
 
+    @Override
+    @Transactional(rollbackFor = ScosException.class)
+    public void requestReactivation(@NonNull Long loginId) {
+        log.info("Request Login Reactivation: {}", loginId);
+
+        Login login = findLoginById(loginId);
+        if (login.getStatus() != LoginStatus.INACTIVE && login.getStatus() != LoginStatus.BLOCKED) {
+            throw new ScosException(SCOS_LOGIN_013);
+        }
+        if (loginApprovalRequestRepository.findByLoginIdAndStatus(loginId, LoginApprovalRequestStatus.PENDING).isPresent()) {
+            throw new ScosException(SCOS_LOGIN_019);
+        }
+
+        openApprovalRequest(login, LoginApprovalRequestType.REACTIVATE_LOGIN);
+    }
+
     /**
-     * Abre, na mesma transação da criação, a {@link LoginApprovalRequest} que decide se o Login
-     * PENDING_APPROVAL vira ACTIVE. Reaproveitado por toda criação de Login (EMPLOYEE hoje;
-     * EXTERNAL/SERVICE do Epic 4 resolve direto para SYSTEM_ACCESS_GROUP, FR-26).
+     * Abre, na mesma transação, a {@link LoginApprovalRequest} que decide se o Login vira ACTIVE.
+     * Reaproveitado pela criação ({@code CREATE_LOGIN}, Story 3.1) e pela reativação
+     * ({@code REACTIVATE_LOGIN}, Story 3.3) - o Login não muda de status aqui em nenhum dos dois casos.
      */
-    private void openApprovalRequest(Login login) {
+    private void openApprovalRequest(Login login, LoginApprovalRequestType requestType) {
         Login requestedByLogin = loginRepository.findByLogin(scosUserAuthentication.findUserAuthentication())
                 .orElseThrow(() -> new ScosException(SCOS_LOGIN_016));
 
@@ -113,7 +131,7 @@ class LoginServiceBean implements LoginService {
                 .currentLevel(firstLevel)
                 .escalationPolicy(LoginApprovalRequestEscalationPolicy.INDEFINITE)
                 .status(LoginApprovalRequestStatus.PENDING)
-                .requestType(LoginApprovalRequestType.CREATE_LOGIN)
+                .requestType(requestType)
                 .isExceptionSelfApproval(false)
                 .slaDeadline(businessDayCalculator.plusBusinessDays(now, 1, ZoneOffset.UTC))
                 .build();

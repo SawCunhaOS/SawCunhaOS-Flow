@@ -19,6 +19,7 @@ import br.com.sawcunhaos.organization.api.dto.CreateEmployeeLoginRequest;
 import br.com.sawcunhaos.organization.api.dto.CreateResponse;
 import br.com.sawcunhaos.organization.api.dto.GetAllLoginsResponse;
 import br.com.sawcunhaos.organization.api.dto.GetLoginResponse;
+import br.com.sawcunhaos.organization.api.dto.LoginReactivationRequest;
 import br.com.sawcunhaos.organization.api.dto.LoginStatus;
 import br.com.sawcunhaos.organization.api.dto.LoginType;
 import br.com.sawcunhaos.organization.api.dto.PaginationFilter;
@@ -26,6 +27,7 @@ import br.com.sawcunhaos.organization.application.usecase.access.login.CreateEmp
 import br.com.sawcunhaos.organization.application.usecase.access.login.FindAllEmployeeLoginUseCase;
 import br.com.sawcunhaos.organization.application.usecase.access.login.FindAllLoginUseCase;
 import br.com.sawcunhaos.organization.application.usecase.access.login.FindLoginUseCase;
+import br.com.sawcunhaos.organization.application.usecase.access.login.RequestLoginReactivationUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -42,6 +44,19 @@ public class LoginDelegate implements LoginApiDelegate {
     private final FindLoginUseCase findLoginUseCase;
     private final FindAllLoginUseCase findAllLoginUseCase;
     private final FindAllEmployeeLoginUseCase findAllEmployeeLoginUseCase;
+    private final RequestLoginReactivationUseCase requestLoginReactivationUseCase;
+
+    @Override
+    public Void activateLogin(Long id, LoginReactivationRequest loginReactivationRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        requestLoginReactivationUseCase.execute(id);
+        return null;
+    }
+
+    @Override
+    public Void unblockLogin(Long id, LoginReactivationRequest loginReactivationRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
+        requestLoginReactivationUseCase.execute(id);
+        return null;
+    }
 
     @Override
     public CreateResponse createEmployeeLogin(Long employeeId, CreateEmployeeLoginRequest createEmployeeLoginRequest, Optional<UUID> xRequestID, Optional<String> acceptLanguage) {
