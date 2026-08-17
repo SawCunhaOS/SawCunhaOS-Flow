@@ -16,10 +16,12 @@ package br.com.sawcunhaos.organization.domain.corporate.department.service;
 import br.com.sawcunhaos.organization.domain.corporate.department.dto.DepartmentOutput;
 import br.com.sawcunhaos.organization.domain.corporate.department.internal.Department;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface DepartmentMapper {
 
+    @Mapping(target = "managerId", source = "manager.id")
     DepartmentOutput toDepartmentOutput(Department department);
 
 }

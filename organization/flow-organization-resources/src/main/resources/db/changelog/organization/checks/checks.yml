@@ -85,3 +85,16 @@ databaseChangeLog:
               ALTER TABLE scos.scos_contact_type DROP CONSTRAINT IF EXISTS chk_contact_type_entity_type;
               ALTER TABLE scos.scos_position_work_schedule DROP CONSTRAINT IF EXISTS chk_position_work_schedule_day;
               ALTER TABLE scos.scos_employee_work_schedule DROP CONSTRAINT IF EXISTS chk_employee_work_schedule_day;
+
+  - changeSet:
+      id: 20260816-Samuel.Cunha-002
+      author: Samuel.Cunha
+      comment: "CHECK de REQUEST_TYPE em SCOS_LOGIN_APPROVAL_REQUEST (Epic 3)"
+      changes:
+        - sql:
+            sql: >-
+              ALTER TABLE scos.scos_login_approval_request
+                ADD CONSTRAINT chk_login_approval_request_type CHECK (request_type IN ('CREATE_LOGIN', 'REACTIVATE_LOGIN', 'CHANGE_PROFILE'));
+      rollback:
+        - sql:
+            sql: ALTER TABLE scos.scos_login_approval_request DROP CONSTRAINT IF EXISTS chk_login_approval_request_type;

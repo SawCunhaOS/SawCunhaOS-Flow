@@ -18,6 +18,12 @@ import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
 import br.com.sawcunhaos.organization.domain.access.login.dto.LoginInput;
 import br.com.sawcunhaos.organization.domain.access.login.dto.LoginOutput;
 import br.com.sawcunhaos.organization.domain.access.login.internal.Login;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequest;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestEscalationPolicy;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestLevel;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestRepository;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestStatus;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestType;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginRepository;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginStatus;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginType;
@@ -34,6 +40,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneOffset;
+
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_014;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_015;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_LOGIN_016;
@@ -47,6 +57,9 @@ class LoginServiceBean implements LoginService {
     private final LoginRepository loginRepository;
     private final ProfileRepository profileRepository;
     private final EmployeeQueryRepository employeeQueryRepository;
+    private final LoginApprovalRequestRepository loginApprovalRequestRepository;
+    private final BusinessDayCalculator businessDayCalculator;
+    private final Clock clock;
     private final ScosUserAuthentication scosUserAuthentication;
 
     @Override
@@ -76,7 +89,37 @@ class LoginServiceBean implements LoginService {
 
         login = loginRepository.merge(login);
 
+        openApprovalRequest(login);
+
         return toLoginOutput(login, true);
+    }
+
+    /**
+     * Abre, na mesma transação da criação, a {@link LoginApprovalRequest} que decide se o Login
+     * PENDING_APPROVAL vira ACTIVE. Reaproveitado por toda criação de Login (EMPLOYEE hoje;
+     * EXTERNAL/SERVICE do Epic 4 resolve direto para SYSTEM_ACCESS_GROUP, FR-26).
+     */
+    private void openApprovalRequest(Login login) {
+        Login requestedByLogin = loginRepository.findByLogin(scosUserAuthentication.findUserAuthentication())
+                .orElseThrow(() -> new ScosException(SCOS_LOGIN_016));
+
+        LoginApprovalRequestLevel firstLevel = LoginApprovalChainResolver.firstLevelFor(login)
+                .orElse(LoginApprovalRequestLevel.SYSTEM_ACCESS_GROUP);
+
+        Instant now = clock.instant();
+        LoginApprovalRequest request = LoginApprovalRequest.builder()
+                .login(login)
+                .requestedByLogin(requestedByLogin)
+                .currentLevel(firstLevel)
+                .escalationPolicy(LoginApprovalRequestEscalationPolicy.INDEFINITE)
+                .status(LoginApprovalRequestStatus.PENDING)
+                .requestType(LoginApprovalRequestType.CREATE_LOGIN)
+                .isExceptionSelfApproval(false)
+                .slaDeadline(businessDayCalculator.plusBusinessDays(now, 1, ZoneOffset.UTC))
+                .build();
+        request.updateAuditInfo(scosUserAuthentication.findUserAuthentication());
+
+        loginApprovalRequestRepository.merge(request);
     }
 
     @Override

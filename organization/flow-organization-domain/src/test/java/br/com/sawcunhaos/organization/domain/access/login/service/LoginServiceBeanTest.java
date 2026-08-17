@@ -18,6 +18,9 @@ import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
 import br.com.sawcunhaos.organization.domain.access.login.dto.LoginInput;
 import br.com.sawcunhaos.organization.domain.access.login.dto.LoginOutput;
 import br.com.sawcunhaos.organization.domain.access.login.internal.Login;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequest;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestLevel;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestRepository;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginRepository;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginStatus;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginType;
@@ -28,6 +31,7 @@ import br.com.sawcunhaos.organization.domain.corporate.employee.internal.Employe
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -35,6 +39,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,6 +60,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class LoginServiceBeanTest {
 
+    private static final Instant NOW = Instant.parse("2026-08-17T10:00:00Z");
+
     @Mock
     private LoginRepository loginRepository;
     @Mock
@@ -60,19 +69,29 @@ class LoginServiceBeanTest {
     @Mock
     private EmployeeQueryRepository employeeQueryRepository;
     @Mock
+    private LoginApprovalRequestRepository loginApprovalRequestRepository;
+    @Mock
     private ScosUserAuthentication scosUserAuthentication;
 
-    @InjectMocks
+    private final BusinessDayCalculator businessDayCalculator = new BusinessDayCalculator();
+    private final Clock clock = Clock.fixed(NOW, ZoneOffset.UTC);
+
     private LoginServiceBean loginServiceBean;
 
     private Profile profile;
     private Employee employee;
+    private Login requester;
 
     @BeforeEach
     void setUp() {
+        loginServiceBean = new LoginServiceBean(loginRepository, profileRepository, employeeQueryRepository,
+                loginApprovalRequestRepository, businessDayCalculator, clock, scosUserAuthentication);
+
         profile = Profile.builder().id(1L).code("ADMIN").description("Administrator").active(true).build();
         employee = Employee.builder().id(2L).name("John Doe").build();
+        requester = Login.builder().id(99L).login("test-user").type(LoginType.EMPLOYEE).status(LoginStatus.ACTIVE).build();
         lenient().when(scosUserAuthentication.findUserAuthentication()).thenReturn("test-user");
+        lenient().when(loginRepository.findByLogin("test-user")).thenReturn(Optional.of(requester));
     }
 
     // ---- create ----
@@ -96,6 +115,33 @@ class LoginServiceBeanTest {
         assertThat(result.employeeId()).isEqualTo(2L);
         assertThat(result.profileCode()).isEqualTo("ADMIN");
         assertThat(result.employeeName()).isEqualTo("John Doe");
+
+        ArgumentCaptor<LoginApprovalRequest> captor = ArgumentCaptor.forClass(LoginApprovalRequest.class);
+        verify(loginApprovalRequestRepository).merge(captor.capture());
+        LoginApprovalRequest request = captor.getValue();
+        assertThat(request.getLogin()).isEqualTo(persisted);
+        assertThat(request.getRequestedByLogin()).isEqualTo(requester);
+        // employee sem supervisor e sem position -> pula SUPERVISOR e MANAGER, cai em SYSTEM_ACCESS_GROUP
+        assertThat(request.getCurrentLevel()).isEqualTo(LoginApprovalRequestLevel.SYSTEM_ACCESS_GROUP);
+        assertThat(request.getSlaDeadline()).isEqualTo(businessDayCalculator.plusBusinessDays(NOW, 1, ZoneOffset.UTC));
+    }
+
+    @Test
+    void createShouldThrowWhenRequestingLoginIsNotFound() {
+        LoginInput input = LoginInput.builder().login("john.doe").profileId(1L).type(LoginType.EMPLOYEE).employeeId(2L).build();
+        Login persisted = Login.builder().id(10L).login("john.doe").type(LoginType.EMPLOYEE).status(LoginStatus.PENDING_APPROVAL).profile(profile).employee(employee).build();
+
+        when(loginRepository.existsByLogin("john.doe")).thenReturn(false);
+        when(profileRepository.findById(1L)).thenReturn(Optional.of(profile));
+        when(employeeQueryRepository.findById(2L)).thenReturn(Optional.of(employee));
+        when(loginRepository.merge(any(Login.class))).thenReturn(persisted);
+        when(loginRepository.findByLogin("test-user")).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> loginServiceBean.create(input))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_LOGIN_016.getCode());
+
+        verify(loginApprovalRequestRepository, never()).merge(any());
     }
 
     @Test

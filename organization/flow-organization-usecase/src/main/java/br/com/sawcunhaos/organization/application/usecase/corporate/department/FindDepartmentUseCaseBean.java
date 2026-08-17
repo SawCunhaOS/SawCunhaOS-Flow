@@ -39,6 +39,7 @@ class FindDepartmentUseCaseBean implements FindDepartmentUseCase {
                 .code(departmentOutput.code())
                 .description(departmentOutput.description())
                 .active(departmentOutput.active())
+                .managerId(departmentOutput.managerId())
                 .build();
     }
 }

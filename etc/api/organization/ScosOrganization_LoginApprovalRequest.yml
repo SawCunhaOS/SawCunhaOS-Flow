@@ -1,0 +1,292 @@
+openapi: 3.0.3
+info:
+  title: SawCunhaOS Organization - Login Approval Request
+  description: |
+    APIs para a cadeia de aprovação de solicitações de acesso (Login) — 3 níveis
+    (SUPERVISOR → MANAGER → SYSTEM_ACCESS_GROUP), com escalonamento por SLA.
+  termsOfService: https://www.apache.org/licenses/LICENSE-2.0
+  contact:
+    name: Samuel Cunha
+    url: https://github.com/SawCunhaOS
+    email: samukasaww@live.com
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: '1.0'
+servers:
+  - url: /organization/api
+tags:
+  - name: Login Approval Request
+    description: APIs para consultar e decidir solicitações de aprovação de acesso
+
+paths:
+  /v1/login-approval-requests:
+    get:
+      tags: [Login Approval Request]
+      summary: Get all login approval requests
+      description: Lista paginada das solicitações de aprovação, filtrável por status e por loginId (histórico completo de um Login)
+      operationId: getAllLoginApprovalRequests
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/statusFilter'
+        - $ref: '#/components/parameters/loginIdFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllLoginApprovalRequestsResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_LOGIN_APPROVAL_REQUEST]
+
+  /v1/login-approval-requests/system-access-approvers:
+    get:
+      tags: [Login Approval Request]
+      summary: Get system access approvers
+      description: >-
+        Lista os Logins ACTIVE que hoje têm a permissão APPROVE_SYSTEM_ACCESS — quem pode decidir
+        uma solicitação no nível SYSTEM_ACCESS_GROUP. Fonte: vw_authority_response, mesma view
+        que o @PreAuthorize já usa. Não paginado - lista tipicamente pequena.
+      operationId: getSystemAccessApprovers
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetSystemAccessApproversResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_LOGIN_APPROVAL_REQUEST]
+
+  /v1/login-approval-requests/{id}:
+    get:
+      tags: [Login Approval Request]
+      summary: Get login approval request by id
+      description: Retorna o detalhe de uma solicitação, incluindo o aprovador resolvido no nível atual (calculado na hora, nunca persistido)
+      operationId: getLoginApprovalRequestById
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLoginApprovalRequestResponse'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_LOGIN_APPROVAL_REQUEST]
+
+  /v1/login-approval-requests/{id}/approve:
+    put:
+      tags: [Login Approval Request]
+      summary: Approve a login approval request
+      description: >-
+        Aprova a solicitação no nível atual. O Login transita para ACTIVE e dispara a Saga Keycloak
+        (grava OutboxEvent, sem dispatcher real). Só o aprovador resolvido no nível atual pode decidir,
+        exceto quem detém APPROVE_SYSTEM_ACCESS (válvula de última instância, mesmo em auto-aprovação -
+        grava isExceptionSelfApproval=true)
+      operationId: approveLoginApprovalRequest
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApproveLoginApprovalRequestRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DECIDE_LOGIN_APPROVAL_REQUEST]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_APPROVE_LOGIN_APPROVAL_REQUEST
+        ttl: 1
+
+  /v1/login-approval-requests/{id}/reject:
+    put:
+      tags: [Login Approval Request]
+      summary: Reject a login approval request
+      description: >-
+        Rejeita a solicitação. O Login transita para REJECTED (estado terminal, sem reversão), sem
+        disparar Saga Keycloak. Mesma regra de elegibilidade do approve
+      operationId: rejectLoginApprovalRequest
+      parameters:
+        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RejectLoginApprovalRequestRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: './ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: './ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DECIDE_LOGIN_APPROVAL_REQUEST]
+      x-jdempotentresource:
+        cachePrefix: SCOS_ORGANIZATION_IDP_REJECT_LOGIN_APPROVAL_REQUEST
+        ttl: 1
+
+components:
+  securitySchemes:
+    BearerAuth:
+      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
+  parameters:
+    statusFilter:
+      name: status
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/LoginApprovalRequestStatus'
+    loginIdFilter:
+      name: loginId
+      in: query
+      required: false
+      description: Filtra pelo Login - devolve o histórico completo (pendente + decidido) daquele Login específico
+      schema:
+        type: integer
+        format: int64
+  schemas:
+    LoginApprovalRequestLevel:
+      type: string
+      enum:
+        - SUPERVISOR
+        - MANAGER
+        - SYSTEM_ACCESS_GROUP
+    LoginApprovalRequestEscalationPolicy:
+      type: string
+      enum:
+        - INDEFINITE
+        - AUTO_CANCEL
+    LoginApprovalRequestStatus:
+      type: string
+      enum:
+        - PENDING
+        - APPROVED
+        - REJECTED
+        - CANCELLED
+    LoginApprovalRequestType:
+      type: string
+      enum:
+        - CREATE_LOGIN
+        - REACTIVATE_LOGIN
+        - CHANGE_PROFILE
+    CurrentApprover:
+      type: object
+      description: Funcionário resolvido para o currentLevel da solicitação. Ausente quando currentLevel=SYSTEM_ACCESS_GROUP - esse nível não resolve uma pessoa, resolve uma permissão
+      properties:
+        employeeId:
+          type: integer
+          format: int64
+        employeeName:
+          type: string
+    LoginApprovalRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        loginId:
+          type: integer
+          format: int64
+        requestType:
+          $ref: '#/components/schemas/LoginApprovalRequestType'
+        currentLevel:
+          $ref: '#/components/schemas/LoginApprovalRequestLevel'
+        status:
+          $ref: '#/components/schemas/LoginApprovalRequestStatus'
+        escalationPolicy:
+          $ref: '#/components/schemas/LoginApprovalRequestEscalationPolicy'
+        slaDeadline:
+          type: string
+          format: date-time
+        decidedByLoginId:
+          type: integer
+          format: int64
+          nullable: true
+        decidedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        currentApprover:
+          $ref: '#/components/schemas/CurrentApprover'
+          nullable: true
+    GetLoginApprovalRequestResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/LoginApprovalRequest'
+    GetAllLoginApprovalRequestsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/LoginApprovalRequest'
+        paginatedDTO:
+          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+    GetSystemAccessApproversResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: './ScosOrganization_Login.yml#/components/schemas/LoginSummary'
+    ApproveLoginApprovalRequestRequest:
+      required: [reasonId]
+      type: object
+      properties:
+        reasonId:
+          type: integer
+          format: int64
+          description: Motivo da aprovação. Referencia ReasonActivate (mesmo catálogo que a criação de Login usava antes - Story 3.1 AC 2 moveu o motivo pra cá)
+          x-required-message: SCOS_VALIDATION_003
+          x-jdempotentrequestpayload: true
+    RejectLoginApprovalRequestRequest:
+      required: [reasonId]
+      type: object
+      properties:
+        reasonId:
+          type: integer
+          format: int64
+          description: Motivo da rejeição. Referencia ReasonInactivate (reaproveitado - não existe catálogo ReasonReject)
+          x-required-message: SCOS_VALIDATION_003
+          x-jdempotentrequestpayload: true
+        observation:
+          type: string
+
+security:
+  - BearerAuth: []

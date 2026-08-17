@@ -24,6 +24,8 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_AUTHORITY_001;
 
 @Service
@@ -46,5 +48,14 @@ class AuthorityResponseServiceBean implements AuthorityResponseService {
         loginRolesService.validateStatusLogin(authorityResponse.getStatus());
 
         return authorityResponseMapper.toOutput(authorityResponse);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AuthorityResponseOutput> findAllByPermission(@NonNull String permission) {
+        log.info("Find All Authority Responses by Permission: {}", permission);
+        return vwAuthorityResponseRepository.findAllByPermission(permission).stream()
+                .map(authorityResponseMapper::toOutput)
+                .toList();
     }
 }

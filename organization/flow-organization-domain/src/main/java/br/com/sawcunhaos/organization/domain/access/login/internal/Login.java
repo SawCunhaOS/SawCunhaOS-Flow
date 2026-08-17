@@ -139,4 +139,34 @@ public class Login extends BaseEntity {
                 .reasonEnable(ReasonEnable.builder().id(reasonEnableId).build())
                 .build();
     }
+
+    /**
+     * Aprova o login a partir de PENDING_APPROVAL. Não persiste.
+     * @throws ScosException SCOS_LOGIN_013 se o status atual não for PENDING_APPROVAL.
+     */
+    public LoginStatusHistory approve(Long reasonActivateId) {
+        if (this.status != LoginStatus.PENDING_APPROVAL) {
+            throw new ScosException(ExceptionCodeError.SCOS_LOGIN_013);
+        }
+        return LoginStatusHistory.builder()
+                .login(this)
+                .status(LoginStatus.ACTIVE)
+                .reasonActivate(ReasonActivate.builder().id(reasonActivateId).build())
+                .build();
+    }
+
+    /**
+     * Rejeita o login a partir de PENDING_APPROVAL. Estado terminal, sem reversão. Não persiste.
+     * @throws ScosException SCOS_LOGIN_013 se o status atual não for PENDING_APPROVAL.
+     */
+    public LoginStatusHistory reject(Long reasonInactivateId) {
+        if (this.status != LoginStatus.PENDING_APPROVAL) {
+            throw new ScosException(ExceptionCodeError.SCOS_LOGIN_013);
+        }
+        return LoginStatusHistory.builder()
+                .login(this)
+                .status(LoginStatus.REJECTED)
+                .reasonInactivate(ReasonInactivate.builder().id(reasonInactivateId).build())
+                .build();
+    }
 }

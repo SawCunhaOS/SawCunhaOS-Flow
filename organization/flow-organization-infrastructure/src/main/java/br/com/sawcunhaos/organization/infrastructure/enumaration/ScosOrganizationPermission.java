@@ -58,6 +58,11 @@ public enum ScosOrganizationPermission implements ScosPermission {
     CREATE_LOGIN_PROFILE("CREATE_LOGIN_PROFILE", "Access", "Login Profile", "1.0.0", "2026-07-15", true),
     DELETE_LOGIN_PROFILE("DELETE_LOGIN_PROFILE", "Access", "Login Profile", "1.0.0", "2026-07-15", true),
 
+    // Login Approval Request
+    GET_LOGIN_APPROVAL_REQUEST("GET_LOGIN_APPROVAL_REQUEST", "Access", "Login Approval Request", "1.0.0", "2026-08-16", true),
+    DECIDE_LOGIN_APPROVAL_REQUEST("DECIDE_LOGIN_APPROVAL_REQUEST", "Access", "Login Approval Request", "1.0.0", "2026-08-16", true),
+    APPROVE_SYSTEM_ACCESS("APPROVE_SYSTEM_ACCESS", "Access", "Login Approval Request", "1.0.0", "2026-08-16", true),
+
     // Profile
     GET_PROFILE("GET_PROFILE", "Access", "Profile", "1.0.0", "2026-07-09", true),
     CREATE_PROFILE("CREATE_PROFILE", "Access", "Profile", "1.0.0", "2026-07-09", true),

@@ -38,6 +38,7 @@ class UpdateDepartmentUseCaseBean implements UpdateDepartmentUseCase {
                         .id(id)
                         .code(updateDepartmentRequest.code())
                         .description(updateDepartmentRequest.description())
+                        .managerId(updateDepartmentRequest.managerId())
                         .build()
         );
     }

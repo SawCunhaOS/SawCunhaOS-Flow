@@ -97,7 +97,7 @@ paths:
     put:
       tags: [Department]
       summary: Update department
-      description: UC-024 - Atualiza o código ou descrição de um departamento
+      description: UC-024 - Atualiza o código, descrição e o Gerente do Departamento (managerId, opcional - null remove o gerente atual)
       operationId: updateDepartment
       parameters:
         - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
@@ -579,6 +579,11 @@ components:
           type: string
         active:
           type: boolean
+        managerId:
+          type: integer
+          format: int64
+          nullable: true
+          description: Funcionário resolvido como Gerente do Departamento - nível MANAGER da cadeia de aprovação de Login (Story 3.2)
     GetDepartmentResponse:
       type: object
       properties:
@@ -618,6 +623,11 @@ components:
           type: string
           x-required-message: SCOS_VALIDATION_003
           x-empty-message: SCOS_VALIDATION_001
+        managerId:
+          type: integer
+          format: int64
+          nullable: true
+          description: Define/troca o Gerente do Departamento. Omitido ou null remove o gerente atual
     Position:
       type: object
       properties:

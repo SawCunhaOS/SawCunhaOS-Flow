@@ -141,6 +141,14 @@ ON CONFLICT DO NOTHING;
 -- REASON_POSITION_CHANGE_ID gerados: 1=NEW_HIRE, 2=PROMOTION, 3=TRANSFER
 
 -- ============================================================
+-- SCOS_OUTBOX_TOPIC — tópico Keycloak (Saga de sincronização de Login, Story 3.2)
+-- BACKEND=DIRECT_API é placeholder - ainda não existe dispatcher real (fora de escopo).
+-- ============================================================
+INSERT INTO scos.SCOS_OUTBOX_TOPIC (TOPIC, BACKEND, TARGET_SYSTEM, DEFAULT_MAX_RETRIES, ACTIVE, UPDATED_AT, USER_AT)
+VALUES ('KEYCLOAK_LOGIN_SYNC', 'DIRECT_API', 'keycloak', 3, true, NOW(), 'seed')
+ON CONFLICT DO NOTHING;
+
+-- ============================================================
 -- SCOS_COMPANY — matriz SawCunhaOS
 -- ============================================================
 INSERT INTO scos.SCOS_COMPANY (
@@ -391,7 +399,10 @@ VALUES
     ('03000000-0000-0000-0000-000000000003', 'CREATE_REASON_ENABLE', 'Criar motivo de desbloqueio', 'Create unblock reason', true, 'Access', 'Reason Enable', '1.0.0', '2026-07-09', NOW(), 'seed'),
     ('03000000-0000-0000-0000-000000000003', 'UPDATE_REASON_ENABLE', 'Atualizar motivo de desbloqueio', 'Update unblock reason', true, 'Access', 'Reason Enable', '1.0.0', '2026-07-09', NOW(), 'seed'),
     ('03000000-0000-0000-0000-000000000003', 'ENABLE_REASON_ENABLE', 'Habilitar motivo de desbloqueio', 'Enable unblock reason', true, 'Access', 'Reason Enable', '1.0.0', '2026-07-09', NOW(), 'seed'),
-    ('03000000-0000-0000-0000-000000000003', 'DISABLE_REASON_ENABLE', 'Desabilitar motivo de desbloqueio', 'Disable unblock reason', true, 'Access', 'Reason Enable', '1.0.0', '2026-07-09', NOW(), 'seed')
+    ('03000000-0000-0000-0000-000000000003', 'DISABLE_REASON_ENABLE', 'Desabilitar motivo de desbloqueio', 'Disable unblock reason', true, 'Access', 'Reason Enable', '1.0.0', '2026-07-09', NOW(), 'seed'),
+    ('03000000-0000-0000-0000-000000000003', 'GET_LOGIN_APPROVAL_REQUEST', 'Consultar solicitação de aprovação de login', 'Get login approval request', true, 'Access', 'Login Approval Request', '1.0.0', '2026-08-16', NOW(), 'seed'),
+    ('03000000-0000-0000-0000-000000000003', 'DECIDE_LOGIN_APPROVAL_REQUEST', 'Aprovar ou rejeitar solicitação de aprovação de login', 'Approve or reject login approval request', true, 'Access', 'Login Approval Request', '1.0.0', '2026-08-16', NOW(), 'seed'),
+    ('03000000-0000-0000-0000-000000000003', 'APPROVE_SYSTEM_ACCESS', 'Decidir solicitações no nível grupo de acesso ao sistema (válvula de última instância)', 'Decide requests at the system access group level (last-resort valve)', true, 'Access', 'Login Approval Request', '1.0.0', '2026-08-16', NOW(), 'seed')
 ON CONFLICT DO NOTHING;
 
 -- ============================================================

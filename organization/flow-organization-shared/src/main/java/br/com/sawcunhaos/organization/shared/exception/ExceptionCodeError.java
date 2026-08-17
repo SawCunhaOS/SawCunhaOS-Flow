@@ -249,9 +249,20 @@ public enum ExceptionCodeError implements ExceptionCode {
     SCOS_LOGIN_015("SCOS_LOGIN_015", 409, "SCOS_TITLE_CONFLICT"),
     /** Login não encontrado pelo id informado. HTTP 404. */
     SCOS_LOGIN_016("SCOS_LOGIN_016", 404, "SCOS_TITLE_NOT_FOUND"),
+    /** Quem decide não é o aprovador resolvido no nível atual nem detém APPROVE_SYSTEM_ACCESS. HTTP 422. */
+    SCOS_LOGIN_017("SCOS_LOGIN_017", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Funcionário vinculado ao Login não está mais ACTIVE no momento da decisão. HTTP 422. */
+    SCOS_LOGIN_018("SCOS_LOGIN_018", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
 
     /** Profile não encontrado pelo id informado. HTTP 404. */
     SCOS_PROFILE_001("SCOS_PROFILE_001", 404, "SCOS_TITLE_NOT_FOUND"),
+
+    /** LoginApprovalRequest não encontrada pelo id informado. HTTP 404. */
+    SCOS_LOGIN_APPROVAL_REQUEST_001("SCOS_LOGIN_APPROVAL_REQUEST_001", 404, "SCOS_TITLE_NOT_FOUND"),
+    /** LoginApprovalRequest já foi decidida (status != PENDING) - não pode escalar/aprovar/rejeitar de novo. HTTP 422. */
+    SCOS_LOGIN_APPROVAL_REQUEST_002("SCOS_LOGIN_APPROVAL_REQUEST_002", 422, "SCOS_TITLE_BUSINESS_RULE_VIOLATION"),
+    /** Tópico SCOS_OUTBOX_TOPIC KEYCLOAK_LOGIN_SYNC não semeado - precondição de infraestrutura, não deveria acontecer. HTTP 500. */
+    SCOS_LOGIN_APPROVAL_REQUEST_003("SCOS_LOGIN_APPROVAL_REQUEST_003", 500, "SCOS_TITLE_INTERNAL_ERROR"),
 
     SCOS_SECURITY_ENCRYPT("SCOS_SECURITY_ENCRYPT", 400, "SCOS_TITLE_GENERIC"),
     SCOS_SECURITY_DECRYPT("SCOS_SECURITY_DECRYPT", 400, "SCOS_TITLE_GENERIC"),

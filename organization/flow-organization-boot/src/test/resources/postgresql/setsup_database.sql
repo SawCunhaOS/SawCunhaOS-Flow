@@ -264,6 +264,13 @@ VALUES ('ARCHIVED_REASON', 'Motivo de mudança de cargo arquivado (inativo p/ te
 ON CONFLICT DO NOTHING;
 
 -- ============================================================
+-- SCOS_OUTBOX_TOPIC — tópico Keycloak (Saga de sincronização de Login, Story 3.2)
+-- ============================================================
+INSERT INTO scos.SCOS_OUTBOX_TOPIC (TOPIC, BACKEND, TARGET_SYSTEM, DEFAULT_MAX_RETRIES, ACTIVE, UPDATED_AT, USER_AT)
+VALUES ('KEYCLOAK_LOGIN_SYNC', 'DIRECT_API', 'keycloak', 3, true, NOW(), 'seed')
+ON CONFLICT DO NOTHING;
+
+-- ============================================================
 -- SCOS_COMPANY — matriz SawCunhaOS
 -- ============================================================
 INSERT INTO scos.SCOS_COMPANY (
@@ -514,7 +521,10 @@ VALUES
     ('03000000-0000-0000-0000-000000000003', 'CREATE_REASON_ENABLE', 'Criar motivo de desbloqueio', 'Create unblock reason', true, 'Access', 'Reason Enable', '1.0.0', '2026-07-09', NOW(), 'seed'),
     ('03000000-0000-0000-0000-000000000003', 'UPDATE_REASON_ENABLE', 'Atualizar motivo de desbloqueio', 'Update unblock reason', true, 'Access', 'Reason Enable', '1.0.0', '2026-07-09', NOW(), 'seed'),
     ('03000000-0000-0000-0000-000000000003', 'ENABLE_REASON_ENABLE', 'Habilitar motivo de desbloqueio', 'Enable unblock reason', true, 'Access', 'Reason Enable', '1.0.0', '2026-07-09', NOW(), 'seed'),
-    ('03000000-0000-0000-0000-000000000003', 'DISABLE_REASON_ENABLE', 'Desabilitar motivo de desbloqueio', 'Disable unblock reason', true, 'Access', 'Reason Enable', '1.0.0', '2026-07-09', NOW(), 'seed')
+    ('03000000-0000-0000-0000-000000000003', 'DISABLE_REASON_ENABLE', 'Desabilitar motivo de desbloqueio', 'Disable unblock reason', true, 'Access', 'Reason Enable', '1.0.0', '2026-07-09', NOW(), 'seed'),
+    ('03000000-0000-0000-0000-000000000003', 'GET_LOGIN_APPROVAL_REQUEST', 'Consultar solicitação de aprovação de login', 'Get login approval request', true, 'Access', 'Login Approval Request', '1.0.0', '2026-08-16', NOW(), 'seed'),
+    ('03000000-0000-0000-0000-000000000003', 'DECIDE_LOGIN_APPROVAL_REQUEST', 'Aprovar ou rejeitar solicitação de aprovação de login', 'Approve or reject login approval request', true, 'Access', 'Login Approval Request', '1.0.0', '2026-08-16', NOW(), 'seed'),
+    ('03000000-0000-0000-0000-000000000003', 'APPROVE_SYSTEM_ACCESS', 'Decidir solicitações no nível grupo de acesso ao sistema (válvula de última instância)', 'Decide requests at the system access group level (last-resort valve)', true, 'Access', 'Login Approval Request', '1.0.0', '2026-08-16', NOW(), 'seed')
 ON CONFLICT DO NOTHING;
 
 -- ============================================================
@@ -537,15 +547,24 @@ ON CONFLICT DO NOTHING;
 --
 --   scos-api → SERVICE (sem funcionário — conta de integração)
 --     EXTERNAL_ID = 02000000-0000-0000-0000-000000000002
+--
+--   inside.admin → EMPLOYEE (vinculado ao funcionário 1) - identidade fixa do JWT de teste
+--     (ScosJwtTestSupport.bearer/BEAR_TOKEN_VALID, preferred_username="inside.admin"). O gRPC
+--     ValidateAuthorityService mockado sempre devolve login="inside.admin" (fullAdminAuthority),
+--     então esta linha precisa existir para LoginRepository.findByLogin("inside.admin") resolver
+--     o Login de quem está autenticado nos testes (Story 3.2 - abertura da LoginApprovalRequest
+--     na criação, decisão de aprovação). Só no seed de teste - não existe em produção.
+--     EXTERNAL_ID = 04000000-0000-0000-0000-000000000004
 -- ============================================================
 INSERT INTO scos.SCOS_LOGIN (
     PROFILE_ID, EMPLOYEE_ID, EXTERNAL_ID, LOGIN, STATUS, TYPE, UPDATED_AT, USER_AT
 )
 VALUES
-    (1, 1,    '01000000-0000-0000-0000-000000000001', 'scos-admin', 'ACTIVE', 'EMPLOYEE', NOW(), 'seed'),
-    (2, NULL, '02000000-0000-0000-0000-000000000002', 'scos-api',   'ACTIVE', 'SERVICE',  NOW(), 'seed')
+    (1, 1,    '01000000-0000-0000-0000-000000000001', 'scos-admin',   'ACTIVE', 'EMPLOYEE', NOW(), 'seed'),
+    (2, NULL, '02000000-0000-0000-0000-000000000002', 'scos-api',     'ACTIVE', 'SERVICE',  NOW(), 'seed'),
+    (1, 1,    '04000000-0000-0000-0000-000000000004', 'inside.admin', 'ACTIVE', 'EMPLOYEE', NOW(), 'seed')
 ON CONFLICT DO NOTHING;
--- LOGIN_ID: 1 = scos-admin, 2 = scos-api
+-- LOGIN_ID: 1 = scos-admin, 2 = scos-api, 3 = inside.admin
 
 -- ============================================================
 -- SCOS_EMPLOYEE_POSITION_HISTORY — cargo inicial (bootstrap)
@@ -614,3 +633,13 @@ FROM scos.SCOS_PROFILE p
 CROSS JOIN scos.SCOS_RESOURCE r
 WHERE r.ACTIVE = true
 ON CONFLICT DO NOTHING;
+
+-- ============================================================
+-- Refresh das views materializadas de autoridade (vw_login_context, vw_authority_response)
+-- Em produção o refresh é feito pelo pg_cron (scos.refresh_authority_views(), a cada 30 min) -
+-- nos testes precisa ser explícito, senão as views ficam com o snapshot da última migration,
+-- sem os Logins/permissões recém-semeados (usado por GET /v1/login-approval-requests/system-access-approvers).
+-- Ordem importa: vw_authority_response é agregada a partir de vw_login_context.
+-- ============================================================
+REFRESH MATERIALIZED VIEW scos.vw_login_context;
+REFRESH MATERIALIZED VIEW scos.vw_authority_response;

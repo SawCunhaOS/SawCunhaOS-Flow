@@ -20,6 +20,7 @@ public record DepartmentOutput(
         Long id,
         String code,
         String description,
-        boolean active
+        boolean active,
+        Long managerId
 ) {
 }

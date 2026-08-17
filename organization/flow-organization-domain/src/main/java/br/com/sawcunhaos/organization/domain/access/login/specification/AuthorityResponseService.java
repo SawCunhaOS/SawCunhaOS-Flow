@@ -16,8 +16,13 @@ package br.com.sawcunhaos.organization.domain.access.login.specification;
 import br.com.sawcunhaos.organization.domain.access.login.dto.AuthorityResponseOutput;
 import org.jspecify.annotations.NonNull;
 
+import java.util.List;
+
 public interface AuthorityResponseService {
 
     AuthorityResponseOutput validate(@NonNull String login);
+
+    /** Logins ACTIVE que hoje detêm {@code permission} - via {@code vw_authority_response}, mesma fonte que o {@code @PreAuthorize} já usa. */
+    List<AuthorityResponseOutput> findAllByPermission(@NonNull String permission);
 
 }

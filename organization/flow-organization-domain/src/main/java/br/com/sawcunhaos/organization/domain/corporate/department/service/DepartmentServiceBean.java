@@ -20,6 +20,8 @@ import br.com.sawcunhaos.organization.domain.corporate.department.dto.Department
 import br.com.sawcunhaos.organization.domain.corporate.department.internal.Department;
 import br.com.sawcunhaos.organization.domain.corporate.department.internal.DepartmentRepository;
 import br.com.sawcunhaos.organization.domain.corporate.department.specification.DepartmentService;
+import br.com.sawcunhaos.organization.domain.corporate.employee.internal.Employee;
+import br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeeQueryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
@@ -31,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_DEPARTMENT_001;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_DEPARTMENT_002;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_DEPARTMENT_003;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_014;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +42,7 @@ public class DepartmentServiceBean implements DepartmentService {
 
     private final DepartmentRepository departmentRepository;
     private final DepartmentMapper departmentMapper;
+    private final EmployeeQueryRepository employeeQueryRepository;
     private final ScosUserAuthentication scosUserAuthentication;
 
     @Override
@@ -79,8 +83,16 @@ public class DepartmentServiceBean implements DepartmentService {
 
         department.setCode(departmentInput.code());
         department.setDescription(departmentInput.description());
+        department.setManager(resolveManager(departmentInput.managerId()));
         department.updateAuditInfo(scosUserAuthentication.findUserAuthentication());
         departmentRepository.update(department);
+    }
+
+    private Employee resolveManager(Long managerId) {
+        if (managerId == null) {
+            return null;
+        }
+        return employeeQueryRepository.findById(managerId).orElseThrow(() -> new ScosException(SCOS_EMPLOYEE_014));
     }
 
     @Override

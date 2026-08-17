@@ -52,6 +52,7 @@ class FindAllDepartmentUseCaseBean implements FindAllDepartmentUseCase {
                                                 .code(department.code())
                                                 .description(department.description())
                                                 .active(department.active())
+                                                .managerId(department.managerId())
                                                 .build()
                                 )
                                 .toList()

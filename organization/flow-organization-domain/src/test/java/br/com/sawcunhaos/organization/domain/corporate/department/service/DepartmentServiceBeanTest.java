@@ -19,6 +19,8 @@ import br.com.sawcunhaos.organization.domain.corporate.department.dto.Department
 import br.com.sawcunhaos.organization.domain.corporate.department.dto.DepartmentOutput;
 import br.com.sawcunhaos.organization.domain.corporate.department.internal.Department;
 import br.com.sawcunhaos.organization.domain.corporate.department.internal.DepartmentRepository;
+import br.com.sawcunhaos.organization.domain.corporate.employee.internal.Employee;
+import br.com.sawcunhaos.organization.domain.corporate.employee.internal.EmployeeQueryRepository;
 import io.hypersistence.utils.spring.repository.BaseJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,6 +40,7 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_DEPARTMENT_003;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_DEPARTMENT_004;
 import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_DEPARTMENT_005;
+import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError.SCOS_EMPLOYEE_014;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -54,6 +57,8 @@ class DepartmentServiceBeanTest {
     private DepartmentRepository departmentRepository;
     @Mock
     private DepartmentMapper departmentMapper;
+    @Mock
+    private EmployeeQueryRepository employeeQueryRepository;
     @Mock
     private ScosUserAuthentication scosUserAuthentication;
 
@@ -146,6 +151,53 @@ class DepartmentServiceBeanTest {
 
         verify(asBaseJpaRepository()).update(existing);
         assertThat(existing.getDescription()).isEqualTo("Software Engineering");
+    }
+
+    @Test
+    void updateShouldSetManagerWhenManagerIdIsInformed() {
+        Department existing = department(1L, "ENG", true);
+        Employee manager = Employee.builder().id(7L).name("Jane Manager").build();
+        DepartmentInput input = DepartmentInput.builder().id(1L).code("ENG").description("Engineering").managerId(7L).build();
+
+        when(departmentRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(departmentRepository.existsByCodeAndNotId(1L, "ENG")).thenReturn(false);
+        when(employeeQueryRepository.findById(7L)).thenReturn(Optional.of(manager));
+
+        departmentServiceBean.update(input);
+
+        assertThat(existing.getManager()).isEqualTo(manager);
+        verify(asBaseJpaRepository()).update(existing);
+    }
+
+    @Test
+    void updateShouldRemoveManagerWhenManagerIdIsNull() {
+        Department existing = department(1L, "ENG", true);
+        existing.setManager(Employee.builder().id(7L).name("Jane Manager").build());
+        DepartmentInput input = DepartmentInput.builder().id(1L).code("ENG").description("Engineering").managerId(null).build();
+
+        when(departmentRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(departmentRepository.existsByCodeAndNotId(1L, "ENG")).thenReturn(false);
+
+        departmentServiceBean.update(input);
+
+        assertThat(existing.getManager()).isNull();
+        verify(employeeQueryRepository, never()).findById(any());
+    }
+
+    @Test
+    void updateShouldThrowWhenManagerIdDoesNotCorrespondToAnyEmployee() {
+        Department existing = department(1L, "ENG", true);
+        DepartmentInput input = DepartmentInput.builder().id(1L).code("ENG").description("Engineering").managerId(999L).build();
+
+        when(departmentRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(departmentRepository.existsByCodeAndNotId(1L, "ENG")).thenReturn(false);
+        when(employeeQueryRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> departmentServiceBean.update(input))
+                .isInstanceOf(ScosException.class)
+                .hasFieldOrPropertyWithValue("code", SCOS_EMPLOYEE_014.getCode());
+
+        verify(asBaseJpaRepository(), never()).update(any());
     }
 
     // ---- findById ----

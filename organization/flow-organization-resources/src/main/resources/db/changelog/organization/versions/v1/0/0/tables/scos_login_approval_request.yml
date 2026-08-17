@@ -105,3 +105,23 @@ databaseChangeLog:
             tableName: SCOS_LOGIN_APPROVAL_REQUEST
             schemaName: scos
             cascadeConstraints: true
+
+  - changeSet:
+      id: 20260816-Samuel.Cunha-001
+      author: Samuel.Cunha
+      comment: "Adiciona REQUEST_TYPE em SCOS_LOGIN_APPROVAL_REQUEST (Epic 3 - discrimina CREATE_LOGIN/REACTIVATE_LOGIN/CHANGE_PROFILE, todos reaproveitando a mesma tabela/cadeia)"
+      changes:
+        - addColumn:
+            tableName: SCOS_LOGIN_APPROVAL_REQUEST
+            schemaName: scos
+            columns:
+              - column:
+                  name: REQUEST_TYPE
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+      rollback:
+        - dropColumn:
+            tableName: SCOS_LOGIN_APPROVAL_REQUEST
+            schemaName: scos
+            columnName: REQUEST_TYPE

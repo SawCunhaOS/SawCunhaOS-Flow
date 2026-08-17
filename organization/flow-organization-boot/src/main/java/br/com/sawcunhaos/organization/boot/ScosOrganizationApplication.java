@@ -22,12 +22,14 @@ import org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfigurat
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @ComponentScan(basePackages = {"br.com.sawcunhaos"})
 @SpringBootApplication(exclude = {
         DataRedisAutoConfiguration.class,
         DataSourceAutoConfiguration.class
 })
+@EnableScheduling
 @RequiredArgsConstructor
 @Slf4j
 public class ScosOrganizationApplication {

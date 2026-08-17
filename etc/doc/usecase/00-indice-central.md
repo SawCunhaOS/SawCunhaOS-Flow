@@ -156,7 +156,10 @@ A trigger `fn_close_previous_position` fecha **todas** as linhas em aberto (`end
 | 05 | Catálogo e Motivos | Address Type, Contact Type, Reason (4 variações) | 36 |
 | 06 | Configuração e Outbox | Configuration, Outbox Events, Outbox Topics | 10 |
 | 07 | Mensagens de Erro (PT/EN) | Catálogo bilíngue de `SCOS_VALIDATION_`/`SCOS_*`, extraído dos arquivos de mensagem reais | — |
+| 08 | Fluxo da Cadeia de Aprovação de Login (Story 3.2) | Narrativa ponta a ponta (visão do usuário + visão de classes/métodos) da criação, consulta, aprovação, rejeição e escalonamento automático de `LoginApprovalRequest`, e do `managerId` do Departamento | 5 |
 
-**Total: 162 endpoints.**
+**Total: 167 endpoints** (162 catalogados nos Documentos 01-07 + 5 da cadeia de aprovação no Documento 08: `GET /v1/login-approval-requests`, `GET .../{id}`, `GET .../system-access-approvers`, `PUT .../{id}/approve`, `PUT .../{id}/reject` — a criação da solicitação é automática, embutida em `POST /v1/employees/{employeeId}/logins` (Documento 04), e o `managerId` reaproveita `PUT /v1/departments/{id}`, já contado no Documento 02 — nenhum dos dois é um endpoint novo).
+
+> **Nota de desatualização:** a Seção 1 (Modelo de Status) acima descreve o Login como fire-and-forget ("nasce `ACTIVE` imediatamente"). Isso mudou nas Stories 3.1/3.2 — Login `EMPLOYEE` agora nasce `PENDING_APPROVAL` e só vira `ACTIVE`/`REJECTED` via decisão de uma `LoginApprovalRequest`. Ver Documento 08 para o fluxo atual; esta seção não foi reescrita para não invalidar o restante da validação cruzada já feita neste documento.
 
 > Nota sobre a estrutura: agrupei por módulo funcional, não um arquivo por endpoint individual (o que geraria 162 arquivos fragmentados, sem contexto compartilhado entre operações do mesmo recurso). Cada documento de módulo cobre seus endpoints com o mesmo nível de detalhe que o documento único anterior — apenas separados para navegação mais fácil. Avise se a intenção era literalmente um arquivo por endpoint.

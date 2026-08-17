@@ -62,7 +62,9 @@ public class DepartmentControllerTest extends ScosOrganizationTestUtil {
     private static final String DEPARTMENTS_URI = "/api/v1/departments";
     private static final long SEEDED_DEPARTMENT_ID = 1L;
     private static final String SEEDED_CODE = "TI";
+    private static final long SEEDED_ACTIVE_EMPLOYEE_ID = 1L;
     private static final long NONEXISTENT_ID = 999_999L;
+    private static final String CODE_EMPLOYEE_NOT_FOUND = "SCOS_EMPLOYEE_014";
 
     // Mensagens (detail) e títulos esperados nas respostas de erro — PT-BR.
     private static final String DETAIL_NOT_FOUND = "O departamento informado não existe.";
@@ -487,6 +489,63 @@ public class DepartmentControllerTest extends ScosOrganizationTestUtil {
     }
 
     // =====================================================================================
+    // PUT /v1/departments/{id} — managerId (Story 3.2 - nível MANAGER da cadeia de aprovação)
+    // =====================================================================================
+
+    @Test
+    @DisplayName("PUT /v1/departments/{id} — managerId informado define o Gerente do Departamento (204)")
+    void updateDepartment_withManagerId_setsManager() throws Exception {
+        long id = createDepartment("MGR40", "Com gerente");
+
+        mockMvc.perform(put(DEPARTMENTS_URI + "/{id}", id)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(departmentBodyWithManager("MGR40", "Com gerente", SEEDED_ACTIVE_EMPLOYEE_ID)))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get(DEPARTMENTS_URI + "/{id}", id)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.managerId").value(SEEDED_ACTIVE_EMPLOYEE_ID));
+    }
+
+    @Test
+    @DisplayName("PUT /v1/departments/{id} — managerId omitido remove o gerente atual (204)")
+    void updateDepartment_withoutManagerId_removesManager() throws Exception {
+        long id = createDepartment("MGR41", "Removendo gerente");
+        mockMvc.perform(put(DEPARTMENTS_URI + "/{id}", id)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(departmentBodyWithManager("MGR41", "Removendo gerente", SEEDED_ACTIVE_EMPLOYEE_ID)))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(put(DEPARTMENTS_URI + "/{id}", id)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(departmentBody("MGR41", "Removendo gerente")))
+                .andExpect(status().isNoContent());
+
+        mockMvc.perform(get(DEPARTMENTS_URI + "/{id}", id)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.managerId").doesNotExist());
+    }
+
+    @Test
+    @DisplayName("PUT /v1/departments/{id} — managerId inexistente retorna 404 SCOS_EMPLOYEE_014")
+    void updateDepartment_managerIdNotFound_returns404() throws Exception {
+        long id = createDepartment("MGR42", "Gerente inexistente");
+
+        mockMvc.perform(put(DEPARTMENTS_URI + "/{id}", id)
+                        .headers(httpHeaders(LANGUAGE_PT, BEAR_TOKEN_VALID, MediaType.APPLICATION_JSON_VALUE))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(departmentBodyWithManager("MGR42", "Gerente inexistente", NONEXISTENT_ID)))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.code").value(CODE_EMPLOYEE_NOT_FOUND));
+    }
+
+    // =====================================================================================
     // PUT /v1/departments/{id}/enable — reativação
     // =====================================================================================
 
@@ -647,6 +706,16 @@ public class DepartmentControllerTest extends ScosOrganizationTestUtil {
                   "description": "%s"
                 }
                 """.formatted(code, description);
+    }
+
+    private static String departmentBodyWithManager(String code, String description, long managerId) {
+        return """
+                {
+                  "code": "%s",
+                  "description": "%s",
+                  "managerId": %d
+                }
+                """.formatted(code, description, managerId);
     }
 
     /** Cria um departamento via API e devolve o id gerado. Cada teste usa um code único. */
