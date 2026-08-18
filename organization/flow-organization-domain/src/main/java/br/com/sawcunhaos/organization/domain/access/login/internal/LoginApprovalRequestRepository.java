@@ -21,6 +21,8 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +36,19 @@ public interface LoginApprovalRequestRepository extends BaseJpaRepository<LoginA
     Optional<LoginApprovalRequest> findByLoginIdAndStatus(Long loginId, LoginApprovalRequestStatus status);
 
     List<LoginApprovalRequest> findAllByStatusAndSlaDeadlineBefore(LoginApprovalRequestStatus status, Instant deadline);
+
+    /**
+     * Guarda "uma solicitação por episódio de licença" (Story 3.5 AC 4) - sem FK dedicada, compara
+     * datas. {@code createdAt} é {@code LocalDateTime} (dívida da {@code BaseEntity} da foundation)
+     * - {@code after} (Instant) é convertido em UTC antes de comparar.
+     */
+    default boolean existsByLoginIdAndRequestTypeAndEscalationPolicyAndCreatedAtAfter(Long loginId, LoginApprovalRequestType requestType, LoginApprovalRequestEscalationPolicy escalationPolicy, Instant after) {
+        QLoginApprovalRequest q = QLoginApprovalRequest.loginApprovalRequest;
+        return exists(q.login.id.eq(loginId)
+                .and(q.requestType.eq(requestType))
+                .and(q.escalationPolicy.eq(escalationPolicy))
+                .and(q.createdAt.after(LocalDateTime.ofInstant(after, ZoneOffset.UTC))));
+    }
 
     default Page<LoginApprovalRequest> findAllFiltered(LoginApprovalRequestStatus status, Long loginId, Pageable pageable) {
         if (status == null && loginId == null) {

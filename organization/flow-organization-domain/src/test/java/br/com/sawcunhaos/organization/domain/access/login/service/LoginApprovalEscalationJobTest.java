@@ -15,6 +15,7 @@ package br.com.sawcunhaos.organization.domain.access.login.service;
 
 import br.com.sawcunhaos.organization.domain.access.login.internal.Login;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequest;
+import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestEscalationPolicy;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestLevel;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestRepository;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestStatus;
@@ -29,6 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Clock;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
@@ -152,5 +154,66 @@ class LoginApprovalEscalationJobTest {
         verify(asBaseJpaRepository(), org.mockito.Mockito.times(2)).update(captor.capture());
         assertThat(captor.getAllValues()).extracting(LoginApprovalRequest::getCurrentLevel)
                 .containsExactly(LoginApprovalRequestLevel.MANAGER, LoginApprovalRequestLevel.SYSTEM_ACCESS_GROUP);
+    }
+
+    @Test
+    void runShouldCancelAutoCancelRequestPastTheFiveBusinessDayCeilingInsteadOfEscalating() {
+        LoginApprovalRequest request = LoginApprovalRequest.builder()
+                .id(1L).login(employeeLoginWithManagerChain())
+                .currentLevel(LoginApprovalRequestLevel.SUPERVISOR)
+                .status(LoginApprovalRequestStatus.PENDING)
+                .escalationPolicy(LoginApprovalRequestEscalationPolicy.AUTO_CANCEL)
+                .build();
+        request.setCreatedAt(LocalDateTime.parse("2026-07-01T09:00:00"));
+
+        when(loginApprovalRequestRepository.findAllByStatusAndSlaDeadlineBefore(LoginApprovalRequestStatus.PENDING, NOW))
+                .thenReturn(List.of(request));
+
+        job().run();
+
+        assertThat(request.getStatus()).isEqualTo(LoginApprovalRequestStatus.CANCELLED);
+        assertThat(request.getDecidedAt()).isEqualTo(NOW);
+        assertThat(request.getCurrentLevel()).isEqualTo(LoginApprovalRequestLevel.SUPERVISOR);
+        verify(asBaseJpaRepository()).update(request);
+    }
+
+    @Test
+    void runShouldEscalateAutoCancelRequestNormallyWhenStillWithinTheFiveBusinessDayCeiling() {
+        LoginApprovalRequest request = LoginApprovalRequest.builder()
+                .id(1L).login(employeeLoginWithManagerChain())
+                .currentLevel(LoginApprovalRequestLevel.SUPERVISOR)
+                .status(LoginApprovalRequestStatus.PENDING)
+                .escalationPolicy(LoginApprovalRequestEscalationPolicy.AUTO_CANCEL)
+                .build();
+        request.setCreatedAt(LocalDateTime.parse("2026-08-17T09:00:00"));
+
+        when(loginApprovalRequestRepository.findAllByStatusAndSlaDeadlineBefore(LoginApprovalRequestStatus.PENDING, NOW))
+                .thenReturn(List.of(request));
+
+        job().run();
+
+        assertThat(request.getStatus()).isEqualTo(LoginApprovalRequestStatus.PENDING);
+        assertThat(request.getCurrentLevel()).isEqualTo(LoginApprovalRequestLevel.MANAGER);
+        verify(asBaseJpaRepository()).update(request);
+    }
+
+    @Test
+    void runShouldNeverCancelIndefiniteRequestRegardlessOfAge() {
+        LoginApprovalRequest request = LoginApprovalRequest.builder()
+                .id(1L).login(employeeLoginWithManagerChain())
+                .currentLevel(LoginApprovalRequestLevel.SUPERVISOR)
+                .status(LoginApprovalRequestStatus.PENDING)
+                .escalationPolicy(LoginApprovalRequestEscalationPolicy.INDEFINITE)
+                .build();
+        request.setCreatedAt(LocalDateTime.parse("2026-01-01T09:00:00"));
+
+        when(loginApprovalRequestRepository.findAllByStatusAndSlaDeadlineBefore(LoginApprovalRequestStatus.PENDING, NOW))
+                .thenReturn(List.of(request));
+
+        job().run();
+
+        assertThat(request.getStatus()).isEqualTo(LoginApprovalRequestStatus.PENDING);
+        assertThat(request.getCurrentLevel()).isEqualTo(LoginApprovalRequestLevel.MANAGER);
+        verify(asBaseJpaRepository()).update(request);
     }
 }

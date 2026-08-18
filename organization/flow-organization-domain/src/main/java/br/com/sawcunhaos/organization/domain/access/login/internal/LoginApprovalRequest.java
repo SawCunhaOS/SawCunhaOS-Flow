@@ -145,6 +145,17 @@ public class LoginApprovalRequest extends BaseEntity {
         this.isExceptionSelfApproval = isException;
     }
 
+    /**
+     * Cancela automaticamente a solicitação por estouro do teto de 5 dias úteis desde a criação
+     * (Story 3.5 AC 2) - sem {@code decidedByLogin}, ninguém decidiu. Não persiste.
+     * @throws ScosException SCOS_LOGIN_APPROVAL_REQUEST_002 se {@code status != PENDING}.
+     */
+    public void cancel(Instant now) {
+        assertPending();
+        this.status = LoginApprovalRequestStatus.CANCELLED;
+        this.decidedAt = now;
+    }
+
     private void assertPending() {
         if (this.status != LoginApprovalRequestStatus.PENDING) {
             throw new ScosException(SCOS_LOGIN_APPROVAL_REQUEST_002);

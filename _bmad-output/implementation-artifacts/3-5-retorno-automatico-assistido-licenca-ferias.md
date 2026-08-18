@@ -4,7 +4,7 @@ baseline_commit: b72b2dcc0f63997fe313658e358e68dc506dd645
 
 # Story 3.5: Retorno Automático Assistido de Licença/Férias
 
-Status: ready-for-dev
+Status: review
 
 <!-- Note: Validation is optional. Run validate-create-story for quality check before dev-story. -->
 
@@ -23,23 +23,23 @@ Para que RH não precise lembrar de reativar manualmente.
 
 ## Tasks / Subtasks
 
-- [ ] Task 1: `EmployeeReturnFromLeaveJob` — abre a solicitação na data prevista (AC: 1, 3, 4)
-  - [ ] Criar `domain/access/status/service/EmployeeReturnFromLeaveJob.java` (`@Component`, `@Scheduled` — mesma frequência do job de escalonamento da Story 3.2, ou diária de manhã cedo; **decisão de design a confirmar com o usuário**, o épico só fala em "a data chega", não a frequência de checagem. Esta story assume 1x/dia, já que `expectedReturnDate` é `LocalDate`, sem granularidade de hora).
-  - [ ] Query: `EmployeeStatusHistoryRepository` (já existe) precisa de um método novo — `findAllByExpectedReturnDateLessThanEqualAndIsLatestForEmployee(LocalDate today)` **ou**, mais simples de implementar corretamente: buscar todas as linhas com `expectedReturnDate <= today` e, para cada uma, confirmar que é a **última** `EmployeeStatusHistory` daquele Funcionário (`ORDER BY createdAt DESC LIMIT 1` = a própria linha) antes de agir — evita depender de uma query complexa, ao custo de checar 1 a 1. **Decisão de design a confirmar com o usuário:** se o volume justificar, isso vira uma query SQL dedicada (`DISTINCT ON` por `employeeId` ordenado por `createdAt DESC`) em vez de N consultas — esta story assume a versão simples primeiro (menos código, funciona, mas não é a mais eficiente em escala).
-  - [ ] Para cada linha qualificada (é a mais recente do Funcionário **e** `expectedReturnDate <= hoje`): resolve o(s) `Login`(s) do Funcionário (`Employee.login`, `Set<Login>` — **atenção**: um Funcionário pode ter mais de 1 Login, campo já mapeado assim em `Employee.java`; decisão de design a confirmar — abrir 1 `LoginApprovalRequest` por Login `INACTIVE`/`BLOCKED` do Funcionário, ignorando os que já estão `ACTIVE`/`PENDING_APPROVAL`/`REJECTED`); para cada Login elegível, checa se **já existe** qualquer `LoginApprovalRequest` (`requestType=REACTIVATE_LOGIN`, `escalationPolicy=AUTO_CANCEL`) criada **depois** de `employeeStatusHistory.createdAt` para aquele Login (AC 4 — evita reabrir todo dia); se não existir, cria uma nova via o mesmo `LoginApprovalChainResolver.firstLevelFor` da Story 3.2, com `requestedByLogin=null`.
-  - [ ] Adicionar `LoginApprovalRequestRepository.existsByLoginIdAndRequestTypeAndEscalationPolicyAndCreatedAtAfter(Long loginId, LoginApprovalRequestType type, LoginApprovalRequestEscalationPolicy policy, Instant after)` (`default`, predicate simples).
-  - [ ] Criar `EmployeeReturnFromLeaveJobTest.java`, `Clock.fixed`, cobrindo: retorno na data → abre solicitação; Funcionário com transição mais recente que não é a de licença → não abre; solicitação já aberta para o mesmo episódio → não abre de novo; Login já `ACTIVE` (RH já reativou manualmente antes do job rodar) → não abre.
+- [x] Task 1: `EmployeeReturnFromLeaveJob` — abre a solicitação na data prevista (AC: 1, 3, 4)
+  - [x] Criar `domain/access/status/service/EmployeeReturnFromLeaveJob.java` (`@Component`, `@Scheduled(cron = "0 0 6 * * *", zone = "UTC")` — 1x/dia, cedo; decisão confirmada com o usuário).
+  - [x] Query: `EmployeeStatusHistoryRepository.findAllByExpectedReturnDateLessThanEqual(LocalDate today)` (N linhas com `expectedReturnDate <= today`) + `findTopByEmployeeIdOrderByCreatedAtDesc(Long employeeId)`, checando 1 a 1 se a linha candidata é a mais recente do Funcionário — versão simples confirmada com o usuário (sem `DISTINCT ON`).
+  - [x] Para cada linha qualificada: resolve os `Login`s do Funcionário (`Employee.login`, `Set<Login>`), abrindo 1 `LoginApprovalRequest` por Login `INACTIVE`/`BLOCKED` (ignorando `ACTIVE`/`PENDING_APPROVAL`/`REJECTED` — decisão confirmada com o usuário); para cada Login elegível, checa se já existe solicitação (`REACTIVATE_LOGIN`/`AUTO_CANCEL`) criada depois de `employeeStatusHistory.createdAt` (AC 4); se não existir, cria uma nova via `LoginApprovalChainResolver.firstLevelFor`, com `requestedByLogin=null`.
+  - [x] Adicionado `LoginApprovalRequestRepository.existsByLoginIdAndRequestTypeAndEscalationPolicyAndCreatedAtAfter(Long loginId, LoginApprovalRequestType type, LoginApprovalRequestEscalationPolicy policy, Instant after)` (`default`, QueryDSL).
+  - [x] Criado `EmployeeReturnFromLeaveJobTest.java`, `Clock.fixed`, cobrindo: retorno na data → abre solicitação; Funcionário com transição mais recente que não é a de licença → não abre; solicitação já aberta para o mesmo episódio → não abre de novo; Login já `ACTIVE` → não abre.
 
-- [ ] Task 2: Auto-cancelamento em 5 dias úteis — estende o job de escalonamento da Story 3.2 (AC: 2)
-  - [ ] Adicionar `LoginApprovalRequest.cancel(Instant now)` (mesmo padrão de `approve`/`reject`): `status=CANCELLED`, `decidedAt=now`, sem `decidedByLogin` (ninguém decidiu — foi o sistema). Lança `ScosException` se `status != PENDING`.
-  - [ ] Em `LoginApprovalEscalationJob` (Story 3.2 Task 9), antes de escalar cada solicitação `PENDING` vencida, checar: `if (request.getEscalationPolicy() == AUTO_CANCEL && now.isAfter(businessDayCalculator.plusBusinessDays(request.getCreatedAt(), 5, zone))) { request.cancel(now); continue; }` — cancelamento tem prioridade sobre escalonamento (se os 5 dias úteis totais já passaram, não importa se ainda "teria" próximo nível pra escalar). Para `escalationPolicy == INDEFINITE`, esse bloco nunca dispara (sem limite total).
-  - [ ] **Não** criar um job separado só para isso — reaproveitar o mesmo `@Scheduled` da Story 3.2 evita duas varreduras da mesma tabela na mesma janela de tempo.
-  - [ ] Estender `LoginApprovalEscalationJobTest` (Story 3.2): solicitação `AUTO_CANCEL` com 5 dias úteis vencidos → `CANCELLED`, não escala; solicitação `AUTO_CANCEL` dentro dos 5 dias mas com SLA de nível vencido → escala normalmente (mesmo comportamento de `INDEFINITE`); solicitação `INDEFINITE` nunca cancela sozinha, não importa o tempo.
+- [x] Task 2: Auto-cancelamento em 5 dias úteis — estende o job de escalonamento da Story 3.2 (AC: 2)
+  - [x] Adicionado `LoginApprovalRequest.cancel(Instant now)` (mesmo padrão de `approve`/`reject`): `status=CANCELLED`, `decidedAt=now`, sem `decidedByLogin`. Lança `ScosException SCOS_LOGIN_APPROVAL_REQUEST_002` se `status != PENDING`.
+  - [x] Em `LoginApprovalEscalationJob`, antes de escalar cada solicitação `PENDING` vencida, checa `isPastAutoCancelDeadline` (`AUTO_CANCEL` + 5 dias úteis desde `createdAt` vencidos) → `cancel()` em vez de escalar. `INDEFINITE` nunca cancela sozinho.
+  - [x] Não criado job separado — reaproveita o mesmo `@Scheduled` da Story 3.2.
+  - [x] Estendido `LoginApprovalEscalationJobTest`: solicitação `AUTO_CANCEL` com 5 dias úteis vencidos → `CANCELLED`, não escala; solicitação `AUTO_CANCEL` dentro dos 5 dias mas com SLA de nível vencido → escala normalmente; solicitação `INDEFINITE` nunca cancela sozinha.
 
-- [ ] Task 3: Guarda de escopo (AC: 2, 4)
-  - [ ] **Não** implementar "reabertura automática" — quando `RH` reabre manualmente (via `enable`/`unblock`, Story 3.3), é um novo request comum (`requestedByLogin` preenchido, `escalationPolicy=INDEFINITE`) — **não** reaproveita `AUTO_CANCEL`. A reabertura manual sai do "modo automático" definitivamente para aquele episódio.
-  - [ ] **Não** criar nenhuma rota nova — nem para "forçar o gatilho", nem para "cancelar manualmente antes dos 5 dias". Só o job cancela por tempo; RH sempre pode aprovar/rejeitar a solicitação `PENDING` normalmente, pelos endpoints já existentes (Story 3.2), antes do prazo estourar.
-  - [ ] **Não** mexer em `EmployeeStatusHistory`/`expectedReturnDate` (Story 2.4) — só leitura.
+- [x] Task 3: Guarda de escopo (AC: 2, 4)
+  - [x] Nenhuma "reabertura automática" implementada — reabertura manual (`enable`/`unblock`, Story 3.3) continua criando request comum (`INDEFINITE`), fora do escopo desta story.
+  - [x] Nenhuma rota nova criada.
+  - [x] Nenhuma mudança em `EmployeeStatusHistory`/`expectedReturnDate` — só leitura.
 
 ## Dev Notes
 
@@ -84,14 +84,37 @@ Para que RH não precise lembrar de reativar manualmente.
 
 ### Agent Model Used
 
+Claude Sonnet 5
+
 ### Debug Log References
+
+- As 3 decisões de design sinalizadas na story (frequência do job, estratégia de query, tratamento de múltiplos Logins) foram confirmadas com o usuário via pergunta direta antes da implementação — todas as opções recomendadas/simples foram aceitas.
+- `mvn -pl organization/flow-organization-domain test -Denforcer.skip=true` — 418 testes, 0 falhas.
+- `mvn install -DskipTests -Denforcer.skip=true` (raiz) — compilação completa do reactor (domain/usecase/api/boot/infrastructure/shared/resources) sem erros.
+- Skill `ponytail-review` aplicada ao diff da story: 2 achados menores corrigidos (`.map().map()` encadeado → 1 `.map()` com lambda comparando ids; constante `SYSTEM_USER` usada 1x → literal `"SYSTEM"` inline, mesmo padrão de `ScosSystemServiceBean`/`"REGISTRY"`). Resto do diff (repositórios, `cancel()`, branch de auto-cancelamento, testes) já seguia os padrões existentes do módulo, sem indireção nova.
 
 ### Completion Notes List
 
+- `EmployeeReturnFromLeaveJob` (novo, `domain/access/status/service/`): `@Scheduled(cron = "0 0 6 * * *", zone = "UTC")`, 1x/dia. Busca `EmployeeStatusHistory` com `expectedReturnDate <= hoje`, confirma 1 a 1 que é a transição mais recente do Funcionário (AC 3), resolve todos os Logins `INACTIVE`/`BLOCKED` do Funcionário e abre 1 `LoginApprovalRequest` (`REACTIVATE_LOGIN`/`AUTO_CANCEL`/`requestedByLogin=null`) por Login elegível, salvo se já existir uma solicitação para o mesmo episódio (AC 4, comparando `createdAt`). `userAt="SYSTEM"` no audit (mesmo padrão de `ScosSystemServiceBean`/`"REGISTRY"`).
+- `LoginApprovalRequest.cancel(Instant)`: novo método de transição (`status=CANCELLED`, `decidedAt=now`, sem `decidedByLogin`), mesmo padrão/guarda (`assertPending`) de `approve`/`reject`/`escalate`.
+- `LoginApprovalEscalationJob`: antes de escalar, checa se a solicitação é `AUTO_CANCEL` e já passou do teto de 5 dias úteis desde `createdAt` — se sim, cancela em vez de escalar (prioridade sobre escalonamento). `INDEFINITE` nunca entra nesse branch. Reaproveita o `@Scheduled` existente (Story 3.2), sem job dedicado.
+- Repositórios: `EmployeeStatusHistoryRepository` ganhou `findAllByExpectedReturnDateLessThanEqual` (QueryDSL, `default`) e `findTopByEmployeeIdOrderByCreatedAtDesc` (derivada Spring Data); `LoginApprovalRequestRepository` ganhou `existsByLoginIdAndRequestTypeAndEscalationPolicyAndCreatedAtAfter` (QueryDSL, `default`) — converte `Instant`→`LocalDateTime` em UTC ao comparar com `createdAt` (dívida conhecida da `BaseEntity` da foundation, já documentada no project-context).
+- Nenhuma mudança de schema/Liquibase — reaproveita tudo que já existe desde a Story 3.2 (`AUTO_CANCEL` já estava no `CHECK` de `escalation_policy` desde 2026-07-18) e a Story 2.4 (`expectedReturnDate`).
+- Nenhum endpoint novo, nenhuma mudança de contrato OpenAPI.
+
 ### File List
+
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/service/EmployeeReturnFromLeaveJob.java` (novo)
+- `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/access/status/service/EmployeeReturnFromLeaveJobTest.java` (novo)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/internal/EmployeeStatusHistoryRepository.java` (alterado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/internal/LoginApprovalRequestRepository.java` (alterado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/internal/LoginApprovalRequest.java` (alterado)
+- `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/service/LoginApprovalEscalationJob.java` (alterado)
+- `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/access/login/service/LoginApprovalEscalationJobTest.java` (alterado)
 
 ## Change Log
 
 | Data | Descrição |
 |------|-----------|
 | 2026-08-16 | Story criada — Epic 3, job de retorno automático de licença/férias (`AUTO_CANCEL`, reaproveitando toda a cadeia da Story 3.2). Auto-cancelamento em 5 dias úteis dobra no mesmo job de escalonamento em vez de criar um segundo `@Scheduled`. Decisões de design sinalizadas: frequência do job, tratamento de Funcionário com múltiplos Logins, estratégia de query (N consultas vs. `DISTINCT ON`). |
+| 2026-08-17 | Story implementada — `EmployeeReturnFromLeaveJob` novo (Task 1); `LoginApprovalRequest.cancel()` + branch de auto-cancelamento no `LoginApprovalEscalationJob` (Task 2); guarda de escopo confirmada (Task 3). Decisões de design confirmadas com o usuário (frequência diária, query simples por N consultas, 1 solicitação por Login elegível). Revisão `ponytail` aplicada, 2 achados menores corrigidos. 418 testes do módulo domain passando, reactor completo compila. |
