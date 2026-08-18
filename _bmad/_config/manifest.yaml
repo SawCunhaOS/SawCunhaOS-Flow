@@ -1,40 +1,39 @@
 installation:
-  version: 6.10.0
+  version: 6.11.0
   installDate: 2026-07-15T20:26:59.445Z
-  lastUpdated: 2026-07-27T22:12:14.075Z
+  lastUpdated: 2026-08-18T15:36:42.278Z
 modules:
   - name: core
-    version: 6.10.0
+    version: 6.11.0
     installDate: 2026-07-15T20:26:59.315Z
-    lastUpdated: 2026-07-27T22:12:14.072Z
+    lastUpdated: 2026-08-18T15:36:42.253Z
     source: built-in
     npmPackage: null
     repoUrl: null
   - name: bmm
-    version: 6.10.0
+    version: 6.11.0
     installDate: 2026-07-15T20:26:59.303Z
-    lastUpdated: 2026-07-27T22:12:14.072Z
+    lastUpdated: 2026-08-18T15:36:42.257Z
     source: built-in
     npmPackage: null
     repoUrl: null
   - name: tea
-    version: v1.19.1
+    version: v1.23.2
     installDate: 2026-07-15T20:26:59.391Z
-    lastUpdated: 2026-07-27T22:12:14.073Z
+    lastUpdated: 2026-08-18T15:36:42.268Z
     source: external
     npmPackage: bmad-method-test-architecture-enterprise
     repoUrl: https://github.com/bmad-code-org/bmad-method-test-architecture-enterprise
     channel: stable
-    sha: 74cf6e6adf5a6f46614788f184f340ea58336157
+    sha: be4dc03242dd6b14b79fd62e5bbacf59d7572f34
   - name: cis
-    version: v0.2.1
+    version: v0.3.1
     installDate: 2026-07-15T20:26:59.401Z
-    lastUpdated: 2026-07-27T22:12:14.075Z
+    lastUpdated: 2026-08-18T15:36:42.278Z
     source: external
     npmPackage: bmad-creative-intelligence-suite
     repoUrl: https://github.com/bmad-code-org/bmad-module-creative-intelligence-suite
     channel: stable
-    sha: 07a8dd03d196a762f21c241d985293fe5b0f90e7
+    sha: 0e4ff9233a792db1a1cd00f22a482f338168cdc3
 ides:
   - claude-code
-  - opencode
