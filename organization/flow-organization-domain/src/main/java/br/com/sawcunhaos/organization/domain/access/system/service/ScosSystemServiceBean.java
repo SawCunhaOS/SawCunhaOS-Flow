@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.access.system.service;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.system.dto.RegisterScosSystemInput;
 import br.com.sawcunhaos.organization.domain.access.system.dto.ScosSystemOutput;
 import br.com.sawcunhaos.organization.domain.access.system.internal.ScosSystem;

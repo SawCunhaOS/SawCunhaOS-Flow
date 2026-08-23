@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.access.login.service;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequest;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestEscalationPolicy;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestRepository;

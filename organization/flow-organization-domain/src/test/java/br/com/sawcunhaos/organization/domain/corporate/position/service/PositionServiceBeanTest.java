@@ -13,8 +13,8 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.position.service;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
-import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.specification.ScosUserAuthentication;
 import br.com.sawcunhaos.organization.domain.corporate.department.dto.DepartmentOutput;
 import br.com.sawcunhaos.organization.domain.corporate.department.internal.Department;
 import br.com.sawcunhaos.organization.domain.corporate.department.service.DepartmentMapper;

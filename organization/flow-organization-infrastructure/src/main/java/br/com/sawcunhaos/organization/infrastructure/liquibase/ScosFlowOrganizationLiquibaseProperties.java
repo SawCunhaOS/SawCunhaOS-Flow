@@ -1,6 +1,6 @@
 package br.com.sawcunhaos.organization.infrastructure.liquibase;
 
-import br.com.sawcunhaos.foundation.utils.configuration.liquibase.BaseLiquibaseProperties;
+import br.com.sawcunhaos.foundation.jpa.liquibase.BaseLiquibaseProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;

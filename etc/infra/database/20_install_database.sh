@@ -11,7 +11,10 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-E
 
     -- uuid-ossp pode nao ter sido instalado pelo 10_postgis.sh
     CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
+    --
+    DROP EXTENSION IF EXISTS pg_cron CASCADE;
+    CREATE EXTENSION pg_cron SCHEMA pg_catalog;
+    --
     -- pgmq: extensao pronta pra uso, sem fila criada ainda —
     -- criar fila especifica com SELECT pgmq.create('nome_da_fila')
     -- quando os topicos forem definidos
@@ -62,8 +65,6 @@ EOSQL
 # Banco e usuario do Keycloak
 # -----------------------------------------------------------------
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "postgres" <<-EOSQL
-
-    CREATE EXTENSION IF NOT EXISTS pg_cron;
 
     DO \$\$
     BEGIN

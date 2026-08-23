@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.access.login;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginApprovalRequestProfileChangeKind;
 import br.com.sawcunhaos.organization.domain.access.login.specification.LoginService;
 import lombok.RequiredArgsConstructor;

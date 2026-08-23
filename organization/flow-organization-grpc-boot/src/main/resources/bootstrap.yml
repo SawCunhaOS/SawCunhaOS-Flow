@@ -70,6 +70,7 @@ spring:
           prepStmtCacheSqlLimit: 4096
           useServerPrepStmts: true
   jpa:
+    open-in-view: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:

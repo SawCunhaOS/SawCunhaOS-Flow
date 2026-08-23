@@ -13,9 +13,9 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.department.internal;
 
-import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
-import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.Employee;
 import br.com.sawcunhaos.organization.domain.corporate.position.internal.Position;
 import jakarta.persistence.Column;

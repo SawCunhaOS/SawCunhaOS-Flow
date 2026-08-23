@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.boot.api.company;
 
-import br.com.sawcunhaos.foundation.utils.valueobjects.Cnpj;
+import br.com.sawcunhaos.foundation.validation.valueobjects.Cnpj;
 import br.com.sawcunhaos.organization.boot.infrastructure.ScosOrganizationTestUtil;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.Company;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.CompanyRepository;

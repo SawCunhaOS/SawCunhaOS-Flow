@@ -59,7 +59,7 @@ SELECT DISTINCT
     pp.code AS profile_code,
 
     -- Permissão (principal + adicionais; NULL quando nenhum perfil tem recursos atribuídos)
-    r.code AS permission
+    COALESCE(r.code, '') AS permission
 
 FROM       scos.scos_login            l
     JOIN       scos.scos_profile          pp   ON  pp.profile_id = l.profile_id
@@ -72,4 +72,4 @@ FROM       scos.scos_login            l
                                              AND r.active = true;
 
 CREATE UNIQUE INDEX uidx_vw_login_context_login_permission
-    ON scos.vw_login_context (login_id, COALESCE(permission, ''));
+    ON scos.vw_login_context (login_id, permission);

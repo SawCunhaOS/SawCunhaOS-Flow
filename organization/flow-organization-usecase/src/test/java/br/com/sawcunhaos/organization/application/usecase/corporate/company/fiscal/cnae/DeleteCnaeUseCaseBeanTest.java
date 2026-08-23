@@ -12,7 +12,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.corporate.company.fiscal.cnae;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.corporate.company.specification.CnaeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package br.com.sawcunhaos.security.starter.keycloak;
 
-import br.com.sawcunhaos.foundation.utils.specification.LocaleService;
+import br.com.sawcunhaos.foundation.core.specification.LocaleService;
 import br.com.sawcunhaos.security.starter.configuration.properties.ScosRegistryProperties;
 import br.com.sawcunhaos.security.starter.specification.ScosSecurity;
 import org.springframework.beans.factory.annotation.Qualifier;

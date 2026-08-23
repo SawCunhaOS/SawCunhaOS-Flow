@@ -13,8 +13,8 @@
 
 package br.com.sawcunhaos.organization.grpc.boot.configuration.handler;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
-import br.com.sawcunhaos.foundation.utils.specification.LocaleService;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.specification.LocaleService;
 import br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError;
 import io.grpc.Metadata;
 import io.grpc.Status;

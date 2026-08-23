@@ -19,19 +19,18 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>br.com.sawcunhaos.flow</groupId>
             <artifactId>flow-organization-domain</artifactId>
         </dependency>
-
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>
             <artifactId>scos-foundation-exception</artifactId>
         </dependency>
+
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>
-            <artifactId>scos-foundation-utils</artifactId>
+            <artifactId>scos-foundation-web</artifactId>
         </dependency>
 
         <!-- Test -->
@@ -476,7 +475,7 @@
                 <dependencies>
                     <dependency>
                         <groupId>br.com.sawcunhaos</groupId>
-                        <artifactId>scos-foundation-utils</artifactId>
+                        <artifactId>scos-foundation-codegen</artifactId>
                         <version>${scos-foundation.version}</version>
                     </dependency>
                 </dependencies>

@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.access.status.internal;
 
-import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
+import br.com.sawcunhaos.foundation.audit.api.Auditable;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.Company;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.StatusCompany;
 import jakarta.persistence.Column;

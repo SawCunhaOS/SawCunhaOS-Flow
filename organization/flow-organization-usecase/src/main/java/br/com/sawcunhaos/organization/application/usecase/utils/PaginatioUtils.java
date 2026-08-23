@@ -13,8 +13,8 @@
 
 package br.com.sawcunhaos.organization.application.usecase.utils;
 
-import br.com.sawcunhaos.foundation.utils.sort.PropertiesOrder;
-import br.com.sawcunhaos.foundation.utils.utils.PaginationUtils;
+import br.com.sawcunhaos.foundation.core.sort.PropertiesOrder;
+import br.com.sawcunhaos.foundation.web.PaginationUtils;
 import br.com.sawcunhaos.organization.api.dto.PaginationFilter;
 import br.com.sawcunhaos.organization.api.dto.ScosPaginated;
 import lombok.NoArgsConstructor;

@@ -17,11 +17,11 @@ import br.com.sawcunhaos.security.grpc.proto.RegistryResourcesRequest;
 import br.com.sawcunhaos.security.grpc.proto.RegistrySystemRequest;
 import br.com.sawcunhaos.security.grpc.proto.RegistrySystemResponse;
 import br.com.sawcunhaos.security.grpc.proto.Resource;
-import br.com.sawcunhaos.security.starter.configuration.properties.ScosRegistryProperties;
 import br.com.sawcunhaos.security.starter.model.ScosSystemContext;
 import br.com.sawcunhaos.security.starter.model.ScosSystemContextHolder;
 import br.com.sawcunhaos.security.starter.service.grpc.ScosRegistryService;
 import br.com.sawcunhaos.security.starter.specification.ScosPermission;
+import br.com.sawcunhaos.security.starter.specification.ScosSystem;
 import br.com.sawcunhaos.security.starter.specification.ScosSystemRegistration;
 import io.grpc.Metadata;
 import io.grpc.StatusRuntimeException;
@@ -52,75 +52,84 @@ public class ScosSystemRegistrationService implements ScosSystemRegistration {
             Metadata.Key.of("scos-error-code", Metadata.ASCII_STRING_MARSHALLER);
 
     private final ScosRegistryService scosRegistryService;
-    private final ScosRegistryProperties properties;
     private final BuildProperties buildProperties;
     private final MessageSource permissionMessageSource;
 
     @Override
     public void register(int attempt) {
-        try {
-            RegistrySystemRequest request = RegistrySystemRequest.newBuilder()
-                    .setName(properties.getSystemName())
-                    .setCode(properties.getSystemCode())
-                    .setDescription(properties.getSystemDescription())
-                    .setVersion(buildProperties.getVersion())
-                    .build();
-
-            RegistrySystemResponse response = scosRegistryService.registrySystem(request);
-
-            ScosSystemContextHolder.set(new ScosSystemContext(
-                    response.getSystemId(),
-                    response.getSecretKey(),
-                    properties.getSystemCode()
-            ));
-
-            if (response.getUpdate()) {
-                log.info("[SCOS] System registered. systemId={}", response.getSystemId());
-
-                RegistryResourcesRequest registryResourcesRequest = RegistryResourcesRequest.newBuilder()
-                        .setSystemId(response.getSystemId())
-                        .addAllResources(createResources())
-                        .build();
-
-                scosRegistryService.registryResources(registryResourcesRequest);
-                log.info("[SCOS] Resources registered.");
-            } else {
-                log.info("[SCOS] System already registered. systemId={}", response.getSystemId());
-            }
-        } catch (Exception ex) {
-            String reason = extractReason(ex);
-
-            if (attempt >= MAX_RETRIES) {
-                // sem registro o sistema não consegue validar permissões
-                throw new IllegalStateException(
-                        "[SCOS] Falha ao registrar sistema após " + MAX_RETRIES
-                                + " tentativas. Motivo: " + reason + ". Startup abortado.", ex
-                );
-            }
-
-            log.warn("[SCOS] Tentativa {}/{} falhou. Motivo: {}. Retrying em {}ms...",
-                    attempt, MAX_RETRIES, reason, DELAY_MS);
+        getAllSystem().forEach(scosSystem -> {
 
             try {
-                Thread.sleep(DELAY_MS);
-            } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
+
+                RegistrySystemRequest request = RegistrySystemRequest.newBuilder()
+                        .setName(scosSystem.getSystemName())
+                        .setCode(scosSystem.getSystemCode())
+                        .setDescription(scosSystem.getSystemDescription())
+                        .setVersion(buildProperties.getVersion())
+                        .build();
+
+                RegistrySystemResponse response = scosRegistryService.registrySystem(request);
+
+                ScosSystemContextHolder.set(new ScosSystemContext(
+                        response.getSystemId(),
+                        response.getSecretKey(),
+                        scosSystem.getSystemCode()
+                ));
+
+                if (response.getUpdate()) {
+                    log.info("[SCOS] System registered. systemId={}", response.getSystemId());
+
+                    RegistryResourcesRequest registryResourcesRequest = RegistryResourcesRequest.newBuilder()
+                            .setSystemId(response.getSystemId())
+                            .addAllResources(createResources(scosSystem.getPermissions()))
+                            .build();
+
+                    scosRegistryService.registryResources(registryResourcesRequest);
+                    log.info("[SCOS] Resources registered.");
+                } else {
+                    log.info("[SCOS] System already registered. systemId={}", response.getSystemId());
+                }
+            } catch (Exception ex) {
+                String reason = extractReason(ex);
+
+                if (attempt >= MAX_RETRIES) {
+                    // sem registro o sistema não consegue validar permissões
+                    throw new IllegalStateException(
+                            "[SCOS] Falha ao registrar sistema após " + MAX_RETRIES
+                                    + " tentativas. Motivo: " + reason + ". Startup abortado.", ex
+                    );
+                }
+
+                log.warn("[SCOS] Tentativa {}/{} falhou. Motivo: {}. Retrying em {}ms...",
+                        attempt, MAX_RETRIES, reason, DELAY_MS);
+
+                try {
+                    Thread.sleep(DELAY_MS);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                }
+
+                register(attempt + 1);
             }
 
-            register(attempt + 1);
-        }
+        });
     }
 
-    private List<Resource> createResources() {
+    private Stream<ScosSystem> getAllSystem() {
         Reflections reflections = new Reflections("br.com.sawcunhaos");
 
-        Set<Class<? extends ScosPermission>> classes =
-                reflections.getSubTypesOf(ScosPermission.class);
+        Set<Class<? extends ScosSystem>> classes =
+                reflections.getSubTypesOf(ScosSystem.class);
 
         return classes.stream()
                 .filter(Class::isEnum)
                 .flatMap(c -> Stream.of(((Class<? extends Enum<?>>) c).getEnumConstants()))
-                .map(p -> (ScosPermission) p)
+                .map(s -> (ScosSystem) s);
+    }
+
+    private List<Resource> createResources(List<ScosPermission> scosPermission) {
+
+        return scosPermission.stream()
                 .map(p -> Resource.newBuilder()
                         .setCode(p.getPermission())
                         .setDescriptionPt(resolveDescription(p, LOCALE_PT))

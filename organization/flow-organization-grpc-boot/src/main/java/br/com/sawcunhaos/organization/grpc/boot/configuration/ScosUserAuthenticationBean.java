@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.grpc.boot.configuration;
 
-import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
+import br.com.sawcunhaos.foundation.core.specification.ScosUserAuthentication;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.outbox.internal;
 
-import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
+import br.com.sawcunhaos.foundation.audit.api.Auditable;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

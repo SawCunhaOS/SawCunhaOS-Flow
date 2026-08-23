@@ -13,9 +13,9 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.company.service;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
-import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
-import br.com.sawcunhaos.foundation.utils.valueobjects.Cnpj;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.specification.ScosUserAuthentication;
+import br.com.sawcunhaos.foundation.validation.valueobjects.Cnpj;
 import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonActivateOutput;
 import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonDisableOutput;
 import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonEnableOutput;
@@ -34,14 +34,14 @@ import br.com.sawcunhaos.organization.domain.configuration.internal.Organization
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.CompanyInput;
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.CompanyOutput;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.Cnae;
+import br.com.sawcunhaos.organization.domain.corporate.company.internal.CnaeRepository;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.Company;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.CompanyRepository;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.LegalNature;
+import br.com.sawcunhaos.organization.domain.corporate.company.internal.LegalNatureRepository;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.QCnae;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.QLegalNature;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.StatusCompany;
-import br.com.sawcunhaos.organization.domain.corporate.company.internal.CnaeRepository;
-import br.com.sawcunhaos.organization.domain.corporate.company.internal.LegalNatureRepository;
 import br.com.sawcunhaos.organization.domain.corporate.company.specification.CompanyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

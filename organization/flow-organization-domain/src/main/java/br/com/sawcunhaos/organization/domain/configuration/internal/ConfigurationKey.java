@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.configuration.internal;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 

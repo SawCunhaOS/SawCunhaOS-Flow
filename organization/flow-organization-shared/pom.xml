@@ -20,8 +20,21 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>br.com.sawcunhaos</groupId>
-            <artifactId>scos-foundation-utils</artifactId>
+            <artifactId>scos-foundation-core</artifactId>
         </dependency>
 
         <dependency>

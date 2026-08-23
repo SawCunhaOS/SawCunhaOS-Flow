@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.corporate.position;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.api.dto.UpdatePositionWorkScheduleRequest;
 import br.com.sawcunhaos.organization.domain.corporate.position.dto.PositionWorkScheduleInput;
 import br.com.sawcunhaos.organization.domain.corporate.position.internal.DayOfWeek;

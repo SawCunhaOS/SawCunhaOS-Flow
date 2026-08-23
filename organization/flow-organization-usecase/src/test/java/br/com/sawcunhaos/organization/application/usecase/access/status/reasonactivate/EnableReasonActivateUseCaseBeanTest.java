@@ -12,7 +12,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.access.status.reasonactivate;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonActivateService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

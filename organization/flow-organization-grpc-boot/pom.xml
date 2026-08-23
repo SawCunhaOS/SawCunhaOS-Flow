@@ -60,14 +60,19 @@
 
         <dependency>
             <groupId>br.com.sawcunhaos.flow</groupId>
-            <artifactId>flow-organization-infrastructure</artifactId>
+            <artifactId>infrastructure</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>br.com.sawcunhaos.flow</groupId>
-                    <artifactId>flow-security-starter</artifactId>
+                    <groupId>br.com.sawcunhaos</groupId>
+                    <artifactId>scos-foundation-jdempotent</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>br.com.sawcunhaos</groupId>
+                    <artifactId>scos-foundation-cache</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
+
         <dependency>
             <groupId>br.com.sawcunhaos.flow</groupId>
             <artifactId>flow-organization-usecase</artifactId>

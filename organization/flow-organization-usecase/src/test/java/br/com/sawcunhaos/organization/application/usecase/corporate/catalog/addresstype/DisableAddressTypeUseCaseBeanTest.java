@@ -12,7 +12,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.corporate.catalog.addresstype;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.corporate.catalog.specification.AddressTypeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

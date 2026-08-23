@@ -16,7 +16,8 @@ import org.springframework.cache.annotation.Cacheable;
 import java.util.Objects;
 import java.util.UUID;
 
-import static br.com.sawcunhaos.foundation.utils.configuration.rest.filter.LoggingInitialFilter.REQUEST_ID_HEADER;
+import static br.com.sawcunhaos.foundation.core.enums.Constant.REQUEST_ID_HEADER;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,10 +27,10 @@ public class ScosSecurityService implements ScosSecurity {
 
     @Override
     @Cacheable(cacheNames = "scos:authority:ctx", keyGenerator = "ScosCacheKeyGenerator")
-    public ScosSecurityContext getSecurityContext(@NonNull String systemCode, @NonNull String login) {
+    public ScosSecurityContext getSecurityContext(@NonNull String login) {
         log.info("Getting all granted authority for login: {}", login);
-        if(Objects.isNull(MDC.get(REQUEST_ID_HEADER)) || MDC.get(REQUEST_ID_HEADER).isBlank()){
-            MDC.put(REQUEST_ID_HEADER, UUID.randomUUID().toString());
+        if(Objects.isNull(MDC.get(REQUEST_ID_HEADER.getValue())) || MDC.get(REQUEST_ID_HEADER.getValue()).isBlank()){
+            MDC.put(REQUEST_ID_HEADER.getValue(), UUID.randomUUID().toString());
         }
         try {
             AuthorityResponse authorityResponse = scosAuthorityService.validate(login);

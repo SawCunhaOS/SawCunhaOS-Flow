@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.corporate.catalog.contacttype;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.api.dto.ContactType;
 import br.com.sawcunhaos.organization.api.dto.CreateContactTypeRequest;
 import br.com.sawcunhaos.organization.domain.corporate.catalog.dto.ContactTypeInput;

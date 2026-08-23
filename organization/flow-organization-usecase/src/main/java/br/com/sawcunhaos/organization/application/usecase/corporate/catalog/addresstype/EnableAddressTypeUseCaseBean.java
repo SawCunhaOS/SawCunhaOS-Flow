@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.corporate.catalog.addresstype;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.corporate.catalog.specification.AddressTypeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

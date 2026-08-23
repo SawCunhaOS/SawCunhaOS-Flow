@@ -12,10 +12,10 @@
 
 package br.com.sawcunhaos.organization.grpc.boot.configuration.interceptor;
 
+import br.com.sawcunhaos.foundation.core.utils.DateUtils;
 import br.com.sawcunhaos.foundation.privacy.SanitizationBodyComponent;
 import br.com.sawcunhaos.foundation.privacy.SanitizationHeadersComponent;
-import br.com.sawcunhaos.foundation.utils.configuration.rest.filter.properties.ScosFilterProperties;
-import br.com.sawcunhaos.foundation.utils.utils.DateUtils;
+import br.com.sawcunhaos.foundation.web.filter.ScosFilterProperties;
 import io.grpc.ForwardingServerCall;
 import io.grpc.ForwardingServerCallListener;
 import io.grpc.Metadata;
@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static br.com.sawcunhaos.foundation.utils.configuration.rest.filter.LoggingInitialFilter.REQUEST_ID_HEADER;
+import static br.com.sawcunhaos.foundation.core.enums.Constant.REQUEST_ID_HEADER;
 
 /**
  * Global gRPC interceptor ({@code @Order(0)}) — gRPC equivalent of
@@ -65,7 +65,7 @@ public class GrpcLoggingInterceptor implements ServerInterceptor {
 
     // gRPC Metadata keys (lowercase — HTTP/2 headers are case-insensitive)
     private static final Metadata.Key<String> REQUEST_ID_KEY =
-            Metadata.Key.of(REQUEST_ID_HEADER, Metadata.ASCII_STRING_MARSHALLER);
+            Metadata.Key.of(REQUEST_ID_HEADER.getValue(), Metadata.ASCII_STRING_MARSHALLER);
 
     private static final Metadata.Key<String> X_FORWARDED_FOR_KEY =
             Metadata.Key.of("x-forwarded-for", Metadata.ASCII_STRING_MARSHALLER);
@@ -89,7 +89,7 @@ public class GrpcLoggingInterceptor implements ServerInterceptor {
         final boolean shouldLog = shouldLog(methodName);
 
         // ── Establish MDC context (mirrors LoggingInitialFilter) ──────────────
-        MDC.put(REQUEST_ID_HEADER, requestId);
+        MDC.put(REQUEST_ID_HEADER.getValue(), requestId);
         MDC.put("IS_IP", clientIp);
 
         // Capture snapshot: gRPC callbacks may run on different virtual threads

@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.flow.infrastructure.database;
 
-import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
+import br.com.sawcunhaos.foundation.core.specification.ScosUserAuthentication;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

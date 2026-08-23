@@ -1,6 +1,6 @@
 package br.com.sawcunhaos.security.starter.utils;
 
-import br.com.sawcunhaos.foundation.utils.specification.ExceptionCode;
+import br.com.sawcunhaos.foundation.core.specification.ExceptionCode;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

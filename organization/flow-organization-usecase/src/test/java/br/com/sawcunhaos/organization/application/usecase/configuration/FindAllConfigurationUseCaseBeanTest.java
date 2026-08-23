@@ -12,7 +12,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.configuration;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.api.dto.ConfigurationType;
 import br.com.sawcunhaos.organization.api.dto.ModelConfiguration;
 import br.com.sawcunhaos.organization.domain.configuration.dto.ConfigurationOutput;

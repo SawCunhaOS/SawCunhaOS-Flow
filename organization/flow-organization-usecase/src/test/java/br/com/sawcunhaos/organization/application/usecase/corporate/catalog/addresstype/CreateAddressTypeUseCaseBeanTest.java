@@ -12,7 +12,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.corporate.catalog.addresstype;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.api.dto.AddressType;
 import br.com.sawcunhaos.organization.api.dto.CatalogEntityType;
 import br.com.sawcunhaos.organization.api.dto.CreateAddressTypeRequest;

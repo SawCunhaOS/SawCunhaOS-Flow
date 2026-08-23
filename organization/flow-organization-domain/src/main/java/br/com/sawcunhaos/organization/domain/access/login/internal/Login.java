@@ -13,16 +13,17 @@
 
 package br.com.sawcunhaos.organization.domain.access.login.internal;
 
-import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
-import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
+import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
+
+import br.com.sawcunhaos.organization.domain.access.profile.internal.Profile;
 import br.com.sawcunhaos.organization.domain.access.status.internal.LoginStatusHistory;
 import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonActivate;
 import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonDisable;
 import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonEnable;
 import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonInactivate;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.Employee;
-import br.com.sawcunhaos.organization.domain.access.profile.internal.Profile;
 import br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -41,12 +41,21 @@
         <!-- Scos Dependencies -->
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>
-            <artifactId>scos-foundation-utils</artifactId>
+            <artifactId>scos-foundation-web</artifactId>
         </dependency>
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>
             <artifactId>scos-foundation-exception</artifactId>
         </dependency>
+        <dependency>
+            <groupId>br.com.sawcunhaos</groupId>
+            <artifactId>scos-foundation-jdempotent-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.sawcunhaos</groupId>
+            <artifactId>scos-foundation-validation-api</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>br.com.sawcunhaos.flow</groupId>
@@ -489,7 +498,7 @@
                 <dependencies>
                     <dependency>
                         <groupId>br.com.sawcunhaos</groupId>
-                        <artifactId>scos-foundation-utils</artifactId>
+                        <artifactId>scos-foundation-codegen</artifactId>
                         <version>${scos-foundation.version}</version>
                     </dependency>
                 </dependencies>

@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.company.service;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.LegalNatureInput;
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.LegalNatureOutput;
 import br.com.sawcunhaos.organization.domain.corporate.company.internal.CompanyRepository;

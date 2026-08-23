@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.access.status.reasonenable;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.api.dto.UpdateReasonEnableRequest;
 import br.com.sawcunhaos.organization.domain.access.status.dto.ReasonEnableInput;
 import br.com.sawcunhaos.organization.domain.access.status.specification.ReasonEnableService;

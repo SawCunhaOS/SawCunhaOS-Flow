@@ -12,7 +12,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.corporate.company.fiscal.cnae;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.api.dto.Cnae;
 import br.com.sawcunhaos.organization.api.dto.CreateCnaeRequest;
 import br.com.sawcunhaos.organization.domain.corporate.company.dto.CnaeInput;

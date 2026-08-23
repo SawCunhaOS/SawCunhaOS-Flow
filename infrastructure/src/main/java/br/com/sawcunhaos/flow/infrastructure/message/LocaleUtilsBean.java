@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.flow.infrastructure.message;
 
-import br.com.sawcunhaos.foundation.utils.specification.LocaleService;
+import br.com.sawcunhaos.foundation.core.specification.LocaleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;

@@ -14,6 +14,7 @@
 package br.com.sawcunhaos.organization.application.usecase.access.login;
 
 import br.com.sawcunhaos.organization.api.dto.CurrentApprover;
+import br.com.sawcunhaos.organization.api.dto.LoginApprovalRequest;
 import br.com.sawcunhaos.organization.api.dto.LoginApprovalRequestEscalationPolicy;
 import br.com.sawcunhaos.organization.api.dto.LoginApprovalRequestLevel;
 import br.com.sawcunhaos.organization.api.dto.LoginApprovalRequestStatus;
@@ -27,8 +28,8 @@ final class LoginApprovalRequestApiMapper {
     private LoginApprovalRequestApiMapper() {
     }
 
-    static br.com.sawcunhaos.organization.api.dto.LoginApprovalRequest toApiLoginApprovalRequest(LoginApprovalRequestOutput output) {
-        return br.com.sawcunhaos.organization.api.dto.LoginApprovalRequest.builder()
+    static LoginApprovalRequest toApiLoginApprovalRequest(LoginApprovalRequestOutput output) {
+        return LoginApprovalRequest.builder()
                 .id(output.id())
                 .loginId(output.loginId())
                 .requestType(toApiType(output.requestType()))

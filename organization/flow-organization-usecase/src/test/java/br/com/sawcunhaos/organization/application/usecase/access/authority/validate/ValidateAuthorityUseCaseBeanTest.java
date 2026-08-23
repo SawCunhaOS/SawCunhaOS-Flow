@@ -12,7 +12,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.access.authority.validate;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.login.dto.AuthorityResponseOutput;
 import br.com.sawcunhaos.organization.domain.access.login.specification.AuthorityResponseService;
 import org.junit.jupiter.api.DisplayName;

@@ -15,7 +15,7 @@ package br.com.sawcunhaos.flow.infrastructure.database;
 
 import br.com.sawcunhaos.foundation.audit.service.ScosHibernateAuditListener;
 import br.com.sawcunhaos.foundation.audit.specification.ScosAuditService;
-import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
+import br.com.sawcunhaos.foundation.core.specification.ScosUserAuthentication;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.event.service.spi.EventListenerRegistry;

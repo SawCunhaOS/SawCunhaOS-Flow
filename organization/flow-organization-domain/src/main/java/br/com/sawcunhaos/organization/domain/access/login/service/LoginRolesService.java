@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.access.login.service;
 
-import br.com.sawcunhaos.foundation.utils.annotation.rules.ScosRuleService;
+import br.com.sawcunhaos.foundation.spring.annotation.rules.ScosRuleService;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginStatus;
 import br.com.sawcunhaos.organization.shared.validation.BusinessRule;
 import br.com.sawcunhaos.organization.shared.validation.RuleChain;

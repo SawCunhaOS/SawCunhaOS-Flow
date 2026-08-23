@@ -13,8 +13,9 @@
 
 package br.com.sawcunhaos.organization.domain.configuration.service;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
-import br.com.sawcunhaos.foundation.utils.specification.LocaleService;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
+
+import br.com.sawcunhaos.foundation.core.specification.LocaleService;
 import br.com.sawcunhaos.organization.domain.configuration.dto.ConfigurationOutput;
 import br.com.sawcunhaos.organization.domain.configuration.dto.KeyConfigurationOutput;
 import br.com.sawcunhaos.organization.domain.configuration.internal.ConfigurationKey;

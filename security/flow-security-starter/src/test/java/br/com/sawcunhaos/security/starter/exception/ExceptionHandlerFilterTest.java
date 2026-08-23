@@ -1,8 +1,7 @@
-package br.com.sawcunhaos.foundation.security.exception;
+package br.com.sawcunhaos.security.starter.exception;
 
+import br.com.sawcunhaos.foundation.core.specification.LocaleService;
 import br.com.sawcunhaos.foundation.exception.error.ScosSecurityException;
-import br.com.sawcunhaos.foundation.utils.specification.LocaleService;
-import br.com.sawcunhaos.security.starter.exception.ExceptionHandlerFilter;
 import br.com.sawcunhaos.security.starter.utils.SecurityExceptionCode;
 import jakarta.servlet.FilterChain;
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +34,8 @@ import static org.mockito.Mockito.when;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ExceptionHandlerFilterTest {
 
-    @Mock LocaleService localeService;
+    @Mock
+    LocaleService localeService;
     @Mock ObjectMapper objectMapper;
     @InjectMocks
     ExceptionHandlerFilter filter;

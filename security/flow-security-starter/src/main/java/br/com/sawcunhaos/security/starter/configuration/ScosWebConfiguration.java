@@ -1,6 +1,6 @@
 package br.com.sawcunhaos.security.starter.configuration;
 
-import br.com.sawcunhaos.foundation.utils.specification.LocaleService;
+import br.com.sawcunhaos.foundation.core.specification.LocaleService;
 import br.com.sawcunhaos.security.starter.ScosUserAuthenticationBean;
 import br.com.sawcunhaos.security.starter.configuration.properties.CorsProperties;
 import br.com.sawcunhaos.security.starter.exception.AccessDeniedExceptionHandler;

@@ -14,11 +14,11 @@
 package br.com.sawcunhaos.organization.domain.corporate.employee.internal;
 
 
-import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
-import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
-import br.com.sawcunhaos.foundation.utils.valueobjects.Cpf;
-import br.com.sawcunhaos.foundation.utils.valueobjects.Email;
+import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
+import br.com.sawcunhaos.foundation.validation.valueobjects.Cpf;
+import br.com.sawcunhaos.foundation.validation.valueobjects.Email;
 import br.com.sawcunhaos.organization.domain.access.status.internal.EmployeeStatusHistory;
 import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonActivate;
 import br.com.sawcunhaos.organization.domain.access.status.internal.ReasonDisable;

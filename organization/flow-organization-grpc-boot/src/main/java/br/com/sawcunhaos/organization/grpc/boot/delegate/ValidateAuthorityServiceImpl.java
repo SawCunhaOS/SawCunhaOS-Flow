@@ -27,7 +27,8 @@ import org.slf4j.MarkerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import static br.com.sawcunhaos.foundation.utils.configuration.rest.filter.LoggingInitialFilter.REQUEST_ID_HEADER;
+import static br.com.sawcunhaos.foundation.core.enums.Constant.REQUEST_ID_HEADER;
+
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +43,7 @@ public class ValidateAuthorityServiceImpl extends ValidateAuthorityServiceGrpc.V
         log.info(AUDIT, "AUTHORITY_QUERY system={} login={} requestId={}",
                 SecurityContextHolder.getContext().getAuthentication().getPrincipal(),
                 request.getLogin(),
-                MDC.get(REQUEST_ID_HEADER)
+                MDC.get(REQUEST_ID_HEADER.getValue())
         );
 
         ValidateAuthorityOutput validateAuthorityOutput = validateAuthorityUseCase.execute(request.getLogin());

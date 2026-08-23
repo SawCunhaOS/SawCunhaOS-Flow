@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.access.login.internal.rules;
 
-import br.com.sawcunhaos.foundation.utils.annotation.rules.ScosRule;
+import br.com.sawcunhaos.foundation.spring.annotation.rules.ScosRule;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginStatus;
 import br.com.sawcunhaos.organization.shared.validation.BusinessRule;
 import lombok.RequiredArgsConstructor;

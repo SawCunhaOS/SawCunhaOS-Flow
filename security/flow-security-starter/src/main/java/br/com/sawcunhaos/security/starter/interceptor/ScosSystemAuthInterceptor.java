@@ -29,7 +29,7 @@ import java.util.Base64;
 import java.util.Objects;
 import java.util.UUID;
 
-import static br.com.sawcunhaos.foundation.utils.configuration.rest.filter.LoggingInitialFilter.REQUEST_ID_HEADER;
+import static br.com.sawcunhaos.foundation.core.enums.Constant.REQUEST_ID_HEADER;
 import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
 
 public class ScosSystemAuthInterceptor implements ClientInterceptor {
@@ -63,10 +63,10 @@ public class ScosSystemAuthInterceptor implements ClientInterceptor {
                 }
                 headers.put(Metadata.Key.of("KEY-ACCESS", ASCII_STRING_MARSHALLER), scosRegistryProperties.getKeyAccess());
                 String xRequestId = UUID.randomUUID().toString();
-                if (Objects.nonNull(MDC.get(REQUEST_ID_HEADER))) {
-                    xRequestId = MDC.get(REQUEST_ID_HEADER);
+                if (Objects.nonNull(MDC.get(REQUEST_ID_HEADER.getValue()))) {
+                    xRequestId = MDC.get(REQUEST_ID_HEADER.getValue());
                 }
-                headers.put(Metadata.Key.of(REQUEST_ID_HEADER, ASCII_STRING_MARSHALLER), xRequestId);
+                headers.put(Metadata.Key.of(REQUEST_ID_HEADER.getValue(), ASCII_STRING_MARSHALLER), xRequestId);
 
                 if (Objects.nonNull(MDC.get("IS_IP"))) {
                     headers.put(Metadata.Key.of("IS_IP", ASCII_STRING_MARSHALLER), MDC.get("IS_IP"));

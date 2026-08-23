@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.access.resource.registry;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.resource.dto.RegisterResourceInput;
 import br.com.sawcunhaos.organization.domain.access.resource.specification.ResourceService;
 import lombok.RequiredArgsConstructor;

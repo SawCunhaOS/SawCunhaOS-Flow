@@ -29,3 +29,14 @@ databaseChangeLog:
       rollback:
         - sql:
             sql: DROP MATERIALIZED VIEW IF EXISTS scos.vw_authority_response;
+  - changeSet:
+      id: 20260822-Samuel.Cunha-Configure-cron-job-vw-authority
+      author: Samuel.Cunha
+      runOnChange: true
+      runAlways: true
+      changes:
+        - sqlFile:
+            path: vw_cront_job_configure.sql
+            relativeToChangelogFile: true
+            splitStatements: false
+            stripComments: false

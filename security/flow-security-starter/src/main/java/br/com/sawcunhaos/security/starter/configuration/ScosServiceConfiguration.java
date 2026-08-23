@@ -2,7 +2,6 @@ package br.com.sawcunhaos.security.starter.configuration;
 
 import br.com.sawcunhaos.security.grpc.proto.RegistryServiceGrpc;
 import br.com.sawcunhaos.security.grpc.proto.ValidateAuthorityServiceGrpc;
-import br.com.sawcunhaos.security.starter.configuration.properties.ScosRegistryProperties;
 import br.com.sawcunhaos.security.starter.service.ScosSecurityService;
 import br.com.sawcunhaos.security.starter.service.ScosSecurityStartupListener;
 import br.com.sawcunhaos.security.starter.service.ScosSystemRegistrationService;
@@ -43,11 +42,10 @@ public class ScosServiceConfiguration {
     @Bean
     public ScosSystemRegistration scosSystemRegistrationService(
             ScosRegistryService scosRegistryService,
-            ScosRegistryProperties scosRegistryProperties,
-            MessageSource permissionMessageSource
+            MessageSource messageSource
     ) {
         return new ScosSystemRegistrationService(
-                scosRegistryService, scosRegistryProperties, buildProperties, permissionMessageSource);
+                scosRegistryService, buildProperties, messageSource);
     }
 
     @Bean

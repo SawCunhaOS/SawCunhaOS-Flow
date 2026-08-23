@@ -27,7 +27,7 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
             throw new ScosSecurityException(SecurityExceptionCode.SCOS_AUTH_001);
         }
 
-        ScosSecurityContext context = scosSecurityService.getSecurityContext(scosRegistryProperties.getSystemCode(), login);
+        ScosSecurityContext context = scosSecurityService.getSecurityContext(login);
 
         return new ScosAuthentication(context, jwt);
     }

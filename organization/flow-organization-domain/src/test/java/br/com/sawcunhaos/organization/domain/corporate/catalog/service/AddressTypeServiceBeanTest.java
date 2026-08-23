@@ -13,8 +13,8 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.catalog.service;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
-import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.specification.ScosUserAuthentication;
 import br.com.sawcunhaos.organization.domain.access.status.internal.EntityType;
 import br.com.sawcunhaos.organization.domain.corporate.catalog.dto.AddressTypeInput;
 import br.com.sawcunhaos.organization.domain.corporate.catalog.dto.AddressTypeOutput;

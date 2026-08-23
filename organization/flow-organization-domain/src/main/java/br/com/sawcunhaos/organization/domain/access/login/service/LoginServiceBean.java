@@ -13,8 +13,8 @@
 
 package br.com.sawcunhaos.organization.domain.access.login.service;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
-import br.com.sawcunhaos.foundation.utils.specification.ScosUserAuthentication;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.specification.ScosUserAuthentication;
 import br.com.sawcunhaos.organization.domain.access.login.dto.LoginInput;
 import br.com.sawcunhaos.organization.domain.access.login.dto.LoginOutput;
 import br.com.sawcunhaos.organization.domain.access.login.internal.Login;

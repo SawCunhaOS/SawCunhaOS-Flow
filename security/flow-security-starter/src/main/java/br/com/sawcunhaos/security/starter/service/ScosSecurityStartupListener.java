@@ -1,6 +1,6 @@
 package br.com.sawcunhaos.security.starter.service;
 
-import br.com.sawcunhaos.foundation.utils.specification.ScosStartupListener;
+import br.com.sawcunhaos.foundation.spring.specification.ScosStartupListener;
 import br.com.sawcunhaos.security.starter.specification.ScosSystemRegistration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

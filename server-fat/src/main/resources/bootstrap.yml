@@ -102,6 +102,7 @@ spring:
           prepStmtCacheSqlLimit: 4096
           useServerPrepStmts: true
   jpa:
+    open-in-view: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:
@@ -243,7 +244,4 @@ scos:
     port: ${scos.registry.port}                      # porta gRPC
     key-access: ${scos.registry.key-access}  # prod: setar via env; default versionado é só dev
     discovery-enabled: ${scos.registry.discovery-enabled}
-    system-code: SCOS_ORGANIZATION
-    system-name: Scos Organization
-    system-description: Sistema de Gestão de Empresas e Funcionarios
     tls-enabled: ${scos.registry.tls-enabled}       # true em produção

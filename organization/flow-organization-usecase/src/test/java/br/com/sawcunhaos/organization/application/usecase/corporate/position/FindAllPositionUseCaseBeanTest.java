@@ -12,7 +12,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.corporate.position;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.api.dto.Direction;
 import br.com.sawcunhaos.organization.api.dto.GetAllPositionsResponse;
 import br.com.sawcunhaos.organization.api.dto.PaginationFilter;

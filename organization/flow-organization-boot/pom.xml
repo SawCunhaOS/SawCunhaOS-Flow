@@ -69,10 +69,6 @@
             <groupId>br.com.sawcunhaos.flow</groupId>
             <artifactId>flow-organization-resources</artifactId>
         </dependency>
-        <dependency>
-            <groupId>br.com.sawcunhaos</groupId>
-            <artifactId>scos-foundation-jdempotent</artifactId>
-        </dependency>
 
         <!-- Tests -->
         <dependency>

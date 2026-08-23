@@ -12,7 +12,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.corporate.department;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.api.dto.CreateDepartmentRequest;
 import br.com.sawcunhaos.organization.api.dto.Department;
 import br.com.sawcunhaos.organization.domain.corporate.department.dto.DepartmentInput;

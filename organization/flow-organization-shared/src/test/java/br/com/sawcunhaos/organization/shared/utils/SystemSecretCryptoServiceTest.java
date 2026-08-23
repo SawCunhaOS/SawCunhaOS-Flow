@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.shared.utils;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;

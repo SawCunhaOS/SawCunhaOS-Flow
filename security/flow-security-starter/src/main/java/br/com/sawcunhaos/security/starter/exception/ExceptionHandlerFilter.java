@@ -1,9 +1,9 @@
 package br.com.sawcunhaos.security.starter.exception;
 
 
+import br.com.sawcunhaos.foundation.core.specification.LocaleService;
 import br.com.sawcunhaos.foundation.exception.error.ScosSecurityException;
 import br.com.sawcunhaos.foundation.exception.model.ScosProblemDetails;
-import br.com.sawcunhaos.foundation.utils.specification.LocaleService;
 import br.com.sawcunhaos.security.starter.utils.AuthenticationUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

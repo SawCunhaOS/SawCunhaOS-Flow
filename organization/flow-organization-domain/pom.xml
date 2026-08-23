@@ -41,15 +41,23 @@
         <!-- SCOS Dependencies -->
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>
-            <artifactId>scos-foundation-utils</artifactId>
+            <artifactId>scos-foundation-audit-api</artifactId>
         </dependency>
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>
-            <artifactId>scos-foundation-exception</artifactId>
+            <artifactId>scos-foundation-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.sawcunhaos</groupId>
+            <artifactId>scos-foundation-jpa</artifactId>
         </dependency>
         <dependency>
             <groupId>br.com.sawcunhaos.flow</groupId>
             <artifactId>flow-organization-shared</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.sawcunhaos</groupId>
+            <artifactId>scos-foundation-spring</artifactId>
         </dependency>
 
         <dependency>
@@ -78,6 +86,10 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
         </dependency>
 
         <!-- Test -->

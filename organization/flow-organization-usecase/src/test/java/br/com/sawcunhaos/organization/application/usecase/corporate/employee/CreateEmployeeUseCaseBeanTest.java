@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.application.usecase.corporate.employee;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.api.dto.CreateEmployeeRequest;
 import br.com.sawcunhaos.organization.api.dto.EmployeeContractType;
 import br.com.sawcunhaos.organization.domain.corporate.employee.dto.EmployeeInput;

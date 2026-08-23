@@ -13,9 +13,9 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.company.internal;
 
-import br.com.sawcunhaos.foundation.utils.annotation.audit.Auditable;
-import br.com.sawcunhaos.foundation.utils.entity.BaseEntity;
-import br.com.sawcunhaos.foundation.utils.valueobjects.Email;
+import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
+import br.com.sawcunhaos.foundation.validation.valueobjects.Email;
 import br.com.sawcunhaos.organization.domain.corporate.catalog.internal.ContactType;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;

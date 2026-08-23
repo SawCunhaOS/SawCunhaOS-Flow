@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.grpc.boot.configuration.interceptor;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.system.specification.ScosSystemService;
 import br.com.sawcunhaos.organization.grpc.boot.configuration.properties.ScosGRPCProperties;
 import io.grpc.Metadata;

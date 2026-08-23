@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.shared.validation;
 
-import br.com.sawcunhaos.foundation.utils.exception.ScosException;
+import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError;
 
 import java.util.List;
