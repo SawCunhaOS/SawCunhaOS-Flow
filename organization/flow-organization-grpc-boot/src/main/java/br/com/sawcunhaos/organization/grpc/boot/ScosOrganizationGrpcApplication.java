@@ -18,14 +18,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.jdbc.autoconfigure.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 
 @ComponentScan(basePackages = {"br.com.sawcunhaos"})
 @SpringBootApplication(exclude = {
-        DataRedisAutoConfiguration.class,
         DataSourceAutoConfiguration.class
 })
 @RequiredArgsConstructor
