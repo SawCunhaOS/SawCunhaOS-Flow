@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_OUTBOX_EVENT_DEAD_LETTER
-            schemaName: scos
             columns:
               - column:
                   name: OUTBOX_EVENT_DEAD_LETTER_ID
@@ -22,7 +21,7 @@ databaseChangeLog:
                   constraints:
                     nullable: true
                     foreignKeyName: FK_OUTBOX_EVENT_ID_SCOS_OUTBOX_EVENT_DEAD_LETTER
-                    references: scos.SCOS_OUTBOX_EVENT(OUTBOX_EVENT_ID)
+                    references: SCOS_OUTBOX_EVENT(OUTBOX_EVENT_ID)
               - column:
                   name: TOPIC
                   type: varchar(255)
@@ -63,5 +62,4 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: SCOS_OUTBOX_EVENT_DEAD_LETTER
-            schemaName: scos
             cascadeConstraints: true

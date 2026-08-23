@@ -19,21 +19,21 @@
 --   - Logins sem recursos aparecem com permission = NULL (perfil vazio)
 --   - Status do login NÃO é filtrado — responsabilidade da query consumidora
 --
--- Refresh: pg_cron a cada 30 minutos via scos.refresh_authority_views()
+-- Refresh: pg_cron a cada 30 minutos via refresh_authority_views()
 --
 -- Permissão agrega Perfil principal (SCOS_LOGIN.PROFILE_ID) E Perfis adicionais
 -- (SCOS_LOGIN_PROFILE, N:N) — profile_id/profile_code continuam se referindo só
 -- ao principal (Story 3.4).
 -- =============================================================================
 
-DROP MATERIALIZED VIEW IF EXISTS scos.vw_login_context CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS vw_login_context CASCADE;
 
-CREATE MATERIALIZED VIEW scos.vw_login_context AS
+CREATE MATERIALIZED VIEW vw_login_context AS
 WITH login_profiles AS (
     -- Perfil principal (1:1, SCOS_LOGIN.PROFILE_ID) + Perfis adicionais (N:N, SCOS_LOGIN_PROFILE)
-    SELECT l.login_id, l.profile_id FROM scos.scos_login l
+    SELECT l.login_id, l.profile_id FROM scos_login l
     UNION
-    SELECT lp.login_id, lp.profile_id FROM scos.scos_login_profile lp
+    SELECT lp.login_id, lp.profile_id FROM scos_login_profile lp
 )
 SELECT DISTINCT
     -- Login
@@ -61,15 +61,15 @@ SELECT DISTINCT
     -- Permissão (principal + adicionais; NULL quando nenhum perfil tem recursos atribuídos)
     COALESCE(r.code, '') AS permission
 
-FROM       scos.scos_login            l
-    JOIN       scos.scos_profile          pp   ON  pp.profile_id = l.profile_id
-    LEFT JOIN  scos.scos_employee         e    ON  e.employee_id = l.employee_id
-    LEFT JOIN  scos.scos_company          ec   ON  ec.company_id = e.company_id
-    LEFT JOIN  scos.scos_company          pc   ON  pc.company_id = ec.parent_company_id
+FROM       scos_login            l
+    JOIN       scos_profile          pp   ON  pp.profile_id = l.profile_id
+    LEFT JOIN  scos_employee         e    ON  e.employee_id = l.employee_id
+    LEFT JOIN  scos_company          ec   ON  ec.company_id = e.company_id
+    LEFT JOIN  scos_company          pc   ON  pc.company_id = ec.parent_company_id
     LEFT JOIN  login_profiles             allp ON  allp.login_id = l.login_id
-    LEFT JOIN  scos.scos_profile_resource pr   ON  pr.profile_id = allp.profile_id
-    LEFT JOIN  scos.scos_resource         r    ON  r.resource_id = pr.resource_id
+    LEFT JOIN  scos_profile_resource pr   ON  pr.profile_id = allp.profile_id
+    LEFT JOIN  scos_resource         r    ON  r.resource_id = pr.resource_id
                                              AND r.active = true;
 
 CREATE UNIQUE INDEX uidx_vw_login_context_login_permission
-    ON scos.vw_login_context (login_id, permission);
+    ON vw_login_context (login_id, permission);

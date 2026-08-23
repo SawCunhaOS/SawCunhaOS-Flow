@@ -203,6 +203,13 @@ scos:
       database-change-log-table: SCOS_DATABASECHANGELOG
       change-log: classpath:/db/changelog/organization/db.changelog-master.yml
       default-schema: ${scos.liquibase.default-schema}
+    geotemporal:
+      enabled: ${scos.liquibase.enabled}
+      contexts: prod
+      database-change-log-lock-table: SCOS_DATABASECHANGELOGLOCK
+      database-change-log-table: SCOS_DATABASECHANGELOG
+      change-log: classpath:/db/changelog/geotemporal/db.changelog-master.yml
+      default-schema: ${scos.liquibase.default-schema}
   filter:
     show-request-body: ${scos.filter.show-request-body}
     show-request-headers: ${scos.filter.show-request-headers}

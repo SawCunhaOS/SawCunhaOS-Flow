@@ -37,8 +37,8 @@ Para localizar rapidamente quem eu preciso gerenciar.
           UC-155 - Recontrata um funcionário localizado pelo CPF, cujo status atual é INACTIVE. ...
         operationId: rehireEmployee
         parameters:
-          - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-          - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+          - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+          - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         requestBody:
           required: true
           content:
@@ -54,9 +54,9 @@ Para localizar rapidamente quem eu preciso gerenciar.
                 schema:
                   $ref: '#/components/schemas/GetEmployeeResponse'
           '4XX':
-            $ref: './ScosComponents.yml#/components/responses/4XX'
+            $ref: '../ScosComponents.yml#/components/responses/4XX'
           '5XX':
-            $ref: './ScosComponents.yml#/components/responses/5XX'
+            $ref: '../ScosComponents.yml#/components/responses/5XX'
         x-authorize: [REHIRE_EMPLOYEE]
         x-jdempotentresource:
           cachePrefix: SCOS_ORGANIZATION_IDP_REHIRE_EMPLOYEE
@@ -69,9 +69,9 @@ Para localizar rapidamente quem eu preciso gerenciar.
         description: UC-037 - Retorna dados completos incluindo cargo, empresa e supervisor
         operationId: getEmployeeById
         parameters:
-          - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-          - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-          - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+          - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+          - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+          - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
         responses:
           '200':
             description: OK
@@ -80,9 +80,9 @@ Para localizar rapidamente quem eu preciso gerenciar.
                 schema:
                   $ref: '#/components/schemas/GetEmployeeResponse'
           '4XX':
-            $ref: './ScosComponents.yml#/components/responses/4XX'
+            $ref: '../ScosComponents.yml#/components/responses/4XX'
           '5XX':
-            $ref: './ScosComponents.yml#/components/responses/5XX'
+            $ref: '../ScosComponents.yml#/components/responses/5XX'
         x-authorize: [GET_EMPLOYEE]
       put:
         tags: [Employee]
@@ -90,9 +90,9 @@ Para localizar rapidamente quem eu preciso gerenciar.
         description: UC-038 - Atualiza dados pessoais. Para empresa, cargo ou supervisor use transfer
         operationId: updateEmployee
         parameters:
-          - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-          - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-          - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+          - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+          - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+          - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
         requestBody:
           required: true
           content:
@@ -102,11 +102,11 @@ Para localizar rapidamente quem eu preciso gerenciar.
           x-jdempotentrequestpayload: true
         responses:
           '204':
-            $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+            $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
           '4XX':
-            $ref: './ScosComponents.yml#/components/responses/4XX'
+            $ref: '../ScosComponents.yml#/components/responses/4XX'
           '5XX':
-            $ref: './ScosComponents.yml#/components/responses/5XX'
+            $ref: '../ScosComponents.yml#/components/responses/5XX'
         x-authorize: [UPDATE_EMPLOYEE]
         x-jdempotentresource:
           cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_EMPLOYEE

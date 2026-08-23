@@ -29,9 +29,9 @@ paths:
       description: UC-022 - Lista todos os departamentos com paginação
       operationId: getAllDepartments
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/activeFilter'
       responses:
         '200':
@@ -41,9 +41,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllDepartmentsResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_DEPARTMENT]
     post:
       tags: [Department]
@@ -51,8 +51,8 @@ paths:
       description: UC-021 - Cria um novo departamento
       operationId: createDepartment
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
       requestBody:
         required: true
         content:
@@ -62,11 +62,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '201':
-          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_DEPARTMENT]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_DEPARTMENT
@@ -79,9 +79,9 @@ paths:
       description: UC-023 - Retorna os dados de um departamento
       operationId: getDepartmentById
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -90,9 +90,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetDepartmentResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_DEPARTMENT]
     put:
       tags: [Department]
@@ -100,9 +100,9 @@ paths:
       description: UC-024 - Atualiza o código, descrição e o Gerente do Departamento (managerId, opcional - null remove o gerente atual)
       operationId: updateDepartment
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -112,11 +112,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_DEPARTMENT]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_DEPARTMENT
@@ -129,16 +129,16 @@ paths:
       description: UC-025 - Reativa departamento com status INACTIVE
       operationId: activateDepartment
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_DEPARTMENT]
 
   /v1/departments/{id}/disable:
@@ -148,16 +148,16 @@ paths:
       description: UC-026 - Inativa departamento com status ACTIVE
       operationId: inactivateDepartment
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_DEPARTMENT]
 
   /v1/positions:
@@ -167,9 +167,9 @@ paths:
       description: UC-029 - Lista todos os cargos com paginação. Pode filtrar por departamento
       operationId: getAllPositions
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/departmentIdFilter'
         - $ref: '#/components/parameters/activeFilter'
       responses:
@@ -180,9 +180,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllPositionsResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_POSITION]
     post:
       tags: [Position]
@@ -190,8 +190,8 @@ paths:
       description: UC-028 - Cria um cargo vinculado a um departamento ativo
       operationId: createPosition
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
       requestBody:
         required: true
         content:
@@ -201,11 +201,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '201':
-          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_POSITION]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_POSITION
@@ -218,9 +218,9 @@ paths:
       description: UC-030 - Retorna os dados de um cargo incluindo o departamento
       operationId: getPositionById
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -229,9 +229,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetPositionResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_POSITION]
     put:
       tags: [Position]
@@ -239,9 +239,9 @@ paths:
       description: UC-031 - Atualiza o código, descrição ou departamento de um cargo
       operationId: updatePosition
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -251,11 +251,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_POSITION]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_POSITION
@@ -268,16 +268,16 @@ paths:
       description: UC-032 - Reativa cargo com status INACTIVE
       operationId: activatePosition
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_POSITION]
 
   /v1/positions/{id}/disable:
@@ -287,16 +287,16 @@ paths:
       description: UC-033 - Inativa cargo com status ACTIVE
       operationId: inactivatePosition
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_POSITION]
 
   /v1/reason-position-change:
@@ -306,9 +306,9 @@ paths:
       description: UC-106 - Lista todos os motivos de mudança de cargo com paginação
       operationId: getAllReasonPositionChange
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
       responses:
         '200':
           description: OK
@@ -317,9 +317,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllReasonPositionChangeResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_POSITION_CHANGE]
     post:
       tags: [Reason Position Change]
@@ -327,8 +327,8 @@ paths:
       description: UC-107 - Cria um novo motivo de mudança de cargo
       operationId: createReasonPositionChange
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
       requestBody:
         required: true
         content:
@@ -338,11 +338,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '201':
-          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_REASON_POSITION_CHANGE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_REASON_POSITION_CHANGE
@@ -355,9 +355,9 @@ paths:
       description: UC-108 - Retorna os dados de um motivo de mudança de cargo
       operationId: getReasonPositionChangeById
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -366,9 +366,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetReasonPositionChangeResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_REASON_POSITION_CHANGE]
     put:
       tags: [Reason Position Change]
@@ -376,9 +376,9 @@ paths:
       description: UC-109 - Atualiza o código ou descrição de um motivo de mudança de cargo
       operationId: updateReasonPositionChange
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -388,11 +388,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_REASON_POSITION_CHANGE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_REASON_POSITION_CHANGE
@@ -405,16 +405,16 @@ paths:
       description: UC-110 - Reativa motivo de mudança de cargo com active=false
       operationId: activateReasonPositionChange
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_REASON_POSITION_CHANGE]
 
   /v1/reason-position-change/{id}/disable:
@@ -424,16 +424,16 @@ paths:
       description: UC-111 - Inativa motivo de mudança de cargo com active=true
       operationId: inactivateReasonPositionChange
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_REASON_POSITION_CHANGE]
 
   /v1/positions/{positionId}/work-schedule:
@@ -445,8 +445,8 @@ paths:
         Retorna array direto, sem paginação - a UK composta (positionId, dayOfWeek) garante teto real de 7 registros
       operationId: getAllPositionWorkSchedule
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idPosition'
       responses:
         '200':
@@ -456,9 +456,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllPositionWorkScheduleResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_POSITION_WORK_SCHEDULE]
     post:
       tags: [Position]
@@ -466,8 +466,8 @@ paths:
       description: UC-145 - Cria o horário de um dia da semana do template do cargo. Rejeitado se já existir registro para esse (positionId, dayOfWeek)
       operationId: createPositionWorkSchedule
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idPosition'
       requestBody:
         required: true
@@ -478,11 +478,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '201':
-          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_POSITION_WORK_SCHEDULE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_POSITION_WORK_SCHEDULE
@@ -495,8 +495,8 @@ paths:
       description: UC-146 - Atualiza o horário de um dia da semana já cadastrado no template do cargo
       operationId: updatePositionWorkSchedule
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idPosition'
         - $ref: '#/components/parameters/dayOfWeekPath'
       requestBody:
@@ -508,11 +508,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_POSITION_WORK_SCHEDULE]
     delete:
       tags: [Position]
@@ -520,23 +520,23 @@ paths:
       description: UC-147 - Remove o horário de um dia da semana do template do cargo
       operationId: deletePositionWorkSchedule
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idPosition'
         - $ref: '#/components/parameters/dayOfWeekPath'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_POSITION_WORK_SCHEDULE]
 
 components:
   securitySchemes:
     BearerAuth:
-      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
+      $ref: '../ScosComponents.yml#/components/securitySchemes/BearerAuth'
   parameters:
     activeFilter:
       name: active
@@ -564,7 +564,7 @@ components:
       in: path
       required: true
       schema:
-        $ref: './ScosComponents.yml#/components/schemas/DayOfWeek'
+        $ref: '../ScosComponents.yml#/components/schemas/DayOfWeek'
       x-jdempotentrequestpayload: true
   schemas:
     Department:
@@ -597,7 +597,7 @@ components:
           items:
             $ref: '#/components/schemas/Department'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateDepartmentRequest:
       required: [code, description]
       type: object
@@ -658,7 +658,7 @@ components:
           items:
             $ref: '#/components/schemas/Position'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     CreatePositionRequest:
       required: [code, description, departmentId]
       type: object
@@ -723,7 +723,7 @@ components:
           items:
             $ref: '#/components/schemas/ReasonPositionChange'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateReasonPositionChangeRequest:
       required: [code, description]
       type: object
@@ -753,7 +753,7 @@ components:
       type: object
       properties:
         dayOfWeek:
-          $ref: './ScosComponents.yml#/components/schemas/DayOfWeek'
+          $ref: '../ScosComponents.yml#/components/schemas/DayOfWeek'
         startTime:
           type: string
           format: time
@@ -777,7 +777,7 @@ components:
       properties:
         dayOfWeek:
           allOf:
-            - $ref: './ScosComponents.yml#/components/schemas/DayOfWeek'
+            - $ref: '../ScosComponents.yml#/components/schemas/DayOfWeek'
           x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
         startTime:

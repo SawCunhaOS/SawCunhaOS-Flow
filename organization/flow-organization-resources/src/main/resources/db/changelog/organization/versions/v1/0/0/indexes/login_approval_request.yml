@@ -8,7 +8,6 @@ databaseChangeLog:
       author: Samuel.Cunha
       changes:
         - createIndex:
-            schemaName: scos
             tableName: scos_login_approval_request
             indexName: idx_scos_login_approval_request_login_id
             columns:
@@ -26,8 +25,8 @@ databaseChangeLog:
         - sql:
             sql: >-
               CREATE INDEX IF NOT EXISTS idx_scos_login_approval_request_sla_scan
-              ON scos.scos_login_approval_request (sla_deadline)
+              ON scos_login_approval_request (sla_deadline)
               WHERE status = 'PENDING';
       rollback:
         - sql:
-            sql: DROP INDEX IF EXISTS scos.idx_scos_login_approval_request_sla_scan;
+            sql: DROP INDEX IF EXISTS idx_scos_login_approval_request_sla_scan;

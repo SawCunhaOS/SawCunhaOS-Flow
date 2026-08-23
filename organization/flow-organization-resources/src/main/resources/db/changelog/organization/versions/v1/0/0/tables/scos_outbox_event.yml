@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_OUTBOX_EVENT
-            schemaName: scos
             columns:
               - column:
                   name: OUTBOX_EVENT_ID
@@ -27,7 +26,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_TOPIC_SCOS_OUTBOX_EVENT
-                    references: scos.SCOS_OUTBOX_TOPIC(TOPIC)
+                    references: SCOS_OUTBOX_TOPIC(TOPIC)
               - column:
                   name: AGGREGATE_ID
                   type: TEXT
@@ -99,13 +98,11 @@ databaseChangeLog:
                     nullable: true
         - addUniqueConstraint:
             tableName: SCOS_OUTBOX_EVENT
-            schemaName: scos
             columnNames: EVENT_HASH
             constraintName: UK_EVENT_HASH_SCOS_OUTBOX_EVENT
             validate: true
         - createIndex:
             tableName: SCOS_OUTBOX_EVENT
-            schemaName: scos
             indexName: IDX_TOPIC_SCOS_OUTBOX_EVENT
             columns:
               - column:
@@ -113,5 +110,4 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: SCOS_OUTBOX_EVENT
-            schemaName: scos
             cascadeConstraints: true

@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION scos.check_company_parent_company()
+CREATE OR REPLACE FUNCTION check_company_parent_company()
 RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.PARENT_COMPANY_ID = NEW.COMPANY_ID THEN

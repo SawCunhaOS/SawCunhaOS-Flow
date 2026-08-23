@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_LOGIN
-            schemaName: scos
             columns:
               - column:
                   name: LOGIN_ID
@@ -22,14 +21,14 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_PROFILE_ID_SCOS_LOGIN
-                    references: scos.SCOS_PROFILE(PROFILE_ID)
+                    references: SCOS_PROFILE(PROFILE_ID)
               - column:
                   name: EMPLOYEE_ID
                   type: BIGINT
                   constraints:
                     nullable: true
                     foreignKeyName: FK_EMPLOYEE_ID_SCOS_LOGIN
-                    references: scos.SCOS_EMPLOYEE(EMPLOYEE_ID)
+                    references: SCOS_EMPLOYEE(EMPLOYEE_ID)
               - column:
                   name: EXTERNAL_ID
                   type: UUID
@@ -73,27 +72,23 @@ databaseChangeLog:
                     nullable: false
         - addUniqueConstraint:
             tableName: SCOS_LOGIN
-            schemaName: scos
             columnNames: LOGIN
             constraintName: UK_LOGIN_SCOS_LOGIN
             validate: true
         - createIndex:
             tableName: SCOS_LOGIN
-            schemaName: scos
             indexName: IDX_PROFILE_ID_SCOS_LOGIN
             columns:
               - column:
                   name: PROFILE_ID
         - createIndex:
             tableName: SCOS_LOGIN
-            schemaName: scos
             indexName: IDX_EMPLOYEE_ID_SCOS_LOGIN
             columns:
               - column:
                   name: EMPLOYEE_ID
         - createIndex:
             tableName: SCOS_LOGIN
-            schemaName: scos
             indexName: IDX_EXTERNAL_ID_SCOS_LOGIN
             columns:
               - column:
@@ -101,5 +96,4 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: SCOS_LOGIN
-            schemaName: scos
             cascadeConstraints: true

@@ -36,6 +36,9 @@ scos:
     organization:
       enabled: true
       default-schema: scos
+    geotemporal:
+      enabled: false
+      default-schema: scos
   filter:
     show-request-body: false
     show-request-headers: false

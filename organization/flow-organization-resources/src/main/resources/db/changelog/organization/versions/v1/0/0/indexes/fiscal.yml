@@ -8,7 +8,6 @@ databaseChangeLog:
       author: Samuel.Cunha
       changes:
         - createIndex:
-            schemaName: scos
             tableName: scos_company_cnae_secondary
             indexName: idx_company_cnae_secondary_reverse
             columns:
@@ -18,4 +17,4 @@ databaseChangeLog:
                   name: company_id
       rollback:
         - sql:
-            sql: DROP INDEX IF EXISTS scos.idx_company_cnae_secondary_reverse;
+            sql: DROP INDEX IF EXISTS idx_company_cnae_secondary_reverse;

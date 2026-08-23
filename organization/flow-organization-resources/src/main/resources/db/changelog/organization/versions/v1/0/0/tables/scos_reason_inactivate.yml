@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_REASON_INACTIVATE
-            schemaName: scos
             columns:
               - column:
                   name: REASON_INACTIVATE_ID
@@ -55,12 +54,10 @@ databaseChangeLog:
                     nullable: false
         - addUniqueConstraint:
             tableName: SCOS_REASON_INACTIVATE
-            schemaName: scos
             columnNames: CODE, ENTITY_TYPE
             constraintName: UK_CODE_ENTITY_TYPE_SCOS_REASON_INACTIVATE
             validate: true
       rollback:
         - dropTable:
             tableName: SCOS_REASON_INACTIVATE
-            schemaName: scos
             cascadeConstraints: true

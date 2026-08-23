@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_CONFIGURATION
-            schemaName: scos
             columns:
               - column:
                   name: CONFIGURATION_ID
@@ -44,5 +43,4 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: SCOS_CONFIGURATION
-            schemaName: scos
             cascadeConstraints: true

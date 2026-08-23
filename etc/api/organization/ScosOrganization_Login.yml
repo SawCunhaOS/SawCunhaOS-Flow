@@ -34,9 +34,9 @@ paths:
       description: UC-058 - Lista todos os logins do sistema - funcionários, externos e serviços
       operationId: getAllLogins
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/typeFilter'
         - $ref: '#/components/parameters/statusFilter'
         - $ref: '#/components/parameters/employeeIdFilter'
@@ -48,9 +48,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllLoginsResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN]
     post:
       tags: [Login]
@@ -58,8 +58,8 @@ paths:
       description: UC-057 - Cria login sem vínculo com funcionário para EXTERNAL ou SERVICE. Inicia a Saga Keycloak
       operationId: createLogin
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
       requestBody:
         required: true
         content:
@@ -69,11 +69,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '201':
-          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_LOGIN]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_LOGIN
@@ -86,8 +86,8 @@ paths:
       description: UC-059 - Retorna o contexto completo do usuário autenticado - dados pessoais, empresa, filial, perfil e permissões
       operationId: getLoginMe
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
       responses:
         '200':
           description: OK
@@ -96,9 +96,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetLoginMeResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN_INFO]
       x-cache: [SCOS_ORGANIZATION_LOGIN_INFO]
 
@@ -109,9 +109,9 @@ paths:
       description: UC-060 - Retorna os dados de um login pelo identificador interno
       operationId: getLoginById
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -120,9 +120,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetLoginResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN]
     put:
       tags: [Login]
@@ -130,9 +130,9 @@ paths:
       description: UC-062 - Atualiza o e-mail de login. Dispara Saga Keycloak TYPE=UPDATE
       operationId: updateLogin
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -142,11 +142,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_LOGIN]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_LOGIN
@@ -162,9 +162,9 @@ paths:
         transita para ACTIVE via Login.activate() e dispara a Saga Keycloak TYPE=UPDATE
       operationId: activateLogin
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -174,11 +174,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_LOGIN]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_LOGIN
@@ -193,9 +193,9 @@ paths:
         Motivo vem do catálogo ReasonInactivate
       operationId: inactivateLogin
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -205,11 +205,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_LOGIN]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_LOGIN
@@ -225,9 +225,9 @@ paths:
         Só é aceito quando o status atual é ACTIVE - a partir de INACTIVE retorna 4XX
       operationId: blockLogin
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -237,11 +237,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [BLOCK_LOGIN]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_BLOCK_LOGIN
@@ -257,9 +257,9 @@ paths:
         transita para ACTIVE via Login.enable() e dispara a Saga Keycloak TYPE=UPDATE
       operationId: unblockLogin
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -269,11 +269,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UNBLOCK_LOGIN]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UNBLOCK_LOGIN
@@ -286,10 +286,10 @@ paths:
       description: UC-143 - Histórico paginado e somente leitura das transições de status do login, populado exclusivamente pelas rotas enable/disable/block/unblock
       operationId: getLoginStatusHistory
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -298,9 +298,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllLoginStatusHistoryResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN_STATUS_HISTORY]
 
   /v1/logins/{id}/profile/{profileId}:
@@ -313,17 +313,17 @@ paths:
         (PUT /v1/login-approval-requests/{id}/approve) - só então o perfil principal muda de fato
       operationId: updateLoginProfile
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
         - $ref: '#/components/parameters/idProfile'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_LOGIN]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_LOGIN_PROFILE
@@ -338,10 +338,10 @@ paths:
         Distinto do perfil principal (1:1, Login.profileId), gerenciado por PUT /logins/{id}/profile/{profileId}
       operationId: getAllLoginProfiles
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -350,9 +350,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllLoginProfilesResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN_PROFILE]
 
   /v1/logins/{id}/profiles/{profileId}:
@@ -367,17 +367,17 @@ paths:
         já na abertura da solicitação, antes da trigger TRG_VALIDATE_LOGIN_PROFILE_NOT_PRIMARY do banco
       operationId: createLoginProfile
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
         - $ref: '#/components/parameters/idProfile'
       responses:
         '201':
-          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_LOGIN_PROFILE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_LOGIN_PROFILE
@@ -390,17 +390,17 @@ paths:
         Idempotente: remover uma associação (loginId, profileId) que não existe retorna 204, não 404
       operationId: deleteLoginProfile
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
         - $ref: '#/components/parameters/idProfile'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_LOGIN_PROFILE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_DELETE_LOGIN_PROFILE
@@ -413,9 +413,9 @@ paths:
       description: UC-055 - Lista os logins de um funcionário incluindo todos os status para histórico
       operationId: getAllEmployeeLogins
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/idEmployee'
       responses:
         '200':
@@ -425,9 +425,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllLoginsResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN]
     post:
       tags: [Login]
@@ -435,8 +435,8 @@ paths:
       description: UC-054 - Cria login tipo EMPLOYEE vinculado ao funcionário, em PENDING_APPROVAL. A Saga Keycloak só dispara quando a aprovação leva o Login a ACTIVE
       operationId: createEmployeeLogin
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idEmployee'
       requestBody:
         required: true
@@ -447,11 +447,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '201':
-          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_LOGIN]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_EMPLOYEE_LOGIN
@@ -464,10 +464,10 @@ paths:
       description: UC-056 - Retorna um login específico do funcionário incluindo perfil e status da integração
       operationId: getEmployeeLoginById
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idEmployee'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -476,9 +476,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetLoginResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN]
 
   /v1/profiles:
@@ -488,9 +488,9 @@ paths:
       description: UC-068 - Lista todos os perfis com paginação
       operationId: getAllProfiles
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/activeFilter'
       responses:
         '200':
@@ -500,9 +500,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllProfilesResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_PROFILE]
     post:
       tags: [Profile]
@@ -510,8 +510,8 @@ paths:
       description: UC-067 - Cria um perfil de acesso. Sem recursos atribuídos não concede nenhum acesso
       operationId: createProfile
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
       requestBody:
         required: true
         content:
@@ -521,11 +521,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '201':
-          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_PROFILE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_PROFILE
@@ -538,9 +538,9 @@ paths:
       description: UC-069 - Retorna os dados do perfil incluindo recursos atribuídos
       operationId: getProfileById
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -549,9 +549,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetProfileResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_PROFILE]
     put:
       tags: [Profile]
@@ -559,9 +559,9 @@ paths:
       description: UC-070 - Atualiza o código ou descrição. Para os recursos use o endpoint de resources
       operationId: updateProfile
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -571,11 +571,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_PROFILE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_PROFILE
@@ -586,16 +586,16 @@ paths:
       description: UC-073 - Exclusão lógica. Registro permanece com status DISABLED
       operationId: deleteProfile
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_PROFILE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_DELETE_PROFILE
@@ -608,16 +608,16 @@ paths:
       description: UC-071 - Reativa perfil com status INACTIVE
       operationId: activateProfile
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_PROFILE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_PROFILE
@@ -630,16 +630,16 @@ paths:
       description: UC-072 - Inativa perfil. Logins existentes não são afetados - impede apenas novas atribuições
       operationId: inactivateProfile
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_PROFILE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_PROFILE
@@ -652,10 +652,10 @@ paths:
       description: UC-074 - Lista os recursos atribuídos ao perfil
       operationId: getProfileResources
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -664,9 +664,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetProfileResourcesResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_PROFILE]
     put:
       tags: [Profile]
@@ -674,9 +674,9 @@ paths:
       description: UC-075 - Substitui a lista completa de recursos do perfil. Logins refletem na próxima validação
       operationId: updateProfileResources
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -686,11 +686,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_PROFILE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_PROFILE_RESOURCES
@@ -703,9 +703,9 @@ paths:
       description: UC-076 - Lista os recursos cadastrados pelos sistemas externos. Somente leitura - cadastro via scos-registry (gRPC)
       operationId: getAllResources
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/systemIdFilter'
         - $ref: '#/components/parameters/activeFilter'
       responses:
@@ -716,9 +716,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllResourcesResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_RESOURCE]
 
   /v1/systems:
@@ -728,9 +728,9 @@ paths:
       description: UC-158 - Lista paginada dos sistemas externos autorizados a usar a central de permissões. Somente leitura - cadastro via scos-registry (gRPC). SECRET_KEY nunca é retornada
       operationId: getAllSystems
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/systemStatusFilter'
       responses:
         '200':
@@ -740,9 +740,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllSystemsResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_SYSTEM]
 
   /v1/systems/{id}:
@@ -752,8 +752,8 @@ paths:
       description: UC-159 - Retorna o detalhe de um sistema externo cadastrado. SECRET_KEY nunca é retornada
       operationId: getSystemById
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idSystem'
       responses:
         '200':
@@ -763,15 +763,15 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetSystemResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_SYSTEM]
 
 components:
   securitySchemes:
     BearerAuth:
-      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
+      $ref: '../ScosComponents.yml#/components/securitySchemes/BearerAuth'
   parameters:
     idEmployee:
       name: employeeId
@@ -901,7 +901,7 @@ components:
           items:
             $ref: '#/components/schemas/System'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     LoginSummary:
       type: object
       properties:
@@ -1001,7 +1001,7 @@ components:
           items:
             $ref: '#/components/schemas/LoginSummary'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     GetLoginMeResponse:
       type: object
       properties:
@@ -1074,7 +1074,7 @@ components:
           items:
             $ref: '#/components/schemas/ProfileSummary'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     Profile:
       type: object
       properties:
@@ -1104,7 +1104,7 @@ components:
           items:
             $ref: '#/components/schemas/ProfileSummary'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateProfileRequest:
       required: [code, description]
       type: object
@@ -1138,7 +1138,7 @@ components:
           items:
             $ref: '#/components/schemas/ResourceSummary'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     UpdateProfileResourcesRequest:
       required: [resourceIds]
       type: object
@@ -1170,7 +1170,7 @@ components:
           items:
             $ref: '#/components/schemas/ResourceSummary'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     LoginReactivationRequest:
       type: object
       description: >-
@@ -1233,7 +1233,7 @@ components:
           items:
             $ref: '#/components/schemas/LoginStatusHistory'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
 
 security:
   - BearerAuth: []

@@ -1,5 +1,5 @@
 CREATE OR REPLACE TRIGGER trg_block_delete_reason_disable
 BEFORE DELETE
-ON scos.SCOS_REASON_DISABLE
+ON SCOS_REASON_DISABLE
 FOR EACH ROW
-EXECUTE FUNCTION scos.fn_block_delete();
+EXECUTE FUNCTION fn_block_delete();

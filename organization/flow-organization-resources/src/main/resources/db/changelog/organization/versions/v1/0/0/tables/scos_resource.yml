@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_RESOURCE
-            schemaName: scos
             columns:
               - column:
                   name: RESOURCE_ID
@@ -22,7 +21,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_SYSTEM_ID_SCOS_RESOURCE
-                    references: scos.SCOS_SYSTEM(SYSTEM_ID)
+                    references: SCOS_SYSTEM(SYSTEM_ID)
               - column:
                   name: CODE
                   type: varchar(50)
@@ -82,13 +81,11 @@ databaseChangeLog:
                     nullable: false
         - addUniqueConstraint:
             tableName: SCOS_RESOURCE
-            schemaName: scos
             columnNames: CODE
             constraintName: UK_CODE_SCOS_RESOURCE
             validate: true
         - createIndex:
             tableName: SCOS_RESOURCE
-            schemaName: scos
             indexName: IDX_SYSTEM_ID_SCOS_RESOURCE
             columns:
               - column:
@@ -96,7 +93,6 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: SCOS_RESOURCE
-            schemaName: scos
             cascadeConstraints: true
   - changeSet:
       id: 20260719-Samuel.Cunha-001
@@ -105,9 +101,8 @@ databaseChangeLog:
       changes:
         - modifyDataType:
             tableName: SCOS_RESOURCE
-            schemaName: scos
             columnName: DEFINITION_UPDATED_AT
             newDataType: TIMESTAMPTZ
       rollback:
         - sql:
-            sql: "ALTER TABLE scos.SCOS_RESOURCE ALTER COLUMN DEFINITION_UPDATED_AT TYPE DATE USING DEFINITION_UPDATED_AT::date"
+            sql: "ALTER TABLE SCOS_RESOURCE ALTER COLUMN DEFINITION_UPDATED_AT TYPE DATE USING DEFINITION_UPDATED_AT::date"

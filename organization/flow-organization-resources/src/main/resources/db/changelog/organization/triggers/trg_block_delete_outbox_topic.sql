@@ -1,5 +1,5 @@
 CREATE OR REPLACE TRIGGER trg_block_delete_outbox_topic
 BEFORE DELETE
-ON scos.SCOS_OUTBOX_TOPIC
+ON SCOS_OUTBOX_TOPIC
 FOR EACH ROW
-EXECUTE FUNCTION scos.fn_block_delete();
+EXECUTE FUNCTION fn_block_delete();

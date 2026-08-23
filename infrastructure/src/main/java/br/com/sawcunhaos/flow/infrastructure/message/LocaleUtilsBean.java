@@ -43,4 +43,9 @@ final class LocaleUtilsBean implements LocaleService {
         return messageSource.getMessage(code, args.toArray(), getLocale());
     }
 
+    @Override
+    public String getMessageOrDefault(String code, String codeDefault) {
+        return messageSource.getMessage(code, null, codeDefault, getLocale());
+    }
+
 }

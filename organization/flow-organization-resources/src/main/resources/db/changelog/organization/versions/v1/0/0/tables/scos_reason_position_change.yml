@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_REASON_POSITION_CHANGE
-            schemaName: scos
             columns:
               - column:
                   name: REASON_POSITION_CHANGE_ID
@@ -50,12 +49,10 @@ databaseChangeLog:
                     nullable: false
         - addUniqueConstraint:
             tableName: SCOS_REASON_POSITION_CHANGE
-            schemaName: scos
             columnNames: CODE
             constraintName: UK_CODE_SCOS_REASON_POSITION_CHANGE
             validate: true
       rollback:
         - dropTable:
             tableName: SCOS_REASON_POSITION_CHANGE
-            schemaName: scos
             cascadeConstraints: true

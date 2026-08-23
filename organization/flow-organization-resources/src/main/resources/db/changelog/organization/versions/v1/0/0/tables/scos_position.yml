@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_POSITION
-            schemaName: scos
             columns:
               - column:
                   name: POSITION_ID
@@ -22,7 +21,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_DEPARTMENT_ID_SCOS_POSITION
-                    references: scos.SCOS_DEPARTMENT(DEPARTMENT_ID)
+                    references: SCOS_DEPARTMENT(DEPARTMENT_ID)
               - column:
                   name: CODE
                   type: varchar(30)
@@ -63,13 +62,11 @@ databaseChangeLog:
                     nullable: false
         - addUniqueConstraint:
             tableName: SCOS_POSITION
-            schemaName: scos
             columnNames: CODE, DEPARTMENT_ID
             constraintName: UK_CODE_DEPARTMENT_ID_SCOS_POSITION
             validate: true
         - createIndex:
             tableName: SCOS_POSITION
-            schemaName: scos
             indexName: IDX_DEPARTMENT_ID_SCOS_POSITION
             columns:
               - column:
@@ -77,5 +74,4 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: SCOS_POSITION
-            schemaName: scos
             cascadeConstraints: true

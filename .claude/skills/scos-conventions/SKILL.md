@@ -248,7 +248,7 @@ Flag deviations from the house style, ordered by impact:
    or using field injection instead of `@RequiredArgsConstructor`.
 6. Delegate building response without the `data` wrapper (breaks the OpenAPI contract).
 7. OpenAPI YAML with inline `204: description: No_Content` instead of
-   `$ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'`.
+   `$ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'`.
 8. Reinventing audit/idempotency/caching/masking/BR-validation the foundation
    already provides.
 

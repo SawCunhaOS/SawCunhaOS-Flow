@@ -1,10 +1,10 @@
-CREATE OR REPLACE FUNCTION scos.fn_validate_login_profile_not_primary()
+CREATE OR REPLACE FUNCTION fn_validate_login_profile_not_primary()
 RETURNS TRIGGER AS $$
 DECLARE
   v_primary_profile_id BIGINT;
 BEGIN
   SELECT profile_id INTO v_primary_profile_id
-  FROM scos.scos_login
+  FROM scos_login
   WHERE login_id = NEW.login_id;
 
   IF NEW.profile_id = v_primary_profile_id THEN

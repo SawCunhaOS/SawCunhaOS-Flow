@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_OUTBOX_TOPIC
-            schemaName: scos
             columns:
               - column:
                   name: TOPIC
@@ -56,5 +55,4 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: SCOS_OUTBOX_TOPIC
-            schemaName: scos
             cascadeConstraints: true

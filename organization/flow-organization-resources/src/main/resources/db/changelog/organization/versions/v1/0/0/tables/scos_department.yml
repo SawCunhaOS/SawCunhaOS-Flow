@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_DEPARTMENT
-            schemaName: scos
             columns:
               - column:
                   name: DEPARTMENT_ID
@@ -50,12 +49,10 @@ databaseChangeLog:
                     nullable: false
         - addUniqueConstraint:
             tableName: SCOS_DEPARTMENT
-            schemaName: scos
             columnNames: CODE
             constraintName: UK_CODE_SCOS_DEPARTMENT
             validate: true
       rollback:
         - dropTable:
             tableName: SCOS_DEPARTMENT
-            schemaName: scos
             cascadeConstraints: true

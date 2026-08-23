@@ -18,8 +18,8 @@
 
 **Padrão de resposta OpenAPI:**
 - `200` → schema próprio com `data:` wrapper
-- `201` → `$ref: './ScosComponents.yml#/components/responses/201_CREATED'`
-- `204` → `$ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'`
+- `201` → `$ref: '../ScosComponents.yml#/components/responses/201_CREATED'`
+- `204` → `$ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'`
 - `4XX`/`5XX` → `$ref` para ScosComponents
 
 **Skills disponíveis:**

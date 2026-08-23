@@ -633,9 +633,9 @@ paths:
       description: UC-022 - Lista todos os departamentos com paginação
       operationId: getAllDepartments
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
       responses:
         '200':
           description: OK
@@ -644,9 +644,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllDepartmentsResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_DEPARTMENT]
 ```
 

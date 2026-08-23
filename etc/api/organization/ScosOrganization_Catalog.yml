@@ -27,9 +27,9 @@ paths:
       description: UC-081 - Lista todos os tipos de endereço com paginação. Pode filtrar por entityType
       operationId: getAllAddressTypes
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/entityTypeFilter'
         - $ref: '#/components/parameters/activeFilter'
       responses:
@@ -40,9 +40,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllAddressTypesResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_ADDRESS_TYPE]
     post:
       tags: [AddressType]
@@ -50,8 +50,8 @@ paths:
       description: UC-082 - Cria um novo tipo de endereço
       operationId: createAddressType
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
       requestBody:
         required: true
         content:
@@ -61,11 +61,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '201':
-          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_ADDRESS_TYPE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_ADDRESS_TYPE
@@ -78,9 +78,9 @@ paths:
       description: UC-083 - Retorna os dados de um tipo de endereço
       operationId: getAddressTypeById
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -89,9 +89,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAddressTypeResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_ADDRESS_TYPE]
     put:
       tags: [AddressType]
@@ -99,9 +99,9 @@ paths:
       description: UC-084 - Atualiza o código, descrição ou entityType de um tipo de endereço
       operationId: updateAddressType
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -111,11 +111,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_ADDRESS_TYPE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_ADDRESS_TYPE
@@ -128,16 +128,16 @@ paths:
       description: UC-085 - Reativa tipo de endereço com active=false
       operationId: activateAddressType
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_ADDRESS_TYPE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_ADDRESS_TYPE
@@ -150,16 +150,16 @@ paths:
       description: UC-086 - Inativa tipo de endereço com active=true
       operationId: inactivateAddressType
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_ADDRESS_TYPE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_ADDRESS_TYPE
@@ -172,9 +172,9 @@ paths:
       description: UC-087 - Lista todos os tipos de contato com paginação. Pode filtrar por entityType
       operationId: getAllContactTypes
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/entityTypeFilter'
         - $ref: '#/components/parameters/activeFilter'
       responses:
@@ -185,9 +185,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllContactTypesResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_CONTACT_TYPE]
     post:
       tags: [ContactType]
@@ -195,8 +195,8 @@ paths:
       description: UC-088 - Cria um novo tipo de contato
       operationId: createContactType
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
       requestBody:
         required: true
         content:
@@ -206,11 +206,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '201':
-          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_CONTACT_TYPE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_CONTACT_TYPE
@@ -223,9 +223,9 @@ paths:
       description: UC-089 - Retorna os dados de um tipo de contato
       operationId: getContactTypeById
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -234,9 +234,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetContactTypeResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_CONTACT_TYPE]
     put:
       tags: [ContactType]
@@ -244,9 +244,9 @@ paths:
       description: UC-090 - Atualiza o código, descrição ou entityType de um tipo de contato
       operationId: updateContactType
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -256,11 +256,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_CONTACT_TYPE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_CONTACT_TYPE
@@ -273,16 +273,16 @@ paths:
       description: UC-091 - Reativa tipo de contato com active=false
       operationId: activateContactType
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_CONTACT_TYPE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_CONTACT_TYPE
@@ -295,16 +295,16 @@ paths:
       description: UC-092 - Inativa tipo de contato com active=true
       operationId: inactivateContactType
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_CONTACT_TYPE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_CONTACT_TYPE
@@ -313,7 +313,7 @@ paths:
 components:
   securitySchemes:
     BearerAuth:
-      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
+      $ref: '../ScosComponents.yml#/components/securitySchemes/BearerAuth'
   parameters:
     entityTypeFilter:
       name: entityType
@@ -360,7 +360,7 @@ components:
           items:
             $ref: '#/components/schemas/AddressType'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateAddressTypeRequest:
       required: [code, description, entityType]
       type: object
@@ -417,7 +417,7 @@ components:
           items:
             $ref: '#/components/schemas/ContactType'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateContactTypeRequest:
       required: [code, description, entityType]
       type: object

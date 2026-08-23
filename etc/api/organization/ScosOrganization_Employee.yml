@@ -31,9 +31,9 @@ paths:
       description: UC-036 - Lista todos os funcionários com paginação e filtros
       operationId: getAllEmployees
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/companyIdFilter'
         - $ref: '#/components/parameters/positionIdFilter'
         - $ref: '#/components/parameters/statusFilter'
@@ -45,9 +45,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllEmployeesResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE]
     post:
       tags: [Employee]
@@ -55,8 +55,8 @@ paths:
       description: UC-035 - Registra funcionário vinculado a cargo e empresa ativos
       operationId: createEmployee
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
       requestBody:
         required: true
         content:
@@ -66,11 +66,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '201':
-          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_EMPLOYEE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_EMPLOYEE
@@ -86,8 +86,8 @@ paths:
         Retorna 4XX se não existir funcionário INACTIVE com este CPF (nunca existiu, ou o CPF pertence a um funcionário ACTIVE/DISABLED)
       operationId: rehireEmployee
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
       requestBody:
         required: true
         content:
@@ -103,9 +103,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetEmployeeResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [REHIRE_EMPLOYEE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_REHIRE_EMPLOYEE
@@ -118,9 +118,9 @@ paths:
       description: UC-037 - Retorna dados completos incluindo cargo, empresa e supervisor
       operationId: getEmployeeById
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -129,9 +129,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetEmployeeResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE]
     put:
       tags: [Employee]
@@ -139,9 +139,9 @@ paths:
       description: UC-038 - Atualiza dados pessoais. Para empresa, cargo ou supervisor use transfer
       operationId: updateEmployee
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -151,11 +151,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_EMPLOYEE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_EMPLOYEE
@@ -169,9 +169,9 @@ paths:
         Nome da rota (`enable`) não corresponde 1:1 ao nome da transição de domínio (`activate`) - motivo vem do catálogo ReasonActivate
       operationId: activateEmployee
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -181,11 +181,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ENABLE_EMPLOYEE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_ACTIVATE_EMPLOYEE
@@ -200,9 +200,9 @@ paths:
         Nome da rota (`disable`) não corresponde 1:1 ao nome da transição de domínio (`inactivate`) - motivo vem do catálogo ReasonInactivate
       operationId: inactivateEmployee
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -212,11 +212,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DISABLE_EMPLOYEE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_INACTIVATE_EMPLOYEE
@@ -232,9 +232,9 @@ paths:
         Só é aceito quando o status atual é ACTIVE - a partir de INACTIVE retorna 4XX
       operationId: blockEmployee
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -244,11 +244,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [BLOCK_EMPLOYEE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_BLOCK_EMPLOYEE
@@ -263,9 +263,9 @@ paths:
         Nome da rota (`unblock`) não corresponde 1:1 ao nome da transição de domínio (`enable`) - motivo vem do catálogo ReasonEnable
       operationId: unblockEmployee
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -275,11 +275,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UNBLOCK_EMPLOYEE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UNBLOCK_EMPLOYEE
@@ -292,10 +292,10 @@ paths:
       description: UC-140 - Histórico paginado e somente leitura das transições de status do funcionário, populado exclusivamente pelas rotas enable/disable/block/unblock
       operationId: getEmployeeStatusHistory
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -304,9 +304,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllEmployeeStatusHistoryResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE_STATUS_HISTORY]
 
   /v1/employees/{id}/transfer:
@@ -316,9 +316,9 @@ paths:
       description: UC-041 - Transfere para outra empresa, filial, cargo ou supervisor. Mudança de empresa dispara Saga Keycloak TYPE=UPDATE
       operationId: transferEmployee
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -328,11 +328,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [TRANSFER_EMPLOYEE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_TRANSFER_EMPLOYEE
@@ -345,9 +345,9 @@ paths:
       description: UC-042 - Retorna a cadeia de supervisores em árvore ascendente
       operationId: getEmployeeHierarchy
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -356,9 +356,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetEmployeeHierarchyResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE]
 
   /v1/employees/{id}/subordinates:
@@ -368,10 +368,10 @@ paths:
       description: UC-080 - Lista os funcionários que reportam diretamente ao funcionário informado
       operationId: getEmployeeSubordinates
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
         - $ref: '#/components/parameters/statusFilter'
       responses:
         '200':
@@ -381,9 +381,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllEmployeesResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE]
 
   /v1/employees/{id}/position-history:
@@ -393,10 +393,10 @@ paths:
       description: UC-112 - Lista o histórico de cargos do funcionário, paginado, do mais recente para o mais antigo. A linha com endDate nulo é a atribuição vigente
       operationId: getEmployeePositionHistory
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -405,9 +405,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllEmployeePositionHistoryResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE_POSITION_HISTORY]
 
   /v1/employees/{employeeId}/contacts:
@@ -417,9 +417,9 @@ paths:
       description: UC-044 - Lista todos os contatos de um funcionário
       operationId: getAllEmployeeContacts
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/idEmployee'
       responses:
         '200':
@@ -429,9 +429,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllEmployeeContactsResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE_CONTACT]
     post:
       tags: [Employee Contact]
@@ -439,8 +439,8 @@ paths:
       description: UC-045 - Adiciona um contato telefônico ao funcionário
       operationId: createEmployeeContact
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idEmployee'
       requestBody:
         required: true
@@ -451,11 +451,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '201':
-          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_EMPLOYEE_CONTACT]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_EMPLOYEE_CONTACT
@@ -468,10 +468,10 @@ paths:
       description: UC-046 - Retorna um contato específico do funcionário
       operationId: getEmployeeContactById
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idEmployee'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -480,9 +480,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetEmployeeContactResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE_CONTACT]
     put:
       tags: [Employee Contact]
@@ -490,10 +490,10 @@ paths:
       description: UC-047 - Atualiza o tipo ou telefone de um contato
       operationId: updateEmployeeContact
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idEmployee'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -503,11 +503,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_EMPLOYEE_CONTACT]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_EMPLOYEE_CONTACT
@@ -518,17 +518,17 @@ paths:
       description: UC-048 - Remove um contato do funcionário
       operationId: deleteEmployeeContact
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idEmployee'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_EMPLOYEE_CONTACT]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_DELETE_EMPLOYEE_CONTACT
@@ -541,9 +541,9 @@ paths:
       description: UC-049 - Lista todos os endereços vinculados a um funcionário
       operationId: getAllEmployeeAddress
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/idEmployee'
       responses:
         '200':
@@ -553,9 +553,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllEmployeeAddressResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE_ADDRESS]
     post:
       tags: [Employee Address]
@@ -563,8 +563,8 @@ paths:
       description: UC-050 - Vincula um endereço externo ao funcionário. Integridade do addressId garantida pela aplicação
       operationId: createEmployeeAddress
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idEmployee'
       requestBody:
         required: true
@@ -575,11 +575,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '201':
-          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_EMPLOYEE_ADDRESS]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_EMPLOYEE_ADDRESS
@@ -592,10 +592,10 @@ paths:
       description: UC-051 - Retorna o vínculo de endereço do funcionário
       operationId: getEmployeeAddressById
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idEmployee'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -604,9 +604,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetEmployeeAddressResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE_ADDRESS]
     put:
       tags: [Employee Address]
@@ -614,10 +614,10 @@ paths:
       description: UC-052 - Atualiza os dados do vínculo. Não altera o addressId externo
       operationId: updateEmployeeAddress
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idEmployee'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -627,11 +627,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_EMPLOYEE_ADDRESS]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_EMPLOYEE_ADDRESS
@@ -642,17 +642,17 @@ paths:
       description: UC-053 - Remove o vínculo de endereço. O registro externo não é afetado
       operationId: deleteEmployeeAddress
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idEmployee'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_EMPLOYEE_ADDRESS]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_DELETE_EMPLOYEE_ADDRESS
@@ -668,8 +668,8 @@ paths:
         Dia sem registro não aparece na resposta - o sistema não infere o horário do template do cargo como fallback
       operationId: getAllEmployeeWorkSchedule
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idEmployee'
       responses:
         '200':
@@ -679,9 +679,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllEmployeeWorkScheduleResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_EMPLOYEE_WORK_SCHEDULE]
     post:
       tags: [Employee Work Schedule]
@@ -689,8 +689,8 @@ paths:
       description: UC-149 - Cria o horário de um dia da semana da jornada efetiva do funcionário. Rejeitado se já existir registro para esse (employeeId, dayOfWeek)
       operationId: createEmployeeWorkSchedule
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idEmployee'
       requestBody:
         required: true
@@ -701,11 +701,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '201':
-          $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [CREATE_EMPLOYEE_WORK_SCHEDULE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_CREATE_EMPLOYEE_WORK_SCHEDULE
@@ -718,8 +718,8 @@ paths:
       description: UC-150 - Atualiza o horário de um dia da semana já cadastrado na jornada efetiva do funcionário
       operationId: updateEmployeeWorkSchedule
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idEmployee'
         - $ref: '#/components/parameters/dayOfWeekPath'
       requestBody:
@@ -731,11 +731,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_EMPLOYEE_WORK_SCHEDULE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_EMPLOYEE_WORK_SCHEDULE
@@ -746,17 +746,17 @@ paths:
       description: UC-151 - Remove o horário de um dia da semana da jornada efetiva do funcionário
       operationId: deleteEmployeeWorkSchedule
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idEmployee'
         - $ref: '#/components/parameters/dayOfWeekPath'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DELETE_EMPLOYEE_WORK_SCHEDULE]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_DELETE_EMPLOYEE_WORK_SCHEDULE
@@ -765,7 +765,7 @@ paths:
 components:
   securitySchemes:
     BearerAuth:
-      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
+      $ref: '../ScosComponents.yml#/components/securitySchemes/BearerAuth'
   parameters:
     idEmployee:
       name: employeeId
@@ -800,7 +800,7 @@ components:
       in: path
       required: true
       schema:
-        $ref: './ScosComponents.yml#/components/schemas/DayOfWeek'
+        $ref: '../ScosComponents.yml#/components/schemas/DayOfWeek'
       x-jdempotentrequestpayload: true
   schemas:
     EmployeeStatus:
@@ -909,7 +909,7 @@ components:
           items:
             $ref: '#/components/schemas/Employees'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     GetEmployeeHierarchyResponse:
       type: object
       properties:
@@ -945,7 +945,7 @@ components:
           items:
             $ref: '#/components/schemas/EmployeePositionHistory'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateEmployeeRequest:
       required: [name, nameTreatment, taxIdentifier, email, birthDate, dateOfHiring, companyId, positionId, contractType, reasonActivateId]
       type: object
@@ -1140,7 +1140,7 @@ components:
           items:
             $ref: '#/components/schemas/EmployeeContact'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateEmployeeContactRequest:
       required: [contactTypeId, phone]
       type: object
@@ -1215,7 +1215,7 @@ components:
           items:
             $ref: '#/components/schemas/EmployeeAddresses'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     CreateEmployeeAddressRequest:
       required: [addressTypeId, number, latitude, longitude, addressId]
       type: object
@@ -1321,12 +1321,12 @@ components:
           items:
             $ref: '#/components/schemas/EmployeeStatusHistory'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     EmployeeWorkSchedule:
       type: object
       properties:
         dayOfWeek:
-          $ref: './ScosComponents.yml#/components/schemas/DayOfWeek'
+          $ref: '../ScosComponents.yml#/components/schemas/DayOfWeek'
         startTime:
           type: string
           format: time
@@ -1350,7 +1350,7 @@ components:
       properties:
         dayOfWeek:
           allOf:
-            - $ref: './ScosComponents.yml#/components/schemas/DayOfWeek'
+            - $ref: '../ScosComponents.yml#/components/schemas/DayOfWeek'
           x-required-message: SCOS_VALIDATION_003
           x-jdempotentrequestpayload: true
         startTime:

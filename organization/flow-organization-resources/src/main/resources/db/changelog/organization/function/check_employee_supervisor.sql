@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION scos.check_employee_supervisor()
+CREATE OR REPLACE FUNCTION check_employee_supervisor()
 RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.SUPERVISOR_ID = NEW.EMPLOYEE_ID THEN

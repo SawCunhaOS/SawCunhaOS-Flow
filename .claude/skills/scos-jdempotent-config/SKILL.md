@@ -66,7 +66,7 @@ post:
     ttl: 1
   responses:
     '201':
-      $ref: './ScosComponents.yml#/components/responses/201_CREATED'
+      $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
 ```
 
 **No delegate (código gerado recebe as anotações; não adicionar manualmente):**

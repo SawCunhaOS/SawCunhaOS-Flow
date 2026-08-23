@@ -25,8 +25,8 @@ paths:
       description: UC-160 - Lista todas as chaves de configurações disponivel no sistema.
       operationId: getAllKeysConfigurations
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
       responses:
         '200':
           description: OK
@@ -35,9 +35,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllKeysConfigurationsResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [ GET_CONFIGURATION ]
   /v1/configurations:
     get:
@@ -46,8 +46,8 @@ paths:
       description: UC-077 - Lista todas as configurações do sistema. Valores sensíveis são mascarados
       operationId: getAllConfigurations
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
       responses:
         '200':
           description: OK
@@ -56,9 +56,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllConfigurationsResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_CONFIGURATION]
 
   /v1/configurations/{id}:
@@ -68,8 +68,8 @@ paths:
       description: UC-078 - Retorna uma configuração pelo identificador textual. Valores sensíveis são mascarados
       operationId: getConfigurationById
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idConfiguration'
       responses:
         '200':
@@ -79,9 +79,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetConfigurationResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_CONFIGURATION]
     put:
       tags: [Configuration]
@@ -89,8 +89,8 @@ paths:
       description: UC-079 - Atualiza o valor de uma configuração existente em tempo real. O valor deve ser compatível com o tipo declarado
       operationId: updateConfiguration
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/idConfiguration'
       requestBody:
         required: true
@@ -101,11 +101,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [UPDATE_CONFIGURATION]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_UPDATE_CONFIGURATION
@@ -114,7 +114,7 @@ paths:
 components:
   securitySchemes:
     BearerAuth:
-      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
+      $ref: '../ScosComponents.yml#/components/securitySchemes/BearerAuth'
   parameters:
     idConfiguration:
       name: id

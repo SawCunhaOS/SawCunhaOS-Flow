@@ -1,4 +1,4 @@
-CREATE OR REPLACE FUNCTION scos.remove_formatting_tax_identifier()
+CREATE OR REPLACE FUNCTION remove_formatting_tax_identifier()
 RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.TAX_IDENTIFIER IS NOT NULL THEN

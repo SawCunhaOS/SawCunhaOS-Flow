@@ -204,13 +204,6 @@ components:
             $ref: '#/components/schemas/ExceptionResponse'
   
   schemas:
-    AttributeNotValid:
-      type: object
-      properties:
-        attribute:
-          type: string
-        message:
-          type: string
     ScosPaginated:
       type: object
       properties:
@@ -229,17 +222,49 @@ components:
     ExceptionResponse:
       type: object
       properties:
-        data:
-          type: object
-          properties:
-            message:
-              type: string
-            codeError:
-              type: string
-            validationErrors:
-              type: array
-              items:
-                $ref: '#/components/schemas/AttributeNotValid'
+        detail:
+          type: string
+          example: Os atributos informados não correspondem ao esperado. Por favor, verifique a documentação do método.
+        instance:
+          type: string
+          example: /organization/api/v1/companies
+        status:
+          type: integer
+          example: 400
+        title:
+          type: string
+          example: Validation Error
+        type:
+          type: string
+          example: https://docs.sawcunhaos.com.br/problems/scos-001
+        code:
+          type: string
+          example: SCOS-001
+        requestId:
+          type: string
+          example: baa479af-d8cb-4b92-91a8-8122190a8770
+        timestamp:
+          type: string
+          example: 2026-08-23T18:24:10.717946423Z
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Errors'
+    Errors:
+      type: object
+      properties:
+        pointer:
+          type: string
+          example: #/sizePerPage
+        detail:
+          type: string
+          example: O valor no campo 'sizePerPage' deve ser menor ou igual a 100.
+        code:
+          type: string
+          example: SCOS_VALIDATION_004
+        type:
+          type: string
+          example: https://docs.sawcunhaos.com.br/problems/scos-validation-004
     PaginationFilter:
       type: object
       properties:

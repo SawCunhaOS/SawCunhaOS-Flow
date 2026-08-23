@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_SHIFT_ENFORCEMENT_LOG
-            schemaName: scos
             columns:
               - column:
                   name: SHIFT_ENFORCEMENT_LOG_ID
@@ -22,14 +21,14 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_LOGIN_ID_SCOS_SHIFT_ENFORCEMENT_LOG
-                    references: scos.SCOS_LOGIN(LOGIN_ID)
+                    references: SCOS_LOGIN(LOGIN_ID)
               - column:
                   name: EMPLOYEE_ID
                   type: BIGINT
                   constraints:
                     nullable: true
                     foreignKeyName: FK_EMPLOYEE_ID_SCOS_SHIFT_ENFORCEMENT_LOG
-                    references: scos.SCOS_EMPLOYEE(EMPLOYEE_ID)
+                    references: SCOS_EMPLOYEE(EMPLOYEE_ID)
               - column:
                   name: ENDPOINT
                   type: varchar(255)
@@ -74,7 +73,6 @@ databaseChangeLog:
                     nullable: false
         - createIndex:
             tableName: SCOS_SHIFT_ENFORCEMENT_LOG
-            schemaName: scos
             indexName: IDX_LOGIN_ID_SCOS_SHIFT_ENFORCEMENT_LOG
             columns:
               - column:
@@ -82,5 +80,4 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: SCOS_SHIFT_ENFORCEMENT_LOG
-            schemaName: scos
             cascadeConstraints: true

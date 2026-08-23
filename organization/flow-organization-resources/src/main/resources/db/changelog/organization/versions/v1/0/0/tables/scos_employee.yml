@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_EMPLOYEE
-            schemaName: scos
             columns:
               - column:
                   name: EMPLOYEE_ID
@@ -22,21 +21,21 @@ databaseChangeLog:
                   constraints:
                     nullable: true
                     foreignKeyName: FK_SUPERVISOR_ID_SCOS_EMPLOYEE
-                    references: scos.SCOS_EMPLOYEE(EMPLOYEE_ID)
+                    references: SCOS_EMPLOYEE(EMPLOYEE_ID)
               - column:
                   name: POSITION_ID
                   type: BIGINT
                   constraints:
                     nullable: false
                     foreignKeyName: FK_POSITION_ID_SCOS_EMPLOYEE
-                    references: scos.SCOS_POSITION(POSITION_ID)
+                    references: SCOS_POSITION(POSITION_ID)
               - column:
                   name: COMPANY_ID
                   type: BIGINT
                   constraints:
                     nullable: false
                     foreignKeyName: FK_COMPANY_ID_SCOS_EMPLOYEE
-                    references: scos.SCOS_COMPANY(COMPANY_ID)
+                    references: SCOS_COMPANY(COMPANY_ID)
               - column:
                   name: NAME
                   type: varchar(250)
@@ -105,40 +104,34 @@ databaseChangeLog:
                     nullable: false
         - addUniqueConstraint:
             tableName: SCOS_EMPLOYEE
-            schemaName: scos
             columnNames: TAX_IDENTIFIER
             constraintName: UK_TAX_IDENTIFIER_SCOS_EMPLOYEE
             validate: true
         - addUniqueConstraint:
             tableName: SCOS_EMPLOYEE
-            schemaName: scos
             columnNames: EMAIL
             constraintName: UK_EMAIL_SCOS_EMPLOYEE
             validate: true
         - createIndex:
             tableName: SCOS_EMPLOYEE
-            schemaName: scos
             indexName: IDX_COMPANY_ID_SCOS_EMPLOYEE
             columns:
               - column:
                   name: COMPANY_ID
         - createIndex:
             tableName: SCOS_EMPLOYEE
-            schemaName: scos
             indexName: IDX_POSITION_ID_SCOS_EMPLOYEE
             columns:
               - column:
                   name: POSITION_ID
         - createIndex:
             tableName: SCOS_EMPLOYEE
-            schemaName: scos
             indexName: IDX_SUPERVISOR_ID_SCOS_EMPLOYEE
             columns:
               - column:
                   name: SUPERVISOR_ID
         - createIndex:
             tableName: SCOS_EMPLOYEE
-            schemaName: scos
             indexName: IDX_STATUS_SCOS_EMPLOYEE
             columns:
               - column:
@@ -146,5 +139,4 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: SCOS_EMPLOYEE
-            schemaName: scos
             cascadeConstraints: true

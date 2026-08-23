@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_LOGIN_APPROVAL_REQUEST
-            schemaName: scos
             columns:
               - column:
                   name: LOGIN_APPROVAL_REQUEST_ID
@@ -22,21 +21,21 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_LOGIN_ID_SCOS_LOGIN_APPROVAL_REQUEST
-                    references: scos.SCOS_LOGIN(LOGIN_ID)
+                    references: SCOS_LOGIN(LOGIN_ID)
               - column:
                   name: REQUESTED_BY_LOGIN_ID
                   type: BIGINT
                   constraints:
                     nullable: true
                     foreignKeyName: FK_REQUESTED_BY_LOGIN_ID_SCOS_LOGIN_APPROVAL_REQUEST
-                    references: scos.SCOS_LOGIN(LOGIN_ID)
+                    references: SCOS_LOGIN(LOGIN_ID)
               - column:
                   name: DECIDED_BY_LOGIN_ID
                   type: BIGINT
                   constraints:
                     nullable: true
                     foreignKeyName: FK_DECIDED_BY_LOGIN_ID_SCOS_LOGIN_APPROVAL_REQUEST
-                    references: scos.SCOS_LOGIN(LOGIN_ID)
+                    references: SCOS_LOGIN(LOGIN_ID)
               - column:
                   name: CURRENT_LEVEL
                   type: varchar(30)
@@ -103,7 +102,6 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: SCOS_LOGIN_APPROVAL_REQUEST
-            schemaName: scos
             cascadeConstraints: true
 
   - changeSet:
@@ -113,7 +111,6 @@ databaseChangeLog:
       changes:
         - addColumn:
             tableName: SCOS_LOGIN_APPROVAL_REQUEST
-            schemaName: scos
             columns:
               - column:
                   name: REQUEST_TYPE
@@ -123,7 +120,6 @@ databaseChangeLog:
       rollback:
         - dropColumn:
             tableName: SCOS_LOGIN_APPROVAL_REQUEST
-            schemaName: scos
             columnName: REQUEST_TYPE
 
   - changeSet:
@@ -133,7 +129,6 @@ databaseChangeLog:
       changes:
         - addColumn:
             tableName: SCOS_LOGIN_APPROVAL_REQUEST
-            schemaName: scos
             columns:
               - column:
                   name: REQUESTED_PROFILE_ID
@@ -141,7 +136,7 @@ databaseChangeLog:
                   constraints:
                     nullable: true
                     foreignKeyName: FK_REQUESTED_PROFILE_ID_SCOS_LOGIN_APPROVAL_REQUEST
-                    references: scos.SCOS_PROFILE(PROFILE_ID)
+                    references: SCOS_PROFILE(PROFILE_ID)
               - column:
                   name: PROFILE_CHANGE_KIND
                   type: varchar(20)
@@ -150,9 +145,7 @@ databaseChangeLog:
       rollback:
         - dropColumn:
             tableName: SCOS_LOGIN_APPROVAL_REQUEST
-            schemaName: scos
             columnName: REQUESTED_PROFILE_ID
         - dropColumn:
             tableName: SCOS_LOGIN_APPROVAL_REQUEST
-            schemaName: scos
             columnName: PROFILE_CHANGE_KIND

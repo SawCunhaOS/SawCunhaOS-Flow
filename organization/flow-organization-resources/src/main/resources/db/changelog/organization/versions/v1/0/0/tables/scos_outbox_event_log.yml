@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_OUTBOX_EVENT_LOG
-            schemaName: scos
             columns:
               - column:
                   name: OUTBOX_EVENT_LOG_ID
@@ -22,7 +21,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_OUTBOX_EVENT_ID_SCOS_OUTBOX_EVENT_LOG
-                    references: scos.SCOS_OUTBOX_EVENT(OUTBOX_EVENT_ID)
+                    references: SCOS_OUTBOX_EVENT(OUTBOX_EVENT_ID)
               - column:
                   name: CONSUMER
                   type: varchar(255)
@@ -51,7 +50,6 @@ databaseChangeLog:
                     nullable: true
         - createIndex:
             tableName: SCOS_OUTBOX_EVENT_LOG
-            schemaName: scos
             indexName: IDX_OUTBOX_EVENT_LOG_EVENT_ID
             columns:
               - column:
@@ -59,5 +57,4 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: SCOS_OUTBOX_EVENT_LOG
-            schemaName: scos
             cascadeConstraints: true

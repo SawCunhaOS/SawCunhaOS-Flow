@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_EMPLOYEE_POSITION_HISTORY
-            schemaName: scos
             columns:
               - column:
                   name: EMPLOYEE_POSITION_HISTORY_ID
@@ -22,14 +21,14 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_EMPLOYEE_ID_SCOS_EMPLOYEE_POSITION_HISTORY
-                    references: scos.SCOS_EMPLOYEE(EMPLOYEE_ID)
+                    references: SCOS_EMPLOYEE(EMPLOYEE_ID)
               - column:
                   name: POSITION_ID
                   type: BIGINT
                   constraints:
                     nullable: false
                     foreignKeyName: FK_POSITION_ID_SCOS_EMPLOYEE_POSITION_HISTORY
-                    references: scos.SCOS_POSITION(POSITION_ID)
+                    references: SCOS_POSITION(POSITION_ID)
               - column:
                   name: START_DATE
                   type: DATE
@@ -46,7 +45,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_REASON_POSITION_CHANGE_ID_SCOS_EMPLOYEE_POSITION_HISTORY
-                    references: scos.SCOS_REASON_POSITION_CHANGE(REASON_POSITION_CHANGE_ID)
+                    references: SCOS_REASON_POSITION_CHANGE(REASON_POSITION_CHANGE_ID)
               - column:
                   name: CREATED_AT
                   type: TIMESTAMPTZ
@@ -60,7 +59,6 @@ databaseChangeLog:
                     nullable: false
         - createIndex:
             tableName: SCOS_EMPLOYEE_POSITION_HISTORY
-            schemaName: scos
             indexName: IDX_POSITION_ID_SCOS_EMPLOYEE_POSITION_HISTORY
             columns:
               - column:
@@ -68,5 +66,4 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: SCOS_EMPLOYEE_POSITION_HISTORY
-            schemaName: scos
             cascadeConstraints: true

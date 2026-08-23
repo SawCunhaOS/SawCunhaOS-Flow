@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_ADDRESS_TYPE
-            schemaName: scos
             columns:
               - column:
                   name: ADDRESS_TYPE_ID
@@ -55,12 +54,10 @@ databaseChangeLog:
                     nullable: false
         - addUniqueConstraint:
             tableName: SCOS_ADDRESS_TYPE
-            schemaName: scos
             columnNames: CODE, ENTITY_TYPE
             constraintName: UK_CODE_ENTITY_TYPE_SCOS_ADDRESS_TYPE
             validate: true
       rollback:
         - dropTable:
             tableName: SCOS_ADDRESS_TYPE
-            schemaName: scos
             cascadeConstraints: true

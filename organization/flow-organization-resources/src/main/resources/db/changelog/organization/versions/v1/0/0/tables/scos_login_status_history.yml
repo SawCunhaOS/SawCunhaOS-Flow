@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_LOGIN_STATUS_HISTORY
-            schemaName: scos
             columns:
               - column:
                   name: LOGIN_STATUS_HISTORY_ID
@@ -22,7 +21,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_LOGIN_ID_SCOS_LOGIN_STATUS_HISTORY
-                    references: scos.SCOS_LOGIN(LOGIN_ID)
+                    references: SCOS_LOGIN(LOGIN_ID)
               - column:
                   name: STATUS
                   type: varchar(20)
@@ -39,28 +38,28 @@ databaseChangeLog:
                   constraints:
                     nullable: true
                     foreignKeyName: FK_REASON_ACTIVATE_ID_SCOS_LOGIN_STATUS_HISTORY
-                    references: scos.SCOS_REASON_ACTIVATE(REASON_ACTIVATE_ID)
+                    references: SCOS_REASON_ACTIVATE(REASON_ACTIVATE_ID)
               - column:
                   name: REASON_INACTIVATE_ID
                   type: BIGINT
                   constraints:
                     nullable: true
                     foreignKeyName: FK_REASON_INACTIVATE_ID_SCOS_LOGIN_STATUS_HISTORY
-                    references: scos.SCOS_REASON_INACTIVATE(REASON_INACTIVATE_ID)
+                    references: SCOS_REASON_INACTIVATE(REASON_INACTIVATE_ID)
               - column:
                   name: REASON_DISABLE_ID
                   type: BIGINT
                   constraints:
                     nullable: true
                     foreignKeyName: FK_REASON_DISABLE_ID_SCOS_LOGIN_STATUS_HISTORY
-                    references: scos.SCOS_REASON_DISABLE(REASON_DISABLE_ID)
+                    references: SCOS_REASON_DISABLE(REASON_DISABLE_ID)
               - column:
                   name: REASON_ENABLE_ID
                   type: BIGINT
                   constraints:
                     nullable: true
                     foreignKeyName: FK_REASON_ENABLE_ID_SCOS_LOGIN_STATUS_HISTORY
-                    references: scos.SCOS_REASON_ENABLE(REASON_ENABLE_ID)
+                    references: SCOS_REASON_ENABLE(REASON_ENABLE_ID)
               - column:
                   name: OBSERVATION
                   type: TEXT
@@ -80,5 +79,4 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: SCOS_LOGIN_STATUS_HISTORY
-            schemaName: scos
             cascadeConstraints: true

@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_PROFILE
-            schemaName: scos
             columns:
               - column:
                   name: PROFILE_ID
@@ -50,12 +49,10 @@ databaseChangeLog:
                     nullable: false
         - addUniqueConstraint:
             tableName: SCOS_PROFILE
-            schemaName: scos
             columnNames: CODE
             constraintName: UK_CODE_SCOS_PROFILE
             validate: true
       rollback:
         - dropTable:
             tableName: SCOS_PROFILE
-            schemaName: scos
             cascadeConstraints: true

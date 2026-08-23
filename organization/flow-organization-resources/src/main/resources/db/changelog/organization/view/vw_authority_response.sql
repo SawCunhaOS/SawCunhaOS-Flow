@@ -18,16 +18,16 @@
 -- Login EXTERNAL/SERVICE retorna company_id, branch_id, employee_id = NULL.
 --
 -- Exemplo de uso no scos-registry:
---   SELECT * FROM scos.vw_authority_response
+--   SELECT * FROM vw_authority_response
 --   WHERE  login  = $1
 --   AND    status = 'ACTIVE';
 --
--- Refresh: pg_cron a cada 30 minutos via scos.refresh_authority_views()
+-- Refresh: pg_cron a cada 30 minutos via refresh_authority_views()
 -- =============================================================================
 
-DROP MATERIALIZED VIEW IF EXISTS scos.vw_authority_response;
+DROP MATERIALIZED VIEW IF EXISTS vw_authority_response;
 
-CREATE MATERIALIZED VIEW scos.vw_authority_response AS
+CREATE MATERIALIZED VIEW vw_authority_response AS
 SELECT
     login_id,
     login,
@@ -50,7 +50,7 @@ SELECT
         NULL
     ) AS permissions
 
-FROM scos.vw_login_context
+FROM vw_login_context
 
 GROUP BY
     login_id,
@@ -69,4 +69,4 @@ GROUP BY
     profile_code;
 
 CREATE UNIQUE INDEX uidx_vw_authority_response_login_id
-    ON scos.vw_authority_response (login_id);
+    ON vw_authority_response (login_id);

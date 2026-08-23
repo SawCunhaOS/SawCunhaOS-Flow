@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_COMPANY_ADDRESS
-            schemaName: scos
             columns:
               - column:
                   name: COMPANY_ID_ADDRESS
@@ -19,14 +18,14 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_COMPANY_ID_SCOS_COMPANY_ADDRESS
-                    references: scos.SCOS_COMPANY(COMPANY_ID)
+                    references: SCOS_COMPANY(COMPANY_ID)
               - column:
                   name: ADDRESS_TYPE_ID
                   type: BIGINT
                   constraints:
                     nullable: false
                     foreignKeyName: FK_ADDRESS_TYPE_ID_SCOS_COMPANY_ADDRESS
-                    references: scos.SCOS_ADDRESS_TYPE(ADDRESS_TYPE_ID)
+                    references: SCOS_ADDRESS_TYPE(ADDRESS_TYPE_ID)
               - column:
                   name: NUMBER
                   type: INT
@@ -60,25 +59,21 @@ databaseChangeLog:
                     nullable: false
         - addPrimaryKey:
             tableName: SCOS_COMPANY_ADDRESS
-            schemaName: scos
             columnNames: COMPANY_ID_ADDRESS, COMPANY_ID
             constraintName: PK_SCOS_COMPANY_ADDRESS
         - addUniqueConstraint:
             tableName: SCOS_COMPANY_ADDRESS
-            schemaName: scos
             columnNames: ADDRESS_TYPE_ID, COMPANY_ID
             constraintName: UK_ADDRESS_TYPE_ID_COMPANY_ID_SCOS_COMPANY_ADDRESS
             validate: true
         - createIndex:
             tableName: SCOS_COMPANY_ADDRESS
-            schemaName: scos
             indexName: IDX_COMPANY_ID_SCOS_COMPANY_ADDRESS
             columns:
               - column:
                   name: COMPANY_ID
         - createIndex:
             tableName: SCOS_COMPANY_ADDRESS
-            schemaName: scos
             indexName: IDX_ADDRESS_TYPE_ID_SCOS_COMPANY_ADDRESS
             columns:
               - column:
@@ -86,5 +81,4 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: SCOS_COMPANY_ADDRESS
-            schemaName: scos
             cascadeConstraints: true

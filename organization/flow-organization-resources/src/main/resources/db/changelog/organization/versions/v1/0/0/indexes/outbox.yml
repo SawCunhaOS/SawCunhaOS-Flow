@@ -10,11 +10,11 @@ databaseChangeLog:
         - sql:
             sql: >-
               CREATE INDEX IF NOT EXISTS idx_outbox_event_pending
-              ON scos.scos_outbox_event (topic, created_at)
+              ON scos_outbox_event (topic, created_at)
               WHERE status = 'PENDING';
       rollback:
         - sql:
-            sql: DROP INDEX IF EXISTS scos.idx_outbox_event_pending;
+            sql: DROP INDEX IF EXISTS idx_outbox_event_pending;
 
   # ============================================================
   # idx_outbox_dead_letter_topic_created
@@ -27,7 +27,7 @@ databaseChangeLog:
         - sql:
             sql: >-
               CREATE INDEX IF NOT EXISTS idx_outbox_dead_letter_topic_created
-              ON scos.scos_outbox_event_dead_letter (topic, created_at DESC);
+              ON scos_outbox_event_dead_letter (topic, created_at DESC);
       rollback:
         - sql:
-            sql: DROP INDEX IF EXISTS scos.idx_outbox_dead_letter_topic_created;
+            sql: DROP INDEX IF EXISTS idx_outbox_dead_letter_topic_created;

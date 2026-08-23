@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_LEGAL_NATURE
-            schemaName: scos
             columns:
               - column:
                   name: LEGAL_NATURE_ID
@@ -34,14 +33,12 @@ databaseChangeLog:
                     nullable: false
         - addUniqueConstraint:
             tableName: SCOS_LEGAL_NATURE
-            schemaName: scos
             columnNames: CODE
             constraintName: UK_CODE_SCOS_LEGAL_NATURE
             validate: true
       rollback:
         - dropTable:
             tableName: SCOS_LEGAL_NATURE
-            schemaName: scos
             cascadeConstraints: true
   - changeSet:
       id: 20260707-Samuel.Cunha-002
@@ -50,12 +47,10 @@ databaseChangeLog:
       changes:
         - modifyDataType:
             tableName: SCOS_LEGAL_NATURE
-            schemaName: scos
             columnName: CODE
             newDataType: varchar(30)
       rollback:
         - modifyDataType:
             tableName: SCOS_LEGAL_NATURE
-            schemaName: scos
             columnName: CODE
             newDataType: varchar(10)

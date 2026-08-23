@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_SYSTEM
-            schemaName: scos
             columns:
               - column:
                   name: SYSTEM_ID
@@ -74,12 +73,10 @@ databaseChangeLog:
                     nullable: false
         - addUniqueConstraint:
             tableName: SCOS_SYSTEM
-            schemaName: scos
             columnNames: CODE
             constraintName: UK_CODE_SCOS_SYSTEM
             validate: true
       rollback:
         - dropTable:
             tableName: SCOS_SYSTEM
-            schemaName: scos
             cascadeConstraints: true

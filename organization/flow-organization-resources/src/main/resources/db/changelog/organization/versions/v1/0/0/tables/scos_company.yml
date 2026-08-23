@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_COMPANY
-            schemaName: scos
             columns:
               - column:
                   name: COMPANY_ID
@@ -22,7 +21,7 @@ databaseChangeLog:
                   constraints:
                     nullable: true
                     foreignKeyName: FK_PARENT_COMPANY_ID_SCOS_COMPANY
-                    references: scos.SCOS_COMPANY(COMPANY_ID)
+                    references: SCOS_COMPANY(COMPANY_ID)
               - column:
                   name: NAME
                   type: varchar(250)
@@ -44,14 +43,14 @@ databaseChangeLog:
                   constraints:
                     nullable: true
                     foreignKeyName: FK_LEGAL_NATURE_ID_SCOS_COMPANY
-                    references: scos.SCOS_LEGAL_NATURE(LEGAL_NATURE_ID)
+                    references: SCOS_LEGAL_NATURE(LEGAL_NATURE_ID)
               - column:
                   name: CNAE_PRINCIPAL_ID
                   type: BIGINT
                   constraints:
                     nullable: true
                     foreignKeyName: FK_CNAE_PRINCIPAL_ID_SCOS_COMPANY
-                    references: scos.SCOS_CNAE(CNAE_ID)
+                    references: SCOS_CNAE(CNAE_ID)
               - column:
                   name: STATE_REGISTRATION
                   type: varchar(20)
@@ -106,34 +105,29 @@ databaseChangeLog:
                     nullable: false
         - addUniqueConstraint:
             tableName: SCOS_COMPANY
-            schemaName: scos
             columnNames: TAX_IDENTIFIER
             constraintName: UK_TAX_IDENTIFIER_SCOS_COMPANY
             validate: true
         - createIndex:
             tableName: SCOS_COMPANY
-            schemaName: scos
             indexName: IDX_PARENT_COMPANY_ID_SCOS_COMPANY
             columns:
               - column:
                   name: PARENT_COMPANY_ID
         - createIndex:
             tableName: SCOS_COMPANY
-            schemaName: scos
             indexName: IDX_STATUS_SCOS_COMPANY
             columns:
               - column:
                   name: STATUS
         - createIndex:
             tableName: SCOS_COMPANY
-            schemaName: scos
             indexName: IDX_LEGAL_NATURE_ID_SCOS_COMPANY
             columns:
               - column:
                   name: LEGAL_NATURE_ID
         - createIndex:
             tableName: SCOS_COMPANY
-            schemaName: scos
             indexName: IDX_CNAE_PRINCIPAL_ID_SCOS_COMPANY
             columns:
               - column:
@@ -141,5 +135,4 @@ databaseChangeLog:
       rollback:
         - dropTable:
             tableName: SCOS_COMPANY
-            schemaName: scos
             cascadeConstraints: true

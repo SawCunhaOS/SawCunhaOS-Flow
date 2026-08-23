@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_POSITION_WORK_SCHEDULE
-            schemaName: scos
             columns:
               - column:
                   name: POSITION_WORK_SCHEDULE_ID
@@ -22,7 +21,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_POSITION_ID_SCOS_POSITION_WORK_SCHEDULE
-                    references: scos.SCOS_POSITION(POSITION_ID)
+                    references: SCOS_POSITION(POSITION_ID)
               - column:
                   name: DAY_OF_WEEK
                   type: varchar(10)
@@ -66,12 +65,10 @@ databaseChangeLog:
                     nullable: false
         - addUniqueConstraint:
             tableName: SCOS_POSITION_WORK_SCHEDULE
-            schemaName: scos
             columnNames: POSITION_ID, DAY_OF_WEEK
             constraintName: UK_POSITION_ID_DAY_OF_WEEK_SCOS_POSITION_WORK_SCHEDULE
             validate: true
       rollback:
         - dropTable:
             tableName: SCOS_POSITION_WORK_SCHEDULE
-            schemaName: scos
             cascadeConstraints: true

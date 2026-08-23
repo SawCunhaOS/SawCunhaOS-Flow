@@ -6,7 +6,6 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: SCOS_COMPANY_CNAE_SECONDARY
-            schemaName: scos
             columns:
               - column:
                   name: COMPANY_ID
@@ -14,14 +13,14 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     foreignKeyName: FK_COMPANY_ID_SCOS_COMPANY_CNAE_SECONDARY
-                    references: scos.SCOS_COMPANY(COMPANY_ID)
+                    references: SCOS_COMPANY(COMPANY_ID)
               - column:
                   name: CNAE_ID
                   type: BIGINT
                   constraints:
                     nullable: false
                     foreignKeyName: FK_CNAE_ID_SCOS_COMPANY_CNAE_SECONDARY
-                    references: scos.SCOS_CNAE(CNAE_ID)
+                    references: SCOS_CNAE(CNAE_ID)
               - column:
                   name: CREATED_AT
                   type: TIMESTAMPTZ
@@ -35,11 +34,9 @@ databaseChangeLog:
                     nullable: false
         - addPrimaryKey:
             tableName: SCOS_COMPANY_CNAE_SECONDARY
-            schemaName: scos
             columnNames: COMPANY_ID, CNAE_ID
             constraintName: PK_SCOS_COMPANY_CNAE_SECONDARY
       rollback:
         - dropTable:
             tableName: SCOS_COMPANY_CNAE_SECONDARY
-            schemaName: scos
             cascadeConstraints: true

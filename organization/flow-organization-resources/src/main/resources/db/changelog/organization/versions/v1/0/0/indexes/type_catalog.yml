@@ -10,11 +10,11 @@ databaseChangeLog:
         - sql:
             sql: >-
               CREATE INDEX IF NOT EXISTS idx_address_type_entity_type
-              ON scos.scos_address_type (entity_type)
+              ON scos_address_type (entity_type)
               WHERE active = true;
       rollback:
         - sql:
-            sql: DROP INDEX IF EXISTS scos.idx_address_type_entity_type;
+            sql: DROP INDEX IF EXISTS idx_address_type_entity_type;
 
   # ============================================================
   # idx_contact_type_entity_type (parcial — somente tipos ativos)
@@ -26,8 +26,8 @@ databaseChangeLog:
         - sql:
             sql: >-
               CREATE INDEX IF NOT EXISTS idx_contact_type_entity_type
-              ON scos.scos_contact_type (entity_type)
+              ON scos_contact_type (entity_type)
               WHERE active = true;
       rollback:
         - sql:
-            sql: DROP INDEX IF EXISTS scos.idx_contact_type_entity_type;
+            sql: DROP INDEX IF EXISTS idx_contact_type_entity_type;

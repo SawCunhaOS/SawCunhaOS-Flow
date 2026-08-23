@@ -25,9 +25,9 @@ paths:
       description: Lista paginada de eventos do outbox, filtrável por tópico, status e id do agregado de origem
       operationId: getAllOutboxEvents
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/topicFilter'
         - $ref: '#/components/parameters/statusFilter'
         - $ref: '#/components/parameters/aggregateIdFilter'
@@ -39,9 +39,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllOutboxEventsResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_OUTBOX_EVENT]
 
   /v1/outbox-events/{id}:
@@ -51,9 +51,9 @@ paths:
       description: Retorna o detalhe de um evento do outbox, incluindo payload, dados de resposta (quando o backend do tópico é DIRECT_API), contagem de tentativas e mensagem de erro
       operationId: getOutboxEventById
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -62,9 +62,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetOutboxEventResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_OUTBOX_EVENT]
 
   /v1/outbox-events/{id}/logs:
@@ -74,10 +74,10 @@ paths:
       description: Lista paginada das tentativas de entrega de um evento do outbox, uma linha por consumidor/tentativa
       operationId: getOutboxEventLogs
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
       responses:
         '200':
           description: OK
@@ -86,9 +86,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllOutboxEventLogsResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_OUTBOX_EVENT]
 
   /v1/outbox-events/{id}/retry:
@@ -98,16 +98,16 @@ paths:
       description: Reprocessa um evento do outbox — só válido quando o status atual é FAILED, volta o status para PENDING. Rejeita com 4XX quando o status atual não é FAILED
       operationId: retryOutboxEvent
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [RETRY_OUTBOX_EVENT]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_RETRY_OUTBOX_EVENT
@@ -120,9 +120,9 @@ paths:
       description: Lista paginada de eventos do outbox que excederam o número de tentativas ou chegaram corrompidos, filtrável por tópico e tipo de erro
       operationId: getAllOutboxEventDeadLetters
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/topicFilter'
         - $ref: '#/components/parameters/errorTypeFilter'
       responses:
@@ -133,9 +133,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllOutboxEventDeadLettersResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_OUTBOX_EVENT_DEAD_LETTER]
 
   /v1/outbox-topics:
@@ -145,9 +145,9 @@ paths:
       description: UC-156 - Lista paginada dos tópicos cadastrados (SCOS_OUTBOX_TOPIC) e seu roteamento. Somente leitura - cadastro é uma linha de configuração/migração, não um endpoint de escrita
       operationId: getAllOutboxTopics
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/backendFilter'
         - $ref: '#/components/parameters/activeFilter'
       responses:
@@ -158,9 +158,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllOutboxTopicsResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_OUTBOX_TOPIC]
       x-cache: [SCOS_ORGANIZATION_OUTBOX_TOPIC]
 
@@ -171,8 +171,8 @@ paths:
       description: UC-157 - Retorna o detalhe de roteamento de um tópico pelo nome (chave natural, sem id substituto)
       operationId: getOutboxTopicByName
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/topicPath'
       responses:
         '200':
@@ -182,9 +182,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetOutboxTopicResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_OUTBOX_TOPIC]
       x-cache: [SCOS_ORGANIZATION_OUTBOX_TOPIC]
 
@@ -192,7 +192,7 @@ paths:
 components:
   securitySchemes:
     BearerAuth:
-      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
+      $ref: '../ScosComponents.yml#/components/securitySchemes/BearerAuth'
   parameters:
     topicFilter:
       name: topic
@@ -289,7 +289,7 @@ components:
           items:
             $ref: '#/components/schemas/OutboxTopic'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     OutboxEvent:
       type: object
       properties:
@@ -365,7 +365,7 @@ components:
           items:
             $ref: '#/components/schemas/OutboxEvent'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     GetAllOutboxEventLogsResponse:
       type: object
       properties:
@@ -374,7 +374,7 @@ components:
           items:
             $ref: '#/components/schemas/OutboxEventLog'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     GetAllOutboxEventDeadLettersResponse:
       type: object
       properties:
@@ -383,7 +383,7 @@ components:
           items:
             $ref: '#/components/schemas/OutboxEventDeadLetter'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
 
 security:
   - BearerAuth: []

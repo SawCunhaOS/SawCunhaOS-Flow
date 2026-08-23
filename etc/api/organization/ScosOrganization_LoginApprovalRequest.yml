@@ -27,9 +27,9 @@ paths:
       description: Lista paginada das solicitações de aprovação, filtrável por status e por loginId (histórico completo de um Login)
       operationId: getAllLoginApprovalRequests
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
         - $ref: '#/components/parameters/statusFilter'
         - $ref: '#/components/parameters/loginIdFilter'
       responses:
@@ -40,9 +40,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetAllLoginApprovalRequestsResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN_APPROVAL_REQUEST]
 
   /v1/login-approval-requests/system-access-approvers:
@@ -55,8 +55,8 @@ paths:
         que o @PreAuthorize já usa. Não paginado - lista tipicamente pequena.
       operationId: getSystemAccessApprovers
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
       responses:
         '200':
           description: OK
@@ -65,9 +65,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetSystemAccessApproversResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN_APPROVAL_REQUEST]
 
   /v1/login-approval-requests/{id}:
@@ -77,9 +77,9 @@ paths:
       description: Retorna o detalhe de uma solicitação, incluindo o aprovador resolvido no nível atual (calculado na hora, nunca persistido)
       operationId: getLoginApprovalRequestById
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       responses:
         '200':
           description: OK
@@ -88,9 +88,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetLoginApprovalRequestResponse'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [GET_LOGIN_APPROVAL_REQUEST]
 
   /v1/login-approval-requests/{id}/approve:
@@ -104,9 +104,9 @@ paths:
         grava isExceptionSelfApproval=true)
       operationId: approveLoginApprovalRequest
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -116,11 +116,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DECIDE_LOGIN_APPROVAL_REQUEST]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_APPROVE_LOGIN_APPROVAL_REQUEST
@@ -135,9 +135,9 @@ paths:
         disparar Saga Keycloak. Mesma regra de elegibilidade do approve
       operationId: rejectLoginApprovalRequest
       parameters:
-        - $ref: './ScosComponents.yml#/components/parameters/X-Request-ID'
-        - $ref: './ScosComponents.yml#/components/parameters/Accept-Language'
-        - $ref: './ScosComponents.yml#/components/parameters/idRequest'
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
       requestBody:
         required: true
         content:
@@ -147,11 +147,11 @@ paths:
         x-jdempotentrequestpayload: true
       responses:
         '204':
-          $ref: './ScosComponents.yml#/components/responses/204_NO_CONTENT'
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
         '4XX':
-          $ref: './ScosComponents.yml#/components/responses/4XX'
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
         '5XX':
-          $ref: './ScosComponents.yml#/components/responses/5XX'
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
       x-authorize: [DECIDE_LOGIN_APPROVAL_REQUEST]
       x-jdempotentresource:
         cachePrefix: SCOS_ORGANIZATION_IDP_REJECT_LOGIN_APPROVAL_REQUEST
@@ -160,7 +160,7 @@ paths:
 components:
   securitySchemes:
     BearerAuth:
-      $ref: './ScosComponents.yml#/components/securitySchemes/BearerAuth'
+      $ref: '../ScosComponents.yml#/components/securitySchemes/BearerAuth'
   parameters:
     statusFilter:
       name: status
@@ -257,7 +257,7 @@ components:
           items:
             $ref: '#/components/schemas/LoginApprovalRequest'
         paginatedDTO:
-          $ref: './ScosComponents.yml#/components/schemas/ScosPaginated'
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
     GetSystemAccessApproversResponse:
       type: object
       properties:
