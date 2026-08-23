@@ -22,6 +22,10 @@
     <dependencies>
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>
+            <artifactId>scos-foundation-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>br.com.sawcunhaos</groupId>
             <artifactId>scos-foundation-jpa</artifactId>
         </dependency>
         <dependency>
@@ -30,15 +34,7 @@
         </dependency>
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>
-            <artifactId>scos-foundation-privacy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>br.com.sawcunhaos</groupId>
             <artifactId>scos-foundation-jdempotent</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>br.com.sawcunhaos</groupId>
-            <artifactId>scos-foundation-cache</artifactId>
         </dependency>
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>

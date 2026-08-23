@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.security.starter.model;
 
-import br.com.sawcunhaos.foundation.exception.error.ScosSecurityException;
+import br.com.sawcunhaos.foundation.core.exception.ScosSecurityException;
 import br.com.sawcunhaos.security.starter.utils.SecurityExceptionCode;
 
 import java.util.Objects;

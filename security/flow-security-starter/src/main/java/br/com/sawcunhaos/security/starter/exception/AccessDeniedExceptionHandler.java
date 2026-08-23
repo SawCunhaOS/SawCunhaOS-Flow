@@ -2,7 +2,7 @@ package br.com.sawcunhaos.security.starter.exception;
 
 import br.com.sawcunhaos.foundation.core.enums.ScosExceptionCode;
 import br.com.sawcunhaos.foundation.core.specification.LocaleService;
-import br.com.sawcunhaos.foundation.exception.model.ScosProblemDetails;
+import br.com.sawcunhaos.foundation.web.model.ScosProblemDetails;
 import br.com.sawcunhaos.security.starter.utils.AuthenticationUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

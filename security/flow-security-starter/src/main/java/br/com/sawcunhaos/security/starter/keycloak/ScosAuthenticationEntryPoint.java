@@ -14,7 +14,7 @@
 package br.com.sawcunhaos.security.starter.keycloak;
 
 import br.com.sawcunhaos.foundation.core.specification.LocaleService;
-import br.com.sawcunhaos.foundation.exception.model.ScosProblemDetails;
+import br.com.sawcunhaos.foundation.web.model.ScosProblemDetails;
 import br.com.sawcunhaos.security.starter.utils.AuthenticationUtils;
 import br.com.sawcunhaos.security.starter.utils.SecurityExceptionCode;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,7 +1,7 @@
 package br.com.sawcunhaos.security.starter.service;
 
 
-import br.com.sawcunhaos.foundation.exception.error.ScosSecurityException;
+import br.com.sawcunhaos.foundation.core.exception.ScosSecurityException;
 import br.com.sawcunhaos.security.grpc.proto.AuthorityResponse;
 import br.com.sawcunhaos.security.starter.model.ScosSecurityContext;
 import br.com.sawcunhaos.security.starter.service.grpc.ScosAuthorityService;

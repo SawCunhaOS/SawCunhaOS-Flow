@@ -1,6 +1,6 @@
 package br.com.sawcunhaos.security.starter.keycloak;
 
-import br.com.sawcunhaos.foundation.exception.error.ScosSecurityException;
+import br.com.sawcunhaos.foundation.core.exception.ScosSecurityException;
 import br.com.sawcunhaos.security.starter.configuration.properties.ScosRegistryProperties;
 import br.com.sawcunhaos.security.starter.model.ScosAuthentication;
 import br.com.sawcunhaos.security.starter.model.ScosSecurityContext;

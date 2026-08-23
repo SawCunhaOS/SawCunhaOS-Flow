@@ -108,13 +108,12 @@
         </dependency>
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>
-            <artifactId>scos-foundation-exception</artifactId>
+            <artifactId>scos-foundation-spring</artifactId>
         </dependency>
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>
-            <artifactId>scos-foundation-spring</artifactId>
+            <artifactId>scos-foundation-web</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>org.postgresql</groupId>

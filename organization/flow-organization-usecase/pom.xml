@@ -23,10 +23,6 @@
             <groupId>br.com.sawcunhaos.flow</groupId>
             <artifactId>flow-organization-domain</artifactId>
         </dependency>
-        <dependency>
-            <groupId>br.com.sawcunhaos</groupId>
-            <artifactId>scos-foundation-exception</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>
