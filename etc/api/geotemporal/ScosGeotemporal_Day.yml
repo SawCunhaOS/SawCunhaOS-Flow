@@ -1,0 +1,1222 @@
+openapi: 3.0.3
+info:
+  title: SawCunhaOS Geotemporal - Day
+  description: APIs para gestão do calendário, marcadores, feriados e dias úteis do sistema SCOS.
+  termsOfService: https://www.apache.org/licenses/LICENSE-2.0
+  contact:
+    name: Samuel Cunha
+    url: https://github.com/SawCunhaOS
+    email: samukasaww@live.com
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: '1.0'
+servers:
+  - url: /geotemporal/api
+tags:
+  - name: Tag
+    description: APIs para gestão dos marcadores de dia
+  - name: Day
+    description: APIs para consulta do calendário
+  - name: Holiday
+    description: APIs para gestão dos feriados
+  - name: Fixed Holiday
+    description: APIs para gestão dos feriados fixos
+  - name: Working Day
+    description: APIs para apuração de dias úteis
+
+paths:
+  /v1/tags:
+    get:
+      tags: [Tag]
+      summary: Get all tags
+      description: UC-042 - Lista todos os marcadores com paginação
+      operationId: getAllTags
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllTagsResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_TAG]
+      x-cache: [SCOS_GEOTEMPORAL_TAG]
+    post:
+      tags: [Tag]
+      summary: Create a tag
+      description: UC-043 - Cadastra um novo marcador de dia
+      operationId: createTag
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTagRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_TAG]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_CREATE_TAG
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_TAG]
+
+  /v1/tags/link:
+    put:
+      tags: [Tag]
+      summary: Link tags to days by criteria
+      description: UC-044 - Agenda o vínculo em lote de marcadores aos dias que atendem ao critério informado. Processamento assíncrono
+      operationId: linkTagsByCriteria
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagCriteriaRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchRequestResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [LINK_TAG]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_LINK_TAG_CRITERIA
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_DAY, SCOS_GEOTEMPORAL_TAG]
+
+  /v1/tags/unlink:
+    put:
+      tags: [Tag]
+      summary: Unlink tags from days by criteria
+      description: UC-045 - Agenda a remoção em lote de marcadores dos dias que atendem ao critério informado. Processamento assíncrono
+      operationId: unlinkTagsByCriteria
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagCriteriaRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '202':
+          description: Accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchRequestResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UNLINK_TAG]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_UNLINK_TAG_CRITERIA
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_DAY, SCOS_GEOTEMPORAL_TAG]
+
+  /v1/tags/{id}:
+    get:
+      tags: [Tag]
+      summary: Get tag by id
+      description: UC-046 - Retorna um marcador pelo identificador
+      operationId: getTagById
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTagResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_TAG]
+      x-cache: [SCOS_GEOTEMPORAL_TAG]
+    put:
+      tags: [Tag]
+      summary: Update tag
+      description: UC-047 - Atualiza os dados de um marcador existente
+      operationId: updateTag
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTagRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_TAG]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_UPDATE_TAG
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_TAG, SCOS_GEOTEMPORAL_DAY]
+    delete:
+      tags: [Tag]
+      summary: Delete tag
+      description: UC-048 - Remove um marcador e todos os seus vínculos com dias
+      operationId: deleteTag
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DELETE_TAG]
+      x-cache: [SCOS_GEOTEMPORAL_TAG, SCOS_GEOTEMPORAL_DAY]
+
+  /v1/days:
+    get:
+      tags: [Day]
+      summary: Get all days
+      description: UC-049 - Lista os dias do calendário com paginação, filtrando por período e por marcador
+      operationId: getAllDays
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/startDate'
+        - $ref: '../ScosComponents.yml#/components/parameters/endDate'
+        - $ref: '../ScosComponents.yml#/components/parameters/tagId'
+        - $ref: '../ScosComponents.yml#/components/parameters/tagCode'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllDaysResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_DAY]
+      x-cache: [SCOS_GEOTEMPORAL_DAY]
+
+  /v1/days/current-month:
+    get:
+      tags: [Day]
+      summary: Get days of the current month
+      description: UC-050 - Retorna todos os dias do mês corrente
+      operationId: getDaysOfCurrentMonth
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllDaysResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_DAY]
+      x-cache: [SCOS_GEOTEMPORAL_DAY]
+
+  /v1/days/month/{month}:
+    get:
+      tags: [Day]
+      summary: Get days of a month
+      description: UC-051 - Retorna todos os dias de um mês. Sem o ano informado, considera o ano corrente
+      operationId: getDaysOfMonth
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/month'
+        - $ref: '../ScosComponents.yml#/components/parameters/year'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllDaysResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_DAY]
+      x-cache: [SCOS_GEOTEMPORAL_DAY]
+
+  /v1/days/date/{date}:
+    get:
+      tags: [Day]
+      summary: Get day by date
+      description: UC-052 - Retorna um dia do calendário pela data, opcionalmente restrito a um marcador
+      operationId: getDayByDate
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/date'
+        - $ref: '../ScosComponents.yml#/components/parameters/tagId'
+        - $ref: '../ScosComponents.yml#/components/parameters/tagCode'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDayResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_DAY]
+      x-cache: [SCOS_GEOTEMPORAL_DAY]
+
+  /v1/days/{id}:
+    get:
+      tags: [Day]
+      summary: Get day by id
+      description: UC-053 - Retorna um dia do calendário pelo identificador
+      operationId: getDayById
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDayResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_DAY]
+      x-cache: [SCOS_GEOTEMPORAL_DAY]
+
+  /v1/days/{id}/tags/link:
+    put:
+      tags: [Day]
+      summary: Link tags to day
+      description: UC-054 - Vincula um lote de marcadores a um dia específico
+      operationId: linkTagsToDay
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagLinkRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [LINK_TAG]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_LINK_TAG_DAY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_DAY]
+
+  /v1/days/{id}/tags/unlink:
+    put:
+      tags: [Day]
+      summary: Unlink tags from day
+      description: UC-055 - Remove um lote de marcadores de um dia específico
+      operationId: unlinkTagsFromDay
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagLinkRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UNLINK_TAG]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_UNLINK_TAG_DAY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_DAY]
+
+  /v1/holidays:
+    get:
+      tags: [Holiday]
+      summary: Get all holidays
+      description: UC-056 - Lista os feriados com paginação, filtrando por período
+      operationId: getAllHolidays
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/startDate'
+        - $ref: '../ScosComponents.yml#/components/parameters/endDate'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllHolidaysResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_HOLIDAY]
+      x-cache: [SCOS_GEOTEMPORAL_HOLIDAY]
+    post:
+      tags: [Holiday]
+      summary: Create a holiday
+      description: UC-057 - Cadastra um feriado em um dia existente do calendário
+      operationId: createHoliday
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHolidayRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_HOLIDAY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_CREATE_HOLIDAY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_HOLIDAY, SCOS_GEOTEMPORAL_DAY, SCOS_GEOTEMPORAL_WORKING]
+
+  /v1/holidays/{id}:
+    get:
+      tags: [Holiday]
+      summary: Get holiday by id
+      description: UC-058 - Retorna um feriado pelo identificador
+      operationId: getHolidayById
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetHolidayResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_HOLIDAY]
+      x-cache: [SCOS_GEOTEMPORAL_HOLIDAY]
+    put:
+      tags: [Holiday]
+      summary: Update holiday
+      description: UC-059 - Atualiza os dados de um feriado existente. O dia vinculado não pode ser alterado
+      operationId: updateHoliday
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateHolidayRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_HOLIDAY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_UPDATE_HOLIDAY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_HOLIDAY, SCOS_GEOTEMPORAL_DAY, SCOS_GEOTEMPORAL_WORKING]
+    delete:
+      tags: [Holiday]
+      summary: Delete holiday
+      description: UC-060 - Remove um feriado e seus vínculos com estados e cidades
+      operationId: deleteHoliday
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DELETE_HOLIDAY]
+      x-cache: [SCOS_GEOTEMPORAL_HOLIDAY, SCOS_GEOTEMPORAL_DAY, SCOS_GEOTEMPORAL_WORKING]
+
+  /v1/fixed-holidays:
+    get:
+      tags: [Fixed Holiday]
+      summary: Get all fixed holidays
+      description: UC-061 - Lista os feriados fixos com paginação
+      operationId: getAllFixedHolidays
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/country'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllFixedHolidaysResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_FIXED_HOLIDAY]
+      x-cache: [SCOS_GEOTEMPORAL_FIXED_HOLIDAY]
+    post:
+      tags: [Fixed Holiday]
+      summary: Create a fixed holiday
+      description: UC-062 - Cadastra um feriado fixo de um país, replicado anualmente na geração do calendário
+      operationId: createFixedHoliday
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFixedHolidayRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_FIXED_HOLIDAY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_CREATE_FIXED_HOLIDAY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_FIXED_HOLIDAY]
+
+  /v1/fixed-holidays/{id}:
+    get:
+      tags: [Fixed Holiday]
+      summary: Get fixed holiday by id
+      description: UC-063 - Retorna um feriado fixo pelo identificador
+      operationId: getFixedHolidayById
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFixedHolidayResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_FIXED_HOLIDAY]
+      x-cache: [SCOS_GEOTEMPORAL_FIXED_HOLIDAY]
+    put:
+      tags: [Fixed Holiday]
+      summary: Update fixed holiday
+      description: UC-064 - Atualiza um feriado fixo. Dia, mês e país não podem ser alterados
+      operationId: updateFixedHoliday
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFixedHolidayRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_FIXED_HOLIDAY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_UPDATE_FIXED_HOLIDAY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_FIXED_HOLIDAY]
+
+  /v1/working-days/current:
+    get:
+      tags: [Working Day]
+      summary: Get current working day status
+      description: UC-065 - Informa se a data corrente é dia útil no calendário nacional
+      operationId: getCurrentWorkingDay
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWorkingDayResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_WORKING_DAY]
+      x-cache: [SCOS_GEOTEMPORAL_WORKING]
+
+  /v1/working-days/current/states/{id}:
+    get:
+      tags: [Working Day]
+      summary: Get current working day status by state
+      description: UC-066 - Informa se a data corrente é dia útil considerando os feriados estaduais
+      operationId: getCurrentWorkingDayByState
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWorkingDayResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_WORKING_DAY]
+      x-cache: [SCOS_GEOTEMPORAL_WORKING]
+
+  /v1/working-days/current/cities/{id}:
+    get:
+      tags: [Working Day]
+      summary: Get current working day status by city
+      description: UC-067 - Informa se a data corrente é dia útil considerando os feriados municipais
+      operationId: getCurrentWorkingDayByCity
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWorkingDayResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_WORKING_DAY]
+      x-cache: [SCOS_GEOTEMPORAL_WORKING]
+
+  /v1/working-days/{date}:
+    get:
+      tags: [Working Day]
+      summary: Get next working day from date
+      description: UC-068 - Retorna o dia útil correspondente à data informada, avançando numberOfDays dias úteis
+      operationId: getNextWorkingDay
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/date'
+        - $ref: '../ScosComponents.yml#/components/parameters/numberOfDays'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDayResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_WORKING_DAY]
+      x-cache: [SCOS_GEOTEMPORAL_WORKING]
+
+  /v1/working-days/{date}/previous:
+    get:
+      tags: [Working Day]
+      summary: Get previous working day from date
+      description: UC-069 - Retorna o dia útil correspondente à data informada, retrocedendo numberOfDays dias úteis
+      operationId: getPreviousWorkingDay
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/date'
+        - $ref: '../ScosComponents.yml#/components/parameters/numberOfDays'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDayResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_WORKING_DAY]
+      x-cache: [SCOS_GEOTEMPORAL_WORKING]
+
+  /v1/working-days/{date}/states/{id}:
+    get:
+      tags: [Working Day]
+      summary: Get working day status by date and state
+      description: UC-070 - Informa se a data informada é dia útil considerando os feriados estaduais
+      operationId: getWorkingDayByState
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/date'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWorkingDayResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_WORKING_DAY]
+      x-cache: [SCOS_GEOTEMPORAL_WORKING]
+
+  /v1/working-days/{date}/cities/{id}:
+    get:
+      tags: [Working Day]
+      summary: Get working day status by date and city
+      description: UC-071 - Informa se a data informada é dia útil considerando os feriados municipais
+      operationId: getWorkingDayByCity
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/date'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetWorkingDayResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_WORKING_DAY]
+      x-cache: [SCOS_GEOTEMPORAL_WORKING]
+
+components:
+  securitySchemes:
+    BearerAuth:
+      $ref: '../ScosComponents.yml#/components/securitySchemes/BearerAuth'
+  schemas:
+    TypeHoliday:
+      type: string
+      enum:
+        - OPTIONAL
+        - HALF_PERIOD
+        - MANDATORY
+
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        code:
+          type: string
+        description:
+          type: string
+    CreateTagRequest:
+      required: [code, description]
+      type: object
+      properties:
+        code:
+          maxLength: 20
+          minLength: 1
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-size-message: SCOS_VALIDATION_008
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+    UpdateTagRequest:
+      required: [code, description]
+      type: object
+      properties:
+        code:
+          maxLength: 20
+          minLength: 1
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-size-message: SCOS_VALIDATION_008
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+    GetTagResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Tag'
+    GetAllTagsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+        paginatedDTO:
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
+
+    TagLinkRequest:
+      required: [tagIds]
+      type: object
+      properties:
+        tagIds:
+          maxItems: 50
+          minItems: 1
+          type: array
+          description: Identificadores dos marcadores a vincular ou desvincular
+          items:
+            type: integer
+            format: int64
+          x-required-message: SCOS_VALIDATION_003
+          x-size-message: SCOS_VALIDATION_008
+          x-empty-message: SCOS_VALIDATION_001
+    TagCriteriaRequest:
+      required: [tagIds, year]
+      type: object
+      description: Critério de seleção dos dias. Ao menos um entre dayOfWeek, dayOfYear ou day/month deve ser informado
+      properties:
+        tagIds:
+          maxItems: 50
+          minItems: 1
+          type: array
+          items:
+            type: integer
+            format: int64
+          x-required-message: SCOS_VALIDATION_003
+          x-size-message: SCOS_VALIDATION_008
+          x-empty-message: SCOS_VALIDATION_001
+        dayOfWeek:
+          $ref: '../ScosComponents.yml#/components/schemas/DayOfWeek'
+        dayOfYear:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 366
+          x-min-message: SCOS_VALIDATION_002
+          x-max-message: SCOS_VALIDATION_004
+        day:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 31
+          x-min-message: SCOS_VALIDATION_002
+          x-max-message: SCOS_VALIDATION_004
+        month:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 12
+          x-min-message: SCOS_VALIDATION_002
+          x-max-message: SCOS_VALIDATION_004
+        year:
+          type: integer
+          format: int32
+          description: Ano alvo. Deve estar dentro da janela definida por LIMIT_BACK_DAYS_YEARS e LIMIT_FORWARD_DAYS_YEARS
+          x-required-message: SCOS_VALIDATION_003
+    BatchRequest:
+      type: object
+      properties:
+        requestId:
+          type: string
+          format: uuid
+          description: Identificador do processamento assíncrono agendado
+    BatchRequestResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/BatchRequest'
+
+    Day:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        date:
+          type: string
+          format: date
+        weekend:
+          type: boolean
+        holiday:
+          type: boolean
+        dayOfWeek:
+          $ref: '../ScosComponents.yml#/components/schemas/DayOfWeek'
+        dayOfYear:
+          type: integer
+          format: int32
+        holidays:
+          type: array
+          items:
+            $ref: '#/components/schemas/Holiday'
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+    GetDayResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Day'
+    GetAllDaysResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Day'
+        paginatedDTO:
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
+
+    Holiday:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        holidayType:
+          $ref: '#/components/schemas/TypeHoliday'
+        fromTime:
+          type: string
+          format: time
+          description: Hora de início do feriado quando holidayType é HALF_PERIOD
+        day:
+          type: string
+          format: date
+        optional:
+          type: boolean
+        nationalHoliday:
+          type: boolean
+    CreateHolidayRequest:
+      required: [name, description, holidayType, optional, nationalHoliday, dayId]
+      type: object
+      properties:
+        name:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        holidayType:
+          allOf:
+            - $ref: '#/components/schemas/TypeHoliday'
+          x-required-message: SCOS_VALIDATION_003
+        fromTime:
+          type: string
+          format: time
+          description: Obrigatório quando holidayType é HALF_PERIOD
+        optional:
+          type: boolean
+          default: false
+          x-required-message: SCOS_VALIDATION_003
+        nationalHoliday:
+          type: boolean
+          default: false
+          x-required-message: SCOS_VALIDATION_003
+        dayId:
+          type: integer
+          format: int64
+          description: Identificador do dia do calendário ao qual o feriado será vinculado
+          x-required-message: SCOS_VALIDATION_003
+    UpdateHolidayRequest:
+      required: [name, description, holidayType, optional, nationalHoliday]
+      type: object
+      properties:
+        name:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        holidayType:
+          allOf:
+            - $ref: '#/components/schemas/TypeHoliday'
+          x-required-message: SCOS_VALIDATION_003
+        fromTime:
+          type: string
+          format: time
+          description: Obrigatório quando holidayType é HALF_PERIOD
+        optional:
+          type: boolean
+          default: false
+          x-required-message: SCOS_VALIDATION_003
+        nationalHoliday:
+          type: boolean
+          default: false
+          x-required-message: SCOS_VALIDATION_003
+    HolidayLinkRequest:
+      required: [holidayIds]
+      type: object
+      properties:
+        holidayIds:
+          maxItems: 50
+          minItems: 1
+          type: array
+          description: Identificadores dos feriados a vincular ou desvincular do estado ou da cidade
+          items:
+            type: integer
+            format: int64
+          x-required-message: SCOS_VALIDATION_003
+          x-size-message: SCOS_VALIDATION_008
+          x-empty-message: SCOS_VALIDATION_001
+    GetHolidayResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Holiday'
+    GetAllHolidaysResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Holiday'
+        paginatedDTO:
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
+
+    FixedHoliday:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        day:
+          type: integer
+          format: int32
+        month:
+          type: integer
+          format: int32
+        optional:
+          type: boolean
+        enabled:
+          type: boolean
+        fromTime:
+          type: string
+          format: time
+        countryId:
+          type: integer
+          format: int64
+        countryName:
+          type: string
+    CreateFixedHolidayRequest:
+      required: [name, description, day, month, optional, enabled, countryId]
+      type: object
+      properties:
+        name:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        day:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 31
+          x-required-message: SCOS_VALIDATION_003
+          x-min-message: SCOS_VALIDATION_002
+          x-max-message: SCOS_VALIDATION_004
+        month:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 12
+          x-required-message: SCOS_VALIDATION_003
+          x-min-message: SCOS_VALIDATION_002
+          x-max-message: SCOS_VALIDATION_004
+        optional:
+          type: boolean
+          default: false
+          x-required-message: SCOS_VALIDATION_003
+        fromTime:
+          type: string
+          format: time
+        enabled:
+          type: boolean
+          default: true
+          x-required-message: SCOS_VALIDATION_003
+        countryId:
+          type: integer
+          format: int64
+          description: País ao qual o feriado fixo pertence
+          x-required-message: SCOS_VALIDATION_003
+    UpdateFixedHolidayRequest:
+      required: [name, description, optional, enabled]
+      type: object
+      properties:
+        name:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        optional:
+          type: boolean
+          default: false
+          x-required-message: SCOS_VALIDATION_003
+        fromTime:
+          type: string
+          format: time
+        enabled:
+          type: boolean
+          default: true
+          x-required-message: SCOS_VALIDATION_003
+    GetFixedHolidayResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/FixedHoliday'
+    GetAllFixedHolidaysResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FixedHoliday'
+        paginatedDTO:
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
+
+    WorkingDay:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        workingDay:
+          type: boolean
+        weekend:
+          type: boolean
+        holiday:
+          type: boolean
+    GetWorkingDayResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/WorkingDay'
+
+security:
+  - BearerAuth: []

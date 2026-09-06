@@ -64,11 +64,10 @@ scos:
     key-prefix: 'api::'
     time-to-live: 12000000
     timeout: 5000ms
-    port: 26379
-    database: 0
-    master: scos_master
+    host: localhost
+    port: 6379
     password: scos#2026
-    sentinels: localhost:26379
+    database: 0
   privacy:
     enabled: true
     strict: false

@@ -232,8 +232,8 @@ Claude Sonnet 5 (claude-sonnet-5), via Claude Code, workflow `bmad-dev-story`.
 - `organization/flow-organization-boot/src/test/resources/postgresql/setsup_database.sql`
 - `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/internal/EmployeeStatusHistory.java`
 - `organization/flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/exception/ExceptionCodeError.java`
-- `organization/flow-organization-shared/src/main/resources/scos_message_organization.properties`
-- `organization/flow-organization-shared/src/main/resources/scos_message_organization_en.properties`
+- `../../organization/flow-organization-shared/src/main/resources/scos_message/scos_message_organization.properties`
+- `../../organization/flow-organization-shared/src/main/resources/scos_message/scos_message_organization_en.properties`
 - `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/specification/EmployeeService.java`
 - `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/service/EmployeeServiceBean.java`
 - `organization/flow-organization-usecase/src/main/java/br/com/sawcunhaos/organization/application/usecase/corporate/employee/InactivateEmployeeUseCaseBean.java`

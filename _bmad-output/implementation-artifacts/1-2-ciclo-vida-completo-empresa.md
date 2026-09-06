@@ -264,8 +264,8 @@ Claude Sonnet 5 (claude-sonnet-5)
 ### File List
 
 - `organization/flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/exception/ExceptionCodeError.java` (modificado — `SCOS_COMPANY_012..017`)
-- `organization/flow-organization-shared/src/main/resources/scos_message_organization.properties` (modificado — 6 mensagens PT novas)
-- `organization/flow-organization-shared/src/main/resources/scos_message_organization_en.properties` (modificado — 6 mensagens EN novas)
+- `../../organization/flow-organization-shared/src/main/resources/scos_message/scos_message_organization.properties` (modificado — 6 mensagens PT novas)
+- `../../organization/flow-organization-shared/src/main/resources/scos_message/scos_message_organization_en.properties` (modificado — 6 mensagens EN novas)
 - `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/specification/CompanyService.java` (modificado — `activate`/`inactivate`/`disable`/`enable`)
 - `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/service/CompanyServiceBean.java` (modificado — implementação + 3 helpers de validação de motivo)
 - `organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/corporate/company/service/CompanyServiceBeanTest.java` (modificado — 16 testes novos das 4 transições)

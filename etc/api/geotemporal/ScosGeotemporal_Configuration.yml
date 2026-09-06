@@ -1,0 +1,200 @@
+openapi: 3.0.3
+info:
+  title: SawCunhaOS Geotemporal - Configuration
+  description: APIs para gestão das configurações do módulo Geotemporal do sistema SCOS.
+  termsOfService: https://www.apache.org/licenses/LICENSE-2.0
+  contact:
+    name: Samuel Cunha
+    url: https://github.com/SawCunhaOS
+    email: samukasaww@live.com
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: '1.0'
+servers:
+  - url: /geotemporal/api
+tags:
+  - name: Configuration
+    description: APIs para gestão das configurações do módulo Geotemporal
+
+paths:
+  /v1/configurations:
+    get:
+      tags: [Configuration]
+      summary: Get all configurations
+      description: UC-072 - Lista todas as configurações do módulo Geotemporal
+      operationId: getAllConfigurations
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllConfigurationsResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_CONFIGURATION]
+      x-cache: [SCOS_GEOTEMPORAL_CONFIGURATION]
+
+  /v1/configurations/keys:
+    get:
+      tags: [Configuration]
+      summary: Get all keys configurations
+      description: UC-073 - Lista todas as chaves de configuração disponíveis no módulo
+      operationId: getAllKeysConfigurations
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllKeysConfigurationsResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_CONFIGURATION]
+      x-cache: [SCOS_GEOTEMPORAL_CONFIGURATION]
+
+  /v1/configurations/{id}:
+    get:
+      tags: [Configuration]
+      summary: Get configuration by id
+      description: UC-074 - Retorna uma configuração pela chave identificadora
+      operationId: getConfigurationById
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idConfiguration'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetConfigurationResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_CONFIGURATION]
+      x-cache: [SCOS_GEOTEMPORAL_CONFIGURATION]
+    put:
+      tags: [Configuration]
+      summary: Update configuration
+      description: UC-075 - Atualiza o valor de uma configuração existente em tempo real. O valor deve ser compatível com o tipo declarado
+      operationId: updateConfiguration
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/idConfiguration'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateConfigurationRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_CONFIGURATION]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_UPDATE_CONFIGURATION
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_CONFIGURATION, SCOS_GEOTEMPORAL_DAY, SCOS_GEOTEMPORAL_WORKING]
+
+components:
+  securitySchemes:
+    BearerAuth:
+      $ref: '../ScosComponents.yml#/components/securitySchemes/BearerAuth'
+  parameters:
+    idConfiguration:
+      name: id
+      in: path
+      required: true
+      description: Chave identificadora da configuração - ex. LIMIT_FORWARD_DAYS_YEARS
+      schema:
+        $ref: '#/components/schemas/ConfigurationKey'
+      x-jdempotentrequestpayload: true
+  schemas:
+    ConfigurationKey:
+      type: string
+      enum:
+        - COUNTRY_DEFAULT
+        - STREET_TYPE_DEFAULT
+        - LIMIT_FORWARD_DAYS_YEARS
+        - LIMIT_BACK_DAYS_YEARS
+    ConfigurationType:
+      type: string
+      enum:
+        - STRING
+        - INTEGER
+        - NUMBER
+        - BOOLEAN
+        - JSON
+    Configuration:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ConfigurationKey'
+        description:
+          type: string
+        value:
+          type: string
+        defaultValue:
+          type: string
+        type:
+          $ref: '#/components/schemas/ConfigurationType'
+    KeyConfiguration:
+      type: object
+      properties:
+        id:
+          $ref: '#/components/schemas/ConfigurationKey'
+        description:
+          type: string
+        type:
+          $ref: '#/components/schemas/ConfigurationType'
+    UpdateConfigurationRequest:
+      required: [value]
+      type: object
+      properties:
+        value:
+          type: string
+          description: Novo valor. Deve ser compatível com o tipo declarado da configuração
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+    GetConfigurationResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Configuration'
+    GetAllConfigurationsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Configuration'
+    GetAllKeysConfigurationsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyConfiguration'
+
+security:
+  - BearerAuth: []

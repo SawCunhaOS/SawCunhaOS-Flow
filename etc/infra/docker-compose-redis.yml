@@ -5,13 +5,14 @@ networks:
 
 services:
   redis:
-    image: redis:8.8-alpine
+    image: redis:8.10.1-alpine
     hostname: redis
+    container_name: redis-standalone
     deploy:
       resources:
         limits:
           cpus: '1'
-          memory: 512MB
+          memory: 512M
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
     command: >
@@ -21,8 +22,10 @@ services:
       --maxmemory-policy allkeys-lru
       --io-threads 4
       --io-threads-do-reads yes
+      --appendonly yes
     healthcheck:
-      test: ["CMD-SHELL", "redis-cli -a $$REDIS_PASSWORD ping | grep -c PONG"]
+      # Usando a flag nativa do redis-cli para autenticação e checagem simples
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -31,34 +34,3 @@ services:
       - scos_network
     ports:
       - '6379:6379'
-
-  redis-sentinel:
-    image: redis:8.8-alpine
-    deploy:
-      resources:
-        limits:
-          cpus: '0.5'
-          memory: 256MB
-    environment:
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - REDIS_MASTER_HOST=redis
-      - REDIS_MASTER_PORT=6379
-      - REDIS_MASTER_SET=scos_master
-      - REDIS_DOWN_AFTER_MS=5000
-      - REDIS_FAILOVER_TIMEOUT=30000
-    entrypoint: /sentinel-entrypoint.sh
-    volumes:
-      - ./redis/sentinel-entrypoint.sh:/sentinel-entrypoint.sh:ro
-    depends_on:
-      redis:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "redis-cli -p 26379 ping | grep -c PONG"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
-    ports:
-      - '26379:26379'
-    networks:
-      - scos_network

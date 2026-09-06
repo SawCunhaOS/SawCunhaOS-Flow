@@ -1,0 +1,246 @@
+@startuml
+skinparam backgroundcolor #666
+
+entity ifa_country {
+    * country_id : serial [PK]
+    --
+    name : varchar(255) [NOT NULL UNIQUE]
+    acronym : varchar(15) [NOT NULL UNIQUE]
+    code : int4 [NOT NULL UNIQUE]
+    description : varchar(255)
+    migration_id : varchar(255)
+}
+
+entity ifa_state {
+    * state_id : serial [PK]
+    --
+    name : varchar(255) [NOT NULL UNIQUE]
+    acronym : varchar(15) [NOT NULL UNIQUE]
+    code : int4 [NOT NULL UNIQUE]
+    country_id : int8 [FK]
+    description : varchar(255)
+    migration_id : varchar(255)
+}
+
+entity ifa_city {
+    * city_id : serial [PK]
+    --
+    name : varchar(255) [NOT NULL UNIQUE]
+    acronym : varchar(100) [NOT NULL]
+    code : int4 [NOT NULL UNIQUE]
+    state_id : int8 [FK]
+    description : varchar(255)
+    migration_id : varchar(255)
+}
+
+entity ifa_district {
+    * district_id : serial [PK]
+    --
+    name : varchar(255) [NOT NULL]
+    acronym : varchar(100) [NOT NULL]
+    code : int4 [UNIQUE]
+    city_id : int8 [FK]
+    description : varchar(255)
+    migration_id : varchar(255)
+}
+
+entity ifa_street_type {
+    street_type_id : int8 [PK]
+    street_type: varchar(255) [NOT NULL UNIQUE]
+    acronym: varchar(15)
+}
+
+entity ifa_address {
+    * address_id : serial [PK]
+    --
+    zip_code : varchar(15) [NOT NULL]
+    unique_zip_code : bool [DEFAULT False]
+    street_type_id : int8 [FK]
+    street : varchar [NOT NULL]
+    complement : varchar(255)
+    geolocation : geometry
+    user_editing : varchar(255) [NOT NULL]
+    date_editing : timestamp [NOT NULL]
+    district_id : int8 [FK]
+    migration_id : varchar(255)
+}
+
+entity ifa_fixed_holiday {
+    * fixed_holiday_id : serial [PK]
+    --
+    name : varchar(255)
+    description : varchar(255)
+    day_holiday : int4
+    month_holiday : int4
+    optional : bool
+    from_time : time
+    enable : bool
+}
+
+entity ifa_holiday {
+    * holiday_id : serial [PK]
+    --
+    name : varchar(255)
+    description : varchar(255)
+    type : varchar(255)
+    from_time : time
+    optional : bool
+    automatic_update : bool
+    day_id : int8 [FK]
+    fixed_holiday_id : int8 [FK]
+    national_holiday : bool
+}
+
+entity ifa_day {
+    * day_id : serial [PK]
+    --
+    date : date
+    weekend : bool
+    holiday : bool
+    day_of_week : varchar(50)
+    day_of_year : int8
+}
+
+entity ifa_tag {
+    * tag_id : serial [PK]
+    --
+    description : varchar(255)
+    code : varchar(30)
+}
+
+entity ifa_day_tag {
+    * day_id : int8 [FK]
+    * tag_id : int8 [FK]
+}
+
+entity ifa_state_holiday {
+    * state_id : int8 [FK]
+    * holiday_id : int8 [FK]
+    holiday : bool
+}
+
+entity ifa_city_holiday {
+    * city_id : int8 [FK]
+    * holiday_id : int8 [FK]
+    holiday : bool
+}
+
+entity ifa_configuration {
+    * configuration_id : serial [PK]
+    --
+    configuration_key : varchar(255)
+    description : varchar(255)
+    configuration_value : varchar(255)
+    default_value : varchar(255)
+}
+
+entity ifa_request {
+    * request_id : serial [PK]
+    --
+    requesting : varchar(255)
+    type_request : varchar(255)
+    status_request : varchar(255)
+    create_date : timestamp
+    start_date : timestamp
+    end_date : timestamp
+}
+
+entity ifa_request_parameter {
+    * request_parameter_id : serial [PK]
+    --
+    type_parameter : varchar(255)
+    value_parameter : varchar(255)
+    type_value : varchar(255)
+    request_id : int8 [FK]
+}
+
+entity ifa_batch_job_instance {
+    * job_instance_id : int8 [PK]
+    --
+    version : int4
+    job_name : varchar(100)
+    job_key : varchar(32)
+}
+
+entity ifa_batch_job_execution {
+    * job_execution_id : int8 [PK]
+    --
+    version : int8
+    job_instance_id : int8 [FK]
+    create_time : timestamp
+    start_time : timestamp
+    end_time : timestamp
+    status : varchar(10)
+    exit_code : varchar(2500)
+    exit_message : varchar(2500)
+    last_updated : timestamp
+}
+
+entity ifa_batch_job_execution_context {
+    * job_execution_id : int8 [PK, FK]
+    --
+    short_context : varchar(250)
+    serialized_context : text
+}
+
+entity ifa_batch_job_execution_params {
+    * job_execution_id : int8 [PK, FK]
+    --
+    parameter_name : varchar(100)
+    parameter_type : varchar(100)
+    parameter_value : varchar(2500)
+    identifying : bpchar(1)
+}
+
+entity ifa_batch_step_execution {
+    * step_execution_id : int8 [PK]
+    --
+    version : int8
+    job_execution_id : int8 [FK]
+    step_name : varchar(1000)
+    create_time : timestamp
+    start_time : timestamp
+    end_time : timestamp
+    status : varchar(100)
+    commit_count : int8
+    read_count : int8
+    filter_count : int8
+    write_count : int8
+    read_skip_count : int8
+    write_skip_count : int8
+    process_skip_count : int8
+    rollback_count : int8
+    exit_code : varchar(2500)
+    exit_message : varchar(2500)
+    last_updated : timestamp
+}
+
+entity ifa_batch_step_execution_context {
+    * step_execution_id : int8 [PK, FK]
+    --
+    short_context : varchar(2500)
+    serialized_context : text
+}
+
+
+ifa_state }--o{ ifa_country
+ifa_city }--o{ ifa_state
+ifa_district }--o{ ifa_city
+ifa_address }--o{ ifa_district
+ifa_address }--o{ ifa_street_type
+ifa_holiday }--o{ ifa_day
+ifa_holiday }--o{ ifa_fixed_holiday
+ifa_city_holiday }--o{ ifa_city
+ifa_city_holiday }--o{ ifa_holiday
+ifa_state_holiday }--o{ ifa_state
+ifa_state_holiday }--o{ ifa_holiday
+ifa_day_tag }--o{ ifa_day
+ifa_day_tag }--o{ ifa_tag
+ifa_request_parameter }--o{ ifa_request
+ifa_batch_job_execution }--o{ ifa_batch_job_instance
+ifa_batch_job_execution_context }--|| ifa_batch_job_execution
+ifa_batch_job_execution_params }--|| ifa_batch_job_execution
+ifa_batch_step_execution }--o{ ifa_batch_job_execution
+ifa_batch_step_execution_context }--|| ifa_batch_step_execution
+
+@enduml

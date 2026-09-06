@@ -1,0 +1,1714 @@
+openapi: 3.0.3
+info:
+  title: SawCunhaOS Geotemporal - Address
+  description: APIs para gestão da hierarquia geográfica e de endereços do sistema SCOS.
+  termsOfService: https://www.apache.org/licenses/LICENSE-2.0
+  contact:
+    name: Samuel Cunha
+    url: https://github.com/SawCunhaOS
+    email: samukasaww@live.com
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: '1.0'
+servers:
+  - url: /geotemporal/api
+tags:
+  - name: Country
+    description: APIs para gestão dos países
+  - name: State
+    description: APIs para gestão dos estados
+  - name: City
+    description: APIs para gestão das cidades
+  - name: District
+    description: APIs para gestão dos bairros
+  - name: Street Type
+    description: APIs para gestão dos tipos de logradouro
+  - name: Address
+    description: APIs para gestão dos endereços
+
+paths:
+  /v1/countries:
+    get:
+      tags: [Country]
+      summary: Get all countries
+      description: UC-001 - Lista todos os países com paginação
+      operationId: getAllCountries
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/activeFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllCountriesResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_COUNTRY]
+      x-cache: [SCOS_GEOTEMPORAL_COUNTRY]
+    post:
+      tags: [Country]
+      summary: Create a country
+      description: UC-002 - Cadastra um novo país
+      operationId: createCountry
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCountryRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_COUNTRY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_CREATE_COUNTRY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_COUNTRY]
+
+  /v1/countries/{id}:
+    get:
+      tags: [Country]
+      summary: Get country by id
+      description: UC-003 - Retorna um país pelo identificador
+      operationId: getCountryById
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCountryResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_COUNTRY]
+      x-cache: [SCOS_GEOTEMPORAL_COUNTRY]
+    put:
+      tags: [Country]
+      summary: Update country
+      description: UC-004 - Atualiza os dados de um país existente
+      operationId: updateCountry
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCountryRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_COUNTRY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_UPDATE_COUNTRY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_COUNTRY, SCOS_GEOTEMPORAL_STATE, SCOS_GEOTEMPORAL_CITY, SCOS_GEOTEMPORAL_DISTRICT, SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/countries/{id}/enable:
+    put:
+      tags: [Country]
+      summary: Activate country
+      description: UC-005 - Reativa country com active=false
+      operationId: activateCountry
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ENABLE_COUNTRY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_ACTIVATE_COUNTRY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_COUNTRY, SCOS_GEOTEMPORAL_STATE, SCOS_GEOTEMPORAL_CITY, SCOS_GEOTEMPORAL_DISTRICT, SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/countries/{id}/disable:
+    put:
+      tags: [Country]
+      summary: Inactivate country
+      description: UC-006 - Inativa country com active=true
+      operationId: inactivateCountry
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DISABLE_COUNTRY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_INACTIVATE_COUNTRY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_COUNTRY, SCOS_GEOTEMPORAL_STATE, SCOS_GEOTEMPORAL_CITY, SCOS_GEOTEMPORAL_DISTRICT, SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/states:
+    get:
+      tags: [State]
+      summary: Get all states
+      description: UC-007 - Lista todos os estados com paginação, opcionalmente filtrados por país
+      operationId: getAllStates
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/country'
+        - $ref: '#/components/parameters/activeFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllStatesResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_STATE]
+      x-cache: [SCOS_GEOTEMPORAL_STATE]
+    post:
+      tags: [State]
+      summary: Create a state
+      description: UC-008 - Cadastra um novo estado vinculado a um país
+      operationId: createState
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStateRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_STATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_CREATE_STATE
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_STATE]
+
+  /v1/states/{id}:
+    get:
+      tags: [State]
+      summary: Get state by id
+      description: UC-009 - Retorna um estado pelo identificador
+      operationId: getStateById
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetStateResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_STATE]
+      x-cache: [SCOS_GEOTEMPORAL_STATE]
+    put:
+      tags: [State]
+      summary: Update state
+      description: UC-010 - Atualiza os dados de um estado existente
+      operationId: updateState
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStateRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_STATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_UPDATE_STATE
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_STATE, SCOS_GEOTEMPORAL_CITY, SCOS_GEOTEMPORAL_DISTRICT, SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/states/{id}/enable:
+    put:
+      tags: [State]
+      summary: Activate state
+      description: UC-011 - Reativa state com active=false
+      operationId: activateState
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ENABLE_STATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_ACTIVATE_STATE
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_STATE, SCOS_GEOTEMPORAL_CITY, SCOS_GEOTEMPORAL_DISTRICT, SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/states/{id}/disable:
+    put:
+      tags: [State]
+      summary: Inactivate state
+      description: UC-012 - Inativa state com active=true
+      operationId: inactivateState
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DISABLE_STATE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_INACTIVATE_STATE
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_STATE, SCOS_GEOTEMPORAL_CITY, SCOS_GEOTEMPORAL_DISTRICT, SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/states/{id}/holidays/link:
+    put:
+      tags: [State]
+      summary: Link holidays to state
+      description: UC-013 - Vincula um lote de feriados ao estado, tornando-os feriados estaduais
+      operationId: linkHolidaysToState
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './ScosGeotemporal_Day.yml#/components/schemas/HolidayLinkRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [LINK_STATE_HOLIDAY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_LINK_STATE_HOLIDAY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_STATE, SCOS_GEOTEMPORAL_HOLIDAY, SCOS_GEOTEMPORAL_DAY, SCOS_GEOTEMPORAL_WORKING]
+
+  /v1/states/{id}/holidays/unlink:
+    put:
+      tags: [State]
+      summary: Unlink holidays from state
+      description: UC-014 - Desvincula um lote de feriados do estado
+      operationId: unlinkHolidaysFromState
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './ScosGeotemporal_Day.yml#/components/schemas/HolidayLinkRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UNLINK_STATE_HOLIDAY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_UNLINK_STATE_HOLIDAY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_STATE, SCOS_GEOTEMPORAL_HOLIDAY, SCOS_GEOTEMPORAL_DAY, SCOS_GEOTEMPORAL_WORKING]
+
+  /v1/cities:
+    get:
+      tags: [City]
+      summary: Get all cities
+      description: UC-015 - Lista todas as cidades com paginação, opcionalmente filtradas por estado
+      operationId: getAllCities
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/state'
+        - $ref: '#/components/parameters/activeFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllCitiesResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_CITY]
+      x-cache: [SCOS_GEOTEMPORAL_CITY]
+    post:
+      tags: [City]
+      summary: Create a city
+      description: UC-016 - Cadastra uma nova cidade vinculada a um estado
+      operationId: createCity
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCityRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_CITY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_CREATE_CITY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_CITY]
+
+  /v1/cities/{id}:
+    get:
+      tags: [City]
+      summary: Get city by id
+      description: UC-017 - Retorna uma cidade pelo identificador
+      operationId: getCityById
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetCityResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_CITY]
+      x-cache: [SCOS_GEOTEMPORAL_CITY]
+    put:
+      tags: [City]
+      summary: Update city
+      description: UC-018 - Atualiza os dados de uma cidade existente
+      operationId: updateCity
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCityRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_CITY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_UPDATE_CITY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_CITY, SCOS_GEOTEMPORAL_DISTRICT, SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/cities/{id}/enable:
+    put:
+      tags: [City]
+      summary: Activate city
+      description: UC-019 - Reativa city com active=false
+      operationId: activateCity
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ENABLE_CITY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_ACTIVATE_CITY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_CITY, SCOS_GEOTEMPORAL_DISTRICT, SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/cities/{id}/disable:
+    put:
+      tags: [City]
+      summary: Inactivate city
+      description: UC-020 - Inativa city com active=true
+      operationId: inactivateCity
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DISABLE_CITY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_INACTIVATE_CITY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_CITY, SCOS_GEOTEMPORAL_DISTRICT, SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/cities/{id}/holidays/link:
+    put:
+      tags: [City]
+      summary: Link holidays to city
+      description: UC-021 - Vincula um lote de feriados à cidade, tornando-os feriados municipais
+      operationId: linkHolidaysToCity
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './ScosGeotemporal_Day.yml#/components/schemas/HolidayLinkRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [LINK_CITY_HOLIDAY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_LINK_CITY_HOLIDAY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_CITY, SCOS_GEOTEMPORAL_HOLIDAY, SCOS_GEOTEMPORAL_DAY, SCOS_GEOTEMPORAL_WORKING]
+
+  /v1/cities/{id}/holidays/unlink:
+    put:
+      tags: [City]
+      summary: Unlink holidays from city
+      description: UC-022 - Desvincula um lote de feriados da cidade
+      operationId: unlinkHolidaysFromCity
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: './ScosGeotemporal_Day.yml#/components/schemas/HolidayLinkRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UNLINK_CITY_HOLIDAY]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_UNLINK_CITY_HOLIDAY
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_CITY, SCOS_GEOTEMPORAL_HOLIDAY, SCOS_GEOTEMPORAL_DAY, SCOS_GEOTEMPORAL_WORKING]
+
+  /v1/districts:
+    get:
+      tags: [District]
+      summary: Get all districts
+      description: UC-023 - Lista todos os bairros com paginação, opcionalmente filtrados por cidade
+      operationId: getAllDistricts
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/city'
+        - $ref: '#/components/parameters/activeFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllDistrictsResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_DISTRICT]
+      x-cache: [SCOS_GEOTEMPORAL_DISTRICT]
+    post:
+      tags: [District]
+      summary: Create a district
+      description: UC-024 - Cadastra um novo bairro vinculado a uma cidade
+      operationId: createDistrict
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDistrictRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_DISTRICT]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_CREATE_DISTRICT
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_DISTRICT]
+
+  /v1/districts/{id}:
+    get:
+      tags: [District]
+      summary: Get district by id
+      description: UC-025 - Retorna um bairro pelo identificador
+      operationId: getDistrictById
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDistrictResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_DISTRICT]
+      x-cache: [SCOS_GEOTEMPORAL_DISTRICT]
+    put:
+      tags: [District]
+      summary: Update district
+      description: UC-026 - Atualiza os dados de um bairro existente
+      operationId: updateDistrict
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDistrictRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_DISTRICT]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_UPDATE_DISTRICT
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_DISTRICT, SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/districts/{id}/enable:
+    put:
+      tags: [District]
+      summary: Activate district
+      description: UC-027 - Reativa district com active=false
+      operationId: activateDistrict
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ENABLE_DISTRICT]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_ACTIVATE_DISTRICT
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_DISTRICT, SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/districts/{id}/disable:
+    put:
+      tags: [District]
+      summary: Inactivate district
+      description: UC-028 - Inativa district com active=true
+      operationId: inactivateDistrict
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DISABLE_DISTRICT]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_INACTIVATE_DISTRICT
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_DISTRICT, SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/street-types:
+    get:
+      tags: [Street Type]
+      summary: Get all street types
+      description: UC-029 - Lista todos os tipos de logradouro com paginação
+      operationId: getAllStreetTypes
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '#/components/parameters/activeFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllStreetTypesResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_STREET_TYPE]
+      x-cache: [SCOS_GEOTEMPORAL_STREET_TYPE]
+    post:
+      tags: [Street Type]
+      summary: Create a street type
+      description: UC-030 - Cadastra um novo tipo de logradouro
+      operationId: createStreetType
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStreetTypeRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_STREET_TYPE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_CREATE_STREET_TYPE
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_STREET_TYPE]
+
+  /v1/street-types/{id}:
+    get:
+      tags: [Street Type]
+      summary: Get street type by id
+      description: UC-031 - Retorna um tipo de logradouro pelo identificador
+      operationId: getStreetTypeById
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetStreetTypeResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_STREET_TYPE]
+      x-cache: [SCOS_GEOTEMPORAL_STREET_TYPE]
+    put:
+      tags: [Street Type]
+      summary: Update street type
+      description: UC-032 - Atualiza os dados de um tipo de logradouro existente
+      operationId: updateStreetType
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStreetTypeRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_STREET_TYPE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_UPDATE_STREET_TYPE
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_STREET_TYPE, SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/street-types/{id}/enable:
+    put:
+      tags: [Street Type]
+      summary: Activate street type
+      description: UC-033 - Reativa street type com active=false
+      operationId: activateStreetType
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [ENABLE_STREET_TYPE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_ACTIVATE_STREET_TYPE
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_STREET_TYPE, SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/street-types/{id}/disable:
+    put:
+      tags: [Street Type]
+      summary: Inactivate street type
+      description: UC-034 - Inativa street type com active=true
+      operationId: inactivateStreetType
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DISABLE_STREET_TYPE]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_INACTIVATE_STREET_TYPE
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_STREET_TYPE, SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/addresses:
+    get:
+      tags: [Address]
+      summary: Get all addresses
+      description: UC-035 - Lista todos os endereços com paginação, opcionalmente filtrados por cidade e bairro
+      operationId: getAllAddresses
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/paginationFilter'
+        - $ref: '../ScosComponents.yml#/components/parameters/city'
+        - $ref: '../ScosComponents.yml#/components/parameters/district'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllAddressesResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_ADDRESS]
+      x-cache: [SCOS_GEOTEMPORAL_ADDRESS]
+    post:
+      tags: [Address]
+      summary: Create an address
+      description: UC-036 - Cadastra um novo endereço vinculado a um bairro e a um tipo de logradouro
+      operationId: createAddress
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAddressRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '201':
+          $ref: '../ScosComponents.yml#/components/responses/201_CREATED'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [CREATE_ADDRESS]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_CREATE_ADDRESS
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/addresses/autocomplete:
+    get:
+      tags: [Address]
+      summary: Autocomplete address by full street
+      description: UC-037 - Busca incremental de endereços pelo logradouro completo, para uso em campos de digitação
+      operationId: autocompleteAddress
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/address'
+        - $ref: '#/components/parameters/limitFilter'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllAddressesFullResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_ADDRESS]
+      x-cache: [SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/addresses/zip-code/{zipCode}:
+    get:
+      tags: [Address]
+      summary: Get addresses by zip code
+      description: UC-038 - Retorna os endereços completos de um CEP, incluindo bairro, cidade, estado e país
+      operationId: getAddressesByZipCode
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/zipCode'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAllAddressesFullResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_ADDRESS]
+      x-cache: [SCOS_GEOTEMPORAL_ADDRESS]
+
+  /v1/addresses/{id}:
+    get:
+      tags: [Address]
+      summary: Get address by id
+      description: UC-039 - Retorna um endereço pelo identificador
+      operationId: getAddressById
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetAddressResponse'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [GET_ADDRESS]
+      x-cache: [SCOS_GEOTEMPORAL_ADDRESS]
+    put:
+      tags: [Address]
+      summary: Update address
+      description: UC-040 - Atualiza os dados de um endereço existente
+      operationId: updateAddress
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAddressRequest'
+        x-jdempotentrequestpayload: true
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [UPDATE_ADDRESS]
+      x-jdempotentresource:
+        cachePrefix: SCOS_GEOTEMPORAL_IDP_UPDATE_ADDRESS
+        ttl: 1
+      x-cache: [SCOS_GEOTEMPORAL_ADDRESS]
+    delete:
+      tags: [Address]
+      summary: Delete address
+      description: UC-041 - Remove um endereço
+      operationId: deleteAddress
+      parameters:
+        - $ref: '../ScosComponents.yml#/components/parameters/X-Request-ID'
+        - $ref: '../ScosComponents.yml#/components/parameters/Accept-Language'
+        - $ref: '../ScosComponents.yml#/components/parameters/idRequest'
+      responses:
+        '204':
+          $ref: '../ScosComponents.yml#/components/responses/204_NO_CONTENT'
+        '4XX':
+          $ref: '../ScosComponents.yml#/components/responses/4XX'
+        '5XX':
+          $ref: '../ScosComponents.yml#/components/responses/5XX'
+      x-authorize: [DELETE_ADDRESS]
+      x-cache: [SCOS_GEOTEMPORAL_ADDRESS]
+
+components:
+  securitySchemes:
+    BearerAuth:
+      $ref: '../ScosComponents.yml#/components/securitySchemes/BearerAuth'
+  parameters:
+    activeFilter:
+      name: active
+      in: query
+      required: false
+      schema:
+        type: boolean
+    limitFilter:
+      name: limit
+      in: query
+      required: false
+      description: Número máximo de resultados retornados pela busca incremental
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 50
+        default: 10
+        x-min-message: SCOS_VALIDATION_002
+        x-max-message: SCOS_VALIDATION_004
+  schemas:
+    Country:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        acronym:
+          type: string
+          description: Código ISO 3166-1 alpha-2 ou alpha-3 - ex. BR, BRA
+        code:
+          type: integer
+          format: int32
+          description: Código numérico ISO 3166-1
+        description:
+          type: string
+        timeZone:
+          type: string
+          description: Fuso horário IANA aplicado na resolução da data corrente - ex. America/Sao_Paulo
+        active:
+          type: boolean
+    CreateCountryRequest:
+      required: [name, description, acronym, code]
+      type: object
+      properties:
+        name:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        acronym:
+          maxLength: 10
+          minLength: 2
+          type: string
+          description: Código ISO 3166-1 alpha-2 ou alpha-3 - ex. BR, BRA
+          x-required-message: SCOS_VALIDATION_003
+          x-size-message: SCOS_VALIDATION_008
+          x-empty-message: SCOS_VALIDATION_001
+        code:
+          type: integer
+          format: int32
+          x-required-message: SCOS_VALIDATION_003
+        timeZone:
+          type: string
+          description: Fuso horário IANA - ex. America/Sao_Paulo. Herdado do nível superior quando ausente
+    UpdateCountryRequest:
+      required: [name, description, acronym, code]
+      type: object
+      properties:
+        name:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        acronym:
+          maxLength: 10
+          minLength: 2
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-size-message: SCOS_VALIDATION_008
+          x-empty-message: SCOS_VALIDATION_001
+        code:
+          type: integer
+          format: int32
+          x-required-message: SCOS_VALIDATION_003
+        timeZone:
+          type: string
+          description: Fuso horário IANA - ex. America/Sao_Paulo. Herdado do nível superior quando ausente
+    GetCountryResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Country'
+    GetAllCountriesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Country'
+        paginatedDTO:
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
+
+    State:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        acronym:
+          type: string
+        code:
+          type: integer
+          format: int32
+        description:
+          type: string
+        countryId:
+          type: integer
+          format: int64
+        timeZone:
+          type: string
+          description: Fuso horário IANA aplicado na resolução da data corrente - ex. America/Sao_Paulo
+        active:
+          type: boolean
+    CreateStateRequest:
+      required: [name, description, acronym, code, countryId]
+      type: object
+      properties:
+        name:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        acronym:
+          maxLength: 10
+          minLength: 2
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-size-message: SCOS_VALIDATION_008
+          x-empty-message: SCOS_VALIDATION_001
+        code:
+          type: integer
+          format: int32
+          x-required-message: SCOS_VALIDATION_003
+        countryId:
+          type: integer
+          format: int64
+          x-required-message: SCOS_VALIDATION_003
+        timeZone:
+          type: string
+          description: Fuso horário IANA - ex. America/Sao_Paulo. Herdado do nível superior quando ausente
+    UpdateStateRequest:
+      required: [name, description, acronym, code, countryId]
+      type: object
+      properties:
+        name:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        acronym:
+          maxLength: 10
+          minLength: 2
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-size-message: SCOS_VALIDATION_008
+          x-empty-message: SCOS_VALIDATION_001
+        code:
+          type: integer
+          format: int32
+          x-required-message: SCOS_VALIDATION_003
+        countryId:
+          type: integer
+          format: int64
+          x-required-message: SCOS_VALIDATION_003
+        timeZone:
+          type: string
+          description: Fuso horário IANA - ex. America/Sao_Paulo. Herdado do nível superior quando ausente
+    GetStateResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/State'
+    GetAllStatesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/State'
+        paginatedDTO:
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
+
+    City:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        acronym:
+          type: string
+        code:
+          type: integer
+          format: int32
+          description: Código IBGE do município
+        description:
+          type: string
+        stateId:
+          type: integer
+          format: int64
+        timeZone:
+          type: string
+          description: Fuso horário IANA aplicado na resolução da data corrente - ex. America/Sao_Paulo
+        active:
+          type: boolean
+    CreateCityRequest:
+      required: [name, description, acronym, code, stateId]
+      type: object
+      properties:
+        name:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        acronym:
+          maxLength: 10
+          minLength: 2
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-size-message: SCOS_VALIDATION_008
+          x-empty-message: SCOS_VALIDATION_001
+        code:
+          type: integer
+          format: int32
+          description: Código IBGE do município
+          x-required-message: SCOS_VALIDATION_003
+        stateId:
+          type: integer
+          format: int64
+          x-required-message: SCOS_VALIDATION_003
+        timeZone:
+          type: string
+          description: Fuso horário IANA - ex. America/Sao_Paulo. Herdado do nível superior quando ausente
+    UpdateCityRequest:
+      required: [name, description, acronym, code, stateId]
+      type: object
+      properties:
+        name:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        acronym:
+          maxLength: 10
+          minLength: 2
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-size-message: SCOS_VALIDATION_008
+          x-empty-message: SCOS_VALIDATION_001
+        code:
+          type: integer
+          format: int32
+          x-required-message: SCOS_VALIDATION_003
+        stateId:
+          type: integer
+          format: int64
+          x-required-message: SCOS_VALIDATION_003
+        timeZone:
+          type: string
+          description: Fuso horário IANA - ex. America/Sao_Paulo. Herdado do nível superior quando ausente
+    GetCityResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/City'
+    GetAllCitiesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/City'
+        paginatedDTO:
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
+
+    District:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        acronym:
+          type: string
+        code:
+          type: integer
+          format: int32
+        description:
+          type: string
+        cityId:
+          type: integer
+          format: int64
+        active:
+          type: boolean
+    CreateDistrictRequest:
+      required: [name, description, acronym, code, cityId]
+      type: object
+      properties:
+        name:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        acronym:
+          maxLength: 10
+          minLength: 2
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-size-message: SCOS_VALIDATION_008
+          x-empty-message: SCOS_VALIDATION_001
+        code:
+          type: integer
+          format: int32
+          x-required-message: SCOS_VALIDATION_003
+        cityId:
+          type: integer
+          format: int64
+          x-required-message: SCOS_VALIDATION_003
+    UpdateDistrictRequest:
+      required: [name, description, acronym, code, cityId]
+      type: object
+      properties:
+        name:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        description:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        acronym:
+          maxLength: 10
+          minLength: 2
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-size-message: SCOS_VALIDATION_008
+          x-empty-message: SCOS_VALIDATION_001
+        code:
+          type: integer
+          format: int32
+          x-required-message: SCOS_VALIDATION_003
+        cityId:
+          type: integer
+          format: int64
+          x-required-message: SCOS_VALIDATION_003
+    GetDistrictResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/District'
+    GetAllDistrictsResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/District'
+        paginatedDTO:
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
+
+    StreetType:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        streetType:
+          type: string
+        acronym:
+          type: string
+        active:
+          type: boolean
+    CreateStreetTypeRequest:
+      required: [streetType, acronym]
+      type: object
+      properties:
+        streetType:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        acronym:
+          maxLength: 10
+          minLength: 1
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-size-message: SCOS_VALIDATION_008
+          x-empty-message: SCOS_VALIDATION_001
+    UpdateStreetTypeRequest:
+      required: [streetType, acronym]
+      type: object
+      properties:
+        streetType:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        acronym:
+          maxLength: 10
+          minLength: 1
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-size-message: SCOS_VALIDATION_008
+          x-empty-message: SCOS_VALIDATION_001
+    GetStreetTypeResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/StreetType'
+    GetAllStreetTypesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreetType'
+        paginatedDTO:
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
+
+    Address:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        zipCode:
+          type: string
+        uniqueZipCode:
+          type: boolean
+        streetType:
+          type: string
+        street:
+          type: string
+        complement:
+          type: string
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+    AddressFull:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        zipCode:
+          type: string
+        uniqueZipCode:
+          type: boolean
+        streetType:
+          type: string
+        street:
+          type: string
+        streetFull:
+          type: string
+        complement:
+          type: string
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        districtName:
+          type: string
+        districtAcronym:
+          type: string
+        districtCode:
+          type: integer
+          format: int32
+        cityName:
+          type: string
+        cityAcronym:
+          type: string
+        cityCode:
+          type: integer
+          format: int32
+        stateName:
+          type: string
+        stateAcronym:
+          type: string
+        stateCode:
+          type: integer
+          format: int32
+        countryName:
+          type: string
+        countryAcronym:
+          type: string
+        countryCode:
+          type: integer
+          format: int32
+    CreateAddressRequest:
+      required: [zipCode, uniqueZipCode, street, streetTypeId, districtId]
+      type: object
+      properties:
+        zipCode:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          x-is-zip-code: true
+        uniqueZipCode:
+          type: boolean
+          default: false
+          x-required-message: SCOS_VALIDATION_003
+        street:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        streetTypeId:
+          type: integer
+          format: int64
+          x-required-message: SCOS_VALIDATION_003
+        districtId:
+          type: integer
+          format: int64
+          x-required-message: SCOS_VALIDATION_003
+        complement:
+          type: string
+        latitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+          x-min-message: SCOS_VALIDATION_002
+          x-max-message: SCOS_VALIDATION_004
+        longitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+          x-min-message: SCOS_VALIDATION_002
+          x-max-message: SCOS_VALIDATION_004
+    UpdateAddressRequest:
+      required: [zipCode, uniqueZipCode, street, streetTypeId, districtId]
+      type: object
+      properties:
+        zipCode:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+          x-is-zip-code: true
+        uniqueZipCode:
+          type: boolean
+          default: false
+          x-required-message: SCOS_VALIDATION_003
+        street:
+          type: string
+          x-required-message: SCOS_VALIDATION_003
+          x-empty-message: SCOS_VALIDATION_001
+        streetTypeId:
+          type: integer
+          format: int64
+          x-required-message: SCOS_VALIDATION_003
+        districtId:
+          type: integer
+          format: int64
+          x-required-message: SCOS_VALIDATION_003
+        complement:
+          type: string
+        latitude:
+          type: number
+          format: double
+          minimum: -90
+          maximum: 90
+          x-min-message: SCOS_VALIDATION_002
+          x-max-message: SCOS_VALIDATION_004
+        longitude:
+          type: number
+          format: double
+          minimum: -180
+          maximum: 180
+          x-min-message: SCOS_VALIDATION_002
+          x-max-message: SCOS_VALIDATION_004
+    GetAddressResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/Address'
+    GetAllAddressesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+        paginatedDTO:
+          $ref: '../ScosComponents.yml#/components/schemas/ScosPaginated'
+    GetAllAddressesFullResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressFull'
+
+security:
+  - BearerAuth: []

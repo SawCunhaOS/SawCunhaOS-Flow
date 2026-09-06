@@ -61,9 +61,7 @@ spring:
       port: ${scos.cache.port}
       password: ${scos.cache.password}
       timeout: ${scos.cache.timeout}
-      sentinel:
-        master: ${scos.cache.master}
-        nodes: ${scos.cache.sentinels}
+      host: ${scos.cache.host}
         
   datasource:
     url: ${scos.datasource.url}

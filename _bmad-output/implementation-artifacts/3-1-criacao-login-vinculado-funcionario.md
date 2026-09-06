@@ -165,7 +165,7 @@ Claude Sonnet 5 (bmad-dev-story), com aplicação da skill `ponytail` (full) dur
 - 2 gaps de infraestrutura pré-existentes (não desta story) achados e corrigidos porque bloqueavam a Task 1: (a) nenhum pom (`usecase`/`api`) tinha `<execution>` do openapi-generator pra `ScosOrganization_Login.yml` — nunca tinha sido gerado; (b) `CreateLoginRequest.type` (enum inline numa propriedade, não schema nomeado) não compilava com os templates mustache do projeto — corrigido com `$ref` pro schema `LoginType` já existente.
 - 1 correção de entendimento equivocado do próprio texto da story: `createEmployeeLogin` usa `data:` (schema `CreateResponse`), não é `204_NO_CONTENT` sem wrapper como a nota original da Task 6 dizia — corrigido lendo `ScosComponents.yml` antes de escrever o Delegate.
 - 5 códigos de erro novos: `SCOS_LOGIN_014` (pendente de aprovação), `SCOS_LOGIN_015` (login duplicado, 409 — não reaproveitou `SCOS_LOGIN_001` porque esse é um placeholder travado por teste), `SCOS_LOGIN_016` (não encontrado, 404), `SCOS_PROFILE_001` (não encontrado, 404 — primeiro código desse módulo), `SCOS_EMPLOYEE_025` (não ativo, 422).
-- **Achado de ambiente, não desta story:** durante a implementação, foi detectada modificação concorrente no mesmo working tree (um novo módulo `geotemporal/` sendo adicionado, com renomeação de `organization/flow-organization-infrastructure/.../messages_permission.properties` → `messages_organization_permission.properties`, e ajuste do `MessageConfiguration` compartilhado). Confirmado que o conteúdo desta story (`BLOCK_LOGIN`/`UNBLOCK_LOGIN`) sobreviveu à renomeação e a suíte de regressão passou 100% — nada foi corrigido ou revertido, é trabalho de outra sessão/pessoa, fora do escopo desta story. Reportado ao usuário no resumo final.
+- **Achado de ambiente, não desta story:** durante a implementação, foi detectada modificação concorrente no mesmo working tree (um novo módulo `geotemporal/` sendo adicionado, com renomeação de `organization/flow-organization-infrastructure/.../messages_permission.properties` → `messages_organization_permission.properties`, e ajuste do `OrganizationMessageConfiguration` compartilhado). Confirmado que o conteúdo desta story (`BLOCK_LOGIN`/`UNBLOCK_LOGIN`) sobreviveu à renomeação e a suíte de regressão passou 100% — nada foi corrigido ou revertido, é trabalho de outra sessão/pessoa, fora do escopo desta story. Reportado ao usuário no resumo final.
 
 ### File List
 
@@ -203,11 +203,11 @@ Claude Sonnet 5 (bmad-dev-story), com aplicação da skill `ponytail` (full) dur
 - `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/internal/LoginStatus.java` — `+PENDING_APPROVAL, +REJECTED`.
 - `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/internal/LoginRepository.java` — `+existsByLogin`, `+findAllFiltered`.
 - `organization/flow-organization-infrastructure/src/main/java/br/com/sawcunhaos/organization/infrastructure/enumaration/ScosOrganizationPermission.java` — `-UPDATE_LOGIN_STATUS`, `+BLOCK_LOGIN`, `+UNBLOCK_LOGIN`.
-- `organization/flow-organization-infrastructure/src/main/resources/messages_organization_permission.properties` *(nome atual — renomeado de `messages_permission.properties` por trabalho concorrente de outra sessão, ver Completion Notes)* — `-UPDATE_LOGIN_STATUS`, `+BLOCK_LOGIN`, `+UNBLOCK_LOGIN`.
-- `organization/flow-organization-infrastructure/src/main/resources/messages_organization_permission_en.properties` *(idem)* — mesma mudança, EN.
+- `../../organization/flow-organization-infrastructure/src/main/resources/scos_message/messages_organization_permission.properties` *(nome atual — renomeado de `messages_permission.properties` por trabalho concorrente de outra sessão, ver Completion Notes)* — `-UPDATE_LOGIN_STATUS`, `+BLOCK_LOGIN`, `+UNBLOCK_LOGIN`.
+- `../../organization/flow-organization-infrastructure/src/main/resources/scos_message/messages_organization_permission_en.properties` *(idem)* — mesma mudança, EN.
 - `organization/flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/exception/ExceptionCodeError.java` — `+SCOS_LOGIN_014/015/016`, `+SCOS_PROFILE_001`, `+SCOS_EMPLOYEE_025`.
-- `organization/flow-organization-shared/src/main/resources/scos_message_organization.properties` — mensagens PT dos 5 códigos acima.
-- `organization/flow-organization-shared/src/main/resources/scos_message_organization_en.properties` — mensagens EN dos 5 códigos acima.
+- `../../organization/flow-organization-shared/src/main/resources/scos_message/scos_message_organization.properties` — mensagens PT dos 5 códigos acima.
+- `../../organization/flow-organization-shared/src/main/resources/scos_message/scos_message_organization_en.properties` — mensagens EN dos 5 códigos acima.
 
 ## Change Log
 

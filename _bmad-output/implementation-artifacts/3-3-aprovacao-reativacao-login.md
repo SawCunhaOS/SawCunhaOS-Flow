@@ -97,7 +97,7 @@ Claude Sonnet 5 (claude-sonnet-5)
 Durante a validação, a suíte de integração (`LoginControllerTest`/`LoginApprovalRequestControllerTest`) esteve bloqueada por 4 causas raiz **pré-existentes no ambiente local, não introduzidas por esta story**, todas diagnosticadas e corrigidas:
 
 1. **JAR obsoleto de `flow-organization-infrastructure` em `~/.m2`** — instalado antes da Story 3.2 finalizar as mensagens de permissão; faltava `GET_LOGIN_APPROVAL_REQUEST` no bundle `messages_organization_permission.properties`, causando `NoSuchMessageException` no startup (`ScosSystemRegistrationService`). Corrigido reinstalando o módulo.
-2. **JAR obsoleto do módulo raiz `infrastructure`** (`br.com.sawcunhaos.flow:infrastructure`, declarado só no `pom.xml` da raiz do monorepo, fora do reactor `organization/`) — o `MessageConfiguration` instalado ainda usava o basename antigo `classpath:messages_permission` em vez do atual `classpath:messages_organization_permission`. Corrigido reinstalando o módulo.
+2. **JAR obsoleto do módulo raiz `infrastructure`** (`br.com.sawcunhaos.flow:infrastructure`, declarado só no `pom.xml` da raiz do monorepo, fora do reactor `organization/`) — o `OrganizationMessageConfiguration` instalado ainda usava o basename antigo `classpath:messages_permission` em vez do atual `classpath:messages_organization_permission`. Corrigido reinstalando o módulo.
 3. **Volume Docker Postgres de teste desatualizado** (container `infra-postgresql-1`, criado ~34h antes, schema sem a coluna `REQUEST_TYPE` da Story 3.2) — Liquibase só roda na 1ª subida do container (singleton estático). Corrigido removendo container+volume (autorizado pelo usuário) para recriação limpa.
 4. **JAR obsoleto de `flow-organization-resources`** (também module do `pom.xml` raiz, fora do reactor `organization/`) — changelog Liquibase empacotado sem o changeset que adiciona `REQUEST_TYPE`. Corrigido reinstalando o módulo.
 
@@ -117,8 +117,8 @@ Um 5º problema, este sim de código (contrato OpenAPI desta story): o corpo `Lo
 
 - `etc/api/organization/ScosOrganization_Login.yml`
 - `organization/flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/exception/ExceptionCodeError.java`
-- `organization/flow-organization-shared/src/main/resources/scos_message_organization.properties`
-- `organization/flow-organization-shared/src/main/resources/scos_message_organization_en.properties`
+- `../../organization/flow-organization-shared/src/main/resources/scos_message/scos_message_organization.properties`
+- `../../organization/flow-organization-shared/src/main/resources/scos_message/scos_message_organization_en.properties`
 - `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/service/LoginApprovalRequestServiceBean.java`
 - `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/service/LoginServiceBean.java`
 - `organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/specification/LoginService.java`

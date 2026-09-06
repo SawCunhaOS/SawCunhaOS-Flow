@@ -202,8 +202,8 @@ Três causas raiz reais (bugs genuínos introduzidos por esta implementação, n
 
 - `etc/api/organization/ScosOrganization_Login.yml`
 - `organization/flow-organization-shared/src/main/java/br/com/sawcunhaos/organization/shared/exception/ExceptionCodeError.java`
-- `organization/flow-organization-shared/src/main/resources/scos_message_organization.properties`
-- `organization/flow-organization-shared/src/main/resources/scos_message_organization_en.properties`
+- `../../organization/flow-organization-shared/src/main/resources/scos_message/scos_message_organization.properties`
+- `../../organization/flow-organization-shared/src/main/resources/scos_message/scos_message_organization_en.properties`
 - `organization/flow-organization-resources/src/main/resources/db/changelog/organization/view/vw_login_context.sql`
 - `organization/flow-organization-resources/src/main/resources/db/changelog/organization/versions/v1/0/0/tables/scos_login_approval_request.yml`
 - `organization/flow-organization-resources/src/main/resources/db/changelog/organization/checks/checks.yml`
