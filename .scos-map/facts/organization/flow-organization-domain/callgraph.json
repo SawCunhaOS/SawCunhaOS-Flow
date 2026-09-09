@@ -1,0 +1,418 @@
+{
+ "fato": "callgraph",
+ "modulo": "organization/flow-organization-domain",
+ "fonte": "java-callgraph",
+ "confianca": "ausente",
+ "gerado_em": "2026-09-09T22:10:03Z",
+ "derivado_de": {},
+ "estado": "indisponivel",
+ "motivo": "java-callgraph.jar nao encontrado",
+ "comando_sugerido": "baixe o jar e passe --callgraph-jar <caminho> ou coloque em ~/.scos-map/java-callgraph.jar",
+ "lacunas_conhecidas": [
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/internal/LoginApprovalRequestRepository.java",
+   "alvo": "LoginApprovalRequestRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/internal/LoginRepository.java",
+   "alvo": "LoginRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/internal/VwAuthorityResponseRepository.java",
+   "anotacao": "PreAuthorize",
+   "motivo": "@PreAuthorize gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/internal/VwAuthorityResponseRepository.java",
+   "alvo": "VwAuthorityResponseRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/service/AuthorityResponseServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/service/LoginApprovalEscalationJob.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/service/LoginApprovalRequestServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/service/LoginServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/specification/AuthorityResponseService.java",
+   "anotacao": "PreAuthorize",
+   "motivo": "@PreAuthorize gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/specification/LoginApprovalRequestService.java",
+   "anotacao": "PreAuthorize",
+   "motivo": "@PreAuthorize gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/profile/internal/LoginProfileRepository.java",
+   "alvo": "LoginProfileRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/profile/internal/ProfileRepository.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/profile/internal/ProfileRepository.java",
+   "alvo": "ProfileRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/resource/internal/ProfileResourceRepository.java",
+   "alvo": "ProfileResourceRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/resource/internal/ResourceRepository.java",
+   "alvo": "ResourceRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/resource/service/ResourceServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/internal/CompanyStatusHistoryRepository.java",
+   "alvo": "CompanyStatusHistoryRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/internal/EmployeeStatusHistoryRepository.java",
+   "alvo": "EmployeeStatusHistoryRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/internal/LoginStatusHistoryRepository.java",
+   "alvo": "LoginStatusHistoryRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/internal/ReasonActivateRepository.java",
+   "alvo": "ReasonActivateRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/internal/ReasonDisableRepository.java",
+   "alvo": "ReasonDisableRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/internal/ReasonEnableRepository.java",
+   "alvo": "ReasonEnableRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/internal/ReasonInactivateRepository.java",
+   "alvo": "ReasonInactivateRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/service/EmployeeReturnFromLeaveJob.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/service/ReasonActivateServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/service/ReasonDisableServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/service/ReasonEnableServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/service/ReasonInactivateServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/system/internal/ScosSystemRepository.java",
+   "alvo": "ScosSystemRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/system/service/ScosSystemServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/configuration/internal/OrganizationConfigurationRepository.java",
+   "alvo": "OrganizationConfigurationRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/configuration/service/ConfigurationServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/catalog/internal/AddressTypeRepository.java",
+   "alvo": "AddressTypeRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/catalog/internal/ContactTypeRepository.java",
+   "alvo": "ContactTypeRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/catalog/service/AddressTypeServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/catalog/service/ContactTypeServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/internal/CnaeRepository.java",
+   "alvo": "CnaeRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/internal/CompanyAddressRepository.java",
+   "alvo": "CompanyAddressRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/internal/CompanyCnaeSecondaryRepository.java",
+   "alvo": "CompanyCnaeSecondaryRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/internal/CompanyContactRepository.java",
+   "alvo": "CompanyContactRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/internal/CompanyRepository.java",
+   "alvo": "CompanyRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/internal/LegalNatureRepository.java",
+   "alvo": "LegalNatureRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/service/CnaeServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/service/CompanyServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/company/service/LegalNatureServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/department/internal/DepartmentRepository.java",
+   "alvo": "DepartmentRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/department/service/DepartmentServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/internal/EmployeeAddressQueryRepository.java",
+   "alvo": "EmployeeAddressQueryRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/internal/EmployeeContactQueryRepository.java",
+   "alvo": "EmployeeContactQueryRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/internal/EmployeePositionHistoryRepository.java",
+   "alvo": "EmployeePositionHistoryRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/internal/EmployeeQueryRepository.java",
+   "alvo": "EmployeeQueryRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/internal/EmployeeWorkScheduleRepository.java",
+   "alvo": "EmployeeWorkScheduleRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/internal/ReasonPositionChangeRepository.java",
+   "alvo": "ReasonPositionChangeRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/service/EmployeePositionQueryServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/employee/service/EmployeeServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/position/internal/PositionRepository.java",
+   "alvo": "PositionRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/position/internal/PositionWorkScheduleRepository.java",
+   "alvo": "PositionWorkScheduleRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/position/service/PositionServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "proxy_spring",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/corporate/position/service/PositionWorkScheduleServiceBean.java",
+   "anotacao": "Transactional",
+   "motivo": "@Transactional gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/outbox/internal/OutboxEventDeadLetterRepository.java",
+   "alvo": "OutboxEventDeadLetterRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/outbox/internal/OutboxEventLogRepository.java",
+   "alvo": "OutboxEventLogRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/outbox/internal/OutboxEventRepository.java",
+   "alvo": "OutboxEventRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  },
+  {
+   "tipo": "implementacao_em_runtime",
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/outbox/internal/OutboxTopicRepository.java",
+   "alvo": "OutboxTopicRepository",
+   "motivo": "repositorio JpaRepository implementado por Spring Data em runtime"
+  }
+ ],
+ "entrypoints": [
+  {
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/service/LoginApprovalEscalationJob.java",
+   "anotacao": "Scheduled",
+   "nota": "ponto de entrada - ausencia de chamador NAO significa codigo morto"
+  },
+  {
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/service/LoginApprovalEscalationJob.java",
+   "anotacao": "Scheduled",
+   "nota": "ponto de entrada - ausencia de chamador NAO significa codigo morto"
+  },
+  {
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/login/service/LoginApprovalEscalationJob.java",
+   "anotacao": "Scheduled",
+   "nota": "ponto de entrada - ausencia de chamador NAO significa codigo morto"
+  },
+  {
+   "path": "organization/flow-organization-domain/src/main/java/br/com/sawcunhaos/organization/domain/access/status/service/EmployeeReturnFromLeaveJob.java",
+   "anotacao": "Scheduled",
+   "nota": "ponto de entrada - ausencia de chamador NAO significa codigo morto"
+  },
+  {
+   "path": "organization/flow-organization-domain/src/test/java/br/com/sawcunhaos/organization/domain/DomainTestApplication.java",
+   "anotacao": "SpringBootApplication",
+   "nota": "ponto de entrada - ausencia de chamador NAO significa codigo morto"
+  }
+ ]
+}

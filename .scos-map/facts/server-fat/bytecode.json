@@ -1,0 +1,181 @@
+{
+ "fato": "bytecode",
+ "modulo": "server-fat",
+ "fonte": "jdeps -verbose --multi-release 25 com classpath",
+ "confianca": "alta",
+ "gerado_em": "2026-09-09T22:10:03Z",
+ "derivado_de": {
+  "server-fat/pom.xml": "dad7e6d"
+ },
+ "estado": "disponivel",
+ "resolucao": "tipo",
+ "derivado_de_agregado": {
+  "escopo": "fontes .java/.kt (apenas main) do modulo server-fat",
+  "arquivos": 1,
+  "sha": "6a5c35b"
+ },
+ "frescor": {
+  "estado": "fresco",
+  "compilado_em": "2026-09-09T22:09:48Z",
+  "nota": null,
+  "aviso": null
+ },
+ "classes_dir": "server-fat/target/classes",
+ "bytecode_major": 69,
+ "classpath_resolvido": true,
+ "classpath_motivo": null,
+ "jdeps_args": [
+  "-verbose",
+  "--multi-release",
+  "25"
+ ],
+ "jdeps_tentativas": [
+  {
+   "args": [],
+   "rc": 2,
+   "erros": [
+    "logback-core-1.5.38.jar is a multi-release jar file but --multi-release option is not set"
+   ]
+  },
+  {
+   "args": [
+    "--multi-release",
+    "25"
+   ],
+   "rc": 0,
+   "erros": null
+  }
+ ],
+ "arestas_arquivo": "facts/server-fat/bytecode_edges.tsv",
+ "arestas_total": 12,
+ "arestas_internas": 0,
+ "diagnostico": {
+  "linhas_saida": 18,
+  "com_seta": 18,
+  "casaram_regex": 12,
+  "descartadas_origem_externa": 0,
+  "auto_referencia": 0
+ },
+ "aviso_nao_resolvidas": null,
+ "motivo_vazio": null,
+ "amostra_saida": null,
+ "classes_conhecidas": 1,
+ "assinatura_classes": {
+  "classes": 1,
+  "sha": "ff6fcfc"
+ },
+ "pacotes": [
+  "br.com.sawcunhaos.flow.server"
+ ],
+ "pacotes_com_aresta_interna": [],
+ "ciclos": [],
+ "jars_usados": {
+  "slf4j-api-2.0.18.jar": 2,
+  "spring-boot-4.1.1.jar": 2,
+  "spring-context-7.0.9.jar": 2,
+  "jakarta.annotation-api-3.0.0.jar": 1,
+  "spring-boot-autoconfigure-4.1.1.jar": 1
+ },
+ "deps_usadas_via_transitiva": [
+  {
+   "artefato": "slf4j-api",
+   "referencias": 2
+  },
+  {
+   "artefato": "spring-boot",
+   "referencias": 2
+  },
+  {
+   "artefato": "spring-context",
+   "referencias": 2
+  },
+  {
+   "artefato": "jakarta.annotation-api",
+   "referencias": 1
+  },
+  {
+   "artefato": "spring-boot-autoconfigure",
+   "referencias": 1
+  }
+ ],
+ "deps_usadas_ausentes_do_pom": [],
+ "deps_declaradas_sem_uso": [
+  {
+   "artefato": "flow-geotemporal-infrastructure",
+   "scope": "compile",
+   "nota": "modulo interno do reator: em app Spring Boot costuma ser agregado por component scan / autoconfiguracao, sem referencia no bytecode",
+   "provavel_falso_positivo": true
+  },
+  {
+   "artefato": "flow-organization-api",
+   "scope": "compile",
+   "nota": "modulo interno do reator: em app Spring Boot costuma ser agregado por component scan / autoconfiguracao, sem referencia no bytecode",
+   "provavel_falso_positivo": true
+  },
+  {
+   "artefato": "flow-organization-domain",
+   "scope": "compile",
+   "nota": "modulo interno do reator: em app Spring Boot costuma ser agregado por component scan / autoconfiguracao, sem referencia no bytecode",
+   "provavel_falso_positivo": true
+  },
+  {
+   "artefato": "flow-organization-infrastructure",
+   "scope": "compile",
+   "nota": "modulo interno do reator: em app Spring Boot costuma ser agregado por component scan / autoconfiguracao, sem referencia no bytecode",
+   "provavel_falso_positivo": true
+  },
+  {
+   "artefato": "flow-organization-resources",
+   "scope": "compile",
+   "nota": "modulo interno do reator: em app Spring Boot costuma ser agregado por component scan / autoconfiguracao, sem referencia no bytecode",
+   "provavel_falso_positivo": true
+  },
+  {
+   "artefato": "flow-organization-usecase",
+   "scope": "compile",
+   "nota": "modulo interno do reator: em app Spring Boot costuma ser agregado por component scan / autoconfiguracao, sem referencia no bytecode",
+   "provavel_falso_positivo": true
+  },
+  {
+   "artefato": "logstash-logback-encoder",
+   "scope": "compile",
+   "nota": "atua em runtime por configuracao (log, driver, migracao): nao aparece no bytecode",
+   "provavel_falso_positivo": true
+  }
+ ],
+ "deps_ignoradas_na_analise": [
+  {
+   "artefato": "spring-boot-starter",
+   "motivo": "agregador (starter/bom): nao tem classes proprias"
+  },
+  {
+   "artefato": "spring-boot-starter-actuator",
+   "motivo": "agregador (starter/bom): nao tem classes proprias"
+  },
+  {
+   "artefato": "spring-boot-starter-test",
+   "motivo": "scope test"
+  },
+  {
+   "artefato": "spring-boot-starter-webmvc",
+   "motivo": "agregador (starter/bom): nao tem classes proprias"
+  },
+  {
+   "artefato": "spring-cloud-starter-bootstrap",
+   "motivo": "agregador (starter/bom): nao tem classes proprias"
+  },
+  {
+   "artefato": "spring-cloud-starter-config",
+   "motivo": "agregador (starter/bom): nao tem classes proprias"
+  }
+ ],
+ "modulo_de_boot": true,
+ "transitivas_resolvidas": true,
+ "aviso_sem_transitivas": null,
+ "como_ler_deps": {
+  "usadas_via_transitiva": "o codigo usa, o pom nao declara, mas veio resolvida (tipico de starter Spring Boot). Risco: quebra se o intermediario parar de trazer. Ordenado por 'referencias' - quanto maior, mais o codigo depende dela e mais vale declarar explicitamente.",
+  "usadas_ausentes_do_pom": "usada e NEM resolvida - o caso que merece atencao imediata.",
+  "declaradas_sem_uso": "sem referencia no bytecode. Confirme antes de remover: uso por reflexao, SPI ou so em runtime nao aparece aqui.",
+  "ignoradas_na_analise": "fora da comparacao de proposito - veja o motivo de cada uma."
+ }
+}

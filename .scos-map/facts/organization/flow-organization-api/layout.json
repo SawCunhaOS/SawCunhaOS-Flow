@@ -1,0 +1,46 @@
+{
+ "fato": "layout",
+ "modulo": "organization/flow-organization-api",
+ "fonte": "varredura de diretorio + regex de anotacao",
+ "confianca": "alta",
+ "gerado_em": "2026-09-09T22:09:12Z",
+ "derivado_de": {
+  "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/catalog/AddressTypeDelegate.java": "6a103df",
+  "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/catalog/ContactTypeDelegate.java": "8656eaa",
+  "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/company/CnaeDelegate.java": "7a3c321",
+  "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/company/CompanyDelegate.java": "b6dd643",
+  "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/company/LegalNatureDelegate.java": "08a0b89",
+  "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/configuration/ConfigurationDelegate.java": "552b992",
+  "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/department/DepartmentDelegate.java": "517629f",
+  "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/employee/EmployeeDelegate.java": "091616c",
+  "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/login/LoginApprovalRequestDelegate.java": "fe93b54",
+  "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/login/LoginDelegate.java": "77d64ed",
+  "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/position/PositionDelegate.java": "392a745",
+  "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/reason/ReasonActivateDelegate.java": "ca92a85",
+  "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/reason/ReasonDisableDelegate.java": "630aa3d",
+  "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/reason/ReasonEnableDelegate.java": "954af2f",
+  "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/reason/ReasonInactivateDelegate.java": "4a8300a"
+ },
+ "raizes_fonte": [
+  "src/main/java",
+  "src"
+ ],
+ "pacote_base": "br.com.sawcunhaos.organization.api.delegate",
+ "arquivos": 16,
+ "por_extensao": {
+  ".java": 15,
+  ".xml": 1
+ },
+ "por_tipo": {
+  "codigo": 15,
+  "build": 1
+ },
+ "areas": [
+  {
+   "caminho": "organization/flow-organization-api/src/main/java/br/com/sawcunhaos/organization/api/delegate/configuration",
+   "papel": "config",
+   "arquivos": 1
+  }
+ ],
+ "entrypoints": []
+}

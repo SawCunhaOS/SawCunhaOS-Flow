@@ -1,0 +1,11 @@
+{
+ "fato": "bytecode",
+ "modulo": "geotemporal/flow-geotemporal-resources",
+ "fonte": "jdeps",
+ "confianca": "ausente",
+ "gerado_em": "2026-09-09T22:09:53Z",
+ "derivado_de": {},
+ "estado": "ausente",
+ "motivo": "compilou mas nao achou classes",
+ "comando_sugerido": "cd geotemporal/flow-geotemporal-resources && mvn compile"
+}

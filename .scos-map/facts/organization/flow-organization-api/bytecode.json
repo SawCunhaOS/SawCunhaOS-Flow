@@ -1,0 +1,181 @@
+{
+ "fato": "bytecode",
+ "modulo": "organization/flow-organization-api",
+ "fonte": "jdeps -verbose --multi-release 25 com classpath",
+ "confianca": "media",
+ "gerado_em": "2026-09-09T22:09:48Z",
+ "derivado_de": {
+  "organization/flow-organization-api/pom.xml": "d2bd74c"
+ },
+ "estado": "disponivel",
+ "resolucao": "tipo",
+ "derivado_de_agregado": {
+  "escopo": "fontes .java/.kt (apenas main) do modulo organization/flow-organization-api",
+  "arquivos": 15,
+  "sha": "4b0f52d"
+ },
+ "frescor": {
+  "estado": "fresco",
+  "compilado_em": "2026-09-09T22:09:46Z",
+  "nota": null,
+  "aviso": null
+ },
+ "classes_dir": "organization/flow-organization-api/target/classes",
+ "bytecode_major": 69,
+ "classpath_resolvido": true,
+ "classpath_motivo": null,
+ "jdeps_args": [
+  "-verbose",
+  "--multi-release",
+  "25"
+ ],
+ "jdeps_tentativas": [
+  {
+   "args": [],
+   "rc": 2,
+   "erros": [
+    "logback-core-1.5.38.jar is a multi-release jar file but --multi-release option is not set"
+   ]
+  },
+  {
+   "args": [
+    "--multi-release",
+    "25"
+   ],
+   "rc": 0,
+   "erros": null
+  }
+ ],
+ "arestas_arquivo": "facts/organization/flow-organization-api/bytecode_edges.tsv",
+ "arestas_total": 355,
+ "arestas_internas": 0,
+ "diagnostico": {
+  "linhas_saida": 360,
+  "com_seta": 360,
+  "casaram_regex": 355,
+  "descartadas_origem_externa": 0,
+  "auto_referencia": 0,
+  "nao_resolvidas": 120
+ },
+ "aviso_nao_resolvidas": "120 referencia(s) externa(s) ficaram 'not found': o classpath esta incompleto, entao deps_nao_declaradas pode estar furado",
+ "motivo_vazio": null,
+ "amostra_saida": null,
+ "classes_conhecidas": 15,
+ "assinatura_classes": {
+  "classes": 15,
+  "sha": "4b63fc7"
+ },
+ "pacotes": [
+  "br.com.sawcunhaos.organization.api.delegate.catalog",
+  "br.com.sawcunhaos.organization.api.delegate.company",
+  "br.com.sawcunhaos.organization.api.delegate.configuration",
+  "br.com.sawcunhaos.organization.api.delegate.department",
+  "br.com.sawcunhaos.organization.api.delegate.employee",
+  "br.com.sawcunhaos.organization.api.delegate.login",
+  "br.com.sawcunhaos.organization.api.delegate.position",
+  "br.com.sawcunhaos.organization.api.delegate.reason"
+ ],
+ "pacotes_com_aresta_interna": [],
+ "ciclos": [],
+ "jars_usados": {
+  "flow-organization-usecase-1.0.0-SNAPSHOT.jar": 92,
+  "slf4j-api-2.0.18.jar": 15,
+  "spring-context-7.0.9.jar": 15
+ },
+ "deps_usadas_via_transitiva": [
+  {
+   "artefato": "slf4j-api",
+   "referencias": 15
+  },
+  {
+   "artefato": "spring-context",
+   "referencias": 15
+  }
+ ],
+ "deps_usadas_ausentes_do_pom": [],
+ "deps_declaradas_sem_uso": [
+  {
+   "artefato": "scos-foundation-jdempotent-api",
+   "scope": "compile"
+  },
+  {
+   "artefato": "scos-foundation-validation-api",
+   "scope": "compile"
+  },
+  {
+   "artefato": "scos-foundation-web",
+   "scope": "compile"
+  },
+  {
+   "artefato": "spring-boot-data-jpa",
+   "scope": "compile"
+  }
+ ],
+ "deps_ignoradas_na_analise": [
+  {
+   "artefato": "h2",
+   "motivo": "scope test"
+  },
+  {
+   "artefato": "junit-jupiter",
+   "motivo": "scope test"
+  },
+  {
+   "artefato": "junit-platform-launcher",
+   "motivo": "scope test"
+  },
+  {
+   "artefato": "lombok",
+   "motivo": "processador de anotacao: nao aparece no bytecode por design"
+  },
+  {
+   "artefato": "mockito-core",
+   "motivo": "scope test"
+  },
+  {
+   "artefato": "spring-boot-autoconfigure",
+   "motivo": "scope test"
+  },
+  {
+   "artefato": "spring-boot-starter-data-jpa",
+   "motivo": "scope test"
+  },
+  {
+   "artefato": "spring-boot-starter-security",
+   "motivo": "agregador (starter/bom): nao tem classes proprias"
+  },
+  {
+   "artefato": "spring-boot-starter-test",
+   "motivo": "scope test"
+  },
+  {
+   "artefato": "spring-boot-starter-validation",
+   "motivo": "agregador (starter/bom): nao tem classes proprias"
+  },
+  {
+   "artefato": "spring-boot-starter-web",
+   "motivo": "agregador (starter/bom): nao tem classes proprias"
+  },
+  {
+   "artefato": "spring-boot-test",
+   "motivo": "scope test"
+  },
+  {
+   "artefato": "spring-boot-test-autoconfigure",
+   "motivo": "scope test"
+  },
+  {
+   "artefato": "spring-test",
+   "motivo": "scope test"
+  }
+ ],
+ "modulo_de_boot": false,
+ "transitivas_resolvidas": true,
+ "aviso_sem_transitivas": null,
+ "como_ler_deps": {
+  "usadas_via_transitiva": "o codigo usa, o pom nao declara, mas veio resolvida (tipico de starter Spring Boot). Risco: quebra se o intermediario parar de trazer. Ordenado por 'referencias' - quanto maior, mais o codigo depende dela e mais vale declarar explicitamente.",
+  "usadas_ausentes_do_pom": "usada e NEM resolvida - o caso que merece atencao imediata.",
+  "declaradas_sem_uso": "sem referencia no bytecode. Confirme antes de remover: uso por reflexao, SPI ou so em runtime nao aparece aqui.",
+  "ignoradas_na_analise": "fora da comparacao de proposito - veja o motivo de cada uma."
+ }
+}

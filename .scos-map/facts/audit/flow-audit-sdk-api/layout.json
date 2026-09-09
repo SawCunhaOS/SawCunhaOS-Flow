@@ -1,0 +1,34 @@
+{
+ "fato": "layout",
+ "modulo": "audit/flow-audit-sdk-api",
+ "fonte": "varredura de diretorio + regex de anotacao",
+ "confianca": "alta",
+ "gerado_em": "2026-09-09T22:09:25Z",
+ "derivado_de": {
+  "audit/flow-audit-sdk-api/src/main/java/br/com/sawcunhaos/flow/audit/sdk/api/AuditAction.java": "1e760e8",
+  "audit/flow-audit-sdk-api/src/main/java/br/com/sawcunhaos/flow/audit/sdk/api/AuditableAPI.java": "db0f73c",
+  "audit/flow-audit-sdk-api/src/main/java/br/com/sawcunhaos/flow/audit/sdk/api/AuditableEntity.java": "6f9dd89"
+ },
+ "raizes_fonte": [
+  "src/main/java",
+  "src"
+ ],
+ "pacote_base": "br.com.sawcunhaos.flow.audit.sdk.api",
+ "arquivos": 4,
+ "por_extensao": {
+  ".java": 3,
+  ".xml": 1
+ },
+ "por_tipo": {
+  "codigo": 3,
+  "build": 1
+ },
+ "areas": [
+  {
+   "caminho": "audit/flow-audit-sdk-api/src/main/java/br/com/sawcunhaos/flow/audit/sdk/api",
+   "papel": "api",
+   "arquivos": 3
+  }
+ ],
+ "entrypoints": []
+}

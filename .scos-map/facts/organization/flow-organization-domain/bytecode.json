@@ -1,0 +1,11 @@
+{
+ "fato": "bytecode",
+ "modulo": "organization/flow-organization-domain",
+ "fonte": "jdeps",
+ "confianca": "ausente",
+ "gerado_em": "2026-09-09T22:09:44Z",
+ "derivado_de": {},
+ "estado": "ausente",
+ "motivo": "compilacao falhou (rc=1)",
+ "comando_sugerido": "cd organization/flow-organization-domain && mvn compile"
+}

@@ -1,0 +1,32 @@
+{
+ "fato": "layout",
+ "modulo": "geotemporal/flow-geotemporal-infrastructure",
+ "fonte": "varredura de diretorio + regex de anotacao",
+ "confianca": "alta",
+ "gerado_em": "2026-09-09T22:09:22Z",
+ "derivado_de": {
+  "geotemporal/flow-geotemporal-infrastructure/src/main/java/br/com/sawcunhaos/flow/geotemporal/infrastructure/enumaration/ScosGeotemporalPermission.java": "ac4c448",
+  "geotemporal/flow-geotemporal-infrastructure/src/main/java/br/com/sawcunhaos/flow/geotemporal/infrastructure/enumaration/ScosGeotemporalSystem.java": "68f9c2e",
+  "geotemporal/flow-geotemporal-infrastructure/src/main/java/br/com/sawcunhaos/flow/geotemporal/infrastructure/liquibase/ScosFlowGeotemporalLiquibaseConfiguration.java": "5c75c69",
+  "geotemporal/flow-geotemporal-infrastructure/src/main/java/br/com/sawcunhaos/flow/geotemporal/infrastructure/liquibase/ScosFlowGeotemporalLiquibaseProperties.java": "fe25e64"
+ },
+ "raizes_fonte": [
+  "src/main/java",
+  "src/main/resources",
+  "src"
+ ],
+ "pacote_base": "br.com.sawcunhaos.flow.geotemporal.infrastructure",
+ "arquivos": 7,
+ "por_extensao": {
+  ".java": 4,
+  ".properties": 2,
+  ".xml": 1
+ },
+ "por_tipo": {
+  "codigo": 4,
+  "config": 2,
+  "build": 1
+ },
+ "areas": [],
+ "entrypoints": []
+}

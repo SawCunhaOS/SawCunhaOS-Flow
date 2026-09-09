@@ -1,0 +1,356 @@
+de	para	tipo	origem
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	AddressTypeApiDelegate	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	CatalogEntityType	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	CreateAddressTypeRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	CreateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	GetAddressTypeResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	GetAllAddressTypesResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	PaginationFilter	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	UpdateAddressTypeRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.catalog.addresstype.CreateAddressTypeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.catalog.addresstype.DisableAddressTypeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.catalog.addresstype.EnableAddressTypeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.catalog.addresstype.FindAddressTypeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.catalog.addresstype.FindAllAddressTypeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.catalog.addresstype.UpdateAddressTypeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	java.lang.Boolean	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	java.lang.Long	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	java.lang.Object	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	java.lang.Void	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	java.util.Optional	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	java.util.UUID	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.api.delegate.catalog.AddressTypeDelegate	org.springframework.stereotype.Component	externo	spring-context-7.0.9.jar
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	CatalogEntityType	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	ContactTypeApiDelegate	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	CreateContactTypeRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	CreateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	GetAllContactTypesResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	GetContactTypeResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	PaginationFilter	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	UpdateContactTypeRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.catalog.contacttype.CreateContactTypeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.catalog.contacttype.DisableContactTypeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.catalog.contacttype.EnableContactTypeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.catalog.contacttype.FindAllContactTypeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.catalog.contacttype.FindContactTypeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.catalog.contacttype.UpdateContactTypeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	java.lang.Boolean	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	java.lang.Long	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	java.lang.Object	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	java.lang.Void	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	java.util.Optional	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	java.util.UUID	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.api.delegate.catalog.ContactTypeDelegate	org.springframework.stereotype.Component	externo	spring-context-7.0.9.jar
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	CnaeApiDelegate	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	CreateCnaeRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	CreateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	GetAllCnaesResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	GetCnaeResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	PaginationFilter	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	UpdateCnaeRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.fiscal.cnae.CreateCnaeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.fiscal.cnae.DeleteCnaeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.fiscal.cnae.FindAllCnaeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.fiscal.cnae.FindCnaeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.fiscal.cnae.UpdateCnaeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	java.lang.Long	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	java.lang.Object	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	java.lang.Void	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	java.util.Optional	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	java.util.UUID	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.api.delegate.company.CnaeDelegate	org.springframework.stereotype.Component	externo	spring-context-7.0.9.jar
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	CompanyApiDelegate	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	CompanyStatusTransitionRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	CreateCompanyRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	CreateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	GetAllCompaniesResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	GetCompanyResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	PaginationFilter	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	StatusCompany	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	UpdateCompanyRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.ActivateCompanyUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.BlockCompanyUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.CreateCompanyUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.FindAllCompanyUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.FindCompanyUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.InactivateCompanyUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.UnblockCompanyUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.UpdateCompanyUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	java.lang.Long	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	java.lang.Object	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	java.lang.Void	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	java.util.Optional	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	java.util.UUID	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.api.delegate.company.CompanyDelegate	org.springframework.stereotype.Component	externo	spring-context-7.0.9.jar
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	CreateLegalNatureRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	CreateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	GetAllLegalNaturesResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	GetLegalNatureResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	LegalNatureApiDelegate	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	PaginationFilter	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	UpdateLegalNatureRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.fiscal.legalnature.CreateLegalNatureUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.fiscal.legalnature.DeleteLegalNatureUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.fiscal.legalnature.FindAllLegalNatureUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.fiscal.legalnature.FindLegalNatureUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.company.fiscal.legalnature.UpdateLegalNatureUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	java.lang.Long	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	java.lang.Object	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	java.lang.Void	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	java.util.Optional	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	java.util.UUID	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.api.delegate.company.LegalNatureDelegate	org.springframework.stereotype.Component	externo	spring-context-7.0.9.jar
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	ConfigurationApiDelegate	externo	not found
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	GetAllConfigurationsResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	GetAllKeysConfigurationsResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	GetConfigurationResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	UpdateConfigurationRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	br.com.sawcunhaos.organization.application.usecase.configuration.FindAllConfigurationUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	br.com.sawcunhaos.organization.application.usecase.configuration.FindAllKeysConfigurationUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	br.com.sawcunhaos.organization.application.usecase.configuration.FindConfigurationByKeyUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	br.com.sawcunhaos.organization.application.usecase.configuration.UpdateConfigurationUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	java.lang.Object	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	java.lang.Void	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	java.util.Optional	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	java.util.UUID	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.api.delegate.configuration.ConfigurationDelegate	org.springframework.stereotype.Component	externo	spring-context-7.0.9.jar
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	CreateDepartmentRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	CreateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	DepartmentApiDelegate	externo	not found
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	GetAllDepartmentsResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	GetDepartmentResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	PaginationFilter	externo	not found
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	UpdateDepartmentRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.department.CreateDepartmentUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.department.DisableDepartmentUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.department.EnableDepartmentUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.department.FindAllDepartmentUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.department.FindDepartmentUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.department.UpdateDepartmentUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	java.lang.Boolean	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	java.lang.Long	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	java.lang.Object	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	java.lang.Void	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	java.util.Optional	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	java.util.UUID	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.api.delegate.department.DepartmentDelegate	org.springframework.stereotype.Component	externo	spring-context-7.0.9.jar
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	CreateEmployeeRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	CreateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	EmployeeApiDelegate	externo	not found
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	EmployeeStatus	externo	not found
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	EmployeeStatusTransitionRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	GetAllEmployeesResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	GetEmployeeResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	PaginationFilter	externo	not found
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	RehireEmployeeRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.employee.ActivateEmployeeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.employee.BlockEmployeeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.employee.CreateEmployeeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.employee.FindAllEmployeeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.employee.FindEmployeeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.employee.InactivateEmployeeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.employee.RehireEmployeeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.employee.UnblockEmployeeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	java.lang.Long	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	java.lang.Object	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	java.lang.Void	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	java.util.Optional	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	java.util.UUID	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.api.delegate.employee.EmployeeDelegate	org.springframework.stereotype.Component	externo	spring-context-7.0.9.jar
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	ApproveLoginApprovalRequestRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	GetAllLoginApprovalRequestsResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	GetLoginApprovalRequestResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	GetSystemAccessApproversResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	LoginApprovalRequestApiDelegate	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	LoginApprovalRequestStatus	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	PaginationFilter	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	RejectLoginApprovalRequestRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	br.com.sawcunhaos.organization.application.usecase.access.login.DecideLoginApprovalRequestUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	br.com.sawcunhaos.organization.application.usecase.access.login.FindAllLoginApprovalRequestUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	br.com.sawcunhaos.organization.application.usecase.access.login.FindLoginApprovalRequestUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	br.com.sawcunhaos.organization.application.usecase.access.login.FindSystemAccessApproversUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	java.lang.Long	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	java.lang.Object	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	java.lang.Void	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	java.util.Optional	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	java.util.UUID	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.api.delegate.login.LoginApprovalRequestDelegate	org.springframework.stereotype.Component	externo	spring-context-7.0.9.jar
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	CreateEmployeeLoginRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	CreateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	GetAllLoginsResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	GetLoginResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	LoginApiDelegate	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	LoginReactivationRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	LoginStatus	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	LoginType	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	PaginationFilter	externo	not found
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	br.com.sawcunhaos.organization.application.usecase.access.login.CreateEmployeeLoginUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	br.com.sawcunhaos.organization.application.usecase.access.login.FindAllEmployeeLoginUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	br.com.sawcunhaos.organization.application.usecase.access.login.FindAllLoginUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	br.com.sawcunhaos.organization.application.usecase.access.login.FindLoginUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	br.com.sawcunhaos.organization.application.usecase.access.login.RequestLoginProfileChangeUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	br.com.sawcunhaos.organization.application.usecase.access.login.RequestLoginReactivationUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	java.lang.Long	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	java.lang.Object	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	java.lang.Void	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	java.util.Optional	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	java.util.UUID	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.api.delegate.login.LoginDelegate	org.springframework.stereotype.Component	externo	spring-context-7.0.9.jar
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	CreatePositionRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	CreatePositionWorkScheduleRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	CreateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	DayOfWeek	externo	not found
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	GetAllPositionsResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	GetPositionResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	PaginationFilter	externo	not found
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	PositionApiDelegate	externo	not found
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	PositionWorkSchedule	externo	not found
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	UpdatePositionRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	UpdatePositionWorkScheduleRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.position.CreatePositionUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.position.CreatePositionWorkScheduleUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.position.DeletePositionWorkScheduleUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.position.DisablePositionUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.position.EnablePositionUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.position.FindAllPositionUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.position.FindPositionUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.position.GetAllPositionWorkScheduleUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.position.UpdatePositionUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	br.com.sawcunhaos.organization.application.usecase.corporate.position.UpdatePositionWorkScheduleUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	java.lang.Boolean	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	java.lang.Long	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	java.lang.Object	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	java.lang.Void	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	java.util.List	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	java.util.Optional	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	java.util.UUID	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.api.delegate.position.PositionDelegate	org.springframework.stereotype.Component	externo	spring-context-7.0.9.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	CreateReasonActivateRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	CreateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	GetAllReasonActivateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	GetReasonActivateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	PaginationFilter	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	ReasonActivateApiDelegate	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	ReasonEntityType	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	UpdateReasonActivateRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasonactivate.CreateReasonActivateUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasonactivate.DisableReasonActivateUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasonactivate.EnableReasonActivateUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasonactivate.FindAllReasonActivateUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasonactivate.FindReasonActivateUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasonactivate.UpdateReasonActivateUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	java.lang.Boolean	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	java.lang.Long	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	java.lang.Object	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	java.lang.Void	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	java.util.Optional	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	java.util.UUID	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonActivateDelegate	org.springframework.stereotype.Component	externo	spring-context-7.0.9.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	CreateReasonDisableRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	CreateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	GetAllReasonDisableResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	GetReasonDisableResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	PaginationFilter	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	ReasonDisableApiDelegate	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	ReasonEntityType	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	UpdateReasonDisableRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasondisable.CreateReasonDisableUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasondisable.DisableReasonDisableUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasondisable.EnableReasonDisableUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasondisable.FindAllReasonDisableUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasondisable.FindReasonDisableUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasondisable.UpdateReasonDisableUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	java.lang.Boolean	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	java.lang.Long	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	java.lang.Object	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	java.lang.Void	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	java.util.Optional	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	java.util.UUID	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonDisableDelegate	org.springframework.stereotype.Component	externo	spring-context-7.0.9.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	CreateReasonEnableRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	CreateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	GetAllReasonEnableResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	GetReasonEnableResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	PaginationFilter	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	ReasonEnableApiDelegate	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	ReasonEntityType	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	UpdateReasonEnableRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasonenable.CreateReasonEnableUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasonenable.DisableReasonEnableUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasonenable.EnableReasonEnableUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasonenable.FindAllReasonEnableUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasonenable.FindReasonEnableUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasonenable.UpdateReasonEnableUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	java.lang.Boolean	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	java.lang.Long	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	java.lang.Object	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	java.lang.Void	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	java.util.Optional	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	java.util.UUID	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonEnableDelegate	org.springframework.stereotype.Component	externo	spring-context-7.0.9.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	CreateReasonInactivateRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	CreateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	GetAllReasonInactivateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	GetReasonInactivateResponse	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	PaginationFilter	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	ReasonEntityType	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	ReasonInactivateApiDelegate	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	UpdateReasonInactivateRequest	externo	not found
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasoninactivate.CreateReasonInactivateUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasoninactivate.DisableReasonInactivateUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasoninactivate.EnableReasonInactivateUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasoninactivate.FindAllReasonInactivateUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasoninactivate.FindReasonInactivateUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	br.com.sawcunhaos.organization.application.usecase.access.status.reasoninactivate.UpdateReasonInactivateUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	java.lang.Boolean	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	java.lang.Long	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	java.lang.Object	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	java.lang.Void	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	java.util.Optional	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	java.util.UUID	jdk	java.base
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.api.delegate.reason.ReasonInactivateDelegate	org.springframework.stereotype.Component	externo	spring-context-7.0.9.jar

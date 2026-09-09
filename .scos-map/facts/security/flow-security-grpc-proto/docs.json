@@ -1,0 +1,41 @@
+{
+ "fato": "docs",
+ "modulo": "security/flow-security-grpc-proto",
+ "fonte": "cabecalhos markdown / declaracoes proto",
+ "confianca": "alta",
+ "gerado_em": "2026-09-09T22:09:05Z",
+ "derivado_de": {
+  "security/flow-security-grpc-proto/src/main/proto/authority.proto": "b009a6b",
+  "security/flow-security-grpc-proto/src/main/proto/registry.proto": "ffa8407"
+ },
+ "aviso": "indice apenas - abra o arquivo pelo caminho para ler o conteudo",
+ "itens": [
+  {
+   "path": "security/flow-security-grpc-proto/src/main/proto/authority.proto",
+   "bytes": 718,
+   "last_modified": "2026-08-15",
+   "last_commit": "ad37021",
+   "commits_90d": 1,
+   "services": [
+    "ValidateAuthorityService"
+   ],
+   "rpcs": [
+    "validateAuthority"
+   ]
+  },
+  {
+   "path": "security/flow-security-grpc-proto/src/main/proto/registry.proto",
+   "bytes": 938,
+   "last_modified": "2026-08-15",
+   "last_commit": "ad37021",
+   "commits_90d": 1,
+   "services": [
+    "RegistryService"
+   ],
+   "rpcs": [
+    "registrySystem",
+    "registryResources"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,29 @@
+{
+ "fato": "layout",
+ "modulo": "audit/flow-audit-infrastructure",
+ "fonte": "varredura de diretorio + regex de anotacao",
+ "confianca": "alta",
+ "gerado_em": "2026-09-09T22:09:29Z",
+ "derivado_de": {
+  "audit/flow-audit-infrastructure/src/main/java/br/com/sawcunhaos/flow/audit/infrastructure/enumaration/ScosAuditPermission.java": "65d7a52",
+  "audit/flow-audit-infrastructure/src/main/java/br/com/sawcunhaos/flow/audit/infrastructure/enumaration/ScosAuditSystem.java": "3df5a4e",
+  "audit/flow-audit-infrastructure/src/main/java/br/com/sawcunhaos/flow/audit/infrastructure/liquibase/ScosFlowAuditLiquibaseConfiguration.java": "1f8acd0",
+  "audit/flow-audit-infrastructure/src/main/java/br/com/sawcunhaos/flow/audit/infrastructure/liquibase/ScosFlowAuditLiquibaseProperties.java": "74dd9d9"
+ },
+ "raizes_fonte": [
+  "src/main/java",
+  "src"
+ ],
+ "pacote_base": "br.com.sawcunhaos.flow.audit.infrastructure",
+ "arquivos": 5,
+ "por_extensao": {
+  ".java": 4,
+  ".xml": 1
+ },
+ "por_tipo": {
+  "codigo": 4,
+  "build": 1
+ },
+ "areas": [],
+ "entrypoints": []
+}

@@ -1,0 +1,25 @@
+{
+ "fato": "layout",
+ "modulo": "security",
+ "fonte": "varredura de diretorio + regex de anotacao",
+ "confianca": "alta",
+ "gerado_em": "2026-09-09T22:09:03Z",
+ "derivado_de": {},
+ "raizes_fonte": [],
+ "pacote_base": null,
+ "arquivos": 1,
+ "por_extensao": {
+  ".xml": 1
+ },
+ "por_tipo": {
+  "build": 1
+ },
+ "areas": [
+  {
+   "caminho": "security",
+   "papel": "seguranca",
+   "arquivos": 1
+  }
+ ],
+ "entrypoints": []
+}

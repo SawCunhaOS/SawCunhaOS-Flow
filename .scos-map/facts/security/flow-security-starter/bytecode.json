@@ -1,0 +1,11 @@
+{
+ "fato": "bytecode",
+ "modulo": "security/flow-security-starter",
+ "fonte": "jdeps",
+ "confianca": "ausente",
+ "gerado_em": "2026-09-09T22:09:35Z",
+ "derivado_de": {},
+ "estado": "ausente",
+ "motivo": "compilacao falhou (rc=1)",
+ "comando_sugerido": "cd security/flow-security-starter && mvn compile"
+}

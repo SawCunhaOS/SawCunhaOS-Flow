@@ -1,0 +1,845 @@
+{
+ "scos_map_versao": "1.0",
+ "gerado_em": "2026-09-09T22:10:04Z",
+ "raiz": "SawCunhaOS-Flow",
+ "como_usar": [
+  "Este arquivo e o unico que precisa ser lido sempre.",
+  "Escolha os fatos relevantes em modulos[].fatos e abra so aqueles.",
+  "Fato com estado 'obsoleto' foi gerado antes de mudancas nas fontes listadas em 'mudou'; regenere antes de confiar.",
+  "O mapa e um indice: para ler conteudo, abra o arquivo pelo caminho."
+ ],
+ "git": {
+  "disponivel": true,
+  "head": "e56929b",
+  "branch": "develop",
+  "dirty": false,
+  "workspace_multi_repo": false,
+  "repositorios": null,
+  "nota_rename": "historico sem --follow: arquivo renomeado aparece com a data do rename"
+ },
+ "ecossistemas": [
+  "maven"
+ ],
+ "tier_executado": 3,
+ "arquivos": {
+  "total": 949,
+  "por_tipo": {
+   "config": 153,
+   "nao_classificado": 9,
+   "doc": 48,
+   "build": 24,
+   "codigo": 713,
+   "contrato": 2
+  },
+  "tsv": "files.tsv"
+ },
+ "modulos": {
+  "_raiz": {
+   "path": "",
+   "tipo": "pom",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos:flow",
+   "arquivos": 82,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/_raiz/layout.json"
+    },
+    "config": {
+     "estado": "fresco",
+     "arquivo": "facts/_raiz/config.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/_raiz/deps.json"
+    },
+    "docs": {
+     "estado": "fresco",
+     "arquivo": "facts/_raiz/docs.json"
+    },
+    "bytecode": {
+     "estado": "nao_aplicavel",
+     "motivo": "modulo agregador (packaging=pom) nao tem codigo",
+     "arquivo": "facts/_raiz/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/_raiz/callgraph.json"
+    }
+   }
+  },
+  "security": {
+   "path": "security",
+   "tipo": "pom",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:security",
+   "arquivos": 1,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/security/layout.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/security/deps.json"
+    },
+    "bytecode": {
+     "estado": "nao_aplicavel",
+     "motivo": "modulo agregador (packaging=pom) nao tem codigo",
+     "arquivo": "facts/security/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/security/callgraph.json"
+    }
+   }
+  },
+  "security/flow-security-grpc-proto": {
+   "path": "security/flow-security-grpc-proto",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:flow-security-grpc-proto",
+   "arquivos": 3,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/security/flow-security-grpc-proto/layout.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/security/flow-security-grpc-proto/deps.json"
+    },
+    "docs": {
+     "estado": "fresco",
+     "arquivo": "facts/security/flow-security-grpc-proto/docs.json"
+    },
+    "bytecode": {
+     "estado": "ausente",
+     "motivo": "compilacao falhou (rc=1)",
+     "arquivo": "facts/security/flow-security-grpc-proto/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/security/flow-security-grpc-proto/callgraph.json"
+    }
+   }
+  },
+  "security/flow-security-starter": {
+   "path": "security/flow-security-starter",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:flow-security-starter",
+   "arquivos": 38,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/security/flow-security-starter/layout.json"
+    },
+    "config": {
+     "estado": "fresco",
+     "arquivo": "facts/security/flow-security-starter/config.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/security/flow-security-starter/deps.json"
+    },
+    "bytecode": {
+     "estado": "ausente",
+     "motivo": "compilacao falhou (rc=1)",
+     "arquivo": "facts/security/flow-security-starter/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/security/flow-security-starter/callgraph.json"
+    }
+   }
+  },
+  "organization": {
+   "path": "organization",
+   "tipo": "pom",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:organization",
+   "arquivos": 1,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/layout.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/deps.json"
+    },
+    "bytecode": {
+     "estado": "nao_aplicavel",
+     "motivo": "modulo agregador (packaging=pom) nao tem codigo",
+     "arquivo": "facts/organization/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/organization/callgraph.json"
+    }
+   }
+  },
+  "organization/flow-organization-shared": {
+   "path": "organization/flow-organization-shared",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:flow-organization-shared",
+   "arquivos": 13,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-shared/layout.json"
+    },
+    "config": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-shared/config.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-shared/deps.json"
+    },
+    "bytecode": {
+     "estado": "obsoleto",
+     "mudou": [
+      "bytecode recompilado (7 classes agora, 7 antes)"
+     ],
+     "arquivo": "facts/organization/flow-organization-shared/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/organization/flow-organization-shared/callgraph.json"
+    }
+   }
+  },
+  "organization/flow-organization-infrastructure": {
+   "path": "organization/flow-organization-infrastructure",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:flow-organization-infrastructure",
+   "arquivos": 8,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-infrastructure/layout.json"
+    },
+    "config": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-infrastructure/config.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-infrastructure/deps.json"
+    },
+    "bytecode": {
+     "estado": "ausente",
+     "motivo": "compilacao falhou (rc=1)",
+     "arquivo": "facts/organization/flow-organization-infrastructure/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/organization/flow-organization-infrastructure/callgraph.json"
+    }
+   }
+  },
+  "organization/flow-organization-domain": {
+   "path": "organization/flow-organization-domain",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:flow-organization-domain",
+   "arquivos": 249,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-domain/layout.json"
+    },
+    "config": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-domain/config.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-domain/deps.json"
+    },
+    "bytecode": {
+     "estado": "ausente",
+     "motivo": "compilacao falhou (rc=1)",
+     "arquivo": "facts/organization/flow-organization-domain/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/organization/flow-organization-domain/callgraph.json"
+    }
+   }
+  },
+  "organization/flow-organization-usecase": {
+   "path": "organization/flow-organization-usecase",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:flow-organization-usecase",
+   "arquivos": 303,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-usecase/layout.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-usecase/deps.json"
+    },
+    "bytecode": {
+     "estado": "obsoleto",
+     "mudou": [
+      "bytecode recompilado (575 classes agora, 214 antes)"
+     ],
+     "arquivo": "facts/organization/flow-organization-usecase/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/organization/flow-organization-usecase/callgraph.json"
+    }
+   }
+  },
+  "organization/flow-organization-api": {
+   "path": "organization/flow-organization-api",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:flow-organization-api",
+   "arquivos": 16,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-api/layout.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-api/deps.json"
+    },
+    "bytecode": {
+     "estado": "obsoleto",
+     "mudou": [
+      "bytecode recompilado (145 classes agora, 15 antes)"
+     ],
+     "arquivo": "facts/organization/flow-organization-api/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/organization/flow-organization-api/callgraph.json"
+    }
+   }
+  },
+  "organization/flow-organization-boot": {
+   "path": "organization/flow-organization-boot",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:flow-organization-boot",
+   "arquivos": 30,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-boot/layout.json"
+    },
+    "config": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-boot/config.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-boot/deps.json"
+    },
+    "bytecode": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-boot/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/organization/flow-organization-boot/callgraph.json"
+    }
+   }
+  },
+  "organization/flow-organization-grpc-boot": {
+   "path": "organization/flow-organization-grpc-boot",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:flow-organization-grpc-boot",
+   "arquivos": 15,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-grpc-boot/layout.json"
+    },
+    "config": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-grpc-boot/config.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-grpc-boot/deps.json"
+    },
+    "bytecode": {
+     "estado": "obsoleto",
+     "mudou": [
+      "bytecode recompilado (14 classes agora, 14 antes)"
+     ],
+     "arquivo": "facts/organization/flow-organization-grpc-boot/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/organization/flow-organization-grpc-boot/callgraph.json"
+    }
+   }
+  },
+  "organization/flow-organization-resources": {
+   "path": "organization/flow-organization-resources",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:flow-organization-resources",
+   "arquivos": 104,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-resources/layout.json"
+    },
+    "config": {
+     "estado": "fresco",
+     "arquivo": "facts/organization/flow-organization-resources/config.json"
+    },
+    "bytecode": {
+     "estado": "ausente",
+     "motivo": "compilou mas nao achou classes",
+     "arquivo": "facts/organization/flow-organization-resources/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/organization/flow-organization-resources/callgraph.json"
+    }
+   }
+  },
+  "notification": {
+   "path": "notification",
+   "tipo": "pom",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:notification",
+   "arquivos": 1,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/notification/layout.json"
+    },
+    "bytecode": {
+     "estado": "nao_aplicavel",
+     "motivo": "modulo agregador (packaging=pom) nao tem codigo",
+     "arquivo": "facts/notification/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/notification/callgraph.json"
+    }
+   }
+  },
+  "geotemporal": {
+   "path": "geotemporal",
+   "tipo": "pom",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:geotemporal",
+   "arquivos": 1,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/geotemporal/layout.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/geotemporal/deps.json"
+    },
+    "bytecode": {
+     "estado": "nao_aplicavel",
+     "motivo": "modulo agregador (packaging=pom) nao tem codigo",
+     "arquivo": "facts/geotemporal/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/geotemporal/callgraph.json"
+    }
+   }
+  },
+  "geotemporal/flow-geotemporal-resources": {
+   "path": "geotemporal/flow-geotemporal-resources",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow.geotemporal:flow-geotemporal-resources",
+   "arquivos": 37,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/geotemporal/flow-geotemporal-resources/layout.json"
+    },
+    "config": {
+     "estado": "fresco",
+     "arquivo": "facts/geotemporal/flow-geotemporal-resources/config.json"
+    },
+    "bytecode": {
+     "estado": "ausente",
+     "motivo": "compilou mas nao achou classes",
+     "arquivo": "facts/geotemporal/flow-geotemporal-resources/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/geotemporal/flow-geotemporal-resources/callgraph.json"
+    }
+   }
+  },
+  "geotemporal/flow-geotemporal-infrastructure": {
+   "path": "geotemporal/flow-geotemporal-infrastructure",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.geotemporal:flow-geotemporal-infrastructure",
+   "arquivos": 7,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/geotemporal/flow-geotemporal-infrastructure/layout.json"
+    },
+    "config": {
+     "estado": "fresco",
+     "arquivo": "facts/geotemporal/flow-geotemporal-infrastructure/config.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/geotemporal/flow-geotemporal-infrastructure/deps.json"
+    },
+    "bytecode": {
+     "estado": "fresco",
+     "arquivo": "facts/geotemporal/flow-geotemporal-infrastructure/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/geotemporal/flow-geotemporal-infrastructure/callgraph.json"
+    }
+   }
+  },
+  "audit": {
+   "path": "audit",
+   "tipo": "pom",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:audit",
+   "arquivos": 1,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/audit/layout.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/audit/deps.json"
+    },
+    "bytecode": {
+     "estado": "nao_aplicavel",
+     "motivo": "modulo agregador (packaging=pom) nao tem codigo",
+     "arquivo": "facts/audit/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/audit/callgraph.json"
+    }
+   }
+  },
+  "audit/flow-audit-sdk": {
+   "path": "audit/flow-audit-sdk",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:flow-audit-sdk",
+   "arquivos": 1,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/audit/flow-audit-sdk/layout.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/audit/flow-audit-sdk/deps.json"
+    },
+    "bytecode": {
+     "estado": "ausente",
+     "motivo": "compilou mas nao achou classes",
+     "arquivo": "facts/audit/flow-audit-sdk/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/audit/flow-audit-sdk/callgraph.json"
+    }
+   }
+  },
+  "audit/flow-audit-sdk-api": {
+   "path": "audit/flow-audit-sdk-api",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:flow-audit-sdk-api",
+   "arquivos": 4,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/audit/flow-audit-sdk-api/layout.json"
+    },
+    "bytecode": {
+     "estado": "fresco",
+     "arquivo": "facts/audit/flow-audit-sdk-api/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/audit/flow-audit-sdk-api/callgraph.json"
+    }
+   }
+  },
+  "audit/flow-audit-resources": {
+   "path": "audit/flow-audit-resources",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:flow-audit-resources",
+   "arquivos": 12,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/audit/flow-audit-resources/layout.json"
+    },
+    "config": {
+     "estado": "fresco",
+     "arquivo": "facts/audit/flow-audit-resources/config.json"
+    },
+    "bytecode": {
+     "estado": "ausente",
+     "motivo": "compilou mas nao achou classes",
+     "arquivo": "facts/audit/flow-audit-resources/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/audit/flow-audit-resources/callgraph.json"
+    }
+   }
+  },
+  "audit/flow-audit-infrastructure": {
+   "path": "audit/flow-audit-infrastructure",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:flow-audit-infrastructure",
+   "arquivos": 5,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/audit/flow-audit-infrastructure/layout.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/audit/flow-audit-infrastructure/deps.json"
+    },
+    "bytecode": {
+     "estado": "fresco",
+     "arquivo": "facts/audit/flow-audit-infrastructure/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/audit/flow-audit-infrastructure/callgraph.json"
+    }
+   }
+  },
+  "infrastructure": {
+   "path": "infrastructure",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:infrastructure",
+   "arquivos": 10,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/infrastructure/layout.json"
+    },
+    "config": {
+     "estado": "fresco",
+     "arquivo": "facts/infrastructure/config.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/infrastructure/deps.json"
+    },
+    "bytecode": {
+     "estado": "fresco",
+     "arquivo": "facts/infrastructure/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/infrastructure/callgraph.json"
+    }
+   }
+  },
+  "server-fat": {
+   "path": "server-fat",
+   "tipo": "jar",
+   "ecossistema": "maven",
+   "artefato": "br.com.sawcunhaos.flow:server-fat",
+   "arquivos": 7,
+   "fatos": {
+    "layout": {
+     "estado": "fresco",
+     "arquivo": "facts/server-fat/layout.json"
+    },
+    "config": {
+     "estado": "fresco",
+     "arquivo": "facts/server-fat/config.json"
+    },
+    "deps": {
+     "estado": "fresco",
+     "arquivo": "facts/server-fat/deps.json"
+    },
+    "bytecode": {
+     "estado": "fresco",
+     "arquivo": "facts/server-fat/bytecode.json"
+    },
+    "callgraph": {
+     "estado": "indisponivel",
+     "motivo": "java-callgraph.jar nao encontrado",
+     "arquivo": "facts/server-fat/callgraph.json"
+    }
+   }
+  }
+ },
+ "reactor": "facts/_reactor.json",
+ "tamanho_bytes": {
+  "files.tsv": 212678,
+  "facts/_raiz/layout.json": 972,
+  "facts/_raiz/config.json": 102131,
+  "facts/_raiz/deps.json": 30398,
+  "facts/_raiz/docs.json": 57442,
+  "facts/security/layout.json": 419,
+  "facts/security/deps.json": 23876,
+  "facts/security/flow-security-grpc-proto/layout.json": 408,
+  "facts/security/flow-security-grpc-proto/deps.json": 3046,
+  "facts/security/flow-security-grpc-proto/docs.json": 1037,
+  "facts/security/flow-security-starter/layout.json": 6078,
+  "facts/security/flow-security-starter/config.json": 1131,
+  "facts/security/flow-security-starter/deps.json": 26215,
+  "facts/organization/layout.json": 345,
+  "facts/organization/deps.json": 23755,
+  "facts/organization/flow-organization-shared/layout.json": 2797,
+  "facts/organization/flow-organization-shared/config.json": 7951,
+  "facts/organization/flow-organization-shared/deps.json": 3103,
+  "facts/organization/flow-organization-infrastructure/layout.json": 1409,
+  "facts/organization/flow-organization-infrastructure/config.json": 8270,
+  "facts/organization/flow-organization-infrastructure/deps.json": 25837,
+  "facts/organization/flow-organization-domain/layout.json": 45387,
+  "facts/organization/flow-organization-domain/config.json": 1306,
+  "facts/organization/flow-organization-domain/deps.json": 12667,
+  "facts/organization/flow-organization-usecase/layout.json": 54687,
+  "facts/organization/flow-organization-usecase/deps.json": 16230,
+  "facts/organization/flow-organization-api/layout.json": 2774,
+  "facts/organization/flow-organization-api/deps.json": 15624,
+  "facts/organization/flow-organization-boot/layout.json": 4300,
+  "facts/organization/flow-organization-boot/config.json": 18284,
+  "facts/organization/flow-organization-boot/deps.json": 33217,
+  "facts/organization/flow-organization-grpc-boot/layout.json": 2683,
+  "facts/organization/flow-organization-grpc-boot/config.json": 11042,
+  "facts/organization/flow-organization-grpc-boot/deps.json": 25458,
+  "facts/organization/flow-organization-resources/layout.json": 7380,
+  "facts/organization/flow-organization-resources/config.json": 54902,
+  "facts/notification/layout.json": 345,
+  "facts/geotemporal/layout.json": 344,
+  "facts/geotemporal/deps.json": 25574,
+  "facts/geotemporal/flow-geotemporal-resources/layout.json": 645,
+  "facts/geotemporal/flow-geotemporal-resources/config.json": 33725,
+  "facts/geotemporal/flow-geotemporal-infrastructure/layout.json": 1230,
+  "facts/geotemporal/flow-geotemporal-infrastructure/config.json": 4546,
+  "facts/geotemporal/flow-geotemporal-infrastructure/deps.json": 25825,
+  "facts/audit/layout.json": 338,
+  "facts/audit/deps.json": 25549,
+  "facts/audit/flow-audit-sdk/layout.json": 353,
+  "facts/audit/flow-audit-sdk/deps.json": 527,
+  "facts/audit/flow-audit-sdk-api/layout.json": 921,
+  "facts/audit/flow-audit-resources/layout.json": 444,
+  "facts/audit/flow-audit-resources/config.json": 4289,
+  "facts/audit/flow-audit-infrastructure/layout.json": 1057,
+  "facts/audit/flow-audit-infrastructure/deps.json": 25802,
+  "facts/infrastructure/layout.json": 1433,
+  "facts/infrastructure/config.json": 1513,
+  "facts/infrastructure/deps.json": 20149,
+  "facts/server-fat/layout.json": 834,
+  "facts/server-fat/config.json": 15202,
+  "facts/server-fat/deps.json": 29911,
+  "facts/_reactor.json": 12608,
+  "facts/_raiz/bytecode.json": 234,
+  "facts/security/bytecode.json": 237,
+  "facts/security/flow-security-grpc-proto/bytecode.json": 311,
+  "facts/security/flow-security-starter/bytecode.json": 305,
+  "facts/organization/bytecode.json": 241,
+  "facts/organization/flow-organization-shared/bytecode.json": 3470,
+  "facts/organization/flow-organization-infrastructure/bytecode.json": 335,
+  "facts/organization/flow-organization-domain/bytecode.json": 319,
+  "facts/organization/flow-organization-usecase/bytecode.json": 5439,
+  "facts/organization/flow-organization-api/bytecode.json": 4793,
+  "facts/organization/flow-organization-boot/bytecode.json": 5980,
+  "facts/organization/flow-organization-grpc-boot/bytecode.json": 7451,
+  "facts/organization/flow-organization-resources/bytecode.json": 331,
+  "facts/notification/bytecode.json": 241,
+  "facts/geotemporal/bytecode.json": 240,
+  "facts/geotemporal/flow-geotemporal-resources/bytecode.json": 327,
+  "facts/geotemporal/flow-geotemporal-infrastructure/bytecode.json": 3591,
+  "facts/audit/bytecode.json": 234,
+  "facts/audit/flow-audit-sdk/bytecode.json": 291,
+  "facts/audit/flow-audit-sdk-api/bytecode.json": 2315,
+  "facts/audit/flow-audit-resources/bytecode.json": 303,
+  "facts/audit/flow-audit-infrastructure/bytecode.json": 3519,
+  "facts/infrastructure/bytecode.json": 6237,
+  "facts/server-fat/bytecode.json": 5288,
+  "facts/_raiz/callgraph.json": 393,
+  "facts/security/callgraph.json": 396,
+  "facts/security/flow-security-grpc-proto/callgraph.json": 421,
+  "facts/security/flow-security-starter/callgraph.json": 1017,
+  "facts/organization/callgraph.json": 400,
+  "facts/organization/flow-organization-shared/callgraph.json": 425,
+  "facts/organization/flow-organization-infrastructure/callgraph.json": 1103,
+  "facts/organization/flow-organization-domain/callgraph.json": 22414,
+  "facts/organization/flow-organization-usecase/callgraph.json": 34358,
+  "facts/organization/flow-organization-api/callgraph.json": 422,
+  "facts/organization/flow-organization-boot/callgraph.json": 2556,
+  "facts/organization/flow-organization-grpc-boot/callgraph.json": 705,
+  "facts/organization/flow-organization-resources/callgraph.json": 428,
+  "facts/notification/callgraph.json": 400,
+  "facts/geotemporal/callgraph.json": 399,
+  "facts/geotemporal/flow-geotemporal-resources/callgraph.json": 426,
+  "facts/geotemporal/flow-geotemporal-infrastructure/callgraph.json": 770,
+  "facts/audit/callgraph.json": 393,
+  "facts/audit/flow-audit-sdk/callgraph.json": 408,
+  "facts/audit/flow-audit-sdk-api/callgraph.json": 412,
+  "facts/audit/flow-audit-resources/callgraph.json": 414,
+  "facts/audit/flow-audit-infrastructure/callgraph.json": 734,
+  "facts/infrastructure/callgraph.json": 402,
+  "facts/server-fat/callgraph.json": 622
+ },
+ "_metricas": {
+  "mapa_bytes": 1227835,
+  "fontes_bytes": 4421813,
+  "reducao": 3.6,
+  "segundos": 62.9
+ }
+}

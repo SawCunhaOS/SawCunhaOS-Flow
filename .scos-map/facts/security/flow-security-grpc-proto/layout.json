@@ -1,0 +1,23 @@
+{
+ "fato": "layout",
+ "modulo": "security/flow-security-grpc-proto",
+ "fonte": "varredura de diretorio + regex de anotacao",
+ "confianca": "alta",
+ "gerado_em": "2026-09-09T22:09:04Z",
+ "derivado_de": {},
+ "raizes_fonte": [
+  "src"
+ ],
+ "pacote_base": null,
+ "arquivos": 3,
+ "por_extensao": {
+  ".proto": 2,
+  ".xml": 1
+ },
+ "por_tipo": {
+  "contrato": 2,
+  "build": 1
+ },
+ "areas": [],
+ "entrypoints": []
+}

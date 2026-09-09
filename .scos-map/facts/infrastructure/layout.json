@@ -1,0 +1,41 @@
+{
+ "fato": "layout",
+ "modulo": "infrastructure",
+ "fonte": "varredura de diretorio + regex de anotacao",
+ "confianca": "alta",
+ "gerado_em": "2026-09-09T22:09:30Z",
+ "derivado_de": {
+  "infrastructure/src/main/java/br/com/sawcunhaos/flow/infrastructure/async/AsyncConfiguration.java": "3c51b86",
+  "infrastructure/src/main/java/br/com/sawcunhaos/flow/infrastructure/async/ThreadsScosConfiguration.java": "9d9e6db",
+  "infrastructure/src/main/java/br/com/sawcunhaos/flow/infrastructure/database/ScosDataSourceConfiguration.java": "7d57ee2",
+  "infrastructure/src/main/java/br/com/sawcunhaos/flow/infrastructure/database/ScosDatabaseApplicationName.java": "03a591c",
+  "infrastructure/src/main/java/br/com/sawcunhaos/flow/infrastructure/database/ScosHikariConfigProperties.java": "9112551",
+  "infrastructure/src/main/java/br/com/sawcunhaos/flow/infrastructure/message/LocaleUtilsBean.java": "9236454",
+  "infrastructure/src/main/java/br/com/sawcunhaos/flow/infrastructure/observation/ObservationConfiguration.java": "9c4794d"
+ },
+ "raizes_fonte": [
+  "src/main/java",
+  "src/main/resources",
+  "src"
+ ],
+ "pacote_base": "br.com.sawcunhaos.flow.infrastructure",
+ "arquivos": 10,
+ "por_extensao": {
+  ".java": 7,
+  ".properties": 2,
+  ".xml": 1
+ },
+ "por_tipo": {
+  "codigo": 7,
+  "config": 2,
+  "build": 1
+ },
+ "areas": [
+  {
+   "caminho": "infrastructure",
+   "papel": "infraestrutura",
+   "arquivos": 1
+  }
+ ],
+ "entrypoints": []
+}

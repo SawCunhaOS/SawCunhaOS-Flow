@@ -1,0 +1,19 @@
+{
+ "fato": "callgraph",
+ "modulo": "organization/flow-organization-grpc-boot",
+ "fonte": "java-callgraph",
+ "confianca": "ausente",
+ "gerado_em": "2026-09-09T22:10:03Z",
+ "derivado_de": {},
+ "estado": "indisponivel",
+ "motivo": "java-callgraph.jar nao encontrado",
+ "comando_sugerido": "baixe o jar e passe --callgraph-jar <caminho> ou coloque em ~/.scos-map/java-callgraph.jar",
+ "lacunas_conhecidas": [],
+ "entrypoints": [
+  {
+   "path": "organization/flow-organization-grpc-boot/src/main/java/br/com/sawcunhaos/organization/grpc/boot/ScosOrganizationGrpcApplication.java",
+   "anotacao": "SpringBootApplication",
+   "nota": "ponto de entrada - ausencia de chamador NAO significa codigo morto"
+  }
+ ]
+}

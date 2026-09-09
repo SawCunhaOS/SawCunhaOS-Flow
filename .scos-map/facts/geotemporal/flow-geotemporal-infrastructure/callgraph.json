@@ -1,0 +1,20 @@
+{
+ "fato": "callgraph",
+ "modulo": "geotemporal/flow-geotemporal-infrastructure",
+ "fonte": "java-callgraph",
+ "confianca": "ausente",
+ "gerado_em": "2026-09-09T22:10:03Z",
+ "derivado_de": {},
+ "estado": "indisponivel",
+ "motivo": "java-callgraph.jar nao encontrado",
+ "comando_sugerido": "baixe o jar e passe --callgraph-jar <caminho> ou coloque em ~/.scos-map/java-callgraph.jar",
+ "lacunas_conhecidas": [
+  {
+   "tipo": "proxy_spring",
+   "path": "geotemporal/flow-geotemporal-infrastructure/src/main/java/br/com/sawcunhaos/flow/geotemporal/infrastructure/liquibase/ScosFlowGeotemporalLiquibaseProperties.java",
+   "anotacao": "Validated",
+   "motivo": "@Validated gera proxy em runtime; a chamada real nao aparece no bytecode compilado"
+  }
+ ],
+ "entrypoints": []
+}

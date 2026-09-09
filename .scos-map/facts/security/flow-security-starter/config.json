@@ -1,0 +1,39 @@
+{
+ "fato": "config",
+ "modulo": "security/flow-security-starter",
+ "fonte": "leitura de chaves (valores omitidos por seguranca)",
+ "confianca": "alta",
+ "gerado_em": "2026-09-09T22:09:05Z",
+ "derivado_de": {
+  "security/flow-security-starter/src/main/resources/scos_message/messages_security.properties": "86937ae",
+  "security/flow-security-starter/src/main/resources/scos_message/messages_security_en.properties": "86937ae"
+ },
+ "aviso": "apenas nomes de chave e placeholders; nenhum valor foi lido",
+ "perfis_detectados": [],
+ "arquivos": [
+  {
+   "path": "security/flow-security-starter/src/main/resources/scos_message/messages_security.properties",
+   "bytes": 398,
+   "last_modified": "2026-09-06",
+   "chaves": [
+    "SCOS_AUTH_001",
+    "SCOS_AUTH_002",
+    "SCOS_AUTH_003",
+    "SCOS_AUTH_004",
+    "SCOS_AUTH_005"
+   ]
+  },
+  {
+   "path": "security/flow-security-starter/src/main/resources/scos_message/messages_security_en.properties",
+   "bytes": 398,
+   "last_modified": "2026-09-06",
+   "chaves": [
+    "SCOS_AUTH_001",
+    "SCOS_AUTH_002",
+    "SCOS_AUTH_003",
+    "SCOS_AUTH_004",
+    "SCOS_AUTH_005"
+   ]
+  }
+ ]
+}

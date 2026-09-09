@@ -1,0 +1,132 @@
+{
+ "fato": "config",
+ "modulo": "audit/flow-audit-resources",
+ "fonte": "leitura de chaves (valores omitidos por seguranca)",
+ "confianca": "alta",
+ "gerado_em": "2026-09-09T22:09:27Z",
+ "derivado_de": {
+  "audit/flow-audit-resources/src/main/resources/liquibase.properties": "603005d",
+  "audit/flow-audit-resources/src/main/resources/db/changelog/audit/db.changelog-master.yml": "f464536",
+  "audit/flow-audit-resources/src/main/resources/db/changelog/audit/property.yml": "7b9b4c8",
+  "audit/flow-audit-resources/src/main/resources/db/changelog/audit/checks/checks.yml": "f84a8a2",
+  "audit/flow-audit-resources/src/main/resources/db/changelog/audit/function/function.yml": "7b08d2b",
+  "audit/flow-audit-resources/src/main/resources/db/changelog/audit/triggers/triggers.yml": "cfb18f0",
+  "audit/flow-audit-resources/src/main/resources/db/changelog/audit/versions/versions.yml": "c070006",
+  "audit/flow-audit-resources/src/main/resources/db/changelog/audit/versions/v1/0/0/v1.0.0.yml": "213f85f",
+  "audit/flow-audit-resources/src/main/resources/db/changelog/audit/versions/v1/0/0/indexes/indexes.yml": "adff648",
+  "audit/flow-audit-resources/src/main/resources/db/changelog/audit/versions/v1/0/0/tables/tables.yml": "adff648",
+  "audit/flow-audit-resources/src/main/resources/db/changelog/audit/view/view.yml": "e3a71c6"
+ },
+ "aviso": "apenas nomes de chave e placeholders; nenhum valor foi lido",
+ "perfis_detectados": [],
+ "arquivos": [
+  {
+   "path": "audit/flow-audit-resources/src/main/resources/liquibase.properties",
+   "bytes": 176,
+   "last_modified": "2026-09-09",
+   "chaves": [
+    "changelogFile",
+    "url",
+    "username",
+    "password",
+    "driver",
+    "outputFile"
+   ]
+  },
+  {
+   "path": "audit/flow-audit-resources/src/main/resources/db/changelog/audit/db.changelog-master.yml",
+   "bytes": 496,
+   "last_modified": "2026-09-09",
+   "chaves": [
+    "databaseChangeLog",
+    "databaseChangeLog.file",
+    "databaseChangeLog.relativeToChangelogFile"
+   ]
+  },
+  {
+   "path": "audit/flow-audit-resources/src/main/resources/db/changelog/audit/property.yml",
+   "bytes": 438,
+   "last_modified": "2026-09-09",
+   "chaves": [
+    "databaseChangeLog",
+    "databaseChangeLog.name",
+    "databaseChangeLog.value",
+    "databaseChangeLog.dbms"
+   ]
+  },
+  {
+   "path": "audit/flow-audit-resources/src/main/resources/db/changelog/audit/checks/checks.yml",
+   "bytes": 651,
+   "last_modified": "2026-09-09",
+   "chaves": [
+    "databaseChangeLog"
+   ]
+  },
+  {
+   "path": "audit/flow-audit-resources/src/main/resources/db/changelog/audit/function/function.yml",
+   "bytes": 617,
+   "last_modified": "2026-09-09",
+   "chaves": [
+    "databaseChangeLog"
+   ]
+  },
+  {
+   "path": "audit/flow-audit-resources/src/main/resources/db/changelog/audit/triggers/triggers.yml",
+   "bytes": 651,
+   "last_modified": "2026-09-09",
+   "chaves": [
+    "databaseChangeLog"
+   ]
+  },
+  {
+   "path": "audit/flow-audit-resources/src/main/resources/db/changelog/audit/versions/versions.yml",
+   "bytes": 97,
+   "last_modified": "2026-09-09",
+   "chaves": [
+    "databaseChangeLog",
+    "databaseChangeLog.file",
+    "databaseChangeLog.relativeToChangelogFile"
+   ]
+  },
+  {
+   "path": "audit/flow-audit-resources/src/main/resources/db/changelog/audit/versions/v1/0/0/v1.0.0.yml",
+   "bytes": 390,
+   "last_modified": "2026-09-09",
+   "chaves": [
+    "databaseChangeLog",
+    "databaseChangeLog.id",
+    "databaseChangeLog.author",
+    "databaseChangeLog.comment",
+    "databaseChangeLog.changes",
+    "databaseChangeLog.changes.tag",
+    "databaseChangeLog.rollback",
+    "databaseChangeLog.file",
+    "databaseChangeLog.relativeToChangelogFile"
+   ]
+  },
+  {
+   "path": "audit/flow-audit-resources/src/main/resources/db/changelog/audit/versions/v1/0/0/indexes/indexes.yml",
+   "bytes": 18,
+   "last_modified": "2026-09-09",
+   "chaves": [
+    "databaseChangeLog"
+   ]
+  },
+  {
+   "path": "audit/flow-audit-resources/src/main/resources/db/changelog/audit/versions/v1/0/0/tables/tables.yml",
+   "bytes": 18,
+   "last_modified": "2026-09-09",
+   "chaves": [
+    "databaseChangeLog"
+   ]
+  },
+  {
+   "path": "audit/flow-audit-resources/src/main/resources/db/changelog/audit/view/view.yml",
+   "bytes": 21,
+   "last_modified": "2026-09-09",
+   "chaves": [
+    "databaseChangeLog"
+   ]
+  }
+ ]
+}
