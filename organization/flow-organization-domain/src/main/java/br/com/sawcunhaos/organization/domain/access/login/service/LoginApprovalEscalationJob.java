@@ -82,7 +82,7 @@ public class LoginApprovalEscalationJob {
         if (request.getEscalationPolicy() != LoginApprovalRequestEscalationPolicy.AUTO_CANCEL) {
             return false;
         }
-        Instant createdAt = request.getCreatedAt().toInstant(ZoneOffset.UTC);
+        Instant createdAt = request.getCreatedAt();
         return now.isAfter(businessDayCalculator.plusBusinessDays(createdAt, AUTO_CANCEL_BUSINESS_DAYS, ZoneOffset.UTC));
     }
 }

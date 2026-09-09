@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.company.internal;
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
 import br.com.sawcunhaos.foundation.validation.valueobjects.Email;
 import br.com.sawcunhaos.organization.domain.corporate.catalog.internal.ContactType;
@@ -41,7 +41,7 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "SCOS_COMPANY_CONTACT")
-@Auditable
+@AuditableEntity
 public class CompanyContact extends BaseEntity {
 
     @Id

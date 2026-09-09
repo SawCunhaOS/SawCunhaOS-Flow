@@ -22,10 +22,9 @@
         <module>organization</module>
         <module>notification</module>
         <module>geotemporal</module>
+        <module>audit</module>
         <module>infrastructure</module>
-        <module>organization/flow-organization-resources</module>
         <module>server-fat</module>
-        <module>geotemporal/flow-geotemporal-infrastructure</module>
     </modules>
 
     <parent>
@@ -109,6 +108,14 @@
                 <scope>import</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.springframework.kafka</groupId>
+                <artifactId>spring-kafka-bom</artifactId>
+                <version>4.1.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <!-- Convergência de dependência (enforcer RequireUpperBoundDeps):
                  grpc-stub traz error_prone_annotations 2.45.0 (nearest), mas guava (2.47.0)
                  e gson (2.48.0) trazem versões maiores. Fixa no máximo da árvore. -->
@@ -127,6 +134,12 @@
             <dependency>
                 <groupId>br.com.sawcunhaos.flow</groupId>
                 <artifactId>flow-security-starter</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>br.com.sawcunhaos.flow</groupId>
+                <artifactId>flow-audit-sdk-api</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
         </dependencies>

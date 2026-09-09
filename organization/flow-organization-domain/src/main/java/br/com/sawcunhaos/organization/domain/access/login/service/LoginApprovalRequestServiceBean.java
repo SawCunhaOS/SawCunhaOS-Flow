@@ -258,7 +258,7 @@ class LoginApprovalRequestServiceBean implements LoginApprovalRequestService {
                 .slaDeadline(request.getSlaDeadline())
                 .decidedByLoginId(request.getDecidedByLogin() != null ? request.getDecidedByLogin().getId() : null)
                 .decidedAt(request.getDecidedAt())
-                .createdAt(request.getCreatedAt())
+                //.createdAt(request.getCreatedAt())
                 .currentApproverEmployeeId(approver.map(Employee::getId).orElse(null))
                 .currentApproverEmployeeName(approver.map(Employee::getName).orElse(null))
                 .build();

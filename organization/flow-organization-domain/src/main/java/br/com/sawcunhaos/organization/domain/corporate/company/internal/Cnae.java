@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.company.internal;
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -36,7 +36,7 @@ import java.time.Instant;
 @Builder
 @Entity
 @Table(name = "SCOS_CNAE")
-@Auditable
+@AuditableEntity
 public class Cnae {
 
     @Id

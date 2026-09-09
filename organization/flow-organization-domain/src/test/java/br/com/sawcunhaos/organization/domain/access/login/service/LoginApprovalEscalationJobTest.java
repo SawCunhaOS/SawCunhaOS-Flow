@@ -164,7 +164,7 @@ class LoginApprovalEscalationJobTest {
                 .status(LoginApprovalRequestStatus.PENDING)
                 .escalationPolicy(LoginApprovalRequestEscalationPolicy.AUTO_CANCEL)
                 .build();
-        request.setCreatedAt(LocalDateTime.parse("2026-07-01T09:00:00"));
+        request.setCreatedAt(LocalDateTime.parse("2026-07-01T09:00:00").toInstant(ZoneOffset.UTC));
 
         when(loginApprovalRequestRepository.findAllByStatusAndSlaDeadlineBefore(LoginApprovalRequestStatus.PENDING, NOW))
                 .thenReturn(List.of(request));
@@ -185,7 +185,7 @@ class LoginApprovalEscalationJobTest {
                 .status(LoginApprovalRequestStatus.PENDING)
                 .escalationPolicy(LoginApprovalRequestEscalationPolicy.AUTO_CANCEL)
                 .build();
-        request.setCreatedAt(LocalDateTime.parse("2026-08-17T09:00:00"));
+        request.setCreatedAt(LocalDateTime.parse("2026-08-17T09:00:00").toInstant(ZoneOffset.UTC));
 
         when(loginApprovalRequestRepository.findAllByStatusAndSlaDeadlineBefore(LoginApprovalRequestStatus.PENDING, NOW))
                 .thenReturn(List.of(request));
@@ -205,7 +205,7 @@ class LoginApprovalEscalationJobTest {
                 .status(LoginApprovalRequestStatus.PENDING)
                 .escalationPolicy(LoginApprovalRequestEscalationPolicy.INDEFINITE)
                 .build();
-        request.setCreatedAt(LocalDateTime.parse("2026-01-01T09:00:00"));
+        request.setCreatedAt(LocalDateTime.parse("2026-01-01T09:00:00").toInstant(ZoneOffset.UTC));
 
         when(loginApprovalRequestRepository.findAllByStatusAndSlaDeadlineBefore(LoginApprovalRequestStatus.PENDING, NOW))
                 .thenReturn(List.of(request));

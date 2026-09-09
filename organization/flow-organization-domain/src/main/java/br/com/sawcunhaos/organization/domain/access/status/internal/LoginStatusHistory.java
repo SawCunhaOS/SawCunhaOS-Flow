@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.access.status.internal;
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import br.com.sawcunhaos.organization.domain.access.login.internal.Login;
 import br.com.sawcunhaos.organization.domain.access.login.internal.LoginStatus;
 import jakarta.persistence.Column;
@@ -43,7 +43,7 @@ import java.time.Instant;
 @Builder
 @Entity
 @Table(name = "SCOS_LOGIN_STATUS_HISTORY")
-@Auditable
+@AuditableEntity
 public class LoginStatusHistory {
 
     @Id

@@ -21,8 +21,6 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +45,7 @@ public interface LoginApprovalRequestRepository extends BaseJpaRepository<LoginA
         return exists(q.login.id.eq(loginId)
                 .and(q.requestType.eq(requestType))
                 .and(q.escalationPolicy.eq(escalationPolicy))
-                .and(q.createdAt.after(LocalDateTime.ofInstant(after, ZoneOffset.UTC))));
+                .and(q.createdAt.after(after)));
     }
 
     default Page<LoginApprovalRequest> findAllFiltered(LoginApprovalRequestStatus status, Long loginId, Pageable pageable) {

@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.position.internal;
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
 import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.corporate.department.internal.Department;
@@ -43,7 +43,7 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 @Builder
 @Entity
 @Table(name = "SCOS_POSITION")
-@Auditable
+@AuditableEntity
 public class Position extends BaseEntity {
 
     @Id

@@ -18,6 +18,7 @@
         <module>flow-organization-api</module>
         <module>flow-organization-boot</module>
         <module>flow-organization-grpc-boot</module>
+        <module>flow-organization-resources</module>
     </modules>
 
     <groupId>br.com.sawcunhaos.flow</groupId>

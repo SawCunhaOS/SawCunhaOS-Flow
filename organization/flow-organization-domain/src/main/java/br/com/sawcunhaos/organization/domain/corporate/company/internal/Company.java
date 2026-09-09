@@ -14,7 +14,7 @@
 package br.com.sawcunhaos.organization.domain.corporate.company.internal;
 
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
 import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.foundation.validation.valueobjects.Cnpj;
@@ -59,7 +59,7 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 @Builder
 @Entity
 @Table(name = "SCOS_COMPANY")
-@Auditable
+@AuditableEntity
 public class Company extends BaseEntity {
 
     public static final ZoneId DEFAULT_TIME_ZONE = ZoneId.of("America/Sao_Paulo");

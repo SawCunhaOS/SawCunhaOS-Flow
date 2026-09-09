@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.access.system.internal;
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
 import br.com.sawcunhaos.organization.shared.converter.SecretKeyConverter;
 import jakarta.persistence.Column;
@@ -43,7 +43,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "SCOS_SYSTEM")
-@Auditable
+@AuditableEntity
 @ToString(exclude = {"secretKey", "previousSecretKey"})
 public class ScosSystem extends BaseEntity {
 

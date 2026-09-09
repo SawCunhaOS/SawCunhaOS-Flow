@@ -1,0 +1,16 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260228-Samuel.Cunha-001
+      author: Samuel.Cunha
+      comment: "Tag de versão v1.0.0"
+      changes:
+        - tagDatabase:
+            tag: v1.0.0
+      rollback:
+        - empty
+  - include:
+      file: tables/tables.yml
+      relativeToChangelogFile: true
+  - include:
+      file: indexes/indexes.yml
+      relativeToChangelogFile: true

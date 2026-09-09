@@ -14,7 +14,7 @@
 package br.com.sawcunhaos.organization.domain.corporate.employee.internal;
 
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
 import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.foundation.validation.valueobjects.Cpf;
@@ -58,7 +58,7 @@ import java.util.Set;
 @Builder
 @Entity
 @Table(name = "SCOS_EMPLOYEE")
-@Auditable(auditRead = true)
+@AuditableEntity(auditRead = true)
 public class Employee extends BaseEntity {
 
     @Id

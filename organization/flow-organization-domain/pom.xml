@@ -40,8 +40,8 @@
 
         <!-- SCOS Dependencies -->
         <dependency>
-            <groupId>br.com.sawcunhaos</groupId>
-            <artifactId>scos-foundation-audit-api</artifactId>
+            <groupId>br.com.sawcunhaos.flow</groupId>
+            <artifactId>flow-audit-sdk-api</artifactId>
         </dependency>
         <dependency>
             <groupId>br.com.sawcunhaos</groupId>

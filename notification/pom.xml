@@ -12,6 +12,7 @@
 
     <groupId>br.com.sawcunhaos.flow</groupId>
     <artifactId>notification</artifactId>
+    <packaging>pom</packaging>
 
     <properties>
         <maven.compiler.source>25</maven.compiler.source>

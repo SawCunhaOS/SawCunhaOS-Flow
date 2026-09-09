@@ -19,17 +19,6 @@ scos:
       format_sql: ${SCOS_DATASOURCE_JPA_FORMAT_SQL}
       generate_statistics: ${SCOS_DATASOURCE_JPA_GENERATE_STATISTICS}
       log_queries_slower: ${SCOS_DATASOURCE_JPA_LOG_QUERIES_SLOWER}
-  audit:
-    enabled: ${SCOS_AUDIT_ENABLED}
-    datasource:
-      url: ${SCOS_AUDIT_DATASOURCE_URL}
-      username: ${SCOS_AUDIT_DATASOURCE_USERNAME}
-      password: ${SCOS_AUDIT_DATASOURCE_PASSWORD}
-      connection-timeout: ${SCOS_AUDIT_DATASOURCE_CONNECTION_TIMEOUT}
-      idle-timeout: ${SCOS_AUDIT_DATASOURCE_IDLE_TIMEOUT}
-      max-lifetime: ${SCOS_AUDIT_DATASOURCE_MAX_LIFETIME}
-      minimum-idle: ${SCOS_AUDIT_DATASOURCE_MINIMUM_IDLE}
-      maximum-pool-size: ${SCOS_AUDIT_DATASOURCE_MAXIMUM_POOL_SIZE}
     liquibase:
       default-schema: ${SCOS_AUDIT_LIQUIBASE_DEFAULT_SCHEMA}
   liquibase:

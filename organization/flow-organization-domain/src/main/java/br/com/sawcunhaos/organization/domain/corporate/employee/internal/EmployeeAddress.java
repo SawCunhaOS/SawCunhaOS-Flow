@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.employee.internal;
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
 import br.com.sawcunhaos.organization.domain.corporate.catalog.internal.AddressType;
 import jakarta.persistence.Column;
@@ -37,7 +37,7 @@ import org.locationtech.jts.geom.Point;
 @Builder
 @Entity
 @Table(name = "SCOS_EMPLOYEE_ADDRESS")
-@Auditable(auditRead = true)
+@AuditableEntity(auditRead = true)
 public class EmployeeAddress extends BaseEntity {
 
     @EmbeddedId

@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.employee.internal;
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
 import br.com.sawcunhaos.organization.domain.corporate.position.internal.DayOfWeek;
 import jakarta.persistence.Column;
@@ -42,7 +42,7 @@ import java.time.LocalTime;
 @Builder
 @Entity
 @Table(name = "SCOS_EMPLOYEE_WORK_SCHEDULE")
-@Auditable
+@AuditableEntity
 public class EmployeeWorkSchedule extends BaseEntity {
 
     @Id

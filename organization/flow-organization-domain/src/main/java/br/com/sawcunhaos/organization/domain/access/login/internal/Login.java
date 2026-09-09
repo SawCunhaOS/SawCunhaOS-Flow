@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.access.login.internal;
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
 
@@ -52,7 +52,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "SCOS_LOGIN")
-@Auditable(auditRead = true)
+@AuditableEntity(auditRead = true)
 public class Login extends BaseEntity {
 
     @Id

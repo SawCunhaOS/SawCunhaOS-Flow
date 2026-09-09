@@ -62,7 +62,6 @@ spring:
       password: ${scos.cache.password}
       timeout: ${scos.cache.timeout}
       host: ${scos.cache.host}
-        
   datasource:
     url: ${scos.datasource.url}
     username: ${scos.datasource.username}
@@ -78,27 +77,6 @@ spring:
       leak-detection-threshold: 0
       validation-timeout: 15000
       keepalive-time: 300000
-    audit:
-      url: ${scos.audit.datasource.url}
-      username: ${scos.audit.datasource.username}
-      password: ${scos.audit.datasource.password}
-      hikari:
-        pool-name: SCOS-AUDIT
-        registerMbeans: false
-        connection-timeout: ${scos.audit.datasource.connection-timeout}
-        idle-timeout: ${scos.audit.datasource.idle-timeout}
-        max-lifetime: ${scos.audit.datasource.max-lifetime}
-        minimum-idle: ${scos.audit.datasource.minimum-idle}
-        maximum-pool-size: ${scos.audit.datasource.maximum-pool-size}
-        leak-detection-threshold: 20000
-        connection-test-query: SELECT 1
-        validation-timeout: 5000
-        auto-commit: false
-        data-source-properties:
-          cachePrepStmts: true
-          prepStmtCacheSize: 1000
-          prepStmtCacheSqlLimit: 4096
-          useServerPrepStmts: true
   jpa:
     open-in-view: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -223,7 +201,8 @@ scos:
       change-log: classpath:db/changelog/db_audit.changelog-master.yaml
       default-schema: ${scos.audit.liquibase.default-schema}
   jdempotent:
-    enabled: ${scos.jdempotent.enabled:true}
+    enabled: true
+    namespace: scos_flow
     cache:
       redis:
         expirationTimeHour: ${scos.jdempotent.expiration-time-hour}

@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.access.status.internal;
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
 import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import jakarta.persistence.Column;
@@ -40,7 +40,7 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 @Builder
 @Entity
 @Table(name = "SCOS_REASON_ENABLE")
-@Auditable
+@AuditableEntity
 public class ReasonEnable extends BaseEntity {
 
     @Id

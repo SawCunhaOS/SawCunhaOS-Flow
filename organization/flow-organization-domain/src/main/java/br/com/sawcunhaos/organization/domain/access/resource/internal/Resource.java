@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.access.resource.internal;
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
 import br.com.sawcunhaos.organization.domain.access.system.internal.ScosSystem;
 import jakarta.persistence.Column;
@@ -41,7 +41,7 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(name = "SCOS_RESOURCE")
-@Auditable
+@AuditableEntity
 public class Resource extends BaseEntity {
 
     @Id

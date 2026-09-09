@@ -1,4 +1,4 @@
-FROM ghcr.io/pgmq/pg18-pgmq:v1.10.0
+FROM ghcr.io/pgmq/pg18-pgmq:v1.13.0
 
 USER root
 

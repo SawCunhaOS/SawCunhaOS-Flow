@@ -1,0 +1,16 @@
+databaseChangeLog:
+  # - changeSet:
+  #     id: 20260718-Samuel.Cunha-002
+  #     author: Samuel.Cunha
+  #     comment: "Trigger trg_block_delete_shift_enforcement_log: bloqueia DELETE em SCOS_SHIFT_ENFORCEMENT_LOG (Etapa 1, FR-11)"
+  #     runOnChange: true
+  #     changes:
+  #       - sqlFile:
+  #           path: trg_block_delete_shift_enforcement_log.sql
+  #           relativeToChangelogFile: true
+  #           encoding: utf8
+  #           stripComments: true
+  #           splitStatements: false
+  #     rollback:
+  #       - sql:
+  #           sql: DROP TRIGGER IF EXISTS trg_block_delete_shift_enforcement_log ON SCOS_SHIFT_ENFORCEMENT_LOG;

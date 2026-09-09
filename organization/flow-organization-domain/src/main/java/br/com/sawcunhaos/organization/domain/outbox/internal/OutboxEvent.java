@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.outbox.internal;
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,7 +43,7 @@ import java.time.Instant;
 @Builder
 @Entity
 @Table(name = "SCOS_OUTBOX_EVENT")
-@Auditable
+@AuditableEntity
 public class OutboxEvent {
 
     @Id

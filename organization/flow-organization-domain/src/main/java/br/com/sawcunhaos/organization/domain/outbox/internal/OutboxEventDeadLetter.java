@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.outbox.internal;
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -39,7 +39,7 @@ import java.time.Instant;
 @Builder
 @Entity
 @Table(name = "SCOS_OUTBOX_EVENT_DEAD_LETTER")
-@Auditable
+@AuditableEntity
 public class OutboxEventDeadLetter {
 
     @Id

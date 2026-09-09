@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - include:
+      file: property.yml
+      relativeToChangelogFile: true
+  - include:
+      file: versions/versions.yml
+      relativeToChangelogFile: true
+  - include:
+      file: checks/checks.yml
+      relativeToChangelogFile: true
+  - include:
+      file: function/function.yml
+      relativeToChangelogFile: true
+  - include:
+      file: triggers/triggers.yml
+      relativeToChangelogFile: true
+  - include:
+      file: view/view.yml
+      relativeToChangelogFile: true

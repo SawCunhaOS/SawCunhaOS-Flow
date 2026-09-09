@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.corporate.position.internal;
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -41,7 +41,7 @@ import java.time.LocalTime;
 @Builder
 @Entity
 @Table(name = "SCOS_POSITION_WORK_SCHEDULE")
-@Auditable
+@AuditableEntity
 public class PositionWorkSchedule extends BaseEntity {
 
     @Id

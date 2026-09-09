@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.access.login.internal;
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import br.com.sawcunhaos.foundation.jpa.entity.BaseEntity;
 import br.com.sawcunhaos.foundation.core.exception.ScosException;
 import br.com.sawcunhaos.organization.domain.access.profile.internal.Profile;
@@ -45,7 +45,7 @@ import static br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError
 @Builder
 @Entity
 @Table(name = "SCOS_LOGIN_APPROVAL_REQUEST")
-@Auditable
+@AuditableEntity
 public class LoginApprovalRequest extends BaseEntity {
 
     @Id

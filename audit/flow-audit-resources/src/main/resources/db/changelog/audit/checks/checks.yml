@@ -1,0 +1,13 @@
+databaseChangeLog:
+  # - changeSet:
+  #     id: 20260817-Samuel.Cunha-002
+  #     author: Samuel.Cunha
+  #     comment: "CHECK de PROFILE_CHANGE_KIND em SCOS_LOGIN_APPROVAL_REQUEST (Story 3.4)"
+  #     changes:
+  #       - sql:
+  #           sql: >-
+  #             ALTER TABLE scos_login_approval_request
+  #               ADD CONSTRAINT chk_login_approval_request_profile_change_kind CHECK (profile_change_kind IS NULL OR profile_change_kind IN ('SET_PRIMARY', 'ADD_ADDITIONAL'));
+  #     rollback:
+  #       - sql:
+  #           sql: ALTER TABLE scos_login_approval_request DROP CONSTRAINT IF EXISTS chk_login_approval_request_profile_change_kind;

@@ -13,7 +13,7 @@
 
 package br.com.sawcunhaos.organization.domain.access.status.internal;
 
-import br.com.sawcunhaos.foundation.audit.api.Auditable;
+import br.com.sawcunhaos.flow.audit.sdk.api.AuditableEntity;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.Employee;
 import br.com.sawcunhaos.organization.domain.corporate.employee.internal.StatusEmployee;
 import jakarta.persistence.Column;
@@ -44,7 +44,7 @@ import java.time.LocalDate;
 @Builder
 @Entity
 @Table(name = "SCOS_EMPLOYEE_STATUS_HISTORY")
-@Auditable
+@AuditableEntity
 public class EmployeeStatusHistory {
 
     @Id

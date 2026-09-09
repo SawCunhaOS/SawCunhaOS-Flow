@@ -1,4 +1,17 @@
-package br.com.sawcunhaos.geotemporal.infrastructure.liquibase;
+
+/*
+ *
+ *  * Copyright 2026 SawCunha Open System - SawCunhaOS-Organization
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ */
+
+package br.com.sawcunhaos.flow.audit.infrastructure.liquibase;
 
 import liquibase.integration.spring.MultiTenantSpringLiquibase;
 import lombok.RequiredArgsConstructor;
@@ -7,25 +20,23 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Primary;
 
 import javax.sql.DataSource;
 
 @ConditionalOnProperty(
-        prefix = "scos.liquibase.geotemporal",
+        prefix = "scos.liquibase.audit",
         name = "enabled",
         havingValue = "true",
         matchIfMissing = true)
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
-final class ScosFlowGeotemporalLiquibaseConfiguration {
+final class ScosFlowAuditLiquibaseConfiguration {
 
-    private final ScosFlowGeotemporalLiquibaseProperties liquibaseProperties;
+    private final ScosFlowAuditLiquibaseProperties liquibaseProperties;
 
-    @Bean("ScosFlowGeotemporalLiquibase")
-    @Primary
+    @Bean("scosFlowAuditLiquibase")
     @DependsOn("ScosDataSource")
-    public MultiTenantSpringLiquibase ScosLiquibase(@Qualifier("ScosDataSource") DataSource dataSource) {
+    public MultiTenantSpringLiquibase scosFlowAuditLiquibase(@Qualifier("ScosDataSource") DataSource dataSource) {
         MultiTenantSpringLiquibase liquibase = new MultiTenantSpringLiquibase();
         liquibase.setDataSource(dataSource);
         liquibase.setChangeLog(liquibaseProperties.getChangeLog());

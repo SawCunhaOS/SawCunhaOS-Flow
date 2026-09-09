@@ -19,19 +19,6 @@ scos:
       format_sql: true
       generate_statistics: true
       log_queries_slower: 500
-  audit:
-    enabled: false
-    datasource:
-      url: jdbc:postgresql://localhost:5432/scos?currentSchema=scos
-      username: scos
-      password: scos#2026
-      connection-timeout: 100000
-      idle-timeout: 150000
-      max-lifetime: 300000
-      minimum-idle: 10
-      maximum-pool-size: 30
-    liquibase:
-      default-schema: scos
   liquibase:
     organization:
       enabled: true
