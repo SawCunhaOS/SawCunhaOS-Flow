@@ -1,6 +1,6 @@
 # Diagramas de Arquitetura — Etapa 1 (P0)
 
-Companion visual de `_bmad-output/planning-artifacts/architecture/architecture-SawCunhaOS-Organization-2026-07-18/ARCHITECTURE-SPINE.md`. Cada diagrama tem um parágrafo de contexto em linguagem simples antes do Mermaid técnico — serve tanto para quem vai codar quanto para quem só precisa entender o desenho geral.
+Companion visual do Architecture Spine da Organization (2026-07-18), arquivado no histórico git deste repo: `git show e56929b^:_bmad-output/planning-artifacts/architecture/architecture-SawCunhaOS-Organization-2026-07-18/ARCHITECTURE-SPINE.md`. Cada diagrama tem um parágrafo de contexto em linguagem simples antes do Mermaid técnico — serve tanto para quem vai codar quanto para quem só precisa entender o desenho geral.
 
 Escopo: só a Etapa 1 (Fundação, Governança de Turno, Kill Switch). Motor Geotemporal e Notificação Híbrida (Etapas 2 e 3) não aparecem aqui — ver `Deferred` na spine.
 

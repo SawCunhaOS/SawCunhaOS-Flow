@@ -1,0 +1,4 @@
+ga	versao	origem	scope
+br.com.sawcunhaos.flow:flow-audit-sdk	1.0.0-SNAPSHOT	propria	compile
+br.com.sawcunhaos.flow:flow-audit-sdk-api	1.0.0-SNAPSHOT	propria	compile
+br.com.sawcunhaos.flow:flow-audit-resources	1.0.0-SNAPSHOT	propria	compile

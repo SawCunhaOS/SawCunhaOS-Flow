@@ -1,0 +1,25 @@
+path	tipo	alvo_heuristico	linhas	last_modified	commits_90d
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/catalog/AddressTypeControllerTest.java	unit	AddressTypeController	579	2026-07-18	1
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/catalog/ContactTypeControllerTest.java	unit	ContactTypeController	569	2026-07-18	1
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/company/CnaeControllerTest.java	unit	CnaeController	467	2026-07-18	1
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/company/CompanyActiveDescendantGuardControllerTest.java	unit	CompanyActiveDescendantGuardController	79	2026-08-23	2
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/company/CompanyControllerTest.java	unit	CompanyController	419	2026-07-22	3
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/company/CompanyCycleGuardControllerTest.java	unit	CompanyCycleGuardController	77	2026-08-23	2
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/company/LegalNatureControllerTest.java	unit	LegalNatureController	467	2026-07-18	1
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/configuration/ConfigurationControllerTest.java	unit	ConfigurationController	276	2026-07-18	1
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/department/DepartmentControllerTest.java	unit	DepartmentController	742	2026-08-17	2
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/employee/EmployeeControllerTest.java	unit	EmployeeController	1333	2026-08-16	4
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/login/LoginApprovalRequestControllerTest.java	unit	LoginApprovalRequestController	317	2026-08-17	1
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/login/LoginControllerTest.java	unit	LoginController	828	2026-08-17	3
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/position/PositionControllerTest.java	unit	PositionController	877	2026-07-22	3
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/reason/ReasonActivateControllerTest.java	unit	ReasonActivateController	531	2026-07-18	1
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/reason/ReasonDisableControllerTest.java	unit	ReasonDisableController	531	2026-07-18	1
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/reason/ReasonEnableControllerTest.java	unit	ReasonEnableController	531	2026-07-18	1
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/api/reason/ReasonInactivateControllerTest.java	unit	ReasonInactivateController	531	2026-08-16	2
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/infrastructure/ScosJwtTestSupport.java	recurso		117	2026-07-18	1
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/infrastructure/ScosOrganizationTestUtil.java	recurso		121	2026-07-18	1
+organization/flow-organization-boot/src/test/java/br/com/sawcunhaos/organization/boot/infrastructure/ScosOrganizationWiremockUtil.java	recurso		195	2026-08-15	2
+organization/flow-organization-boot/src/test/resources/application-test.yml	recurso		85	2026-07-18	1
+organization/flow-organization-boot/src/test/resources/mappings/keycloack.json	recurso		369	2026-07-18	1
+organization/flow-organization-boot/src/test/resources/postgresql/setsup_database.sql	recurso		673	2026-08-17	7
+organization/flow-organization-boot/src/test/resources/testcontainer.properties 	recurso		2		0

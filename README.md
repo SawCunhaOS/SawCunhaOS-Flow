@@ -37,7 +37,7 @@ Login e aprovação de acesso seguem uma cadeia de 3 níveis (Supervisor → Ger
 
 ## 📊 Estado Atual do Projeto
 
-O projeto é conduzido pelo método **BMAD** (épicos/stories em `_bmad-output/`). Estado do sprint em `_bmad-output/implementation-artifacts/sprint-status.yaml`.
+O projeto é conduzido pelo método **BMAD**, cuja instalação e artefatos moram só no workspace SCOS (repo `ScosWorkspace`), nunca neste repo. Os artefatos desta rodada de planejamento (PRD, Architecture, épicos/stories, sprint-status) foram arquivados e estão no histórico git deste repo — ex.: `git show e56929b^:_bmad-output/implementation-artifacts/sprint-status.yaml`.
 
 ### Baseline pré-existente (antes da quebra em épicos atual)
 
@@ -81,7 +81,7 @@ RH consegue montar e manter toda a estrutura organizacional do ISP. Cobre FR-1 a
 | Epic 5 — Governança de Turno (Zero Trust) | Bloqueio de requisição fora da jornada de trabalho, plantão pré-aprovado, auditoria imutável de decisão |
 | Epic 6 — Kill Switch | Invalidação síncrona de sessão via denylist Redis; reativação nunca restaura sessão antiga |
 
-> Detalhe completo de cada épico/story (contexto, acceptance criteria, dev notes): `_bmad-output/planning-artifacts/epics.md` e `_bmad-output/implementation-artifacts/*.md`.
+> Detalhe completo de cada épico/story (contexto, acceptance criteria, dev notes): no histórico git — `git show e56929b^:_bmad-output/planning-artifacts/epics.md` e `git ls-tree -r --name-only e56929b^ -- _bmad-output/implementation-artifacts`.
 
 ---
 

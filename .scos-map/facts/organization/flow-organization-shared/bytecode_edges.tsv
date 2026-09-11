@@ -16,6 +16,7 @@ br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError	java.lang.Cla
 br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError	java.lang.Enum	jdk	java.base
 br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError	java.lang.Object	jdk	java.base
 br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.shared.exception.ExceptionCodeError	java.lang.System	jdk	java.base
 br.com.sawcunhaos.organization.shared.utils.PasswordGenerateUtil	java.lang.Class	jdk	java.base
 br.com.sawcunhaos.organization.shared.utils.PasswordGenerateUtil	java.lang.Exception	jdk	java.base
 br.com.sawcunhaos.organization.shared.utils.PasswordGenerateUtil	java.lang.Object	jdk	java.base

@@ -213,27 +213,67 @@ br.com.sawcunhaos.organization.grpc.boot.configuration.properties.ScosGRPCProper
 br.com.sawcunhaos.organization.grpc.boot.configuration.properties.ScosGRPCProperties	java.lang.invoke.MethodType	jdk	java.base
 br.com.sawcunhaos.organization.grpc.boot.configuration.properties.ScosGRPCProperties	java.lang.invoke.StringConcatFactory	jdk	java.base
 br.com.sawcunhaos.organization.grpc.boot.configuration.properties.ScosGRPCProperties	org.springframework.boot.context.properties.ConfigurationProperties	externo	spring-boot-4.1.1.jar
-br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	Empty	externo	not found
-br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	RegistryResourcesRequest	externo	not found
-br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	RegistryServiceGrpc.RegistryServiceImplBase	externo	not found
-br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	RegistrySystemRequest	externo	not found
-br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	RegistrySystemResponse	externo	not found
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.organization.application.usecase.access.resource.registry.RegistryResourceInput	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.organization.application.usecase.access.resource.registry.RegistryResourceInput$RegistryResourceInputBuilder	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
 br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.organization.application.usecase.access.resource.registry.RegistryResourcesUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.organization.application.usecase.access.system.registry.RegistrySystemInput	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.organization.application.usecase.access.system.registry.RegistrySystemInput$RegistrySystemInputBuilder	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.organization.application.usecase.access.system.registry.RegistrySystemOutput	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
 br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.organization.application.usecase.access.system.registry.RegistrySystemUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.security.grpc.proto.Empty	externo	flow-security-grpc-proto-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.security.grpc.proto.Empty$Builder	externo	flow-security-grpc-proto-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.security.grpc.proto.RegistryResourcesRequest	externo	flow-security-grpc-proto-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.security.grpc.proto.RegistryServiceGrpc	externo	flow-security-grpc-proto-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.security.grpc.proto.RegistryServiceGrpc$RegistryServiceImplBase	externo	flow-security-grpc-proto-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.security.grpc.proto.RegistrySystemRequest	externo	flow-security-grpc-proto-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.security.grpc.proto.RegistrySystemResponse	externo	flow-security-grpc-proto-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.security.grpc.proto.RegistrySystemResponse$Builder	externo	flow-security-grpc-proto-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	br.com.sawcunhaos.security.grpc.proto.Resource	externo	flow-security-grpc-proto-1.0.0-SNAPSHOT.jar
 br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	io.grpc.stub.StreamObserver	externo	grpc-stub-1.83.1.jar
-br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.lang.CharSequence	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.lang.Class	jdk	java.base
 br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.lang.Object	jdk	java.base
 br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.lang.invoke.CallSite	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.lang.invoke.LambdaMetafactory	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.lang.invoke.MethodHandle	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.lang.invoke.MethodHandles	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.lang.invoke.MethodHandles$Lookup	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.lang.invoke.MethodType	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.time.Instant	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.time.LocalDate	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.time.ZoneId	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.time.ZoneOffset	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.time.ZonedDateTime	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.util.List	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.util.function.Function	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.util.stream.Collector	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.util.stream.Collectors	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	java.util.stream.Stream	jdk	java.base
 br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	org.slf4j.LoggerFactory	externo	slf4j-api-2.0.18.jar
 br.com.sawcunhaos.organization.grpc.boot.delegate.RegistreServiceImpl	org.springframework.stereotype.Service	externo	spring-context-7.0.9.jar
-br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	AuthorityRequest	externo	not found
-br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	AuthorityResponse	externo	not found
-br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	ValidateAuthorityServiceGrpc.ValidateAuthorityServiceImplBase	externo	not found
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	br.com.sawcunhaos.foundation.core.enums.Constant	externo	scos-foundation-core-1.2.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	br.com.sawcunhaos.organization.application.usecase.access.authority.validate.ValidateAuthorityOutput	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
 br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	br.com.sawcunhaos.organization.application.usecase.access.authority.validate.ValidateAuthorityUseCase	externo	flow-organization-usecase-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	br.com.sawcunhaos.security.grpc.proto.AuthorityRequest	externo	flow-security-grpc-proto-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	br.com.sawcunhaos.security.grpc.proto.AuthorityResponse	externo	flow-security-grpc-proto-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	br.com.sawcunhaos.security.grpc.proto.AuthorityResponse$Builder	externo	flow-security-grpc-proto-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	br.com.sawcunhaos.security.grpc.proto.ValidateAuthorityServiceGrpc	externo	flow-security-grpc-proto-1.0.0-SNAPSHOT.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	br.com.sawcunhaos.security.grpc.proto.ValidateAuthorityServiceGrpc$ValidateAuthorityServiceImplBase	externo	flow-security-grpc-proto-1.0.0-SNAPSHOT.jar
 br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	io.grpc.stub.StreamObserver	externo	grpc-stub-1.83.1.jar
-br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	java.lang.Error	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	java.lang.Class	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	java.lang.Iterable	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	java.lang.Long	jdk	java.base
 br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	java.lang.Object	jdk	java.base
 br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	java.lang.String	jdk	java.base
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	java.util.List	jdk	java.base
 br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	org.slf4j.Logger	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	org.slf4j.LoggerFactory	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	org.slf4j.MDC	externo	slf4j-api-2.0.18.jar
 br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	org.slf4j.Marker	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	org.slf4j.MarkerFactory	externo	slf4j-api-2.0.18.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	org.springframework.security.core.Authentication	externo	spring-security-core-7.1.1.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	org.springframework.security.core.context.SecurityContext	externo	spring-security-core-7.1.1.jar
+br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	org.springframework.security.core.context.SecurityContextHolder	externo	spring-security-core-7.1.1.jar
 br.com.sawcunhaos.organization.grpc.boot.delegate.ValidateAuthorityServiceImpl	org.springframework.stereotype.Service	externo	spring-context-7.0.9.jar

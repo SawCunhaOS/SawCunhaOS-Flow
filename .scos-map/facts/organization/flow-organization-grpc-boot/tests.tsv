@@ -1,0 +1,2 @@
+path	tipo	alvo_heuristico	linhas	last_modified	commits_90d
+organization/flow-organization-grpc-boot/src/test/java/br/com/sawcunhaos/organization/grpc/boot/configuration/interceptor/TokenAuthorizationInterceptorTest.java	unit	TokenAuthorizationInterceptor	209	2026-08-23	3

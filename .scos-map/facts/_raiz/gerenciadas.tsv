@@ -1,0 +1,7 @@
+ga	versao	origem	scope
+br.com.sawcunhaos:scos-foundation	1.2.0-SNAPSHOT	propriedade:scos-foundation.version	import
+org.springframework.kafka:spring-kafka-bom	4.1.1	propria	import
+com.google.errorprone:error_prone_annotations	2.48.0	propria	compile
+br.com.sawcunhaos.flow:infrastructure	1.0.0-SNAPSHOT	propria	compile
+br.com.sawcunhaos.flow:flow-security-starter	1.0.0-SNAPSHOT	propria	compile
+br.com.sawcunhaos.flow:flow-audit-sdk-api	1.0.0-SNAPSHOT	propria	compile

@@ -1,10 +1,1 @@
-{
- "fato": "bytecode",
- "modulo": "audit",
- "fonte": "n/d",
- "confianca": "ausente",
- "gerado_em": "2026-09-09T22:09:55Z",
- "derivado_de": {},
- "estado": "nao_aplicavel",
- "motivo": "modulo agregador (packaging=pom) nao tem codigo"
-}
+{"fato":"bytecode","modulo":"audit","base":"n/d","estado":"nao_aplicavel","motivo":"modulo agregador (packaging=pom) nao tem codigo"}

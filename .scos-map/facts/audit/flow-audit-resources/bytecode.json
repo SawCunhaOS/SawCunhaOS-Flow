@@ -1,11 +1,1 @@
-{
- "fato": "bytecode",
- "modulo": "audit/flow-audit-resources",
- "fonte": "jdeps",
- "confianca": "ausente",
- "gerado_em": "2026-09-09T22:09:58Z",
- "derivado_de": {},
- "estado": "ausente",
- "motivo": "compilou mas nao achou classes",
- "comando_sugerido": "cd audit/flow-audit-resources && mvn compile"
-}
+{"fato":"bytecode","modulo":"audit/flow-audit-resources","base":"n/d","estado":"nao_aplicavel","motivo":"modulo sem codigo-fonte JVM de producao (so resources/testes)"}

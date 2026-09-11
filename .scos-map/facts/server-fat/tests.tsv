@@ -1,0 +1,2 @@
+path	tipo	alvo_heuristico	linhas	last_modified	commits_90d
+server-fat/src/test/java/br/com/sawcunhaos/flow/server/message/ScosMessageSourceAggregationTest.java	unit	ScosMessageSourceAggregation	42	2026-09-06	1

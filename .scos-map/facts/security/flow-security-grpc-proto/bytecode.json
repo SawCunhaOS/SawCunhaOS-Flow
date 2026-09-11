@@ -1,11 +1,1 @@
-{
- "fato": "bytecode",
- "modulo": "security/flow-security-grpc-proto",
- "fonte": "jdeps",
- "confianca": "ausente",
- "gerado_em": "2026-09-09T22:09:34Z",
- "derivado_de": {},
- "estado": "ausente",
- "motivo": "compilacao falhou (rc=1)",
- "comando_sugerido": "cd security/flow-security-grpc-proto && mvn compile"
-}
+{"fato":"bytecode","modulo":"security/flow-security-grpc-proto","base":"jdeps -verbose --multi-release 25 com classpath","confianca":"alta","derivado_de":{"security/flow-security-grpc-proto/pom.xml":"dfd269d945ed"},"estado":"disponivel","resolucao":"tipo","derivado_de_agregado":{"escopo":"fontes .java/.kt (apenas main) do modulo security/flow-security-grpc-proto","arquivos":0,"sha":"da39a3ee5e6b"},"frescor":{"estado":"fresco","compilado_em":"2026-09-09T22:10:04Z"},"classes_dir":"security/flow-security-grpc-proto/target/classes","bytecode_major":69,"classpath_resolvido":true,"jdeps_args":["-verbose","--multi-release","25"],"jdeps_tentativas":[{"rc":2,"erros":["failureaccess-1.0.3.jar is a multi-release jar file but --multi-release option is not set"]},{"args":["--multi-release","25"],"rc":0}],"arestas_arquivo":"facts/security/flow-security-grpc-proto/bytecode_edges.tsv","arestas_total":879,"arestas_internas":183,"diagnostico":{"linhas_saida":885,"com_seta":885,"casaram_regex":879,"descartadas_origem_externa":0,"auto_referencia":0},"classes_conhecidas":60,"assinatura_classes":{"classes":60,"sha":"c5bb61b06766"},"pacotes":["br.com.sawcunhaos.security.grpc.proto"],"jars_usados":{"protobuf-java-4.34.2.jar":380,"grpc-api-1.83.1.jar":72,"grpc-stub-1.83.1.jar":66,"grpc-protobuf-1.83.1.jar":8,"guava-33.7.1-jre.jar":2},"deps_usadas_via_transitiva":[{"artefato":"grpc-api","referencias":72},{"artefato":"guava","referencias":2}],"deps_declaradas_sem_uso":[{"artefato":"grpc-okhttp","scope":"compile"}],"modulo_de_boot":false,"transitivas_resolvidas":true,"como_ler_deps":{"usadas_via_transitiva":"o codigo usa, o pom nao declara, mas veio resolvida (tipico de starter Spring Boot). Risco: quebra se o intermediario parar de trazer. Ordenado por 'referencias' - quanto maior, mais o codigo depende dela e mais vale declarar explicitamente.","usadas_ausentes_do_pom":"usada e NEM resolvida - o caso que merece atencao imediata.","declaradas_sem_uso":"sem referencia no bytecode. Confirme antes de remover: uso por reflexao, SPI ou so em runtime nao aparece aqui.","ignoradas_na_analise":"fora da comparacao de proposito - veja o motivo de cada uma."}}
